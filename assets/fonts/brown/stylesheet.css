@@ -1,0 +1,72 @@
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-RegularItalic.woff2') format('woff2'),
+        url('Brown-RegularItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-Bold.woff2') format('woff2'),
+        url('Brown-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-Regular.woff2') format('woff2'),
+        url('Brown-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-LightItalic.woff2') format('woff2'),
+        url('Brown-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-BoldItalic.woff2') format('woff2'),
+        url('Brown-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-Thin.woff2') format('woff2'),
+        url('Brown-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-Light.woff2') format('woff2'),
+        url('Brown-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('Brown-ThinItalic.woff2') format('woff2'),
+        url('Brown-ThinItalic.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+

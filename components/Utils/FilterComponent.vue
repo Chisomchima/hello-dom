@@ -1,0 +1,203 @@
+<template>
+  <div class="card">
+    <slot name="top"></slot>
+    <div class="card-body">
+      <div
+        class="
+          filter-wrapper
+          d-flex
+          flex-wrap
+          align-items-center
+          justify-content-between
+        "
+      >
+        <slot name="beforeActions"></slot>
+        <div
+          class="
+            d-flex
+            align-items-center
+            justify-content-between justify-content-md-start
+            flex-wrap
+            my-3 my-lg-0
+          "
+        >
+          <div class="mr-2 w-100">
+            <div v-if="!disableVisualization" class="display-toggle">
+              <div
+                class="icon-wrapper"
+                :class="[visualization === 'grid' ? 'active' : '']"
+                @click="toggleVisualization()"
+              >
+                <b-icon icon="grid"></b-icon>
+              </div>
+              <div
+                class="icon-wrapper"
+                :class="[visualization === 'list' ? 'active' : '']"
+                @click="toggleVisualization()"
+              >
+                <b-icon icon="card-list"></b-icon>
+              </div>
+              <slot name="besidesFilterBy"></slot>
+            </div>
+          </div>
+
+          <div v-if="!disablePagination" class="records-count">
+            <span>View by: </span>
+            <select
+              class="records-count"
+              @change="$emit('view-by', $event.target.value)"
+            >
+              <option
+                v-for="(option, optionIndex) in options"
+                :key="optionIndex"
+                :value="option"
+              >
+                {{ option }} Records
+              </option>
+              <option value="9999">Infinite Records</option>
+              <option value="" disabled selected>Default Records</option>
+            </select>
+          </div>
+        </div>
+        <slot name="besidesViewBy"></slot>
+
+        <div
+          class="
+            d-flex
+            align-items-center
+            justify-content-between justify-content-md-end
+            flex-wrap
+            mb-1 mb-md-0
+          "
+        >
+          <div v-if="!disableSearch" class="search-input mx-2">
+            <span
+              class="iconify icon"
+              data-inline="false"
+              data-icon="carbon:search"
+            ></span>
+            <input
+              type="text"
+              class="form-control w-100"
+              :placeholder="
+                searchPlaceholder ? searchPlaceholder : ' Search by Name'
+              "
+              @input="searchDebounced($event.target.value)"
+            />
+          </div>
+          <div>
+            <slot name="besideFilterButton"></slot>
+            <!-- <button
+              class="btn filters-btn"
+              data-toggle-visibility="#filters-container"
+            >
+              <div class="d-flex align-items-center">
+                <span>Filters</span>
+                <span
+                  class="iconify"
+                  data-inline="false"
+                  data-icon="fluent:filter-16-filled"
+                ></span>
+              </div>
+            </button> -->
+          </div>
+          <div id="filters-container" class="filters-container d-none">
+            <div
+              class="filter-closer"
+              data-toggle-visibility="#filters-container"
+            >
+              <span
+                class="iconify"
+                data-inline="false"
+                data-icon="eva:close-outline"
+              ></span>
+            </div>
+
+            <div class="filters-container-content">
+              <div class="search-input mb-2">
+                <span
+                  class="iconify icon"
+                  data-inline="false"
+                  data-icon="carbon:search"
+                ></span>
+                <input
+                  type="text"
+                  class="form-control w-100"
+                  placeholder="Search for class"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <slot :visualization="visualization"></slot>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { debounce } from 'lodash'
+
+import Vue from 'vue'
+
+type visualize = 'grid' | 'list' | any
+
+export default Vue.extend({
+  props: {
+    searchPlaceholder: {
+      type: String,
+      default: '',
+    },
+    options: {
+      type: Array,
+      default: () => [5, 10, 20, 25, 50, 100],
+    },
+    disablePagination: {
+      type: Boolean,
+      default: false,
+    },
+    disableVisualization: {
+      type: Boolean,
+      default: false,
+    },
+    disableSearch: {
+      type: Boolean,
+      default: false,
+    },
+    busy: {
+      type: Boolean,
+      required: false,
+    },
+
+    visual: {
+      type: String,
+      default: 'list',
+    },
+  },
+  data() {
+    const visualization: visualize = this.visual
+    return {
+      visualization,
+    }
+  },
+  methods: {
+    searchDebounced: debounce(function (this: any, search: string) {
+      this.$emit('search-input', search)
+    }, 500),
+    toggleVisualization() {
+      this.visualization =
+        this.visualization === 'grid' ? 'list' : ('grid' as visualize)
+      this.$emit('visualization', this.visualization)
+    },
+  },
+})
+</script>
+
+<style>
+@media (max-width: 767px) {
+  .filter-wrapper {
+    width: 100% !important;
+  }
+}
+</style>

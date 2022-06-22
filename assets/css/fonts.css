@@ -1,0 +1,124 @@
+/* // Styling By Daniel R. Obiekwe ( https://madebyraymond.herokuapp.com ) */
+/* museo_sans Font  */
+@font-face {
+    font-family: 'Museo Sans';
+    src: url('../fonts/museo_sans/museosans_500-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans_500-webfont.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Museo Sans';
+    src: url('../fonts/museo_sans/museosans_700-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans_700-webfont.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Museo Sans';
+    src: url('../fonts/museo_sans/museosans-100-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-100-webfont.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Museo Sans';
+    src: url('../fonts/museo_sans/museosans-300-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-300-webfont.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+
+
+
+/* Brown Font  */
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-RegularItalic.woff2') format('woff2'),
+        url('../fonts/brown/Brown-RegularItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-Bold.woff2') format('woff2'),
+        url('../fonts/brown/Brown-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-Regular.woff2') format('woff2'),
+        url('../fonts/brown/Brown-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-LightItalic.woff2') format('woff2'),
+        url('../fonts/brown/Brown-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-BoldItalic.woff2') format('woff2'),
+        url('../fonts/brown/Brown-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-Thin.woff2') format('woff2'),
+        url('../fonts/brown/Brown-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-Light.woff2') format('woff2'),
+        url('../fonts/brown/Brown-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brown';
+    src: url('../fonts/brown/Brown-ThinItalic.woff2') format('woff2'),
+        url('../fonts/brown/Brown-ThinItalic.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+
+
+
+/* Mermaid Font  */
+@font-face {
+    font-family: 'Mermaid';
+    src: url('../fonts/mermaid/Mermaid-Bold.woff2') format('woff2'),
+        url('../fonts/mermaid/Mermaid-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}

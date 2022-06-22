@@ -1,0 +1,9 @@
+@import url("../variables/default.css");
+
+@media screen  and (max-width: 996px) {
+    .main_container {
+        /* width: var(--sidebar-width); */
+        
+        margin-left: var(--sidebar-width-minimized) !important;
+    }
+}
