@@ -38,10 +38,11 @@ export const actions: ActionTree<RootState, RootState> = {
 
     async login({ commit }, { username, password }) {
         try {
-            const response = await this.$axios.$post('/api-auth/login/', { username, password });;
-            if (response.data.token) {
-                commit('SET_USER', response.data.user_details);
-                commit('SET_TOKEN', response.data.token);
+            const response = await this.$axios.$post('/users/api-token-auth/', { username, password });
+
+            if (response.token) {
+                commit('SET_USER', response);
+                commit('SET_TOKEN', response.token);
             }
             return Promise.resolve(response);
         } catch (e) {
