@@ -15,6 +15,15 @@
               :label="form.select_label"
               @input="$emit('change', { key: form.key, value: form.value })"
             ></VSelect>
+
+            <label
+              v-else-if="form.type === 'checkbox'"
+              class="exercise-option-check green-check"
+            >
+              <input v-model="form.value" type="checkbox" name="customRadio" />
+              <span class="checkmark"></span>
+              <span class="text">{{ form.name }}</span>
+            </label>
             <input
               v-else
               v-model="form.value"
@@ -147,7 +156,7 @@ export default {
         const result = this.formConfigData.map((item) => ({
           name: item.name,
           value: item.value,
-          key:  item.key,
+          key: item.key,
         }))
         return result
       }

@@ -116,6 +116,9 @@
       <template #cell(status)="data">
         <slot name="status" :data="data">{{ data.value }}</slot>
       </template>
+      <template #cell(info)="data">
+        <slot name="info" :data="data">{{ data.value }}</slot>
+      </template>
       <template #cell(avatar)="data">
         <slot name="avatar" :data="data">{{ data.value }}</slot>
       </template>
@@ -123,6 +126,11 @@
       <template #cell(liveClass)="data">
         <slot name="liveClass" :data="data"></slot>
       </template>
+
+      <template #cell(print)="data">
+        <slot name="print" :data="data"></slot>
+      </template>
+
 
       <template #cell(download)="data">
         <slot name="download" :data="data">{{ data.value }}</slot>

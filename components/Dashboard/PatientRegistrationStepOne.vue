@@ -14,7 +14,23 @@ export default {
     return {
       formConfig: [
         {
-          key: 'firstName',
+          key: 'is_baby',
+          name: 'is Baby',
+          type: 'checkbox',
+          rules: [''],
+          value: '',
+        },
+        {
+          key: 'salutation',
+          name: 'Salutation',
+          rules: ['required'],
+          type: 'select',
+          select_label: 'salutations',
+          options: [],
+          value: '',
+        },
+        {
+          key: 'firstname',
           name: 'First Name',
           rules: ['required'],
           value: '',
@@ -22,11 +38,11 @@ export default {
         {
           key: 'middlename',
           name: 'Middle Name',
-          rules: ['required'],
+          rules: [''],
           value: '',
         },
         {
-          key: 'lastName',
+          key: 'lastname',
           name: 'Last Name',
           rules: ['required'],
           value: '',
@@ -50,19 +66,19 @@ export default {
         {
           key: 'email',
           name: 'Email',
-          rules: ['required'],
+          rules: ['email'],
           value: '',
         },
         {
           key: 'phone_number',
           name: 'Phone Number',
-          rules: ['required'],
+          rules: ['required', 'digits:11'],
           value: '',
         },
         {
-          key: 'martial_status',
-          name: 'Martial Status',
-          rules: ['required'],
+          key: 'marital_status',
+          name: 'Marital Status',
+          rules: [''],
           type: 'select',
           select_label: 'marital_status',
           options: [],
@@ -71,13 +87,13 @@ export default {
         {
           key: 'occupations',
           name: 'Occupation',
-          rules: ['required'],
+          rules: [''],
           value: '',
         },
         {
           key: 'religion',
           name: 'Religion',
-          rules: ['required'],
+          rules: [''],
           type: 'select',
           select_label: 'religion',
           options: [],
@@ -86,16 +102,16 @@ export default {
         {
           key: 'nationality',
           select_label: 'country',
-          name: 'Nationality',
+          name: 'nationality',
           type: 'select',
-          rules: ['required'],
+          rules: [''],
           options: ['Christianity', 'Islam'],
           value: '',
         },
         {
           key: 'state_of_origin',
           name: 'State of Origin',
-          rules: ['required'],
+          rules: [''],
           type: 'select',
           select_label: 'state',
           options: [],
@@ -104,13 +120,13 @@ export default {
         {
           key: 'lga',
           name: 'Lga',
-          rules: ['required'],
+          rules: [''],
           value: '',
         },
         {
           key: 'id_type',
           name: 'Identification Type',
-          rules: ['required'],
+          rules: [''],
           type: 'select',
           options: [
             'Service No',
@@ -123,13 +139,13 @@ export default {
         {
           key: 'id_number',
           name: 'Identification Number',
-          rules: ['required'],
+          rules: [''],
           value: '',
         },
         {
           key: 'id_validity',
           name: 'ID Validity',
-          rules: ['required'],
+          rules: [''],
           type: 'date',
           value: '',
         },
@@ -144,9 +160,12 @@ export default {
     const { results: mStatus } = await this.$api.core.martialStatus({
       size: 1000,
     })
-    this.$refs.formGen.setOptions('martial_status', mStatus)
+    this.$refs.formGen.setOptions('marital_status', mStatus)
     const { results: religion } = await this.$api.core.religion({ size: 1000 })
     this.$refs.formGen.setOptions('religion', religion)
+
+    const { results: salutation } = await this.$api.core.salutation({ size: 1000 })
+    this.$refs.formGen.setOptions('salutation', salutation)
   },
   methods: {
     async submit() {
