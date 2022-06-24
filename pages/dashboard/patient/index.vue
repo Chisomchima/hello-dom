@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       genders: ['male', 'female'],
+      busy:false,
       currentFilter: {},
       fields: [
         {
