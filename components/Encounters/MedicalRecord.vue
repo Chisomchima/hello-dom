@@ -41,7 +41,7 @@ export default {
     },
   },
   mounted() {
-    // this.getPatientEncounters();
+    this.getPatientEncounters();
   },
   methods: {
     async getPatientEncounters() {

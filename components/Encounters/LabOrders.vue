@@ -4,7 +4,7 @@
             <div class="text-20 d-flex justify-content-between align-items-center">
                 <h4 class="text-grey text-18">Lab Orders</h4>
                 <div>
-                    <button @click="newLabOrders" class="btn theme-btn text-14">
+                    <button @click="newLabOrders" class="btn btn-outline-primary text-14">
                         New Lab Order
                     </button>
                 </div>

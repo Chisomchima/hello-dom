@@ -108,6 +108,7 @@ export default {
     '~/plugins/highchart.js',
 
     '~/plugins/api.js',
+    '~/plugins/prime-vue.js',
     // '~/plugins/gleap.js'
     // {
     //   src: '~/plugins/socket-client.js',
@@ -133,6 +134,7 @@ export default {
     'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    "primevue/nuxt",
     // https://www.npmjs.com/package/@nuxtjs/dotenv
     '@nuxtjs/dotenv',
     'vue2-editor/nuxt',
