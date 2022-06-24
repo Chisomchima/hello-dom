@@ -4,6 +4,11 @@ export default axios => ({
     },
     getPatient(id) {
         return axios.$get(`patient/patients/${id}`);
+    },
+    searchPatient(params) {
+        return axios.$get('patient/patients/', {
+            params
+        })
     }
 
 });

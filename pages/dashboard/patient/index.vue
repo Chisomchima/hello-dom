@@ -1,74 +1,27 @@
 <template>
-  <div class="row">
-    <div class="col-12 mb-3">
-      <h5>Patients</h5>
-    </div>
-    <div class="col-md-8">
-      <UtilsFilterComponent
-        disablePagination
-        :disable-visualization="true"
-        search-placeholder="Search"
-      >
-        <TableComponent
-          :fields="fields"
-          :pages="pages"
-          :items="items"
-          :busy="false"
-        />
-      </UtilsFilterComponent>
-    </div>
+  <div>
+    <div class="page-heading mb-4">Patient Search</div>
+    <div class="row">
+      <div class="col-md-9">
+        <UtilsFilterComponent
+          disable-pagination
+          :disable-visualization="true"
+          search-placeholder="Search"
+        >
+          <TableComponent
+            :fields="fields"
+            :pages="pages"
+            :items="items"
+            :busy="busy"
+            @page-changed="filter($event, currentFilter)"
+          />
+        </UtilsFilterComponent>
+      </div>
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
-          <div class="filter-wrapper">
-            <div class="mb-2">
-              <label class="form-control-label">First Name</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your full name"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="form-control-label">Last Name</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your full name"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="form-control-label">Phone number</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your full name"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="form-control-label">D.O.B</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your email address"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-control-label">Gender</label>
-              <VSelect label="Gender" :options="genders"></VSelect>
-            </div>
-
-            <div class="mb-2">
-              <div class="row">
-                <div class="col-6">
-                  <BaseButton class="w-100"> Filter </BaseButton>
-                </div>
-                <div class="col-6">
-                  <BaseButton class="w-100 btn-danger"> Cancel </BaseButton>
-                </div>
-              </div>
-            </div>
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-body">
+            <DashboardPatientFilters @filter="filter(1, $event)" />
           </div>
         </div>
       </div>
@@ -84,37 +37,45 @@ export default {
   data() {
     return {
       genders: ['male', 'female'],
+      currentFilter: {},
       fields: [
         {
-          key: 'first_name',
-          label: 'Name',
-          sortable: true,
+          key: 'uhid',
+          label: 'UHID',
           // width: '20%',
         },
         {
-          key: 'last_name',
-          sortable: true,
-          // width: '20%',
+          key: 'firstname',
+          label: 'First Name',
         },
         {
-          key: 'age',
-          sortable: true,
-          // width: '20%',
+          key: 'lastname',
+          label: 'Last Name',
         },
-        
-      ],
-      items: [
         {
-          isActive: true,
-          age: 40,
-          first_name: 'Dickerson',
-          last_name: 'Macdonald',
+          key: 'gender',
         },
-        { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-        { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-        { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' },
+        {
+          key: 'phone_number',
+        },
       ],
     }
+  },
+  methods: {
+    async filter(page = 1, e) {
+      this.currentFilter = e
+      try {
+        this.busy = true
+        const data = await this.$api.patient.searchPatient({ ...e, page })
+        this.items = data.results
+        this.pages = data.total_pages
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.busy = false
+      }
+    },
+    pageChange() {},
   },
 }
 </script>

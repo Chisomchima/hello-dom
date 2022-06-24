@@ -13,7 +13,6 @@
       :busy="busy"
       :per-page="perPage"
       class="custom-table"
-      :current-page="isClientPagination ? currentPage : 1"
       :class="classCustom"
       :table-class="tableClass"
       @row-clicked="$emit('row-clicked', $event)"
@@ -202,10 +201,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    currentPage: {
-      type: Number,
-      default: 1,
-    },
+    // currentPage: {
+    //   type: Number,
+    //   default: 1,
+    // },
 
     classCustom: {
       type: String,
@@ -271,6 +270,7 @@ export default {
   data() {
     return {
       totalRows: 0,
+      currentPage:1
     }
   },
   computed: {
@@ -312,7 +312,7 @@ export default {
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length
-      this.currentPage = 1
+      // this.currentPage = 1
     },
   },
 }
