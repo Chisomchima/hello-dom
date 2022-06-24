@@ -1,0 +1,93 @@
+<template>
+  <div>
+    <UtilsFilterComponent disable-visualization disable-pagination>
+      <template #besideFilterButton>
+        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')">New Encounter</BaseButton>
+      </template>
+      <template>
+        <TableComponent
+          :fields="fields"
+          :pages="pages"
+          :items="items"
+          :busy="busy"
+          @page-changed="pageChange"
+          @row-clicked="onRowClicked"
+        >
+          <template #status="{ data }">
+            <span v-if="data.item.status === 'NS'" class="badge badge-info">{{
+              data.item.status
+            }}</span>
+          </template>
+        </TableComponent>
+      </template>
+    </UtilsFilterComponent>
+    <DashboardModalAddEncounter />
+  </div>
+</template>
+
+<script>
+import { DateTime } from 'luxon'
+import TableFunc from '~/mixins/TableCompFun' // Table component mixins
+export default {
+  mixins: [TableFunc],
+  data() {
+    return {
+      fields: [
+        {
+          key: 'encounter_id',
+        },
+        {
+          key: 'encounter_type',
+        },
+        {
+          key: 'clinic.Department.name',
+          label: 'Department',
+        },
+        {
+          key: 'clinic.name',
+          label: 'Clinic',
+        },
+        {
+          key: 'provider',
+          formatter: (val) => {
+            return val.first_name + ' ' + val.last_name
+          },
+        },
+        {
+          key: 'encounter_datetime',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toFormat('DDD')
+          },
+        },
+        {
+          key: 'status',
+        },
+      ],
+    }
+  },
+  async mounted() {
+    await this.pageChange(1)
+  },
+  methods: {
+    async pageChange(page = 1) {
+      try {
+        this.busy = true
+        const data = await this.$api.encounter.getPatient(
+          this.$route.params.uuid
+        )
+        console.log(data)
+        this.items = data
+        this.pages = 1
+        this.busy = false
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.busy = false
+      }
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+</style>

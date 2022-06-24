@@ -13,28 +13,20 @@ export default {
     return {
       formConfig: [
         {
-          key:'address',
-          name: 'Address/Village',
-          rules: [''],
+          key: 'payer',
+          name: 'payer',
+          rules: [],
           value: '',
         },
         {
-          key:'address_country',
-          name: 'Country',
-          rules: [''],
-          value: '',
+          key: 'sponsor',
+          name: 'Relation',
+          rules: [],
         },
         {
-          key:'address_city',
-          name: 'City',
-          rules: [''],
-          value: '',
-        },
-        {
-          key:'address_postal_code',
-          name: 'Postal Code',
-          rules: [''],
-          type: 'date',
+          key: 'network',
+          name: 'Network',
+          rules: [],
           value: '',
         },
       ],

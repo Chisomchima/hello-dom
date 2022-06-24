@@ -40,7 +40,7 @@
         <button
           v-if="Number(currentStep) === steps.length - 1"
           class="btn btn-outline-primary py-2 px-3 ml-3"
-          @click="$emit('save')"
+          @click="$emit('done')"
         >
           Save
         </button>
@@ -61,24 +61,33 @@ export default {
     return {
       // steps: ['Setup Lesson', 'Lesson Content', 'Exercise'],
       currentStep: 0,
+      prevStep: 0,
     }
   },
   watch: {
-    currentStep(newVal, oldVal) {
-      this.$emit('pageChange', { next: newVal, prev: oldVal })
+    currentStep(_newVal, oldVal) {
+      this.prevStep = oldVal
     },
   },
   methods: {
     next() {
-      this.currentStep = this.currentStep + 1
+      const currentStep = this.currentStep + 1
+      this.$emit('requestPageChange', {
+        currentPage: this.currentStep,
+        nextPage: currentStep,
+      })
     },
 
     prev() {
-      this.currentStep = this.currentStep - 1
+      const currentStep = this.currentStep - 1
+      this.$emit('requestPageChange', {
+        currentPage: this.currentStep,
+        nextPage: currentStep,
+      })
     },
-    goto(num){
+    goto(num) {
       this.currentStep = num
-    }
+    },
   },
 }
 </script>
