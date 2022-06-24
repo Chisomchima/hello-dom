@@ -10630,10 +10630,10 @@ primeicons@^5.0.0:
   resolved "https://registry.npmjs.org/primeicons/-/primeicons-5.0.0.tgz"
   integrity sha512-heygWF0X5HFI1otlZE62pp6ye7sZ8om78J9au2BRkg8O7Y8AHTZ9qKMRzchZUHLe8zUAvdi6hZzzm9XxgwIExw==
 
-primevue@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.npmjs.org/primevue/-/primevue-2.7.0.tgz"
-  integrity sha512-8OaTBUuLO1HCi3BghCo/1t28RFC8s0DQj1AbWentI0+kznbvTCP6nfu+bM+XWeQDV/KALkwt5aCXsrfoKuag6Q==
+primevue@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/primevue/-/primevue-2.9.2.tgz#99d1edc73994c1747ac6da6bb14932bfd1c31a43"
+  integrity sha512-07Djz4D4DRcQu9cNpadhi5PzcZUngvl14YCwYNoOOZsbjXkMcd6rpZ4bfXk1aZT/U217KAeAQiB5u9+nsDLGIQ==
 
 printj@~1.1.0:
   version "1.1.2"
@@ -12936,6 +12936,11 @@ v-calendar@^2.3.4:
     date-fns-tz "^1.1.4"
     lodash "^4.17.21"
 
+v-debounce@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/v-debounce/-/v-debounce-0.2.0.tgz#20a6f0ec7025708fb0fddfb5b7186f0954789b78"
+  integrity sha512-aRm2D8SIs6jI9iaLzxry2TYWZtpuIj7gpQD82wQJFQVrX1iQFsRXdyxONlhlfv2wXV0dEhgXCH1j6+3VEJYpmg==
+
 v-emoji-picker@^2.3.3:
   version "2.3.3"
   resolved "https://registry.npmjs.org/v-emoji-picker/-/v-emoji-picker-2.3.3.tgz"
@@ -13071,6 +13076,11 @@ vue-clipboard2@^0.3.3:
   integrity sha512-aNWXIL2DKgJyY/1OOeITwAQz1fHaCIGvUFHf9h8UcoQBG5a74MkdhS/xqoYe7DNZdQmZRL+TAdIbtUs9OyVjbw==
   dependencies:
     clipboard "^2.0.0"
+
+vue-debounce@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/vue-debounce/-/vue-debounce-4.0.0.tgz#3f584dabc08a841a0182ab68d19f77f70a416fcc"
+  integrity sha512-+BrcKfLpyDpUJ58ZrAvI35irRCgYHFpnF3NJZwwaz8/kkKmEq6TWPXBIhLh2HQAsUZNwo52K/vQyiEFsJ/1RYA==
 
 vue-emoji-picker@^1.0.3:
   version "1.0.3"

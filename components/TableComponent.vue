@@ -108,6 +108,9 @@
       <template #cell(state)="data">
         <slot name="state" :data="data">{{ data.value }}</slot>
       </template>
+      <template #cell(action)="data">
+        <slot name="action" :data="data">{{ data.value }}</slot>
+      </template>
 
       <template #cell(submissions)="data">
         <slot name="submissions" :data="data">{{ data.value }}</slot>

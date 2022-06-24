@@ -101,22 +101,7 @@ export default {
           sortable: true,
           // width: '20%',
         },
-        {
-          key: 'bny',
-          label: 'Name',
-          sortable: true,
-          // width: '20%',
-        },
-        {
-          key: 'bt',
-          sortable: true,
-          // width: '20%',
-        },
-        {
-          key: 'bs',
-          sortable: true,
-          // width: '20%',
-        },
+        
       ],
       items: [
         {

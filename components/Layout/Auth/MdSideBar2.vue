@@ -97,11 +97,7 @@ export default {
           name: 'dashboard',
           icon: 'camera',
         },
-        // {
-        //   pathName: 'dashboard-patient',
-        //   name: 'patient',
-        //   icon: 'alarm',
-        // },
+       
         {
           pathName: 'dashboard-hr',
           name: 'patient',
@@ -127,6 +123,31 @@ export default {
             },
           ],
         },
+        {
+          pathName: 'dashboard-opd',
+          name: 'OPD',
+          icon: 'archive',
+          isToggled: false,
+
+          dropdown: [
+             {
+              pathName: 'dashboard-opd',
+              name: 'Encounter Worklist',
+            },
+            // {
+            //   pathName: 'dashboard-patient-add',
+            //   name: 'register patient',
+            // },
+            // {
+            //   pathName: 'sms-id-staff-pension-settings',
+            //   name: 'Pension Settings',
+            // },
+            // {
+            //   pathName: 'sms-id-staff-banks',
+            //   name: 'Banks',
+            // },
+          ],
+        },
       ],
       isMobile: false,
       isShowing: false,
@@ -134,7 +155,6 @@ export default {
   },
   created() {
     this.$nuxt.$on('openSidebar', () => {
-      console.log('side bar event')
       this.isMobile = !this.isMobile
       this.isShowing = !this.isShowing
     })
