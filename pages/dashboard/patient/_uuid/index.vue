@@ -39,9 +39,13 @@
 <script>
 export default {
   async asyncData({ $api, route }) {
-    const data = await $api.patient.getPatient(route.params.uuid)
-    return {
-      data,
+    try {
+      const data = await $api.patient.getPatient(route.params.uuid)
+      return {
+        data,
+      }
+    } catch (error) {
+      console.log(error)
     }
   },
 }

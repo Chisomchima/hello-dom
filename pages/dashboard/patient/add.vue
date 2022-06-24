@@ -178,7 +178,13 @@ export default {
           salutation:dataObject.salutation.salutations
         }
 
-        await this.$api.patient.savePatient(customObj)
+       const response = await this.$api.patient.savePatient(customObj)
+        this.$router.push({
+          name:'dashboard-patient-uuid',
+          params:{
+            uuid:response.id
+          }
+        })
       } catch (error) {
         console.log(error)
       }
