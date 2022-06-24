@@ -35,14 +35,14 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: 'stylesheet',
-        href: 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.2/cropper.min.css',
-      },
-      {
-        href: 'https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css',
-        rel: 'stylesheet',
-      },
+      // {
+      //   rel: 'stylesheet',
+      //   href: 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.2/cropper.min.css',
+      // },
+      // {
+      //   href: 'https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css',
+      //   rel: 'stylesheet',
+      // },
     ],
 
     script: [
@@ -50,23 +50,23 @@ export default {
         src: '/js/scripts.js',
       },
       // <!-- JQuery 3.5.1 and Bootstrap 4.6.0 -->
-      {
-        src: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
-        integrity:
-          'sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj',
-        crossorigin: 'anonymous',
-      },
-      {
-        src: 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js',
-        integrity:
-          'sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns',
-        crossorigin: 'anonymous',
-      },
+      // {
+      //   src: 'https://code.jquery.com/jquery-3.5.1.slim.min.js',
+      //   integrity:
+      //     'sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj',
+      //   crossorigin: 'anonymous',
+      // },
+      // {
+      //   src: 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js',
+      //   integrity:
+      //     'sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns',
+      //   crossorigin: 'anonymous',
+      // },
       // <!-- Iconify  -->
 
-      {
-        src: 'https://code.iconify.design/1/1.0.6/iconify.min.js',
-      },
+      // {
+      //   src: 'https://code.iconify.design/1/1.0.6/iconify.min.js',
+      // },
     ],
   },
   // server: {
@@ -101,6 +101,7 @@ export default {
     '~/plugins/modalMsgMixin.global.js',
 
     '~/plugins/loading-brain.js',
+    '~/plugins/vue-debounce.js',
 
     '~/plugins/dexie.js',
     '~/plugins/vueInput.js',
@@ -137,6 +138,11 @@ export default {
     'vue2-editor/nuxt',
     '@nuxtjs/style-resources'
   ],
+  primevue: {
+    theme: "saga-green",
+    ripple: true,
+    components: ["Button", "Menu", "TabView", "TabPanel", "Accordion"],
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -146,7 +152,7 @@ export default {
   env: {
     BASE_URL: process.env.BASE_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  // Build Configuration: https://go.nuxtjs.dev/config-build
+    // Build Configuration: https://go.nuxtjs.dev/config-build
     extend(config, _ctx) {
       config.module.rules.push({
         test: /\.worker\.js$/i,

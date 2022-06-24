@@ -3,11 +3,10 @@ export default function ({ $axios, $toast, store, redirect }) {
   // $axios.defaults.timeout = 1000 * 5 // t - 5s
   $axios.onRequest((config) => {
     store.commit('toggleRequestInProgress', true)
-    // if (store.state.auth.token) {
-      // console.log('token')
-    //  config.headers.common.Authorization = `Bearer ${store.state.auth.token}`
-     config.headers.common.Authorization = `Token d3473d576e21aff0c6603d06a3e064a2d9561119`
-    // }
+    if (store.state.auth.token) {
+      console.log('token')
+      config.headers.common.Authorization = `Token ${store.state.auth.token}`
+    }
     return config
   })
   $axios.onError((error) => {
