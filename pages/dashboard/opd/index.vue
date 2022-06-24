@@ -92,8 +92,8 @@ ng-untouched ng-pristine ng-valid
 
                                 <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6">
                                     <label class="form-control-label">Provider</label>
-                                    <VSelect class="text-14" v-model="encounterData.provider"
-                                       label="providers" :options="providers">
+                                    <VSelect class="text-14" v-model="encounterData.provider" label="providers"
+                                        :options="providers">
                                         <template #option="{ first_name, last_name }">
                                             <div>
                                                 {{ first_name + " " + last_name }}
@@ -236,6 +236,11 @@ ng-untouched ng-pristine ng-valid
                                 </VSelect>
                             </div>
                             <div class="mb-2">
+                                <label class="form-control-label">Encounter ID</label>
+                                <input v-model="filter.encounter_id" type="text" placeholder="Encounter ID"
+                                    v-debounce:1300ms.cancelonempty="rareCase" class=" form-control" />
+                            </div>
+                            <div class="mb-2">
                                 <label class="form-control-label">Clinic</label>
                                 <VSelect :reduce="(option) => option.id" multiple taggable v-model="filter.clinic"
                                     :options="clinics" label="name"></VSelect>
@@ -277,8 +282,9 @@ ng-untouched ng-pristine ng-valid
 </template>
 
 <script>
-
+// import calcAge from '~/mixins/calcAge'
 export default {
+// mixins: [calcAge],
 data() {
 return {
 providers: [],
@@ -318,7 +324,8 @@ entry: "",
 department: null,
 clinic: null,
 provider: null,
-status: ''
+    status: '',
+    encounter_id: ''
 },
 patientDetails: "Type UHID to search...",
 patientData: {},
@@ -371,11 +378,13 @@ iterator.firstname + " " + iterator.lastname
 ? iterator.firstname + " " + iterator.lastname
 : "No matching record";
 
-this.patientData = iterator;
+    this.patientData = iterator;
+    this.calcAge(this.patientData.date_of_birth)
 
 }
 if (response.results < 1) {
-this.patientData = {};
+    this.patientData = {};
+
 this.patientData = "No matching records...";
 (this.age.year = ""), (this.age.month = ""), (this.age.day = "");
 this.encounterData.patient = {};
@@ -394,6 +403,7 @@ console.log(error)
         if (this.$refs.runValidation) {
             this.$refs.runValidation.click();
         }
+        this.encounterData.patient.age = this.age
         if (this.encounterData.provider === null) {
             this.encounterData.provider = ''
         }
@@ -449,9 +459,9 @@ time: "",
 },
 };
 this.test = "";
-this.year = null;
-this.month = null;
-this.day = null;
+this.age.year = null;
+this.age.month = null;
+this.age.day = null;
 this.age = {
 year: null,
 month: null,
@@ -503,7 +513,7 @@ this.busy = true;
 let uri = `encounters/encounter/?page=${page}&department=${this.filter.department ? this.filter.department : ""
 }&size=${this.perPage}&clinic=${this.filter.clinic ? this.filter.clinic : ""
 }&limit=12&${this.filter.by ? this.filter.by : ""}=${this.filter.entry ? this.filter.entry : ""
-}&provider_name=${this.filter.provider ? this.filter.provider : ""}&status=${this.filter.status ? this.filter.status : ""}`;
+    }&provider_name=${this.filter.provider ? this.filter.provider : ""}&status=${this.filter.status ? this.filter.status : ""}&encounter_id=${this.filter.encounter_id ? this.filter.encounter_id : ""}`;
 
 console.log(uri)
 let response = await this.$axios.$get(uri);
@@ -572,12 +582,74 @@ this.busy = false;
 viewPatientData(e) {
 console.log(e);
 this.$router.push(`/dashboard/opd/${e.id}`);
-},
+    },
+    calcAge(e) {
+        // **********calc year***********
+        let presentDate = new Date().getFullYear();
+        let yearOfBirth = e.substring(0, 4);
+
+        let diff = presentDate - yearOfBirth;
+        let x = parseInt(diff);
+        if (x === 0) {
+            this.age.year = 0;
+            this.age.month = 0;
+        } else {
+            this.age.year = x;
+        }
+
+        if (monthOfBirth < month) {
+            this.age.year;
+        } else {
+            if (this.age.year === 0) {
+                this.age.year;
+            } else {
+                this.age.year--;
+            }
+        }
+
+        // **************calc month***********
+        let tempMonth;
+        let month = new Date().getMonth();
+        let monthOfBirth = parseInt(e.substring(5, 7));
+        // tempMonth = monthOfBirth - month
+        if (presentDate === yearOfBirth) {
+            this.patient.age.month = 0;
+        } else {
+            tempMonth = 12 - monthOfBirth;
+        }
+
+        if (monthOfBirth <= month) {
+            this.age.month = month - monthOfBirth;
+            // this.patient.age.month + 1;
+        } else if (month + 1 === monthOfBirth) {
+            this.age.month = 0;
+        } else {
+            this.age.month = tempMonth + month;
+            // this.patient.age.month + 1;
+        }
+
+        // **************calc day**************
+        let day = new Date().getDate();
+        let dayOfBirth = e.substring(8, 10);
+        // this.patient.age.day = new Date().getDate();
+
+        if (day > dayOfBirth) {
+            this.age.day = day - dayOfBirth;
+        } else if (day === dayOfBirth) {
+            this.age.day = 0;
+        } else {
+            this.age.day = day;
+        }
+
+        // *********************************
+    },
 optionClicked(e, i) {
 if (i === 0) {
 this.$router.push(`/dashboard/opd/${e.id}`);
 }
-},
+    },
+
+
 }
 }
 </script>

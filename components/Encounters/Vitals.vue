@@ -4,7 +4,7 @@
       <div>
         <h4 class="pl-2 text-18 mb-0 text-grey">Vitals</h4>
       </div>
-      <div class="theme-color-text" @click.prevent="openForm" id="button-1" v-show="step">
+      <div class="text-primary" @click.prevent="openForm" id="button-1" v-show="step">
         <!-- <span
           title="Tooltip directive content"
           class="iconify"
@@ -24,7 +24,7 @@
 
         <b-tooltip target="button-1" placement="bottom"> Add Vitals </b-tooltip>
       </div>
-      <div class="theme-color-text" @click="closeForm" id="button-8" v-show="kink">
+      <div class="text-primary" @click="closeForm" id="button-8" v-show="kink">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-dash-square"
             viewBox="0 0 16 16">
@@ -39,6 +39,10 @@
     </div>
     <transition name="slide-fade">
       <div v-if="hideVitalsForm" style="max-width: 98%" class="trans pl-5 row px-2">
+        <div class="d-flex align-items-center col-lg-12 col-md-12 col-sm-12">
+          <div><input style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div><small
+            class="text-info text-12 ml-2">Nurse seen</small>
+        </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div>
             <small class="text-grey text-12">Time Taken</small>
@@ -127,10 +131,8 @@
               <button @click="closeForm" class="btn mx-3 text-14 btn-light">
                 Cancel
               </button>
-              <button @click.prevent="addVitals" class="btn text-14 theme-color text-white">
-                <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <slot>Save </slot>
-              </button>
+
+              <BaseButton :disabled="allow" @click.prevent="addVitals" class="btn-primary">Save</BaseButton>
             </div>
           </div>
         </div>
@@ -145,7 +147,7 @@
       <div class="p-5 text-center" v-else>
         <div class="text-16 text-grey">
           No Vitals added yet, click the
-          <span style="position: relative; top: -3px" class="theme-color-text mx-1">
+          <span style="position: relative; top: -3px" class="text-primary mx-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-plus-square-fill" viewBox="0 0 16 16">
               <path
@@ -153,7 +155,7 @@
             </svg></span>
           icon to add Vitals
         </div>
-        <div class="theme-color-text my-3">
+        <div class="text-primary my-3">
           <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="30" height="30"
             preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
             <g fill="currentColor">
@@ -176,6 +178,7 @@ export default {
       weight: null,
       step: true,
       kink: false,
+      allow: false,
       chart: {
         vitals: {},
       },

@@ -2,90 +2,48 @@
   <div>
     <div class="d-flex w-100">
       <ul class="text-12 pl-0" style="background: #fff">
-        <li
-          @click="vitals"
-          :class="hide1 ? 'theme-color color' : ''"
-          class="p-2"
-        >
+        <li @click="vitals" :class="hide1 ? 'bg-primary color' : ''" class="p-2">
           Vital Signs
         </li>
-        <li
-          @click="complaint"
-          :class="hide4 ? 'theme-color color' : ''"
-          class="p-2"
-        >
+        <li @click="complaint" :class="hide4 ? 'bg-primary color' : ''" class="p-2">
           Chief Complaint
         </li>
-        <li @click="ros" :class="hide2 ? 'theme-color color' : ''" class="p-2">
+        <li @click="ros" :class="hide2 ? 'bg-primary color' : ''" class="p-2">
           Review of Systems
         </li>
-        <li @click="exam" :class="hide3 ? 'theme-color color' : ''" class="p-2">
+        <li @click="exam" :class="hide3 ? 'bg-primary color' : ''" class="p-2">
           Physical Exam
         </li>
 
-        <li
-          @click="diagnosis"
-          :class="hide5 ? 'theme-color color' : ''"
-          class="p-2"
-        >
+        <li @click="diagnosis" :class="hide5 ? 'bg-primary color' : ''" class="p-2">
           Diagnosis
         </li>
-        <li
-          @click="order"
-          :class="hide6 ? 'theme-color color' : ''"
-          class="p-2"
-        >
+        <li @click="order" :class="hide6 ? 'bg-primary color' : ''" class="p-2">
           Order
         </li>
-        <li @click="plan" :class="hide7 ? 'theme-color color' : ''" class="p-2">
+        <li @click="plan" :class="hide7 ? 'bg-primary color' : ''" class="p-2">
           Plan
         </li>
       </ul>
       <div v-if="tab1" class="trans col-sm-9 col-lg-11 col-md-10 pl-3">
-        <EncountersVitals
-          @clearance="clearance"
-          :consultationData="consultationData"
-        />
+        <EncountersVitals @clearance="clearance" :consultationData="consultationData" />
       </div>
-      <div
-        v-if="tab2"
-        style="max-width: 80vw"
-        class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100"
-      >
+      <div v-if="tab2" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersRos :consultationData="consultationData" />
       </div>
-      <div
-        v-if="tab3"
-        style="max-width: 80vw"
-        class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100"
-      >
+      <div v-if="tab3" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersExam :consultationData="consultationData" />
       </div>
       <div v-if="tab4" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
-        <EncountersComplaints
-          :consultationData="consultationData"
-          @refresh="refresh"
-        />
+        <EncountersComplaints :consultationData="consultationData" @refresh="refresh" />
       </div>
-      <div
-        v-if="tab5"
-        style="max-width: 80vw"
-        class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100"
-      >
+      <div v-if="tab5" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersDiagnosis :consultationData="consultationData" />
       </div>
-      <div
-        v-if="tab6"
-        style="max-width: 80vw"
-        class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100"
-      >
+      <div v-if="tab6" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersOrder :consultationData="consultationData" />
       </div>
-      <div
-        v-if="tab7"
-        style="max-width: 80vw"
-        class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100"
-      >
+      <div v-if="tab7" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersPlan :consultationData="consultationData" />
       </div>
     </div>

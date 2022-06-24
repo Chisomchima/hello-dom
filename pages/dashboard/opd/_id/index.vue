@@ -17,8 +17,6 @@
         <div class="bg-light text-12 border-radius mb-3 margin-fix" v-else>
             <div style="border-radius: 4px" class="
           p-3
-          pt-3
-          mt-5
           bg-white
           d-flex
           flex-wrap

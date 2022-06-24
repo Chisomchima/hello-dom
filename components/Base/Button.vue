@@ -30,6 +30,10 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     isLoading() {
