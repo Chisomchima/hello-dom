@@ -2,7 +2,9 @@
   <div>
     <UtilsFilterComponent disable-visualization disable-pagination>
       <template #besideFilterButton>
-        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')">New Encounter</BaseButton>
+        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
+          >New Encounter</BaseButton
+        >
       </template>
       <template>
         <TableComponent
@@ -21,7 +23,7 @@
         </TableComponent>
       </template>
     </UtilsFilterComponent>
-    <DashboardModalAddEncounter />
+    <DashboardModalAddEncounter :data="data" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -30,6 +32,12 @@ import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 export default {
   mixins: [TableFunc],
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       fields: [

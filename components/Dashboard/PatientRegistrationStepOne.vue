@@ -153,19 +153,27 @@ export default {
     }
   },
   async created() {
-    const { results } = await this.$api.core.country({ size: 1000 })
-    this.$refs.formGen.setOptions('nationality', results)
-    const { results: genders } = await this.$api.core.gender({ size: 1000 })
-    this.$refs.formGen.setOptions('gender', genders)
-    const { results: mStatus } = await this.$api.core.martialStatus({
-      size: 1000,
-    })
-    this.$refs.formGen.setOptions('marital_status', mStatus)
-    const { results: religion } = await this.$api.core.religion({ size: 1000 })
-    this.$refs.formGen.setOptions('religion', religion)
+    try {
+      const { results } = await this.$api.core.country({ size: 1000 })
+      this.$refs.formGen.setOptions('nationality', results)
+      const { results: genders } = await this.$api.core.gender({ size: 1000 })
+      this.$refs.formGen.setOptions('gender', genders)
+      const { results: mStatus } = await this.$api.core.martialStatus({
+        size: 1000,
+      })
+      this.$refs.formGen.setOptions('marital_status', mStatus)
+      const { results: religion } = await this.$api.core.religion({
+        size: 1000,
+      })
+      this.$refs.formGen.setOptions('religion', religion)
 
-    const { results: salutation } = await this.$api.core.salutation({ size: 1000 })
-    this.$refs.formGen.setOptions('salutation', salutation)
+      const { results: salutation } = await this.$api.core.salutation({
+        size: 1000,
+      })
+      this.$refs.formGen.setOptions('salutation', salutation)
+    } catch (error) {
+      console.log(error)
+    }
   },
   methods: {
     async submit() {
