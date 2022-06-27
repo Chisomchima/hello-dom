@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsHeaderCard
+    <UtilsHeaderCardWithAvatar
       :title="`${data.salutation} ${data.firstname} ${data.lastname}`"
       :data="data"
       :enable-action="true"
@@ -14,7 +14,7 @@
         'phone_number',
       ]"
     >
-    </UtilsHeaderCard>
+    </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Encounter">
         <keep-alive>

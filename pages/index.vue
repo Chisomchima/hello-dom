@@ -6,9 +6,9 @@
 
 <script lang="ts">
 export default {
-  // layout: 'profile',
 
-  layout: 'notLoggedin'
+  layout: 'notLoggedin',
+  middleware:'to_slatemd'
   // middleware: 'guest',
 }
 </script>

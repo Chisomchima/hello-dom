@@ -9,8 +9,8 @@
           @click="$router.push(`/`)"
         >
           <nuxt-link to="/">
-            <img src="~/assets/img/logo-white.png" class="logo"
-          /></nuxt-link>
+            <h2 class="text-white">Slate MD</h2>
+          </nuxt-link>
         </div>
         <div class="d-flex align-items-center flex-md-wrap">
           <!-- <nav
@@ -128,10 +128,7 @@
                 class="account-image"
                 :src="user.avatar ? user.avatar : fallbackAvatar"
               /> -->
-               <img
-                class="account-image"
-                :src="fallbackAvatar"
-              />
+              <img class="account-image" :src="fallbackAvatar" />
             </div>
             <div class="ml-2">
               <div v-if="user" class="account-name text-left">
@@ -355,8 +352,7 @@ export default Vue.extend({
       return []
     },
   },
-  async created() {
-  },
+  async created() {},
   methods: {
     mobileMenu() {
       this.fullScreenMenu = !this.fullScreenMenu

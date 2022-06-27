@@ -2,7 +2,9 @@
   <div>
     <UtilsFilterComponent disable-visualization disable-pagination>
       <template #besideFilterButton>
-        <BaseButton class="btn-outline-primary">New Lab Order</BaseButton>
+        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
+          >New Lab Order</BaseButton
+        >
       </template>
       <template>
         <TableComponent
@@ -29,6 +31,7 @@
       </template>
     </UtilsFilterComponent>
     <DashboardModalShowLabOrderDetails :lab-order="labOrder" />
+     <DashboardModalAddLabOrder :data="data" @refresh="pageChange()" />
   </div>
 </template>
 

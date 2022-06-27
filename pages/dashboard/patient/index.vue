@@ -2,7 +2,14 @@
   <div>
     <div class="page-heading mb-4">Patient Search</div>
     <div class="row">
-      <div class="col-md-9">
+      <div class="col-md-12 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <DashboardPatientFilters @filter="filter(1, $event)" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
         <UtilsFilterComponent
           disable-pagination
           :disable-visualization="true"
@@ -14,16 +21,9 @@
             :items="items"
             :busy="busy"
             @page-changed="filter($event, currentFilter)"
+            @row-clicked="goToProfile($event)"
           />
         </UtilsFilterComponent>
-      </div>
-
-      <div class="col-md-3">
-        <div class="card">
-          <div class="card-body">
-            <DashboardPatientFilters @filter="filter(1, $event)" />
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       genders: ['male', 'female'],
-      busy:false,
+      busy: false,
       currentFilter: {},
       fields: [
         {
@@ -77,6 +77,14 @@ export default {
       }
     },
     pageChange() {},
+    goToProfile(e) {
+      this.$router.push({
+        name: 'dashboard-patient-uuid',
+        params: {
+          uuid: e.id,
+        },
+      })
+    },
   },
 }
 </script>

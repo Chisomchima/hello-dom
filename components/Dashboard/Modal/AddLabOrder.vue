@@ -2,14 +2,14 @@
   <div>
     <ModalWrapper
       size="lg"
-      title="Add Encounter"
+      title="Add Lab Order"
       @show="getData()"
       @ok="save()"
     >
       <ValidationObserver ref="form">
         <form>
           <div class="row">
-            <div class="col-md-6 mb-2">
+            <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="UHID" :rules="['required']">
                 <input
                   :value="data.uhid"
@@ -42,19 +42,6 @@
                 />
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Phone Number"
-                :rules="['required']"
-              >
-                <input
-                  type="text"
-                  class="form-control"
-                  :value="data.phone_number"
-                  readonly
-                />
-              </ValidationProviderWrapper>
-            </div>
 
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Gender" :rules="['required']">
@@ -63,43 +50,54 @@
             </div>
 
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Clinic" :rules="['required']">
+              <ValidationProviderWrapper name="Email" :rules="['required']">
+                <input
+                  v-model="currentData.email"
+                  type="text"
+                  class="form-control"
+                />
+              </ValidationProviderWrapper>
+            </div>
+
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper
+                name="Services Center"
+                :rules="['required']"
+              >
                 <VSelect
-                  v-model="clinic"
-                  :options="clinics"
+                  v-model="serviceCenter"
+                  :options="serviceCenters"
                   label="name"
                 ></VSelect>
               </ValidationProviderWrapper>
             </div>
 
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Encounter type"
-                :rules="['required']"
-              >
+              <ValidationProviderWrapper name="Lap Panel" :rules="['required']">
                 <VSelect
-                  v-model="encounterType"
-                  :options="encounterTypes"
+                  v-model="lapPanel"
+                  :reduce="(op) => op.id"
+                  :multiple="true"
+                  label="name"
+                  :options="lapPanels"
                 ></VSelect>
               </ValidationProviderWrapper>
             </div>
+
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Provider type"
-                :rules="['required']"
-              >
-                <VSelect
-                  v-model="provider"
-                  :options="providers"
-                  label="first_name"
-                >
-                  <template #option="data">
-                    <span>{{ data.first_name }} {{ data.last_name }}</span>
-                  </template>
-                  <template #selected-option="data">
-                    <span>{{ data.first_name }} {{ data.last_name }}</span>
-                  </template>
-                </VSelect>
+              <ValidationProviderWrapper name="Stat" :rules="[]">
+                <input id="" v-model="stat" type="checkbox"   name="" />
+              </ValidationProviderWrapper>
+            </div>
+
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Comment" :rules="[]">
+                <textarea
+                  v-model="comments"
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                ></textarea>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -119,35 +117,42 @@ export default {
   },
   data() {
     return {
-      clinics: [],
-      providers: [],
+      currentData: this.data,
+      serviceCenters: [],
+      lapPanels: [],
       encounterTypes: ['walk in'],
-      provider: null,
-      clinic: null,
+      serviceCenter: null,
+      lapPanel: [],
       encounterType: null,
+      comments: '',
+      stat: false,
     }
   },
   methods: {
     async getData() {
       try {
-        const clinic = await this.$api.encounter.getClinic({ size: 1000 })
-        this.clinics = clinic.results
+        const serviceCenters = await this.$api.laboratory.getServiceCenter({
+          size: 1000,
+        })
+        this.serviceCenters = serviceCenters.results
 
-        const provider = await this.$api.encounter.getProvider({ size: 1000 })
-        this.providers = provider
+        const lapPanels = await this.$api.laboratory.getLabPanel({ size: 1000 })
+        this.lapPanels = lapPanels.results
       } catch (error) {
         console.log(error)
       }
     },
     async save() {
       if (await this.$refs.form.validate()) {
-      const data =  await this.$api.encounter.saveEncounter({
-          clinic: this.clinic,
+        const data = await this.$api.laboratory.saveLabOrder({
+          service_center: this.serviceCenter,
           provider: this.provider,
-          encounterType: this.encounterType,
-          patient:this.data,
-        });
-        this.$bvModal.hide('modal');
+          lab_panels: this.lapPanel,
+          patient: this.currentData,
+          comments: this.comments,
+          stat: this.stat,
+        })
+        this.$bvModal.hide('modal')
         this.$emit('refresh')
       }
     },
