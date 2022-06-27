@@ -43,7 +43,9 @@
                 style="font-size: 16px"
               ></b-icon>
 
-              <div class="nav-item-text w-100 text-capitalize">{{ item.name }}</div>
+              <div class="nav-item-text w-100 text-capitalize">
+                {{ item.name }}
+              </div>
 
               <b-icon-chevron-up
                 v-if="item.isToggled"
@@ -65,7 +67,7 @@
                     name: child.pathName,
                   }"
                   class="nav-dropdown-item"
-                  style="padding: 0px !important;"
+                  style="padding: 0px !important"
                 >
                   <div class="nav-item">
                     <b-icon
@@ -75,7 +77,9 @@
                       style="font-size: 16px"
                     ></b-icon>
 
-                    <div class="nav-item-text w-100 text-capitalize">{{ child.name }}</div>
+                    <div class="nav-item-text w-100 text-capitalize">
+                      {{ child.name }}
+                    </div>
                   </div>
                 </nuxt-link>
               </template>
@@ -97,7 +101,7 @@ export default {
           name: 'dashboard',
           icon: 'camera',
         },
-       
+
         {
           pathName: 'dashboard-hr',
           name: 'patient',
@@ -105,21 +109,15 @@ export default {
           isToggled: false,
 
           dropdown: [
-             {
+            {
               pathName: 'dashboard-patient',
               name: 'search patient',
+              icon: 'people',
             },
             {
               pathName: 'dashboard-patient-add',
               name: 'register patient',
-            },
-            {
-              pathName: 'sms-id-staff-pension-settings',
-              name: 'Pension Settings',
-            },
-            {
-              pathName: 'sms-id-staff-banks',
-              name: 'Banks',
+              icon: 'people',
             },
           ],
         },
@@ -130,7 +128,7 @@ export default {
           isToggled: false,
 
           dropdown: [
-             {
+            {
               pathName: 'dashboard-opd',
               name: 'Encounter Worklist',
             },
@@ -155,7 +153,7 @@ export default {
           isToggled: false,
 
           dropdown: [
-             {
+            {
               pathName: 'dashboard-settings-laboratory',
               name: 'Laboratory Settings',
             },

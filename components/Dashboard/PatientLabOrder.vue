@@ -31,7 +31,7 @@
       </template>
     </UtilsFilterComponent>
     <DashboardModalShowLabOrderDetails :lab-order="labOrder" />
-     <DashboardModalAddLabOrder :data="data" @refresh="pageChange()" />
+    <DashboardModalAddLabOrder :data="data" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -111,6 +111,14 @@ export default {
     showDetails(labOrder) {
       this.labOrder = labOrder
       this.$bvModal.show('showDetails')
+    },
+    onRowClicked(e) {
+      this.$router.push({
+        name: 'dashboard-opd-id-index',
+        params: {
+          id: e.id,
+        },
+      })
     },
   },
 }
