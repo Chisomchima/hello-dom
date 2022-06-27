@@ -148,6 +148,31 @@ export default {
             // },
           ],
         },
+        {
+          pathName: 'dashboard-settings',
+          name: 'Settings',
+          icon: 'archive',
+          isToggled: false,
+
+          dropdown: [
+             {
+              pathName: 'dashboard-settings-laboratory',
+              name: 'Laboratory Settings',
+            },
+            // {
+            //   pathName: 'dashboard-patient-add',
+            //   name: 'register patient',
+            // },
+            // {
+            //   pathName: 'sms-id-staff-pension-settings',
+            //   name: 'Pension Settings',
+            // },
+            // {
+            //   pathName: 'sms-id-staff-banks',
+            //   name: 'Banks',
+            // },
+          ],
+        },
       ],
       isMobile: false,
       isShowing: false,

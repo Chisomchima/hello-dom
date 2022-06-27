@@ -59,15 +59,15 @@
                                     <small class="text-grey text-12">Age (Y-M-D)</small>
                                     <div class="d-flex">
                                         <div class="px-1">
-                                            <input type="text" disabled placeholder="Year" v-model="year"
+                                            <input type="text" disabled placeholder="Year" v-model="age.year"
                                                 class="form-control ng-untouched ng-pristine ng-valid" />
                                         </div>
                                         <div class="px-1">
-                                            <input type="text" disabled placeholder="Month" v-model="month"
+                                            <input type="text" disabled placeholder="Month" v-model="age.month"
                                                 class="form-control ng-untouched ng-pristine ng-valid" />
                                         </div>
                                         <div class="px-1">
-                                            <input type="text" disabled placeholder="Day" v-model="day"
+                                            <input type="text" disabled placeholder="Day" v-model="age.day"
                                                 class="form-control ng-untouched ng-pristine ng-valid" />
                                         </div>
                                     </div>
@@ -75,9 +75,13 @@
 
                                 <div class="mb-2 col-lg-6 pr-2 pl-0 col-md-6 col-sm-6">
                                     <small class="text-grey text-12">Email</small>
-
-                                    <input type="text" placeholder="Recipient Email" v-model="provisionalEmail"
-                                        class="form-control ng-untouched ng-pristine ng-valid" />
+                                    <validation-provider :rules="'email|required'" v-slot="{ errors }">
+                                        <input type="text" placeholder="Recipient Email" v-model="provisionalEmail"
+                                            class="form-control ng-untouched ng-pristine ng-valid" />
+                                        <span class="text-12" style="color: red">{{
+                                            errors[0]
+                                            }}</span>
+                                    </validation-provider>
                                 </div>
 
                                 <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
@@ -134,7 +138,7 @@
                                 style="height: 38px; width: 5rem; text-align: center">
                                 Cancel
                             </button>
-                            <button @click.prevent="createLabOrder" class="
+                            <!-- <button @click.prevent="createLabOrder" class="
                   btn
                   text-white text-14
                   mainbtndashboard
@@ -147,7 +151,9 @@
                                     </b-spinner>
                                 </span>
                                 <span v-else>Save</span>
-                            </button>
+                            </button> -->
+                            <BaseButton @click.prevent="createLabOrder" class="btn-primary">Save
+                            </BaseButton>
                         </div>
                         <div type="button" ref="runValidation" id="runValidation" @click="validate"></div>
                     </form>
@@ -168,7 +174,6 @@
               </button>
             </template> -->
             <template #row-details="{ data }">
-                <!-- <pre>{{ data }}</pre> -->
                 <b-card v-if="data.item.lab_panel_orders.length >
                 0">
 
@@ -196,8 +201,9 @@
                                 </div>
 
                                 <div class="table_container table-responsive mt-2 pt-2">
-                                    <table-component :paginate="false" :fields="nestedFields" :items="panel.panel.obv">
+                                    <TableComponent :paginate="false" :fields="nestedFields" :items="panel.panel.obv">
                                         <template #reference_range="{ data: { item } }">
+                                          
                                             <div v-for="(seen, index) in item.reference_range" :key="index">
                                                 <span>
                                                     {{ seen.name }}
@@ -209,7 +215,7 @@
                                                 {{ item.value ? item.value : "No Value recorded" }}
                                             </div>
                                         </template>
-                                    </table-component>
+                                    </TableComponent>
                                 </div>
                                 <p class="my-2 text-capitalize text-14 text-info">
                                     Comments: {{ panel.panel.comments }}
@@ -283,9 +289,11 @@ export default {
                 lab_panels: [],
                 comments: "",
             },
-            year: "",
-            month: "",
-            day: "",
+            age: {
+                year: "",
+                month: "",
+                day: "",
+            },
             patientDetails: "Type UHID to search...",
             nestedFields: [
                 { key: "name", label: "Observations", sortable: true },
@@ -298,7 +306,7 @@ export default {
                 { key: "asn", label: "ASN No.", sortable: true },
                 { key: "ordered_datetime", label: "Order Date", sortable: true },
 
-                { key: "actions", label: "Info", sortable: false },
+                { key: "details", label: "Info", sortable: false },
             ],
             test: "",
         };
@@ -310,7 +318,7 @@ export default {
         }
     },
     mounted() {
-        // this.getLabOrders();
+        this.getLabOrders();
         // this.getPatientRecord();
     },
     computed: {
@@ -351,9 +359,9 @@ export default {
         resetModal() {
             this.test = "";
             this.patientDetails = "";
-            this.year = "";
-            this.month = "";
-            this.day = "";
+            this.age.year = "";
+            this.age.month = "";
+            this.age.day = "";
             this.labOrderData = {
                 patient: {},
                 stat: false,
@@ -374,42 +382,7 @@ export default {
                 this.provisionalEmail = this.patientData.email
            }
         },
-        // async getPatientLabOrder() {
-        //   try {
-        //     this.searchingPatient = true;
-        //     this.patientDetails = "Searching...";
-        //     let response = await this.$axios.$get(
-        //       `patient/patients/?uhid=${this.test}`,
-        //       {
-        //         headers: {
-        //           Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
-        //         },
-        //       }
-        //     );
-
-        //     for (const iterator of response.results) {
-        //       this.patientDetails =
-        //         iterator.firstname + " " + iterator.lastname
-        //           ? iterator.firstname + " " + iterator.lastname
-        //           : "No matching record";
-
-        //       this.patientData = iterator;
-        //     }
-        //     if (response.results < 1) {
-        //       this.patientData = {};
-        //       this.patientDetails = "No matching records...";
-        //       (this.year = ""), (this.month = ""), (this.day = "");
-        //       this.labOrderData.patient = {};
-        //     }
-        //     this.labOrderData.patient = this.patientData;
-        //     this.calcAge(this.patientData.date_of_birth);
-        //     this.searchingPatient = false;
-        //   } catch {
-        //   } finally {
-        //     this.searchingPatient = false;
-        //   }
-        // },
-
+       
         closeModal() {
             this.$bvModal.hide("Add-laborder");
 
@@ -422,58 +395,9 @@ export default {
                 lab_panels: [],
                 comments: "",
             }),
-                (this.year = ""),
-                (this.month = ""),
-                (this.day = "");
-        },
-
-        async savePanelOrder() {
-            if (this.$refs.runValidation) {
-                this.$refs.runValidation.click();
-            }
-            this.commitPanel.obv = this.labOrderPanel.panel.obv;
-            if (this.commitPanel.obv.length > 0) {
-                try {
-                    this.isbusy = true;
-                    let response = await this.$axios.$put(
-                        `laboratory/lab_panel_order/${this.labOrderPanel.id}/panel`,
-                        this.commitPanel,
-                        {
-                            headers: {
-                                Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
-                            },
-                        }
-                    );
-
-                    this.setStatusToAwaitingApproval();
-
-                    this.$toast({
-                        type: 'success',
-                        text: 'Laborder added',
-                    })
-                    this.getLabOrders();
-                    this.cancelPanelOrder();
-                } catch {
-                    this.$toast({
-                        type: 'error',
-                        text: 'Unable to create lab panel order',
-                    })
-                   
-                } finally {
-                    // this.getEncounters();
-                    this.isbusy = false;
-                }
-            }
-        },
-
-        cancelRequestModal(e) {
-            console.log(e);
-            this.labOrderPanel.id = e.id;
-            this.assertion = e.asn;
-            this.$bvModal.show("cancelRequest");
-        },
-        closeCancelModal() {
-            this.$bvModal.hide("cancelRequest");
+                (this.age.year = ""),
+                (this.age.month = ""),
+                (this.age.day = "");
         },
         
 
@@ -481,19 +405,15 @@ export default {
             if (this.$refs.runValidation) {
                 this.$refs.runValidation.click();
             }
-            this.patientData.email = this.provisionalEmail 
+            this.patientData.email = this.provisionalEmail
+            this.patientData.age =  this.age
             this.labOrderData.patient = this.patientData;
-            if (this.labOrderData.lab_panels && this.labOrderData.service_center) {
+            if (this.labOrderData.lab_panels && this.labOrderData.service_center && (this.patientData.email || this.provisionalEmail)) {
                 try {
                     this.isbusy = true;
                     let response = await this.$axios.$post(
                         "laboratory/lab_order/",
                         this.labOrderData,
-                        {
-                            headers: {
-                                Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
-                            },
-                        }
                     );
                     this.$toast({
                         type: 'success',
@@ -514,43 +434,7 @@ export default {
             }
         },
 
-        openEditPanel(e) {
-            this.$bvModal.show("Edit-laborder");
-
-            for (const iterator of e.panel.obv) {
-                if (iterator.type.name === "Options") {
-                    this.showOptions = true;
-                } else {
-                    this.showOptions = false;
-                }
-                if (
-                    iterator.type.name === "Integer" ||
-                    iterator.type.name === "Float" ||
-                    iterator.type.name === "Text"
-                ) {
-                    this.text = iterator.type.name;
-                }
-                if (
-                    iterator.type.name === "Integer" ||
-                    iterator.type.name === "Float"
-                ) {
-                    this.manageInput = "number";
-                } else {
-                    this.manageInput = "text";
-                }
-            }
-
-            this.labOrderPanel.lab_order = e.lab_order;
-            this.labOrderPanel.panel = e.panel;
-            this.labOrderPanel.status = e.stats;
-            this.labOrderPanel.asn = e.asn;
-            this.labOrderPanel.id = e.id;
-            this.labOrderPanel.current_status = e.current_status;
-            console.log(e);
-        },
-        cancelPanelOrder() {
-            this.$bvModal.hide("Edit-laborder");
-        },
+    
 
         async getLabOrders(page = 1) {
             try {
@@ -559,15 +443,9 @@ export default {
 
                 console.log(uri);
 
-                const response = await this.$axios.$get(uri, {
-                    headers: {
-                        Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
-                    },
-                });
+                const response = await this.$axios.$get(uri);
 
                 this.pages = response.total_pages;
-
-                console.log(response.results);
                 this.totalPages = response.total_pages;
 
                 this.itemsToShow = [];
@@ -584,10 +462,6 @@ export default {
 
                     let labunit;
 
-                    //   for (const iterator of iterator.lab_panel_orders) {
-                    //     labunit = iterator.lab_panel_orders.panel.lab_unit.name;
-                    //   }
-
                     this.itemsToShow.push({
                         patient_name: name,
                         phone_number: no_,
@@ -603,7 +477,6 @@ export default {
                     });
                 }
 
-                // this.itemsToShow = response.results;
             } catch (error) {
                 console.log(error);
             } finally {
@@ -688,19 +561,19 @@ export default {
             let diff = presentDate - yearOfBirth;
             let x = parseInt(diff);
             if (x === 0) {
-                this.year = 0;
-                this.month = 0;
+                this.age.year = 0;
+                this.age.month = 0;
             } else {
-                this.year = x;
+                this.age.year = x;
             }
 
             if (monthOfBirth < month) {
-                this.year;
+                this.age.year;
             } else {
-                if (this.year === 0) {
-                    this.year;
+                if (this.age.year === 0) {
+                    this.age.year;
                 } else {
-                    this.year--;
+                    this.age.year--;
                 }
             }
 
@@ -716,12 +589,12 @@ export default {
             }
 
             if (monthOfBirth <= month) {
-                this.month = month - monthOfBirth;
+                this.age.month = month - monthOfBirth;
                 // this.patient.age.month + 1;
             } else if (month + 1 === monthOfBirth) {
-                this.month = 0;
+                this.age.month = 0;
             } else {
-                this.month = tempMonth + month;
+                this.age.month = tempMonth + month;
                 // this.patient.age.month + 1;
             }
 
@@ -731,11 +604,11 @@ export default {
             // this.patient.age.day = new Date().getDate();
 
             if (day > dayOfBirth) {
-                this.day = day - dayOfBirth;
+                this.age.day = day - dayOfBirth;
             } else if (day === dayOfBirth) {
-                this.day = 0;
+                this.age.day = 0;
             } else {
-                this.day = day;
+                this.age.day = day;
             }
 
             // *********************************

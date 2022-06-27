@@ -4,7 +4,7 @@
       <table-component :busy="busy" :fields="fields" :items="itemsToShow">
         <template #status="{ data }">
           <div class="text-center">
-            <span :class="data.item.color" class="badge text-white px-2 py-1">{{
+            <span :class="data.item.color" class="badge text-12 text-white px-2 py-1">{{
               data.item.status
             }}</span>
           </div>
@@ -20,6 +20,9 @@ export default {
     return {
       busy: false,
       itemsToShow: [],
+      pages: 1,
+      page: 1,
+      perPage: 12,
       fields: [
         { key: "encounter_id", label: "Encounter ID", sortable: true },
 
@@ -44,7 +47,7 @@ export default {
     this.getPatientEncounters();
   },
   methods: {
-    async getPatientEncounters() {
+    async getPatientEncounters(page = 1) {
       try {
         this.busy = true;
         let response = await this.$axios.$get(

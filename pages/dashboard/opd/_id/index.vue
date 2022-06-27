@@ -2,7 +2,7 @@
     <div>
         <div v-if="isLoading" class="skeleton">
             <b-row>
-                <b-col cols="12" class="pt-5 mt-5">
+                <b-col cols="12" class="mt-5">
                     <b-skeleton animation="wave" width="85%"></b-skeleton>
                     <b-skeleton animation="wave" width="55%"></b-skeleton>
                     <b-skeleton animation="wave" width="70%"></b-skeleton>
@@ -253,6 +253,7 @@ export default {
                 let y = new Date(time).toLocaleDateString();
                 let z = new Date(time).toTimeString().substring(0, 5);
                 this.encounter_time = y + ", " + z;
+                this.calcAge(this.patientData.date_of_birth)
             } catch {
             } finally {
                 this.isLoading = false;
@@ -271,18 +272,30 @@ export default {
             } finally {
             }
         },
-        calcAge() {
+        calcAge(e) {
+            // **********calc year***********
             let presentDate = new Date().getFullYear();
-            let yearOfBirth = this.patientData.date_of_birth;
-            yearOfBirth;
-            let temp
-            // let temp = yearOfBirth.substring(0, 4);
-            let x = presentDate - temp - 1;
-            if (yearOfBirth === temp) {
+            let yearOfBirth = e.substring(0, 4);
+
+            let diff = presentDate - yearOfBirth;
+            let x = parseInt(diff);
+            if (x === 0) {
                 this.age = 0;
+                // this.month = 0;
             } else {
                 this.age = x;
             }
+
+            if (monthOfBirth < month) {
+                this.age;
+            } else {
+                if (this.age === 0) {
+                    this.age;
+                } else {
+                    this.age--;
+                }
+            }
+
         },
     },
 };

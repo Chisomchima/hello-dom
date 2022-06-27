@@ -73,8 +73,8 @@ ng-untouched ng-pristine ng-valid
                                             :options="clinics">
                                         </VSelect>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -85,8 +85,8 @@ ng-untouched ng-pristine ng-valid
                                             :options="['Walk in']">
                                         </VSelect>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -134,7 +134,112 @@ ng-untouched ng-pristine ng-valid
             </div>
         </div>
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="filter-wrapper row">
+                            <div class="mb-2 col-md-4">
+                                <label class="form-control-label">Status </label>
+                                <VSelect label="Gender" v-model="filter.status" @close="getEncounters(page = 1)"
+                                    :reduce="(option) => option.name"
+                                    :options="[{ label: 'New', name: 'New' }, { label: 'Nurse Seen', name: 'NS' }, { label: 'Doctor Seen', name: 'DS'}]">
+                                    <template #option="{ label }">
+                                        <span class="text-14  badge-warning rounded text-center p-1 text-white"
+                                            v-if="label === 'New'" style="margin: 0">{{ label }} ({{newCount}})</span>
+                                        <span class="text-14  badge-info rounded text-center p-1 text-white"
+                                            v-else-if="label === 'Nurse Seen'">
+                                            {{ label }} ({{nurseSeen}})
+                                        </span>
+                                        <span class="text-14 badge-danger rounded text-center p-1 text-white"
+                                            v-else-if="label === 'Doctor Seen'">
+                                            {{label}}
+                                        </span>
+                                    </template>
+                                    <template #selected-option="{ label }">
+                                        <span class="text-14  badge-warning rounded text-center px-1 text-white"
+                                            v-if="label === 'New'" style="margin: 0">{{ label }}</span>
+                                        <span class="text-14  badge-info rounded text-center px-1 text-white"
+                                            v-else-if="label === 'Nurse Seen'">
+                                            {{ label }}
+                                        </span>
+                                        <span class="text-14 badge-danger rounded text-center px-1 text-white"
+                                            v-else-if="label === 'Doctor Seen'">
+                                            {{label}}
+                                        </span>
+                                    </template>
+                                </VSelect>
+                            </div>
+                            <div class="mb-2 col-md-4">
+                                <label class="form-control-label">UHID/NAME</label>
+                                <div class="w-100 d-flex">
+                                    <div class="w-50">
+                                        <VSelect v-model="filter.by" style="font-size: 15px" label="label"
+                                            placeholder="By" :reduce="(option) => option.name"
+                                            :options="[{ name: 'patient_name', label: 'Name' }, { name: 'patient_uhid', label: 'UHID'}]">
+                                        </VSelect>
+                                    </div>
+
+                                    <input v-model="filter.entry" type="text" placeholder="context"
+                                        v-debounce:1300ms.cancelonempty="rareCase" class="w-50 form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-2 col-md-4">
+                                <label class="form-control-label">Department</label>
+                                <VSelect @close="getEncounters(page = 1)" v-model="filter.department"
+                                    :reduce="(option) => option.id" label="name" :options="departments">
+                                    <template #selected-option="{ name }">
+                                        <div>
+                                            {{ name }}
+                                        </div>
+                                    </template>
+                                </VSelect>
+                            </div>
+                            <div class="mb-2 col-md-4">
+                                <label class="form-control-label">Clinic</label>
+                                <VSelect @close="getEncounters(page = 1)" :reduce="(option) => option.id" multiple
+                                    taggable v-model="filter.clinic" :options="clinics" label="name"></VSelect>
+                            </div>
+                            <div class="mb-2 col-md-4">
+                                <label class="form-control-label">Encounter ID</label>
+                                <input v-model="filter.encounter_id" type="text" placeholder="Encounter ID"
+                                    v-debounce:1300ms.cancelonempty="rareCase" class=" form-control" />
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-control-label">Provider</label>
+                                <VSelect v-model="filter.provider" :reduce="(option) => option.id"
+                                    @close="getEncounters(page = 1)" label="providers" :options="providers">
+                                    <template #option="{ first_name, last_name }">
+                                        <div>
+                                            {{ first_name + " " + last_name }}
+                                        </div>
+                                    </template>
+                                    <template #selected-option="{ first_name, last_name }">
+                                        <div>
+                                            {{ first_name + " " + last_name }}
+                                        </div>
+                                    </template>
+                                </VSelect>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-2 row justify-content-end">
+
+                                    <!-- <div class="col-md-2">
+                                        <BaseButton @click="getEncounters(page = 1)" class="w-100"> Filter
+                                        </BaseButton>
+                                    </div> -->
+                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                        <BaseButton @click="clearEntry" class="w-100 btn-danger"> Clear </BaseButton>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <UtilsFilterComponent disablePagination :disable-visualization="true" search-placeholder="Search">
                     <TableComponent :paginate="true" :busy="busy" :items="itemsToShow" :pages="pages" :perPage="perPage"
                         :fields="fields" @page-changed="getEncounters($event)" @row-clicked="viewPatientData">
@@ -166,117 +271,14 @@ ng-untouched ng-pristine ng-valid
                             <div class="text-center">
                                 <!-- {{ data.item.color }} -->
                                 <span :class="data.item.color" class="badge text-white px-2 py-1">{{
-                                data.item.status
-                                }}</span>
+                                    data.item.status
+                                    }}</span>
                             </div>
                         </template>
                     </TableComponent>
                 </UtilsFilterComponent>
             </div>
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="filter-wrapper">
-                            <div class="mb-2">
-                                <label class="form-control-label">Status </label>
-                                <VSelect label="Gender" v-model="filter.status" @close="getEncounters(page = 1)"
-                                    :reduce="(option) => option.name"
-                                    :options="[{ label: 'New', name: 'New' }, { label: 'Nurse Seen', name: 'NS' }, { label: 'Doctor Seen', name: 'DS'}]">
-                                    <template #option="{ label }">
-                                        <span class="text-14  badge-warning rounded text-center p-1 text-white"
-                                            v-if="label === 'New'" style="margin: 0">{{ label }} ({{newCount}})</span>
-                                        <span class="text-14  badge-info rounded text-center p-1 text-white"
-                                            v-else-if="label === 'Nurse Seen'">
-                                            {{ label }} ({{nurseSeen}})
-                                        </span>
-                                        <span class="text-14 badge-danger rounded text-center p-1 text-white"
-                                            v-else-if="label === 'Doctor Seen'">
-                                            {{label}}
-                                        </span>
-                                    </template>
-                                    <template #selected-option="{ label }">
-                                        <span class="text-14  badge-warning rounded text-center px-1 text-white"
-                                            v-if="label === 'New'" style="margin: 0">{{ label }}</span>
-                                        <span class="text-14  badge-info rounded text-center px-1 text-white"
-                                            v-else-if="label === 'Nurse Seen'">
-                                            {{ label }}
-                                        </span>
-                                        <span class="text-14 badge-danger rounded text-center px-1 text-white"
-                                            v-else-if="label === 'Doctor Seen'">
-                                            {{label}}
-                                        </span>
-                                    </template>
-                                </VSelect>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-control-label">UHID/NAME</label>
-                                <div class="w-100 d-flex">
-                                    <div class="w-50">
-                                        <VSelect v-model="filter.by" style="font-size: 15px" label="label"
-                                            placeholder="By" :reduce="(option) => option.name"
-                                            :options="[{ name: 'patient_name', label: 'Name' }, { name: 'patient_uhid', label: 'UHID'}]">
-                                        </VSelect>
-                                    </div>
-
-                                    <input v-model="filter.entry" type="text" placeholder="context"
-                                        v-debounce:1300ms.cancelonempty="rareCase" class="w-50 form-control" />
-                                </div>
-                            </div>
-
-                            <div class="mb-2">
-                                <label class="form-control-label">Department</label>
-                                <VSelect v-model="filter.department" :reduce="(option) => option.id" label="name"
-                                    :options="departments">
-                                    <template #selected-option="{ name }">
-                                        <div>
-                                            {{ name }}
-                                        </div>
-                                    </template>
-                                </VSelect>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-control-label">Encounter ID</label>
-                                <input v-model="filter.encounter_id" type="text" placeholder="Encounter ID"
-                                    v-debounce:1300ms.cancelonempty="rareCase" class=" form-control" />
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-control-label">Clinic</label>
-                                <VSelect :reduce="(option) => option.id" multiple taggable v-model="filter.clinic"
-                                    :options="clinics" label="name"></VSelect>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-control-label">Provider</label>
-                                <VSelect v-model="filter.provider" :reduce="(option) => option.id"
-                                    @close="getEncounters(page = 1)" label="providers" :options="providers">
-                                    <template #option="{ first_name, last_name }">
-                                        <div>
-                                            {{ first_name + " " + last_name }}
-                                        </div>
-                                    </template>
-                                    <template #selected-option="{ first_name, last_name }">
-                                        <div>
-                                            {{ first_name + " " + last_name }}
-                                        </div>
-                                    </template>
-                                </VSelect>
-                            </div>
-
-                            <div class="mb-2">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <BaseButton @click="getEncounters(page = 1)" class="w-100"> Filter
-                                        </BaseButton>
-                                    </div>
-                                    <div class="col-6">
-                                        <BaseButton @click="clearEntry" class="w-100 btn-danger"> Cancel </BaseButton>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -360,6 +362,13 @@ this.departments.push(iterator.Department)
     this.getEncounters()
     this.getNurseSeenCount()
     this.getNewCount()
+    },
+    watch: {
+        filter() {
+            if (!this.filter) {
+                this.getEncounters()
+        }
+    }  
 },
 
 methods: {
@@ -510,12 +519,11 @@ time: "",
 async getEncounters(page = 1) {
 try {
 this.busy = true;
+    
 let uri = `encounters/encounter/?page=${page}&department=${this.filter.department ? this.filter.department : ""
 }&size=${this.perPage}&clinic=${this.filter.clinic ? this.filter.clinic : ""
 }&limit=12&${this.filter.by ? this.filter.by : ""}=${this.filter.entry ? this.filter.entry : ""
-    }&provider_name=${this.filter.provider ? this.filter.provider : ""}&status=${this.filter.status ? this.filter.status : ""}&encounter_id=${this.filter.encounter_id ? this.filter.encounter_id : ""}`;
-
-console.log(uri)
+    }&provider=${this.filter.provider ? this.filter.provider : ""}&status=${this.filter.status ? this.filter.status : ""}&encounter_id=${this.filter.encounter_id ? this.filter.encounter_id : ""}`;
 let response = await this.$axios.$get(uri);
 
 let temp = [];
@@ -578,6 +586,7 @@ this.busy = false;
             provider : null,
             status : ''
         }
+        this.getEncounters()
     },
 viewPatientData(e) {
 console.log(e);

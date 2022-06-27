@@ -39,8 +39,8 @@
     </div>
     <transition name="slide-fade">
       <div v-if="hideVitalsForm" style="max-width: 98%" class="trans pl-5 row px-2">
-        <div class="d-flex align-items-center col-lg-12 col-md-12 col-sm-12">
-          <div><input style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div><small
+        <div class="d-flex align-items-center col-lg-12 col-md-12 col-sm-12 mt-2">
+          <div><input v-model="nurseFlag" style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div><small
             class="text-info text-12 ml-2">Nurse seen</small>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
@@ -179,6 +179,7 @@ export default {
       step: true,
       kink: false,
       allow: false,
+      nurseFlag: false,
       chart: {
         vitals: {},
       },
@@ -308,7 +309,12 @@ export default {
     async addVitals() {
       this.vitals.height = this.height;
       this.vitals.weight = this.weight;
-
+      if (this.height && this.weight) {
+        this.vitals.bmi
+      }
+      else {
+        this.vitals.bmi = 0
+      }
       this.vitals.time = this.time;
       this.isLoading = true;
 
@@ -325,8 +331,10 @@ export default {
           type: 'success',
           text: 'Vitals added',
         })
-        
-        this.updateStatus();
+
+        if (this.nurseFlag) {
+          this.updateStatus();
+        }
         // this.$emit("clearance", true);
 
         this.hideVitalsForm = false;
