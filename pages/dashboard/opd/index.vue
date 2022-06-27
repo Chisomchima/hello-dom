@@ -364,11 +364,13 @@ this.departments.push(iterator.Department)
     this.getNewCount()
     },
     watch: {
-        filter() {
-            if (!this.filter) {
+        filter: {
+            handler() {
                 this.getEncounters()
-        }
-    }  
+            },
+            deep: true
+        }, 
+ 
 },
 
 methods: {
@@ -586,7 +588,7 @@ this.busy = false;
             provider : null,
             status : ''
         }
-        this.getEncounters()
+        // this.getEncounters()
     },
 viewPatientData(e) {
 console.log(e);
