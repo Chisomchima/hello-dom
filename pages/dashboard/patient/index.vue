@@ -39,6 +39,8 @@ export default {
       genders: ['male', 'female'],
       busy: false,
       currentFilter: {},
+      newCount:0,
+      nurseCount:0,
       fields: [
         {
           key: 'uhid',
