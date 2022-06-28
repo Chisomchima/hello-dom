@@ -17,6 +17,20 @@ export default axios => ({
         return axios.$post('/encounters/encounter/',
             body
         )
+    },
+
+    newEncountersCount() {
+        return axios.$get('/encounters/ns/count/')
+    },
+
+    nurseSeenCount() {
+        return axios.$get('/encounters/new/count/')
+    },
+
+    getEncounter(params) {
+        return axios.$get('/encounters/encounter/', {
+            params
+        })
     }
 
 

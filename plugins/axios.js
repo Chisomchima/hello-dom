@@ -1,6 +1,14 @@
 
+import qs from 'qs';
+
 export default function ({ $axios, $toast, store, redirect }) {
   // $axios.defaults.timeout = 1000 * 5 // t - 5s
+
+  $axios.onRequest(config => {
+    config.paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' });
+    return config;
+  });
+
   $axios.onRequest((config) => {
     store.commit('toggleRequestInProgress', true)
     if (store.state.auth.token) {

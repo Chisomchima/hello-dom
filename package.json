@@ -79,6 +79,7 @@
     "vue-lazytube": "^1.0.2",
     "vue-pdf": "^4.3.0",
     "vue-select": "^3.16.0",
+    "vue-sidebar-menu": "4",
     "vue-socket.io": "^3.0.10",
     "vue-socket.io-extended": "^4.2.0",
     "vue-swatches": "^2.1.1",

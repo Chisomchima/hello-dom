@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="site-nav">
-      <LayoutAuthMdSideBar2 />
+      <LayoutAuthMdSideBarCustomComp />
       <LayoutAuthNavbar />
       <!-- <LayoutAuthTopbar /> -->
     </div>
