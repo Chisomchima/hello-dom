@@ -2,7 +2,7 @@
     <div>
         <h4 class="text-20 page-heading">Settings</h4>
         <div class="row">
-        <div v-for="(menu, index) in menuOptions" :key="index" @click="goToSettings(index)" class="
+            <div v-for="(menu, index) in menuOptions" :key="index" class="
               pointer
               d-flex
               flex-column
@@ -15,20 +15,21 @@
               mx-3
               my-2
             ">
-                <div style="min-width: 18px" class="text-center mt-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="60" height="60"
-                            preserveAspectRatio="xMidYMid meet" :viewBox="menu.viewBox">
-                            <path v-for="(path, index) in menu.icon" :key="index" fill="currentColor" :d="path" />
-                        </svg>
-                    </div>
-
-                    {{ menu.name }}
+                <div @click="goToSettings(index)" style="min-width: 18px" class="text-center mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="60" height="60"
+                        preserveAspectRatio="xMidYMid meet" :viewBox="menu.viewBox">
+                        <path v-for="(path, index) in menu.icon" :key="index" fill="currentColor" :d="path" />
+                    </svg>
                 </div>
+
+                {{ menu.name }}
             </div>
         </div>
+    </div>
 </template>
 
 <script>
+import jaHira from 'date-fns/locale/ja-Hira'
 export default {
     layout: "dashboard",
     data() {
@@ -53,17 +54,17 @@ export default {
     },
 
     methods: {
-        goToSettings(i) {
-            // this.$router.push('laboratory/service-center')
+        goToSettings(j) {
+            if(j === 0){
+                this.$router.push('laboratory/service-center')
+            }
+            if(j === 1){
+                this.$router.push('laboratory/service-config')
+            }
         }
     }
 } 
 </script>
 
 <style scoped>
-.margin-fix {
-    margin: 2rem 0 1rem;
-    background: #fff;
-    min-height: 70vh;
-}
 </style>

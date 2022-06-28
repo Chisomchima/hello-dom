@@ -363,15 +363,15 @@ this.departments.push(iterator.Department)
     this.getNurseSeenCount()
     this.getNewCount()
     },
-    watch: {
-        filter: {
-            handler() {
-                this.getEncounters()
-            },
-            deep: true
-        }, 
+//     watch: {
+//         filter: {
+//             handler() {
+//                 this.getEncounters()
+//             },
+//             deep: true
+//         }, 
  
-},
+// },
 
 methods: {
 async searchPatient() {

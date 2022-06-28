@@ -105,6 +105,9 @@
       <template #cell(submissions)="data">
         <slot name="submissions" :data="data">{{ data.value }}</slot>
       </template>
+      <template #cell(edit)="item">
+        <slot name="edit" :data="item"></slot>
+      </template>
 
       <template #cell(status)="data">
         <slot name="status" :data="data">{{ data.value }}</slot>
@@ -122,6 +125,22 @@
 
       <template #cell(print)="data">
         <slot name="print" :data="data"></slot>
+      </template>
+
+      <template #cell(type)="item">
+        <slot name="type" :data="item"></slot>
+      </template>
+      <template #cell(obv)="item">
+        <slot name="obv" :data="item"></slot>
+      </template>
+      <template #cell(specimen_type)="item">
+        <slot name="specimen_type" :data="item"></slot>
+      </template>
+      <template #cell(lab_unit)="item">
+        <slot name="lab_unit" :data="item"></slot>
+      </template>
+      <template #cell(panel)="item">
+        <slot name="panel" :data="item"></slot>
       </template>
 
 
@@ -156,6 +175,15 @@
               @click="$emit(dropdown, row.item)">{{ dropdown.split('_').join(' ') }}</b-dropdown-item>
           </template>
         </b-dropdown>
+      </template>
+
+      <template #table-colgroup="scope">
+        <template v-for="field in scope.fields">
+          <col v-if="field.key === 'email'" :key="field.key" :style="{ width: '15rem' }" />
+          <col v-if="field.key === 'date'" :key="field.key" :style="{ width: '10rem' }" />
+          <col v-else-if="field.key === 'service_name'" :key="field.key" :style="{ width: '50rem' }" />
+          <col v-else-if="field.key === 'order_no'" :key="field.key" :style="{ width: '20rem' }" />
+        </template>
       </template>
     </b-table>
 
