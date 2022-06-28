@@ -138,20 +138,8 @@
                                 style="height: 38px; width: 5rem; text-align: center">
                                 Cancel
                             </button>
-                            <!-- <button @click.prevent="createLabOrder" class="
-                  btn
-                  text-white text-14
-                  mainbtndashboard
-                  medbrownparagraph
-                  theme-color
-                " style="height: 38px; width: 5rem; text-align: center">
-                                <span v-if="isbusy">
-                                    <b-spinner label="loading" variant="primary" style="width: 1.5rem; height: 1.5rem"
-                                        class="text-center">
-                                    </b-spinner>
-                                </span>
-                                <span v-else>Save</span>
-                            </button> -->
+                            
+
                             <BaseButton @click.prevent="createLabOrder" class="btn-primary">Save
                             </BaseButton>
                         </div>
@@ -203,7 +191,7 @@
                                 <div class="table_container table-responsive mt-2 pt-2">
                                     <TableComponent :paginate="false" :fields="nestedFields" :items="panel.panel.obv">
                                         <template #reference_range="{ data: { item } }">
-                                          
+
                                             <div v-for="(seen, index) in item.reference_range" :key="index">
                                                 <span>
                                                     {{ seen.name }}

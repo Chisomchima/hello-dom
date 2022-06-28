@@ -44,4 +44,19 @@ export default axios => ({
             params
         })
     },
+    labUnits(params = {}) {
+        return axios.$get("laboratory/lab_observation/", {
+            params
+        })
+    },
+    specimens(params = {}) {
+        return axios.$get("laboratory/lab_specimen_type/", {
+            params
+        })
+    },
+    observations(params = {}) {
+        return axios.$get("laboratory/lab_observation/", {
+            params
+        })
+    }
 });
