@@ -93,6 +93,14 @@ export default {
         this.busy = false
       }
     },
+    onRowClicked(e) {
+      this.$router.push({
+        name: 'dashboard-opd-id',
+        params: {
+          id: e.id,
+        },
+      })
+    },
   },
 }
 </script>
