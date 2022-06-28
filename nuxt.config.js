@@ -62,7 +62,7 @@ export default {
   // },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['@/assets/css/all.scss'],
+  css: ['@/assets/css/all.scss', '@/assets/css/sidebar-var.scss',],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
