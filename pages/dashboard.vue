@@ -5,6 +5,7 @@
 <script>
 export default {
   layout: 'auth2',
+  middleware:'authenticated'
 }
 </script>
 
