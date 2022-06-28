@@ -65,12 +65,17 @@ export default {
           icon: 'fa fa-user',
           child: [
             {
-              href: '/dashboard/settings/laboratory',
               title: 'Laboratory Settings',
-            },
-            {
-              href: '/dashboard/settings/laboratory/service-center/',
-              title: 'Service Center',
+              child: [
+                {
+                  href: '/dashboard/settings/laboratory/service-center',
+                  title: 'Service Center',
+                },
+                {
+                  href: '/dashboard/settings/laboratory/service-config',
+                  title: 'Service Configuration',
+                },
+              ],
             },
           ],
         },
@@ -173,7 +178,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .nav-item-icon {
   z-index: 999;
 }
