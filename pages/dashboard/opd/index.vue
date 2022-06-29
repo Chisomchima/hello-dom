@@ -30,6 +30,7 @@
             :pages="pages"
             :items="items"
             :busy="busy"
+            :dropdown-item="['nurse_vital']"
             @page-changed="filter($event, currentFilter)"
             @row-clicked="viewPatientData"
           />
@@ -84,7 +85,7 @@ export default {
           },
         },
         { key: 'status', label: 'Status', sortable: true },
-        { key: 'action', label: '', sortable: false },
+        { key: 'dots', label:'', sortable: false },
       ],
     }
   },

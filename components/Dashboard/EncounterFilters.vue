@@ -3,6 +3,95 @@
     <div class="row">
       <div class="col-md-4">
         <div class="mb-2">
+          <label class="form-control-label">Departments</label>
+          <VSelect
+            v-model="filters.department"
+            :multiple="true"
+            :reduce="(opt) => opt.id"
+            :options="departments"
+            label="name"
+          ></VSelect>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Clinics</label>
+          <VSelect
+            v-model="filters.clinic"
+            label="name"
+            :options="clinics"
+            :reduce="(opt) => opt.id"
+            :multiple="true"
+          ></VSelect>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Provider</label>
+          <VSelect
+            v-model="filters.provider"
+            label="first_name"
+            :multiple="true"
+            :reduce="(opt) => opt.id"
+            :options="providers"
+          >
+            <template #option="{ first_name, last_name }">
+              <span>{{ first_name }} {{ last_name }}</span>
+            </template>
+            <template #selected-option="{ first_name, last_name }">
+              <span>{{ first_name }} {{ last_name }}</span>
+            </template>
+          </VSelect>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Date Before</label>
+          <input
+            v-model="filters.date_before"
+            type="datetime-local"
+            name=""
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Date After</label>
+          <input
+            v-model="filters.date_after"
+            type="datetime-local"
+            name=""
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="mb-2 col-md-4">
+        <label class="form-control-label">UHID/NAME</label>
+        <div class="row">
+          <div class="col-md-6">
+            <VSelect
+              v-model="filters.by"
+              style="font-size: 15px"
+              label="label"
+              placeholder="By"
+              :reduce="(option) => option.name"
+              :options="[
+                { name: 'patient_name', label: 'Name' },
+                { name: 'patient_uhid', label: 'UHID' },
+                { name: 'encounter_id', label: 'Encounter ID' },
+              ]"
+            >
+            </VSelect>
+          </div>
+          <div class="col-md-6">
+            <input v-model="filters.entry" type="text" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-2">
           <label class="form-control-label">Status </label>
           <VSelect
             v-model="filters.status"
@@ -60,81 +149,6 @@
           </VSelect>
         </div>
       </div>
-      <div class="mb-2 col-md-4">
-        <label class="form-control-label">UHID/NAME</label>
-        <div class="row">
-          <div class="col-md-6">
-            <VSelect
-              v-model="filters.by"
-              style="font-size: 15px"
-              label="label"
-              placeholder="By"
-              :reduce="(option) => option.name"
-              :options="[
-                { name: 'patient_name', label: 'Name' },
-                { name: 'patient_uhid', label: 'UHID' },
-              ]"
-            >
-            </VSelect>
-          </div>
-          <div class="col-md-6">
-            <input v-model="filters.entry" type="text" class="form-control" />
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Departments</label>
-          <VSelect
-            v-model="filters.department"
-            :multiple="true"
-            :reduce="(opt) => opt.id"
-            :options="departments"
-            label="name"
-          ></VSelect>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Clinics</label>
-          <VSelect
-            v-model="filters.clinic"
-            label="name"
-            :options="clinics"
-            :reduce="(opt) => opt.id"
-            :multiple="true"
-          ></VSelect>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Encounter ID</label>
-          <input
-            v-model="filters.encounter_id"
-            type="text"
-            class="form-control"
-          />
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Provider</label>
-          <VSelect
-            v-model="filters.provider"
-            label="first_name"
-            :multiple="true"
-            :reduce="(opt) => opt.id"
-            :options="providers"
-          >
-            <template #option="{ first_name, last_name }">
-              <span>{{ first_name }} {{ last_name }}</span>
-            </template>
-            <template #selected-option="{ first_name, last_name }">
-              <span>{{ first_name }} {{ last_name }}</span>
-            </template>
-          </VSelect>
-        </div>
-      </div>
     </div>
 
     <div class="mb-2">
@@ -178,6 +192,8 @@ export default {
         provider: [],
         status: '',
         encounter_id: '',
+        date_before: '',
+        date_after: '',
       },
     }
   },
@@ -192,7 +208,7 @@ export default {
         }
       }, 500),
       deep: true,
-      immediate:true
+      immediate: true,
     },
     genders: {},
   },

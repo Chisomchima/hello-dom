@@ -43,10 +43,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Phone Number"
-                :rules="['required']"
-              >
+              <ValidationProviderWrapper name="Phone Number" :rules="['']">
                 <input
                   type="text"
                   class="form-control"
@@ -74,8 +71,8 @@
 
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper
-                name="Encounter type"
-                :rules="['required']"
+                name="Encounter Type"
+                :rules="['']"
               >
                 <VSelect
                   v-model="encounterType"
@@ -84,10 +81,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Provider type"
-                :rules="['required']"
-              >
+              <ValidationProviderWrapper name="Provider" :rules="['']">
                 <VSelect
                   v-model="provider"
                   :options="providers"
@@ -140,15 +134,19 @@ export default {
       }
     },
     async save() {
-      if (await this.$refs.form.validate()) {
-      const data =  await this.$api.encounter.saveEncounter({
-          clinic: this.clinic,
-          provider: this.provider,
-          encounterType: this.encounterType,
-          patient:this.data,
-        });
-        this.$bvModal.hide('modal');
-        this.$emit('refresh')
+      try {
+        if (await this.$refs.form.validate()) {
+          const data = await this.$api.encounter.saveEncounter({
+            clinic: this.clinic,
+            provider: this.provider ? this.provider : {},
+            encounter_type: this.encounterType,
+            patient: this.data,
+          })
+          this.$bvModal.hide('modal')
+          this.$emit('refresh')
+        }
+      } catch (error) {
+        console.log(error)
       }
     },
   },

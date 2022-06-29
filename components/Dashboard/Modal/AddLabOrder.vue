@@ -50,7 +50,7 @@
             </div>
 
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Email" :rules="['required']">
+              <ValidationProviderWrapper name="Email" :rules="['']">
                 <input
                   v-model="currentData.email"
                   type="text"
