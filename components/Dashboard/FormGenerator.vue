@@ -4,7 +4,7 @@
       <div
         v-for="(form, index) in formConfigData"
         :key="index"
-        class="col-md-4"
+        :class="form.col ? form.col : 'col-md-4'"
       >
         <div class="mb-2">
           <ValidationProviderWrapper :name="form.name" :rules="form.rules">
@@ -24,6 +24,14 @@
               <span class="checkmark"></span>
               <span class="text">{{ form.name }}</span>
             </label>
+            <textarea
+              v-else-if="form.type === 'textarea'"
+              v-model="form.value"
+              cols="10"
+              rows="10"
+              class="form-control"
+            >
+            </textarea>
             <input
               v-else
               v-model="form.value"

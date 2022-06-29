@@ -13,7 +13,7 @@ export default {
     return {
       formConfig: [
         {
-          key: 'payer',
+          key: 'Payer',
           name: 'payer',
           rules: [],
           value: '',

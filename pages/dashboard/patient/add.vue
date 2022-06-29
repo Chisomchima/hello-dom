@@ -1,12 +1,22 @@
 <template>
   <div>
-    <div class="page-heading mb-4">Patient Registration</div>
+     <div class="row">
+      <div class="col-12 mb-3">
+        <div class="d-flex justify-content-between">
+          <div class="page-heading mb-4">Patient Registration</div>
+          <div>
+            <BaseButton class="btn-primary" @click="submit()">Save</BaseButton>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <DashboardStepWrapper
       ref="stepWrapper"
       :steps="[
         'Personal Detail',
-        'Home Addresses',
-        'Nearest Relative',
+        'Demographics',
+        'Next of Kin',
         'Payer Information',
       ]"
       @requestPageChange="checkPage($event)"

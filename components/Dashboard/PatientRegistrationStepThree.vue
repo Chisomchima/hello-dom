@@ -17,10 +17,12 @@ export default {
           name: 'Relative Name',
           rules: [''],
           value: '',
+          col:'col-md-6'
         },
         {
           key: 'relationship',
           name: 'Relationship',
+          col:'col-md-6',
           rules: [''],
           value: '',
           options: [
@@ -51,6 +53,8 @@ export default {
           name: 'Address',
           rules: [''],
           value: '',
+          col:'col-md-12',
+          type:'textarea'
         },
          {
           key: 'relation_phone_num',
