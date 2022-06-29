@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Encounter Work list</div>
           <div>
-            <BaseButton class="btn-outline-primary">New Encounter</BaseButton>
+            <BaseButton class="btn-primary btn-lg" @click="$bvModal.show('Add-encounter')">New Encounter</BaseButton>
           </div>
         </div>
       </div>
@@ -37,6 +37,7 @@
         </UtilsFilterComponent>
       </div>
     </div>
+    <DashboardModalNewEncounter @get-encounter="filter(1,{})" />
   </div>
 </template>
 
