@@ -24,7 +24,7 @@
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
-                                    <small class="text-grey text-12">Observation *</small>
+                                    <small class="text-grey text-12">Observation(s) *</small>
                                     <div class="d-flex align-items-end">
                                         <div class="w-100">
 
@@ -57,7 +57,7 @@
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
-                                    <small class="text-grey text-12">Unit *</small>
+                                    <small class="text-grey text-12">Lab Unit *</small>
                                     <validation-provider rules="required" v-slot="{ errors }">
                                         <VSelect class=" text-grey text-14" placeholder="Type to search" label="name"
                                             :reduce="(option) => option" :options="unitsForModal" :loading="cue2"

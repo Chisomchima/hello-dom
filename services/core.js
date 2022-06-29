@@ -45,7 +45,12 @@ export default axios => ({
         })
     },
     labUnits(params = {}) {
-        return axios.$get("laboratory/lab_observation/", {
+        return axios.$get("laboratory/lab_unit/", {
+            params
+        })
+    },
+    serviceCenter(params = {}) {
+        return axios.$get("laboratory/service_center/", {
             params
         })
     },

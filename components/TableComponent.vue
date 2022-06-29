@@ -142,7 +142,9 @@
       <template #cell(panel)="item">
         <slot name="panel" :data="item"></slot>
       </template>
-
+      <template #cell(cancel)="item">
+        <slot name="cancel" :data="item"></slot>
+      </template>
 
       <template #cell(download)="data">
         <slot name="download" :data="data">{{ data.value }}</slot>
