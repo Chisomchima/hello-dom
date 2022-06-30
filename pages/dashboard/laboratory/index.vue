@@ -177,6 +177,7 @@ export default {
             } catch (error){}
             finally {
                 this.busy = false;
+                
             }
         },
         openSpecimenTaken(e) {
