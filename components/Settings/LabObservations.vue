@@ -26,8 +26,8 @@
                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                   <small class="text-grey text-12">Type *</small>
                   <validation-provider rules="required" v-slot="{ errors }">
-                    <v-select v-model="observation.type.name" class=" text-14" placeholder="Type"
-                      label="name" :options="['Float', 'Integer', 'Text', 'Options']"></v-select>
+                    <v-select v-model="observation.type.name" class=" text-14" placeholder="Type" label="name"
+                      :options="['Float', 'Integer', 'Text', 'Options']"></v-select>
                     <span class="text-12" style="color: red">{{
                     errors[0]
                     }}</span>
@@ -222,7 +222,7 @@
                         </validation-provider>
                       </div>
 
-                      <div @click="deleteEditOption(index)" style="left: 20px" class="theme-color-text pointer">
+                      <div @click="deleteEditOption(index)" style="left: 20px" class="text-danger pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18"
                           preserveAspectRatio="xMidYMid meet" viewBox="0 0 28 28">
                           <path fill="currentColor"
@@ -231,7 +231,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="ml-3 mb-3 theme-color-text">
+                  <div class="ml-3 mb-3 text-info">
                     <div @click="addEditOption" class="pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -274,7 +274,7 @@
                       </div>
 
                       <div @click="deleteEditReference(index)" style="position: absoulte; z-index: 100000; left: 20px"
-                        class="theme-color-text pointer">
+                        class="text-danger pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18"
                           preserveAspectRatio="xMidYMid meet" viewBox="0 0 28 28">
                           <path fill="currentColor"
@@ -283,7 +283,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="ml-3 mb-3 theme-color-text">
+                  <div class="ml-3 mb-3 text-info">
                     <div @click="addEditReference" class="pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -303,7 +303,7 @@
                 style="height: 38px; width: 5rem; text-align: center">
                 Cancel
               </button>
-              <button @click.prevent="editObservationfunc" class="
+              <!-- <button @click.prevent="editObservationfunc" class="
                   btn
                   text-white text-14
                   mainbtndashboard
@@ -316,7 +316,9 @@
                   </b-spinner>
                 </span>
                 <span v-else>Save</span>
-              </button>
+              </button> -->
+              <BaseButton class="btn-primary" @click="editObservationfunc">Save
+              </BaseButton>
             </div>
 
             <div type="button" ref="runValidation" id="runValidation" @click="validate"></div>

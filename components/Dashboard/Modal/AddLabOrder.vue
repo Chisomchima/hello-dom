@@ -146,7 +146,6 @@ export default {
       if (await this.$refs.form.validate()) {
         const data = await this.$api.laboratory.saveLabOrder({
           service_center: this.serviceCenter,
-          provider: this.provider,
           lab_panels: this.lapPanel,
           patient: this.currentData,
           comments: this.comments,

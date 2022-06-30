@@ -84,6 +84,11 @@ export default {
       default: false,
     },
   },
+  methods: {
+    cancel() {
+      this.$emit('clearForm', true)
+    }
+  }
 }
 </script>
 
