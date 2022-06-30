@@ -29,13 +29,10 @@
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>
-      <UtilsCardTab title="Billing" :tabs="tabs">
-       <UtilsSubCardTab title="bill me">
-
-        <h1>This is for billling</h1>
-       </UtilsSubCardTab>
-       <UtilsSubCardTab title="bill2"></UtilsSubCardTab>
-        <UtilsSubCardTab title="bill233"></UtilsSubCardTab>
+      <UtilsCardTab title="Finance" :tabs="tabs">
+        <UtilsSubCardTab title="Billing">
+          <DashboardPatientBilling :init-active="true" />
+        </UtilsSubCardTab>
       </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
@@ -55,7 +52,7 @@ export default {
   },
   data() {
     return {
-      tabs: true
+      tabs: true,
     }
   },
 }

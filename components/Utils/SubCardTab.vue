@@ -1,5 +1,5 @@
 <template>
-  <div v-if="active" ref="subCardTab" style="padding:1.25 rem">
+  <div v-if="active" ref="subCardTab" style="padding: 1.25 rem">
     <slot></slot>
   </div>
 </template>
@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      active: false,
+      active: true,
     }
   },
   mounted() {

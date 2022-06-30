@@ -1,17 +1,18 @@
 <template>
   <div v-if="active" class="" role="" aria-labelledby="pills-class-board-tab">
-    <ul v-if="tabs" class="d-flex list-unstyled border-bottom">
-      <li
-        v-for="(subTab, index) in subTabs"
-        :key="index"
-        class="px-2 py-2 pointer text-muted"
-        :class="[index === selectedIndex ? 'active' : '']"
-        @click="selectTab(index)"
-      >
-        {{ subTab.title }}
-      </li>
-    </ul>
-
+    <div v-if="tabs" class="border-bottom">
+      <ul class="d-flex list-unstyled mb-0 mx-3">
+        <li
+          v-for="(subTab, index) in subTabs"
+          :key="index"
+          class="px-2 py-2 pointer text-muted"
+          :class="[index === selectedIndex ? 'active' : '']"
+          @click="selectTab(index)"
+        >
+          {{ subTab.title }}
+        </li>
+      </ul>
+    </div>
     <slot>
       <h1>Hello Word</h1>
     </slot>
@@ -52,18 +53,10 @@ export default Vue.extend({
   },
   mounted() {
     if (this.tabs) {
+      this.subTabs = this.$children
       const urlTab = this.checkUrlForTab()
       this.selectTab(urlTab)
     }
-
-    // console.log(this.tabs)
-    // // this.$nextTick(() => {
-    // // console.log(this.tabs)
-    // if (this.tabs) {
-    //   this.subTabs = this.$children
-    //   console.log(this.subTabs)
-    // }
-    // // })
   },
   methods: {
     selectTab(subTabIndex) {

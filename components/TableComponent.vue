@@ -98,9 +98,15 @@
       <template #head(last_name)>
         <span>Surname</span>
       </template>
+      
 
       <template #cell(house)="data">
         <slot name="house" :data="data">{{ data.value }}</slot>
+        <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
+      </template>
+
+       <template #cell(clear)="data">
+        <slot name="clear" :data="data">{{ data.value }}</slot>
         <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
       </template>
 
