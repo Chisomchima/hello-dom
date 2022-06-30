@@ -49,7 +49,7 @@
           <label class="form-control-label">Date Before</label>
           <input
             v-model="filters.date_before"
-            type="datetime-local"
+            type="date"
             name=""
             class="form-control"
           />
@@ -61,7 +61,7 @@
           <label class="form-control-label">Date After</label>
           <input
             v-model="filters.date_after"
-            type="datetime-local"
+            type="date"
             name=""
             class="form-control"
           />
