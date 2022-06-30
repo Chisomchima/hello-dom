@@ -3,7 +3,7 @@
         <div class="text-20 d-flex justify-content-between align-items-center mb-3">
             <h4>Lab worklist</h4>
             <div>
-                <BaseButton class="btn-outline-primary" @click="newLabOrders">New Lab Order
+                <BaseButton class="btn-outline-primary" @click="$bvModal.show('labOrderPanel')">New Lab Order
                 </BaseButton>
             </div>
         </div>
@@ -20,8 +20,9 @@
                     @page-changed="getLabOrders($event, currentFilter)">
                     <template #status="{ data }">
                         <div>
-                            <!-- @click="openSpecimenTaken(data.item)" -->
-                            <div v-if="data.item.status === 'NEW'" style="width: 8rem" class="
+
+                            <div @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
+                                style="width: 8rem" class="
                 text-center text-capitalize text-12
                 btn btn-outline-info
                 pointer
@@ -107,6 +108,15 @@
                 </TableComponent>
             </UtilsFilterComponent>
         </div>
+
+        <div class="create_order">
+            <DashboardModalLabPanelOrder :data="{}" @refresh="getLabOrders()" />
+        </div>
+
+        <!-- ***********workflow********* -->
+        <div>
+            <DashboardModalLabStepsTakeSpecimen @refresh="getLabOrders()" status="specimen taken" :id="id" />
+        </div>
     </div>
 </template>
 
@@ -120,6 +130,8 @@ export default {
         return {
             currentFilter: {},
             itemsToShow: [],
+            id: '',
+            modalTitle: '',
             fields: [
                 { key: 'asn', label: 'ASN', sortable: true },
                 {
@@ -151,8 +163,8 @@ export default {
             ],
         }
     },
-    mounted() {
-        this.getLabOrders()  
+    async mounted() {
+      await this.getLabOrders()  
     },
     methods: {
         async getLabOrders(page, e) {
@@ -166,6 +178,12 @@ export default {
             finally {
                 this.busy = false;
             }
+        },
+        openSpecimenTaken(e) {
+            this.$bvModal.show("takespecimen");
+            this.modalTitle = 'Take Specimen'
+            this.id = e.id;
+            this.assertion = e.asn;
         },
     }
 
