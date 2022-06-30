@@ -63,8 +63,9 @@ export default {
         },
         {
           key: 'encounter_datetime',
+          label:'Date&Time',
           formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('DDD')
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
           },
         },
         {
@@ -84,8 +85,8 @@ export default {
           this.$route.params.uuid
         )
         console.log(data)
-        this.items = data
-        this.pages = 1
+        this.items = data.results
+        this.pages = data.total.pages
         this.busy = false
       } catch (error) {
         console.log(error)

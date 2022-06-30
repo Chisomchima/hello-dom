@@ -20,11 +20,11 @@ export default axios => ({
     },
 
     newEncountersCount() {
-        return axios.$get('/encounters/ns/count/')
+        return axios.$get('/encounters/new/count/')
     },
 
     nurseSeenCount() {
-        return axios.$get('/encounters/new/count/')
+        return axios.$get('/encounters/ns/count/')
     },
 
     getEncounter(params) {

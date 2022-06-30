@@ -98,6 +98,7 @@ export default {
     '~/plugins/api.js',
     '~/plugins/prime-vue.js',
 
+
     // '~/assets/js/jquery-latest.min.js'
     // '~/plugins/gleap.js'
     // {
@@ -116,7 +117,10 @@ export default {
     '@nuxt/typescript-build',
     // https://pwa.nuxtjs.org/
     '@nuxtjs/pwa',
+
+    '@nuxtjs/fontawesome',
   ],
+
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -128,7 +132,7 @@ export default {
     // https://www.npmjs.com/package/@nuxtjs/dotenv
     '@nuxtjs/dotenv',
     'vue2-editor/nuxt',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
   ],
   primevue: {
     theme: "saga-green",
@@ -154,6 +158,15 @@ export default {
         },
       })
     },
+  },
+  fontawesome: {
+    icons: {
+      solid: true,
+      regular: true,
+      // light: true,
+      // duotone: true,
+      brands: true
+    }
   },
 
   workbox: {

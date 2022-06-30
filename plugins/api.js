@@ -7,6 +7,7 @@ import Encounter from "@/services/encounter";
 import Laboratory from "@/services/laboratory";
 import Facility from "@/services/facility";
 import LabOrder from "@/services/laborder";
+import Finance from "@/services/finance";
 
 export default (context, inject) => {
     // Initialize API factories
@@ -17,7 +18,8 @@ export default (context, inject) => {
         encounter: Encounter(context.$axios),
         laboratory: Laboratory(context.$axios),
         facility: Facility(context.$axios),
-        laborder: LabOrder(context.$axios)
+        laborder: LabOrder(context.$axios),
+        finance: Finance(context.$axios),
     };
 
     // Inject $api

@@ -23,7 +23,11 @@
       </ul>
     </div>
 
-    <div id="pills-tabContent" class="tab-content card-body">
+    <div
+      id="pills-tabContent"
+      class="tab-content card-body"
+      :style="{ padding: subTabs ? '0px' : '1.25rem' }"
+    >
       <slot></slot>
     </div>
   </div>
@@ -42,6 +46,7 @@ export default {
     return {
       selectedTab: 0,
       tabs: [],
+      subTabs: false,
     }
   },
   mounted() {
@@ -55,6 +60,7 @@ export default {
       // loop over all the tabs
       this.tabs.forEach((control, index) => {
         control.active = index === tabIndex
+        this.subTabs = control.tabs
         if (index === tabIndex) {
           // debugger
           this.$router.replace({

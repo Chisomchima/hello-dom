@@ -31,30 +31,18 @@ export default {
 
         {
           href: '/dashboard/patient',
-          title: 'Patients',
+          title: 'Patient Records',
           icon: 'fas fa-hospital-user',
-          child: [
-            {
-              href: '/dashboard/patient/add',
-              title: 'Patient Registration',
-              icon: 'fas fa-procedures',
-            },
-            {
-              href: '/dashboard/patient',
-              title: 'Patient Search',
-              icon: 'fas fa-search',
-            },
-          ],
         },
 
         {
           href: '/dashboard/opd',
           title: 'OPD',
-          icon: 'fab fa-accessible-icon',
+          icon: 'fas fa-user-md',
           child: [
             {
               href: '/dashboard/opd/',
-              title: 'Encounter Wordlist',
+              title: 'Encounter Work list',
               icon: 'fas fa-list-ul',
             },
           ],
