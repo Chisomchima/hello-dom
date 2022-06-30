@@ -98,14 +98,13 @@
       <template #head(last_name)>
         <span>Surname</span>
       </template>
-      
 
       <template #cell(house)="data">
         <slot name="house" :data="data">{{ data.value }}</slot>
         <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
       </template>
 
-       <template #cell(clear)="data">
+      <template #cell(clear)="data">
         <slot name="clear" :data="data">{{ data.value }}</slot>
         <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
       </template>
@@ -155,7 +154,7 @@
             v-else-if="data.item.status === 'NS'"
             class="text-14 badge-info rounded text-center p-1 text-white"
           >
-            {{data.item.status }}
+            {{ data.item.status }}
           </span>
 
           <span
@@ -211,14 +210,14 @@
             class="btn"
             @click="$emit('edit', row.item)"
           >
-            <span class="iconify" data-icon="ant-design:edit-twotone"></span>
+            <b-icon variant="info" icon="pencil-square"></b-icon>
           </button>
           <button
             v-if="!disableDeleteAction"
             class="btn"
             @click="$emit('delete', row.item)"
           >
-            <span class="iconify text-danger" data-icon="mi:delete"></span>
+            <b-icon variant="danger" icon="trash"></b-icon>
           </button>
         </div>
 
