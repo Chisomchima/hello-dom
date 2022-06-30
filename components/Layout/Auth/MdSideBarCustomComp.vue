@@ -38,7 +38,7 @@ export default {
         {
           href: '/dashboard/opd',
           title: 'OPD',
-          icon: 'fab fa-accessible-icon',
+          icon: 'fas fa-user-md',
           child: [
             {
               href: '/dashboard/opd/',
