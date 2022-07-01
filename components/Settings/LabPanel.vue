@@ -7,12 +7,12 @@
                     <ValidationObserver v-slot="{ validate }">
                         <form>
                             <div class="
-                  d-flex
-                  flex-column
-                  align-items-center
-                  justify-content-center
-                  mb-3
-                ">
+d-flex
+flex-column
+align-items-center
+justify-content-center
+mb-3
+">
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                                     <small class="text-grey text-12">Name *</small>
                                     <validation-provider rules="required" v-slot="{ errors }">
@@ -68,6 +68,23 @@
                                         }}</span>
                                     </validation-provider>
                                 </div>
+
+                                <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                                    <small class="text-grey text-12">Biling price *</small>
+                                    <validation-provider rules="required" v-slot="{ errors }">
+                                        <input v-model="panel.bill_price" type="number" placeholder="Biling price"
+                                            class="form-control ng-untouched ng-pristine ng-valid" />
+                                        <span class="text-12" style="color: red">{{
+                                        errors[0]
+                                        }}</span>
+                                    </validation-provider>
+                                </div>
+
+                                <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                                    <small class="text-grey text-12">Biling description </small>
+                                    <input v-model="panel.bill_description" type="text" placeholder="Biling description"
+                                        class="form-control ng-untouched ng-pristine ng-valid" />
+                                </div>
                             </div>
 
                             <div class="my-3 d-flex justify-content-center">
@@ -94,12 +111,12 @@
                     <ValidationObserver v-slot="{ validate }">
                         <form>
                             <div class="
-                  d-flex
-                  flex-column
-                  align-items-center
-                  justify-content-center
-                  mb-3
-                ">
+d-flex
+flex-column
+align-items-center
+justify-content-center
+mb-3
+">
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                                     <small class="text-grey text-12">Name *</small>
                                     <validation-provider rules="required" v-slot="{ errors }">
@@ -154,6 +171,25 @@
                                         }}</span>
                                     </validation-provider>
                                 </div>
+
+                                <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                                    <small class="text-grey text-12">Biling price *</small>
+                                    <validation-provider rules="required" v-slot="{ errors }">
+                                        <input v-model="editPanel.bill_price" type="number" placeholder="Biling price"
+                                            class="form-control ng-untouched ng-pristine ng-valid" />
+                                        <span class="text-12" style="color: red">{{
+                                        errors[0]
+                                        }}</span>
+                                    </validation-provider>
+                                </div>
+
+                                <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                                    <small class="text-grey text-12">Biling description </small>
+                                    <input v-model="editPanel.bill_description" type="text"
+                                        placeholder="Biling description"
+                                        class="form-control ng-untouched ng-pristine ng-valid" />
+                                </div>
+
                             </div>
                             <div class="my-2 px-5 align-item-start">
                                 <small class="text-grey text-14">Active</small>
@@ -217,271 +253,279 @@
 
 <script>
 export default {
-    data() {
-        return {
-            panel: {
-                name: "",
-                obv: [],
-                specimen_type: null,
-                lab_unit: null,
-                active: true,
-            },
-            sswap: "",
-            lswap: "",
-            editPanel: {
-                name: "",
-                obv: [],
-                specimen_type: null,
-                lab_unit: null,
-                active: true,
-            },
-            lab_unit: "",
-            specimen_type: "",
-            typeId: "",
-            unitId: "",
-            page: 1,
-            pager: 1,
-            perPage: 20,
-            perPager: 12,
-            pages: 0,
-            observations: [],
-            observationWithoutPagination: [],
-            busy: false,
-            isbusy: false,
-            specimens: [],
-            specimensForModal: [],
-            units: [],
-            unitsForModal: [],
-            cue: false,
-            cue1: false,
-            cue2: false,
-            labPanels: [],
-            fields: [
-                { key: "identity", label: "Name", sortable: true },
-                { key: "obv", label: "Observations", sortable: true },
+data() {
+return {
+panel: {
+name: "",
+obv: [],
+specimen_type: null,
+lab_unit: null,
+active: true,
+bill_price: null,
+bill_description: ''
+},
+sswap: "",
+lswap: "",
+editPanel: {
+name: "",
+obv: [],
+specimen_type: null,
+lab_unit: null,
+bill_price: null,
+bill_description: '',
+active: true,
+},
+lab_unit: "",
+specimen_type: "",
+typeId: "",
+unitId: "",
+page: 1,
+pager: 1,
+perPage: 20,
+perPager: 12,
+pages: 0,
+observations: [],
+observationWithoutPagination: [],
+busy: false,
+isbusy: false,
+specimens: [],
+specimensForModal: [],
+units: [],
+unitsForModal: [],
+cue: false,
+cue1: false,
+cue2: false,
+labPanels: [],
+fields: [
+{ key: "identity", label: "Name", sortable: true },
+{ key: "obv", label: "Observations", sortable: true },
 
-                { key: "specimen_type", label: "Specimen Type", sortable: true },
-                { key: "lab_unit", label: "Lab Unit", sortable: true },
-                { key: "edit", label: "", sortable: false },
-            ],
-            uniqueId: "",
-        };
-    },
-    watch: {
-        typeId() {
-            this.panel.specimen_type = this.typeId.id;
-        },
-        unitId() {
-            this.panel.lab_unit = this.unitId.id;
-        },
-        // "editPanel.lab_unit": {
-        //   handler() {
-        //     let edit = this.editPanel.lab_unit;
-        //     this.editPanel.lab_unit = edit.id
-        //   },
-        //   deep: true,
-        // },
-        // "editPanel.specimen_type": {
-        //   handler() {
-        //     this.editPanel.specimen_type = this.editPanel.specimen_type.id;
-        //   },
-        //   deep: true,
-        // },
-    },
-    mounted() {
-        this.getLabPanels();
-    },
-    methods: {
-        closeModal() {
-            this.$bvModal.hide("Add-panel");
-            this.panel = {
-                name: "",
-                obv: [],
-                specimen_type: "",
-                lab_unit: "",
-                active: false,
-            };
-        },
-        closeEditModal() {
-            this.$bvModal.hide("Edit-panel");
-            this.editPanel = {
-                name: "",
-                obv: [],
-                specimen_type: null,
-                lab_unit: null,
-                active: false,
-            };
-        },
-        async openLabPanelModal() {
-            this.$bvModal.show("Add-panel"); 
-            if (this.observationWithoutPagination.length < 1) {
-                this.cue = true;
-                let temp = await this.$api.core.observations({ size: 1000 })
-                this.observationWithoutPagination = temp.results
-                this.cue = false;
-            }
-            if (this.specimensForModal.length < 1) {
-                this.cue1 = true;
-                let temp = await this.$api.core.specimens({ size: 1000 })
-                this.specimensForModal = temp.results
-                this.cue1 = false;
-            }
-            if (this.unitsForModal.length < 1) {
-                this.cue2 = true;
-                let temp = await this.$api.core.labUnits({ size: 1000 })
-                this.unitsForModal = temp.results
-                this.cue2 = false;
-            }
-        },
+{ key: "specimen_type", label: "Specimen Type", sortable: true },
+{ key: "lab_unit", label: "Lab Unit", sortable: true },
+{ key: "edit", label: "", sortable: false },
+],
+uniqueId: "",
+};
+},
+watch: {
+typeId() {
+this.panel.specimen_type = this.typeId.id;
+},
+unitId() {
+this.panel.lab_unit = this.unitId.id;
+},
+// "editPanel.lab_unit": {
+//   handler() {
+//     let edit = this.editPanel.lab_unit;
+//     this.editPanel.lab_unit = edit.id
+//   },
+//   deep: true,
+// },
+// "editPanel.specimen_type": {
+//   handler() {
+//     this.editPanel.specimen_type = this.editPanel.specimen_type.id;
+//   },
+//   deep: true,
+// },
+},
+mounted() {
+this.getLabPanels();
+},
+methods: {
+closeModal() {
+this.$bvModal.hide("Add-panel");
+this.panel = {
+name: "",
+obv: [],
+specimen_type: "",
+lab_unit: "",
+active: false,
+};
+},
+closeEditModal() {
+this.$bvModal.hide("Edit-panel");
+this.editPanel = {
+name: "",
+obv: [],
+specimen_type: null,
+lab_unit: null,
+active: false,
+};
+},
+async openLabPanelModal() {
+this.$bvModal.show("Add-panel"); 
+if (this.observationWithoutPagination.length < 1) {
+this.cue = true;
+let temp = await this.$api.core.observations({ size: 1000 })
+this.observationWithoutPagination = temp.results
+this.cue = false;
+}
+if (this.specimensForModal.length < 1) {
+this.cue1 = true;
+let temp = await this.$api.core.specimens({ size: 1000 })
+this.specimensForModal = temp.results
+this.cue1 = false;
+}
+if (this.unitsForModal.length < 1) {
+this.cue2 = true;
+let temp = await this.$api.core.labUnits({ size: 1000 })
+this.unitsForModal = temp.results
+this.cue2 = false;
+}
+},
 
-        async openEditPanel(e) {
-            this.uniqueId = e.id;
-            console.log(e);
-            this.editPanel.name = e.identity;
+    async openEditPanel(e) {
+    console.log(e)
+this.uniqueId = e.id;
+this.editPanel.name = e.identity;
+        this.editPanel.bill_price = e.bill_price,
+    this.editPanel.bill_description = e.bill_description
 
-            this.sswap = e.specimen_type;
-            this.lswap = e.lab_unit;
-            this.editPanel.obv = e.obv;
-            this.editPanel.active = e.active;
-            this.$bvModal.show("Edit-panel");
-            if (this.observationWithoutPagination.length < 1) {
-                this.cue = true;
-                let temp = await this.$api.core.observations({ size: 1000 })
-                this.observationWithoutPagination = temp.results
-                this.cue = false;
-            }
-            if (this.specimensForModal.length < 1) {
-                this.cue1 = true;
-                let temp = await this.$api.core.specimens({ size: 1000 })
-                this.specimensForModal = temp.results
-                this.cue1 = false;
-            }
-            if (this.unitsForModal.length < 1) {
-                this.cue2 = true;
-                let temp = await this.$api.core.labUnits({ size: 1000 })
-                this.unitsForModal = temp.results
-                this.cue2 = false;
-            }
-            
-            
-        },
+this.sswap = e.specimen_type;
+this.lswap = e.lab_unit;
+this.editPanel.obv = e.obv;
+this.editPanel.active = e.active;
+this.$bvModal.show("Edit-panel");
+if (this.observationWithoutPagination.length < 1) {
+this.cue = true;
+let temp = await this.$api.core.observations({ size: 1000 })
+this.observationWithoutPagination = temp.results
+this.cue = false;
+}
+if (this.specimensForModal.length < 1) {
+this.cue1 = true;
+let temp = await this.$api.core.specimens({ size: 1000 })
+this.specimensForModal = temp.results
+this.cue1 = false;
+}
+if (this.unitsForModal.length < 1) {
+this.cue2 = true;
+let temp = await this.$api.core.labUnits({ size: 1000 })
+this.unitsForModal = temp.results
+this.cue2 = false;
+}
 
-        async addPanel() {
-            if (this.$refs.runValidation) {
-                this.$refs.runValidation.click();
-            }
-            if (
-                this.panel.name &&
-                this.panel.specimen_type &&
-                this.panel.obv &&
-                this.panel.lab_unit
-            ) {
-                try {
-                   
-                    let response = await this.$axios.$post(
-                        "laboratory/lab_panel/",
-                        this.panel
-                    );
-                    
-                    this.$toast({
-                        type: 'success',
-                        text: 'Lab Panel added'
-                    })
-                    this.getLabPanels();
-                    this.$bvModal.hide("Add-panel");
 
-                    this.panel = {
-                        name: "",
-                        obv: [],
-                        specimen_type: null,
-                        lab_unit: null,
-                        active: false,
-                    };
-                } catch {
-                   
-                    this.$toast(
-                        {
-                            type: 'error',
-                            text: `Unable to add lab panels`
-                        });
-                } finally {
-                   
-                }
-            }
-        },
+},
 
-        async editPanelFunc() {
-            if (this.$refs.runValidation) {
-                this.$refs.runValidation.click();
-            }
+async addPanel() {
+if (this.$refs.runValidation) {
+this.$refs.runValidation.click();
+}
+if (
+this.panel.name &&
+this.panel.specimen_type &&
+this.panel.obv &&
+this.panel.lab_unit
+) {
+try {
 
-            this.editPanel.lab_unit = this.lswap.id;
-            this.editPanel.specimen_type = this.sswap.id;
+let response = await this.$axios.$post(
+"laboratory/lab_panel/",
+this.panel
+);
 
-            if (this.editPanel) {
-                try {
-                    this.isbusy = true;
+this.$toast({
+type: 'success',
+text: 'Lab Panel added'
+})
+this.getLabPanels();
+this.$bvModal.hide("Add-panel");
 
-                    let response = await this.$axios.$put(
-                        `laboratory/lab_panel/${this.uniqueId}/`,
+this.panel = {
+name: "",
+obv: [],
+specimen_type: null,
+lab_unit: null,
+active: false,
+};
+} catch {
 
-                        this.editPanel
-                    );
+this.$toast(
+{
+type: 'error',
+text: `Unable to add lab panels`
+});
+} finally {
 
-                    this.$toast({
-                        type: 'success',
-                        text: 'Laboratory panel edited'
-                    })
-                    this.getLabPanels();
-                    this.$bvModal.hide("Edit-panel");
-                } catch {
-                    this.$toast(
-                        {
-                            type: 'error',
-                            text: `Unable to edit laboratory panel`
-                        });
-                } finally {
-                    this.isbusy = false;
-                }
-            }
-        },
+}
+}
+},
 
-        async getLabPanels(page = 1) {
-            try {
-                this.busy = true;
-                let uri = `/laboratory/lab_panel/?page=${page}&size=${this.perPager}`;
+async editPanelFunc() {
+if (this.$refs.runValidation) {
+this.$refs.runValidation.click();
+}
 
-                const response = await this.$axios.$get(uri);
+this.editPanel.lab_unit = this.lswap.id;
+this.editPanel.specimen_type = this.sswap.id;
 
-                this.labPanels = [];
-                this.pages = response.total_pages;
-                let temp = [];
-                for (const iterator of response.results) {
-                    let time = iterator.created_at;
-                    let y = new Date(time).toLocaleDateString();
-                    let z = new Date(time).toTimeString().substring(0, 5);
-                    let b = y + ", " + z;
-                    // let red = iterator.obv.reduce(
-                    //   (start, end) => `${start.name + end.name}`
-                    // );
-                    this.labPanels.push({
-                        identity: iterator.name,
-                        obv: iterator.obv,
-                        created_at: b,
-                        specimen_type: iterator.specimen_type,
-                        lab_unit: iterator.lab_unit,
-                        active: true,
-                        id: iterator.id,
-                    });
-                }
+if (this.editPanel) {
+try {
+this.isbusy = true;
 
-                this.busy = false;
-            } catch (error) {
-                console.log(error);
-            } finally {
-            }
-        },
-    },
+let response = await this.$axios.$put(
+`laboratory/lab_panel/${this.uniqueId}/`,
+
+this.editPanel
+);
+
+this.$toast({
+type: 'success',
+text: 'Laboratory panel edited'
+})
+this.getLabPanels();
+this.$bvModal.hide("Edit-panel");
+} catch {
+this.$toast(
+{
+type: 'error',
+text: `Unable to edit laboratory panel`
+});
+} finally {
+this.isbusy = false;
+}
+}
+},
+
+async getLabPanels(page = 1) {
+try {
+this.busy = true;
+let uri = `/laboratory/lab_panel/?page=${page}&size=${this.perPager}`;
+
+const response = await this.$axios.$get(uri);
+
+this.labPanels = [];
+this.pages = response.total_pages;
+let temp = [];
+for (const iterator of response.results) {
+let time = iterator.created_at;
+let y = new Date(time).toLocaleDateString();
+let z = new Date(time).toTimeString().substring(0, 5);
+let b = y + ", " + z;
+// let red = iterator.obv.reduce(
+//   (start, end) => `${start.name + end.name}`
+// );
+this.labPanels.push({
+identity: iterator.name,
+obv: iterator.obv,
+created_at: b,
+specimen_type: iterator.specimen_type,
+lab_unit: iterator.lab_unit,
+active: true,
+    id: iterator.id,
+    bill_price: iterator.bill_price,
+    bill_description: iterator.bill_description
+});
+}
+
+this.busy = false;
+} catch (error) {
+console.log(error);
+} finally {
+}
+},
+},
 };
 </script>
 

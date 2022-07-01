@@ -135,7 +135,7 @@ export default {
       this.isLoading = true;
       try {
         let response = await this.$axios.$post(
-          `encounters/update_patient_chart/${this.consultationData.encounter_id}/`,
+          `encounters/${this.consultationData.id}/charts/`,
           {
             chart: {
               exam: this.exam,

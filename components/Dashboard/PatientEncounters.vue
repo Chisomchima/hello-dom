@@ -58,7 +58,12 @@ export default {
         {
           key: 'provider',
           formatter: (val) => {
-            return val.first_name + ' ' + val.last_name
+            if (val.first_name || val.last_name) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else {
+              return ''
+            }
           },
         },
         {

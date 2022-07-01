@@ -71,7 +71,12 @@ export default {
           label: 'Provider Name',
           sortable: true,
           formatter: (val) => {
-            return val.first_name + ' ' + val.last_name
+            if (val.first_name || val.last_name) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else {
+              return ''
+            }
           },
         },
         { key: 'encounter_type', label: 'Encounter Type', sortable: true },

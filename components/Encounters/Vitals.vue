@@ -40,8 +40,8 @@
     <transition name="slide-fade">
       <div v-if="hideVitalsForm" style="max-width: 98%" class="trans pl-5 row px-2">
         <div class="d-flex align-items-center col-lg-12 col-md-12 col-sm-12 mt-2">
-          <div><input v-model="nurseFlag" style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div><small
-            class="text-info text-12 ml-2">Nurse seen</small>
+          <div><input v-model="nurseFlag" style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div>
+          <small class="text-info text-12 ml-2">Nurse seen</small>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div>
@@ -116,15 +116,15 @@
           <v-select class="style-chooser" v-model="vitals.oxygen" placeholder="Oxygen Supplementation"></v-select>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
-          <small class="text-grey text-12">Intake</small>
-          <v-select v-model="vitals.intake" class="style-chooser" placeholder="Intake"></v-select>
+          <small class="text-grey text-12">Fluid intake</small>
+          <v-select v-model="vitals.intake" class="style-chooser" placeholder="Fluid intake"></v-select>
         </div>
 
         <div class="col-lg-6 col-md-12 col-sm-12">
           <div class="d-flex text-16 justify-content-between align-items-end">
             <div class="col-lg-6 col-md-6 pl-0 col-sm-12">
-              <small class="text-grey text-12">Output</small>
-              <v-select v-model="vitals.output" class="style-chooser" placeholder="Output"></v-select>
+              <small class="text-grey text-12">Fluid output</small>
+              <v-select v-model="vitals.output" class="style-chooser" placeholder="Fluid output"></v-select>
             </div>
 
             <div class="col-lg-6 col-md-6 px-0 col-sm-12">
@@ -320,7 +320,7 @@ export default {
 
       try {
         let response = await this.$axios.$post(
-          `encounters/update_patient_chart/${this.consultationData.encounter_id}/`,
+          `encounters/${this.consultationData.id}/charts/`,
           {
             chart: {
               vitals: this.vitals,
@@ -365,12 +365,12 @@ export default {
         this.vitals.blood_sugar_f = null;
         this.vitals.blood_sugar_r = null;
         this.vitals.spo2 = null;
-        this.vitals.avpu = "";
-        this.vitals.trauma = "";
-        this.vitals.mobility = "";
-        this.vitals.oxygen = "";
-        this.vitals.intake = "";
-        this.vitals.output = "";
+        this.vitals.avpu = null;
+        this.vitals.trauma = null;
+        this.vitals.mobility = null;
+        this.vitals.oxygen = null;
+        this.vitals.intake = null;
+        this.vitals.output = null;
       }
     },
     calc() {
