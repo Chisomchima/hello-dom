@@ -562,8 +562,8 @@ hr {
 
 .btn.btn-outline-primary:not(:disabled):focus,
 .btn.btn-outline-primary:not(:disabled):active {
-  background: #0c5791;
-  border-color: #0c5791;
+  background: $COLOR_TWO;
+  border-color: $COLOR_TWO;
   color: #fff;
 }
 

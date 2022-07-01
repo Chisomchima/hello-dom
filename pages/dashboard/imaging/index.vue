@@ -39,7 +39,7 @@
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddImagingOrder @get-encounter="filter(1, {})" />
+    <DashboardModalAddImagingOrder @refresh="filter(1, {})" />
   </div>
 </template>
 

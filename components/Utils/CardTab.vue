@@ -6,7 +6,7 @@
           v-for="(subTab, index) in subTabs"
           :key="index"
           class="px-2 py-2 pointer text-muted"
-          :class="[index === selectedIndex ? 'active' : '']"
+          :class="[index === selectedIndex ? 'active border-bottom border-primary' : '']"
           @click="selectTab(index)"
         >
           {{ subTab.title }}
@@ -92,7 +92,7 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .active {
-  background-color: $COLOR_THREE;
-  color: white !important;
+  // background-color: $COLOR_THREE;
+  color: $COLOR_THREE !important;
 }
 </style>
