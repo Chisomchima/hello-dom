@@ -248,26 +248,10 @@
 
       <template #table-colgroup="scope">
         <template v-for="field in scope.fields">
-          <col
-            v-if="field.key === 'email'"
-            :key="field.key"
-            :style="{ width: '15rem' }"
-          />
-          <col
-            v-if="field.key === 'date'"
-            :key="field.key"
-            :style="{ width: '10rem' }"
-          />
-          <col
-            v-else-if="field.key === 'service_name'"
-            :key="field.key"
-            :style="{ width: '50rem' }"
-          />
-          <col
-            v-else-if="field.key === 'order_no'"
-            :key="field.key"
-            :style="{ width: '20rem' }"
-          />
+          <col v-if="field.key === 'email'" :key="field.key" :style="{ width: '15rem' }" />
+          <col v-else-if="field.key === 'date'" :key="field.key" :style="{ width: '10rem' }" />
+          <col v-else-if="field.key === 'service_name'" :key="field.key" :style="{ width: '50rem' }" />
+          <col v-else-if="field.key === 'order_no'" :key="field.key" :style="{ width: '20rem' }" />
         </template>
       </template>
     </b-table>
