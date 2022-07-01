@@ -137,9 +137,9 @@ export default {
         })
 
         console.log(dataObject)
-
         const customObj = {
           ...dataObject,
+          is_baby:dataObject.is_baby ? dataObject.is_baby : false,
           gender: dataObject.gender ? dataObject.gender.gender : null,
           nationality: dataObject.nationality
             ? dataObject.nationality.country

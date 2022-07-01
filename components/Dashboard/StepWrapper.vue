@@ -9,7 +9,6 @@
                 :key="index"
                 class="step"
                 :class="[currentStep === index ? 'active' : '']"
-                @click="currentStep = index"
               >
                 <span>{{ index + 1 }}</span>
                 {{ step }}
