@@ -1,11 +1,11 @@
 <template>
   <div>
     <div>
-      <table-component :busy="busy" :fields="fields" :items="itemsToShow">
+      <table-component :pages="pages" :busy="busy" :fields="fields" :items="itemsToShow" :perpage="perPage">
         <template #status="{ data }">
           <div class="text-center">
             <span :class="data.item.color" class="badge text-12 text-white px-2 py-1">{{
-              data.item.status
+            data.item.status
             }}</span>
           </div>
         </template>
@@ -54,7 +54,10 @@ export default {
           `encounters/get_patient_encounter/${this.consultationData.patient.id}`
         );
 
-        let temp = response;
+        console.log(response)
+
+        let temp = response.results;
+        this.pages = response.total_pages
         this.itemsToShow = [];
 
         for (const iterator of temp) {

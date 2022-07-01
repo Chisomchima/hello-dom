@@ -194,6 +194,7 @@ export default {
         encounter_id: '',
         date_before: '',
         date_after: '',
+        worklist: true
       },
     }
   },
@@ -201,7 +202,9 @@ export default {
     filters: {
       handler: debounce(function (newVal) {
         if (newVal.by.length > 0) {
-          const newFilterObject = { ...newVal, [newVal.by]: newVal.entry }
+          
+          const newFilterObject = { ...newVal, [newVal.by]: newVal.entry, worklist: true }
+          console.log(newFilterObject)
           this.$emit('filter', newFilterObject)
         } else {
           this.$emit('filter', newVal)

@@ -2,7 +2,7 @@
   <button
     class="btn btn-primary"
     :class="extraClass"
-    :disabled="isLoading"
+    :disabled="isLoading || disabled"
     @click="$emit('click', $event)"
   >
     <template v-if="watchRequest">

@@ -34,7 +34,8 @@
 
       <div style="height: 38px" class="w-100 mt-4 text-16 d-flex justify-content-end">
 
-        <BaseButton :disabled="allow" @click.prevent="addPlan" class="btn-primary">Save</BaseButton>
+        <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
+          @click.prevent="addPlan" class="btn-primary">Save</BaseButton>
       </div>
     </div>
 

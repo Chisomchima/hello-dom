@@ -75,7 +75,7 @@
 
                                 <div class="mb-2 col-lg-6 pr-2 pl-0 col-md-6 col-sm-6">
                                     <small class="text-grey text-12">Email</small>
-                                    <validation-provider :rules="'email|required'" v-slot="{ errors }">
+                                    <validation-provider :rules="'email'" v-slot="{ errors }">
                                         <input type="text" placeholder="Recipient Email" v-model="provisionalEmail"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
                                         <span class="text-12" style="color: red">{{
@@ -396,7 +396,7 @@ export default {
             this.patientData.email = this.provisionalEmail
             this.patientData.age =  this.age
             this.labOrderData.patient = this.patientData;
-            if (this.labOrderData.lab_panels && this.labOrderData.service_center && (this.patientData.email || this.provisionalEmail)) {
+            if (this.labOrderData.lab_panels && this.labOrderData.service_center) {
                 try {
                     this.isbusy = true;
                     let response = await this.$axios.$post(
