@@ -20,10 +20,11 @@
                     @page-changed="getLabOrders($event, currentFilter)">
                     <template #status="{ data }">
                         <div>
-                            <!-- :disabled="data.item.bill.cleared_status === 'UNCLEARED'" -->
                             <div style="width: 9rem">
-                                <button @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
-                                    class="btn btn-outline-info text-center text-capitalize text-12">
+                                <button :disabled="data.item.bill.cleared_status === 'UNCLEARED'"
+                                    @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
+                                    class="text-center text-capitalize text-12"
+                                    :class="data.item.bill.cleared_status === 'UNCLEARED' ? 'btn btn-warning' : 'btn btn-outline-info '">
                                     {{
                                     data.item.status === "NEW"
                                     ? "take specimen" : data.item.status
