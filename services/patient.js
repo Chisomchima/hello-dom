@@ -12,6 +12,10 @@ export default axios => ({
         return axios.$get('patient/patients/', {
             params
         })
-    }
+    },
+    getPatientByUHID(uhid) {
+        return axios.$get(`patient/patients/uhid/${uhid}/`);
+    },
+
 
 });

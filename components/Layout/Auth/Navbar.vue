@@ -9,7 +9,14 @@
           @click="$router.push(`/`)"
         >
           <nuxt-link to="/">
-            <h2 class="text-white">Slate MD</h2>
+           <img
+           width="50px"
+            src="@/assets/img/theme-image.jpeg"
+            class="rounded-circle"
+            :alt="APP_NAME_LONG"
+            srcset=""
+          />
+            <!-- <h4 class="text-white">{{APP_NAME_LONG}}</h4> -->
           </nuxt-link>
         </div>
         <div class="d-flex align-items-center flex-md-wrap">
@@ -320,6 +327,7 @@ export default Vue.extend({
 
   data() {
     return {
+      APP_NAME_LONG:process.env.APP_NAME_LONG,
       isMobile: false,
       fallbackAvatar:
         'https://546458-1766807-raikfcquaxqncofqfm.stackpathdns.com/pub/media/wordpress/d5f1425700d7460bb2aa1e1e8e1b7e49.jpg',

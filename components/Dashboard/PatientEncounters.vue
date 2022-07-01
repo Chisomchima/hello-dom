@@ -86,7 +86,7 @@ export default {
         )
         console.log(data)
         this.items = data.results
-        this.pages = data.total.pages
+        this.pages = data.total_pages
         this.busy = false
       } catch (error) {
         console.log(error)

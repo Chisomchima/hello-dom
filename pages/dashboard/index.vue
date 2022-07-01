@@ -7,7 +7,7 @@
         class="col-md-4 col-12 col-sm-6"
       >
         <div
-          class="card card-stats mb-4 mb-xl-0 shadow-sm p-3 card-hover pointer"
+          class="card card-stats mb-4 mb-xl-0 shadow-sm p-3 card-hover pointer my-3"
           @click="goToRoute(card.route)"
         >
           <div class="card-body">
@@ -57,6 +57,16 @@ export default {
           name: 'Laboratory Setting',
           icon: 'fas fa-cog',
           route: '/dashboard/settings/laboratory/service-center',
+        },
+        {
+          name: 'Laboratory',
+          icon: 'fas fa-vial',
+          route: '/dashboard/laboratory/',
+        },
+        {
+          name: 'Imaging',
+          icon: 'fas fa-x-ray',
+          route: '/dashboard/imaging/',
         },
       ],
     }

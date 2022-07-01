@@ -2,7 +2,16 @@
   <div class="container-fluid">
     <div class="row vh-100">
       <div class="col-md-4 bg-slate-primary px-4 text-white d-none d-md-block">
-       
+        <div class="w-100 d-flex align-self-center">
+          <img
+            width="100%"
+            src="@/assets/img/theme-image.jpeg"
+            class="rounded-circle"
+            alt=""
+            style="margin-top: 100px"
+            srcset=""
+          />
+        </div>
       </div>
       <div class="col-md-8">
         <div class="d-flex flex-column justify-content-around vh-100">
@@ -18,17 +27,18 @@
               > -->
 
               <span class="click mx-2">
-                <nuxt-link to="/privacy-policy" class="auth-footer">
+                <nuxt-link to="#" class="auth-footer">
                   Privacy Policy
                 </nuxt-link> </span
               ><span class="click ml-2">
-                <nuxt-link to="/terms" class="auth-footer">
+                <nuxt-link to="#" class="auth-footer">
                   Terms and Conditions
                 </nuxt-link>
               </span>
             </div>
             <div class="auth-footer">
-              © {{ new Date().getFullYear() }} Slate.ng, All Rights Reserved
+              © {{ new Date().getFullYear() }}, Powered by V3C Technology, All
+              Rights Reserved
             </div>
           </div>
         </div>

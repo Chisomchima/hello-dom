@@ -42,11 +42,24 @@ export default {
           child: [
             {
               href: '/dashboard/opd/',
-              title: 'Encounter Work list',
+              title: 'Encounter Work List',
               icon: 'fas fa-list-ul',
             },
           ],
         },
+
+         {
+          href: '/dashboard/laboratory',
+          title: 'Laboratory Work List',
+          icon: 'fas fa-vial',
+        },
+
+          {
+          href: '/dashboard/imaging',
+          title: 'Imaging Work List',
+          icon: 'fas fa-x-ray',
+        },
+
 
         {
           title: 'Settings',
@@ -61,6 +74,19 @@ export default {
                 },
                 {
                   href: '/dashboard/settings/laboratory/service-config',
+                  title: 'Service Configuration',
+                },
+              ],
+            },
+            {
+              title: 'Imaging Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/imaging/service-center',
+                  title: 'Service Center',
+                },
+                {
+                  href: '/dashboard/settings/imaging/service-config',
                   title: 'Service Configuration',
                 },
               ],

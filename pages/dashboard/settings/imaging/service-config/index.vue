@@ -1,0 +1,17 @@
+<template>
+  <div>
+    <div class="page-heading mb-4">Service Configuration</div>
+    <UtilsBaseCardTab>
+      <UtilsCardTab title="Imaging Observation">
+       <DashboardImagingObservationSettings />
+      </UtilsCardTab>
+    </UtilsBaseCardTab>
+  </div>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style lang="scss" scoped>
+</style>

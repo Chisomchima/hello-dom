@@ -34,7 +34,7 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      // { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       // {
       //   rel: 'stylesheet',
       //   href: 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.0-alpha.2/cropper.min.css',
@@ -143,6 +143,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.BASE_URL,
+    APP_NAME_LONG:process.env.APP_NAME_LONG || "HEHEH",
+    APP_NAME_SHORT:process.env.APP_NAME_SHORT || "Hello",
   },
 
   env: {

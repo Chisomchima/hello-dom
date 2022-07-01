@@ -1,3 +1,6 @@
 $primary-color: $COLOR_THREE !default;
+$base-bg: purple !default;
 
-@import 'vue-sidebar-menu/src/scss/vue-sidebar-menu.scss'
+@import 'vue-sidebar-menu/src/scss/vue-sidebar-menu.scss';
+
+$base-bg: $COLOR_THREE !default;
