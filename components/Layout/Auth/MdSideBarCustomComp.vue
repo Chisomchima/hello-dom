@@ -42,11 +42,24 @@ export default {
           child: [
             {
               href: '/dashboard/opd/',
-              title: 'Encounter Work list',
+              title: 'Encounter Work List',
               icon: 'fas fa-list-ul',
             },
           ],
         },
+
+         {
+          href: '/dashboard/laboratory',
+          title: 'Laboratory Word List',
+          icon: 'fas fa-hospital-user',
+        },
+
+          {
+          href: '/dashboard/imaging',
+          title: 'Imaging Word List',
+          icon: 'fas fa-hospital-user',
+        },
+
 
         {
           title: 'Settings',
