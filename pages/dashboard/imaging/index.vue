@@ -5,20 +5,24 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Imaging Work List</div>
           <div>
-            <BaseButton class="btn-primary btn-lg" @click="$bvModal.show('modal')">New imaging Order</BaseButton>
+            <BaseButton
+              class="btn-primary btn-lg"
+              @click="$bvModal.show('modal')"
+              >New imaging Order</BaseButton
+            >
           </div>
         </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12 mb-4">
+      <!-- <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
             <DashboardEncounterFilters @filter="filter(1, $event)" />
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col-md-12">
         <UtilsFilterComponent
           disable-pagination
@@ -30,18 +34,17 @@
             :pages="pages"
             :items="items"
             :busy="busy"
-            :dropdown-item="['nurse_vital']"
             @page-changed="filter($event, currentFilter)"
           />
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddImagingOrder @get-encounter="filter(1,{})" />
+    <DashboardModalAddImagingOrder @get-encounter="filter(1, {})" />
   </div>
 </template>
 
 <script>
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
 export default {
   mixins: [TableFunc],
@@ -50,32 +53,16 @@ export default {
       busy: false,
       currentFilter: {},
       fields: [
-        { key: 'encounter_id', label: 'Encounter ID', sortable: true },
-
-        {
-          key: 'encounter_datetime',
-          label: 'Date',
-          sortable: true,
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
-          },
-        },
-        {
-          key: 'clinic.Department.display_name',
-          label: 'Department',
-          sortable: true,
-        },
-        { key: 'clinic.name', label: 'Clinic', sortable: true },
+        { key: 'img_obv.name', label: 'Observation', sortable: true },
         { key: 'patient.uhid', label: 'UHID', sortable: true },
         {
-          key: 'provider',
-          label: 'Provider Name',
-          sortable: true,
-          formatter: (val) => {
-            return val.first_name + ' ' + val.last_name
+          key: 'img_order',
+          label: 'Order By',
+          formatter: (val, key, item) => {
+            return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
           },
+          sortable: true,
         },
-        { key: 'encounter_type', label: 'Encounter Type', sortable: true },
         {
           key: 'patient',
           label: 'Patient',
@@ -85,16 +72,19 @@ export default {
           },
         },
         { key: 'status', label: 'Status', sortable: true },
-        { key: 'dots', label:'', sortable: false },
+        { key: 'dots', label: '', sortable: false },
       ],
     }
+  },
+  mounted() {
+    this.filter(1, {})
   },
   methods: {
     async filter(page, e) {
       this.currentFilter = e
       try {
         this.busy = true
-        const data = await this.$api.imaging.getOrder({ ...e, page })
+        const data = await this.$api.imaging.getObservationOrder({ ...e, page })
         this.items = data.results
         this.pages = data.total_pages
         console.log(data)

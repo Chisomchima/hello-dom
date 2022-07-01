@@ -49,4 +49,10 @@ export default axios => ({
         return axios.$put(`/imaging/imaging_order/${id}/`, body);
     },
 
+    getObservationOrder(params) {
+        return axios.$get('/imaging/imaging_observation_order/', {
+            params
+        });
+    },
+
 });

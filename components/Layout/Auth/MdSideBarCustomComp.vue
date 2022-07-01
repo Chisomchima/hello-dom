@@ -50,14 +50,14 @@ export default {
 
          {
           href: '/dashboard/laboratory',
-          title: 'Laboratory Word List',
-          icon: 'fas fa-hospital-user',
+          title: 'Laboratory Work List',
+          icon: 'fas fa-vial',
         },
 
           {
           href: '/dashboard/imaging',
-          title: 'Imaging Word List',
-          icon: 'fas fa-hospital-user',
+          title: 'Imaging Work List',
+          icon: 'fas fa-x-ray',
         },
 
 
@@ -74,6 +74,19 @@ export default {
                 },
                 {
                   href: '/dashboard/settings/laboratory/service-config',
+                  title: 'Service Configuration',
+                },
+              ],
+            },
+            {
+              title: 'Imaging Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/imaging/service-center',
+                  title: 'Service Center',
+                },
+                {
+                  href: '/dashboard/settings/imaging/service-config',
                   title: 'Service Configuration',
                 },
               ],

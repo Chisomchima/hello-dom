@@ -144,7 +144,6 @@ export default {
         ordering_physician: '',
         referral_facility: '',
         comments: '',
-        payment_scheme: 0,
         service_center: null,
         patient: {},
         stat: false,
