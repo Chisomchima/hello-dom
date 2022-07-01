@@ -116,18 +116,18 @@ export default {
   },
   async created() {
     try {
-      const { results } = await this.$api.core.country({ size: 1000 })
-      this.$refs.formGen.setOptions('nationality', results)
+      // const { results } = await this.$api.core.country({ size: 1000 })
+      // this.$refs.formGen.setOptions('nationality', results)
       const { results: genders } = await this.$api.core.gender({ size: 1000 })
       this.$refs.formGen.setOptions('gender', genders)
       const { results: mStatus } = await this.$api.core.martialStatus({
         size: 1000,
       })
       this.$refs.formGen.setOptions('marital_status', mStatus)
-      const { results: religion } = await this.$api.core.religion({
-        size: 1000,
-      })
-      this.$refs.formGen.setOptions('religion', religion)
+      // const { results: religion } = await this.$api.core.religion({
+      //   size: 1000,
+      // })
+      // this.$refs.formGen.setOptions('religion', religion)
 
       const { results: salutation } = await this.$api.core.salutation({
         size: 1000,
