@@ -20,30 +20,30 @@
                     @page-changed="getLabOrders($event, currentFilter)">
                     <template #status="{ data }">
                         <div>
+                            <!-- :disabled="data.item.bill.cleared_status === 'UNCLEARED'" -->
+                            <div style="width: 9rem">
+                                <button @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
+                                    class="btn btn-outline-info text-center text-capitalize text-12">
+                                    {{
+                                    data.item.status === "NEW"
+                                    ? "take specimen" : data.item.status
+                                    }}
+                                </button>
 
-                            <div @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
-                                style="width: 8rem" class="
-                text-center text-capitalize text-12
-                btn btn-outline-info
-                pointer
-              ">
-                                {{
-                                data.item.status === "NEW"
-                                ? "take specimen" : data.item.status
-                                }}
                             </div>
                             <div>
 
-                                <!-- @click="openFillResult(data.item)" -->
-                                <div v-if="data.item.status === 'recieve specimen'" style="width: 8rem" class="
+
+                                <div @click="openFillResult(data.item)" v-if="data.item.status === 'recieve specimen'"
+                                    style="width: 9rem" class="
                   text-center text-capitalize text-12
                   btn btn-outline-info
                   pointer
                 ">
                                     {{ data.item.status }}
                                 </div>
-                                <!-- @click="openEditPanel(data.item)" -->
-                                <div v-if="data.item.current_status === 'fill result'" style="width: 8rem" class="
+                                <div @click="openEditPanel(data.item)" v-if="data.item.status === 'fill result'"
+                                    style="width: 8rem" class="
                   text-center text-capitalize text-12
                   btn btn-outline-info
                   pointer
@@ -98,8 +98,8 @@
                     </template>
                     <template #cancel="{ data }">
                         <div>
-                            <!-- @click="cancelRequestModal(data.item)" -->
-                            <div style="width: 6rem" class="text-center text-12 pointer btn btn-outline-danger">
+                            <div @click="cancelRequestModal(data.item)" style="width: 6rem"
+                                class="text-center text-12 pointer btn btn-outline-danger">
                                 Cancel
                             </div>
                         </div>
@@ -110,13 +110,31 @@
         </div>
 
         <div class="create_order">
-            <DashboardModalLabPanelOrder :data="{}" @refresh="getLabOrders()" />
+            <DashboardModalLabPanelOrder @refresh="getLabOrders()" />
         </div>
 
         <!-- ***********workflow********* -->
         <div>
-            <DashboardModalLabStepsTakeSpecimen @refresh="getLabOrders()" status="specimen taken" :id="id" />
+            <DashboardModalLabStepsSpecimenHandler @refresh="getLabOrders()" :status="status" :modalTitle="modalTitle"
+                :id="id" />
         </div>
+
+        <div>
+            <DashboardModalLabStepsResultHandler @refresh="getLabOrders()" :labOrderPanel="labOrderPanel"
+                :manageInput="manageInput" :id="id" />
+        </div>
+
+        <div>
+            <DashboardModalLabStepsApproval @refresh="getLabOrders()" :labOrderPanel="labOrderPanel" :status="status"
+                :id="id" />
+        </div>
+
+        <div>
+            <DashboardModalLabStepsCancel @refresh="getLabOrders()" :labOrderPanel="labOrderPanel" />
+        </div>
+
+        <!-- ********************************* -->
+
     </div>
 </template>
 
@@ -130,8 +148,16 @@ export default {
         return {
             currentFilter: {},
             itemsToShow: [],
+            labOrderPanel: {
+                panel: {},
+                status: "",
+                lab_order: "",
+            },
+            showOptions: false,
+            manageInput: "",
             id: '',
             modalTitle: '',
+            status: '',
             fields: [
                 { key: 'asn', label: 'ASN', sortable: true },
                 {
@@ -177,14 +203,93 @@ export default {
             } catch (error){}
             finally {
                 this.busy = false;
-                
+
             }
         },
         openSpecimenTaken(e) {
+            console.log(e)
             this.$bvModal.show("takespecimen");
             this.modalTitle = 'Take Specimen'
+            this.status = 'recieve specimen'
             this.id = e.id;
-            this.assertion = e.asn;
+        },
+        openFillResult(e) {
+            console.log(e);
+            this.$bvModal.show("takespecimen");
+            this.modalTitle = 'Recieve Specimen'
+            this.status = 'fill result'
+            this.id = e.id;
+        },
+        openEditPanel(e) {
+            console.log(e)
+            this.$bvModal.show("fillresult");
+        
+            for (const iterator of e.panel.obv) {
+                if (iterator.type.name === "Options") {
+                    this.showOptions = true;
+                } else {
+                    this.showOptions = false;
+                }
+                if (
+                    iterator.type.name === "Integer" ||
+                    iterator.type.name === "Float"
+                ) {
+                    this.manageInput = "number";
+                } else {
+                    this.manageInput = "text";
+                }
+            }
+            // this.fillControl = true;
+            // this.approveControl = false;
+            // this.enable = true;
+
+            this.labOrderPanel.lab_order = e.lab_order;
+            this.labOrderPanel.panel = e.panel;
+            console.log(this.labOrderPanel.panel.obv)
+            this.labOrderPanel.status = e.stats;
+            this.labOrderPanel.asn = e.asn;
+            this.labOrderPanel.id = e.id;
+            this.labOrderPanel.status = e.status;
+        },
+        setStatusToApproved(e) {
+            this.labOrderPanel = e;
+            this.id = e.id
+            this.$bvModal.show("Edit-laborder");
+            for (const iterator of e.panel.obv) {
+                if (iterator.type.name === "Options") {
+                    this.showOptions = true;
+                } else {
+                    this.showOptions = false;
+                }
+                if (
+                    iterator.type.name === "Integer" ||
+                    iterator.type.name === "Float"
+                ) {
+                    this.manageInput = "number";
+                } else {
+                    this.manageInput = "text";
+                }
+            }
+        },
+        async setStatusToAwaitingApproval() {
+            try {
+                let response = await this.$axios.$patch(
+                    `laboratory/lab_panel_order/${this.id}/`,
+                    { status: "awaiting approval" }
+                );
+                this.$bvModal.hide("confirm");
+                this.$emit('refresh')
+            } catch {
+                this.$toast({
+                    type: 'error',
+                    text: `Unable to submit for approval`
+                });
+            }
+        },
+        cancelRequestModal(e) {
+            this.labOrderPanel = e;
+            this.status = 'cancelled'
+            this.$bvModal.show("cancelRequest");
         },
     }
 

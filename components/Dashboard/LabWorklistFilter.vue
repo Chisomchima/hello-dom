@@ -17,7 +17,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <small class="text-grey text-12">Status</small>
                 <v-select class=" text-grey text-14" placeholder="status" v-model="filters.status" :options="[
-                    { name: 'all', display: 'All' },
+                    
                     { name: 'NEW', display: 'Take specimen' },
                 
                     { name: 'recieve specimen', display: 'Recieve specimen' },
@@ -84,9 +84,10 @@ export default {
     },
     watch: {
         filters: {
-            handler: debounce(function (newVal) {    
-                console.log(newVal)
-                this.$emit('filters', newVal)
+            handler: debounce(function (newVal) {
+                let toggle = true
+                const newFilterObject = { ...newVal, ['status']: newVal.status, ['worklist']:true}  
+                this.$emit('filters', newFilterObject)
             }, 1000),
             deep: true,
             immediate: true
