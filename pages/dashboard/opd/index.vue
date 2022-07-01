@@ -20,24 +20,16 @@
         </div>
       </div>
       <div class="col-md-12">
-        <UtilsFilterComponent
-          disable-pagination
-          :disable-visualization="true"
-          search-placeholder="Search"
-        >
-          <TableComponent
-            :fields="fields"
-            :pages="pages"
-            :items="items"
-            :busy="busy"
-            :dropdown-item="['nurse_vital']"
-            @page-changed="filter($event, currentFilter)"
-            @row-clicked="viewPatientData"
-          />
+        <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+          <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" :dropdown-item="['nurse_vital']"
+            @dropdown="addVitals($event)" @page-changed="filter($event, currentFilter)"
+            @row-clicked="viewPatientData" >
+          </TableComponent>
         </UtilsFilterComponent>
       </div>
     </div>
     <DashboardModalNewEncounter @get-encounter="filter(1,{})" />
+    <DashboardModalAddVitalOnOpd :encounterData="tempEncounterData" @refresh="filter(1, {})" />
   </div>
 </template>
 
@@ -50,6 +42,7 @@ export default {
     return {
       busy: false,
       currentFilter: {},
+      tempEncounterData: {},
       fields: [
         { key: 'encounter_id', label: 'Encounter ID', sortable: true },
 
@@ -73,7 +66,12 @@ export default {
           label: 'Provider Name',
           sortable: true,
           formatter: (val) => {
-            return val.first_name + ' ' + val.last_name
+            if (val.first_name || val.last_name) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else {
+              return ''
+            }
           },
         },
         { key: 'encounter_type', label: 'Encounter Type', sortable: true },
@@ -106,8 +104,22 @@ export default {
       }
     },
     viewPatientData(e) {
-      this.$router.push(`/dashboard/opd/${e.id}`)
+      console.log(e)
+      if (e.bill.cleared_status === 'CLEARED') {
+        this.$router.push(`/dashboard/opd/${e.id}`)
+      }
+      else {
+        this.$toast({
+          type: 'info',
+          text: 'Bill not cleared'
+        });
+      }
+      
     },
+    addVitals(e) {
+      this.tempEncounterData = e
+      this.$bvModal.show('addvital')
+    }
   },
 }
 </script>

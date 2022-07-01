@@ -14,7 +14,17 @@
                 </b-col>
             </b-row>
         </div>
-        <div class="bg-light text-12 border-radius mb-3 margin-fix" v-else>
+
+        <div class="bg-light text-12 border-radius mb-3" v-else>
+            <div class="d-flex justify-content-end mb-2 bg-light">
+                <BaseButton @click="signAndCloseEnc" class="btn-outline-primary"
+                    :disabled="consultationData ? (consultationData.bill.cleared_status === 'CLEARED' ? false : true) : ''">
+                    Sign
+                </BaseButton>
+
+                <DashboardModalDoctorSign @refresh="showSignature" />
+
+            </div>
             <div style="border-radius: 4px" class="
           p-3
           bg-white
@@ -31,9 +41,9 @@
                         <div class="col-md-12 col-sm-12 col-lg-12">
                             <b>ENC-ID:</b>
                             {{
-                                    consultationData.encounter_id
-                                        ? consultationData.encounter_id
-                                        : "nil"
+                            consultationData.encounter_id
+                            ? consultationData.encounter_id
+                            : "nil"
                             }}
                         </div>
                         <div class="col-md-12 col-sm-12 col-lg-12">
@@ -58,6 +68,10 @@
             " class="text-truncate col-md-12 pt-2 col-sm-12 col-lg-11">
                         <b>Chief Complaint:</b> {{ consultationData.chief_complaint }}
                     </div>
+                    <div v-if="consultationData.signed_date" class="col-md-12 col-sm-12">
+                        <b>Signed by:</b> {{ consultationData.provider.first_name + " " +
+                        consultationData.provider.last_name }}, {{ dateSigned }}
+                    </div>
                 </div>
                 <div class="
             d-flex
@@ -75,18 +89,20 @@
                             <p class="text-14 mb-0 text-grey">
                                 <b>Name:</b>
                                 {{
-                                        patientData.firstname
-                                            ? patientData.firstname + " " + patientData.lastname
-                                            : "nil"
+                                patientData.firstname
+                                ? patientData.firstname + " " + patientData.lastname
+                                : "nil"
                                 }}
                             </p>
                         </div>
                         <div class="px-2">
                             <p class="text-14 mb-0 text-grey">
-                                <b>D.O.B:</b> {{ patientData.date_of_birth }} ({{
-                                        age ? age : "0"
-                                }}
-                                {{ age === 0 ? " year" : " years" }})
+                                <b>D.O.B:</b> {{ patientData.date_of_birth }}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>Age(Y-M-D)</b> {{this.age.year}} - {{this.age.month}} - {{this.age.day}}
                             </p>
                         </div>
                         <div class="px-2">
@@ -117,34 +133,34 @@
                                     {{ patientData.salutation ? patientData.salutation : "Mr." }}
 
                                     {{
-                                            patientData.firstname
-                                                ? patientData.firstname +
-                                                " " +
-                                                patientData.middlename +
-                                                " " +
-                                                patientData.lastname
-                                                : "Anonymous"
+                                    patientData.firstname
+                                    ? patientData.firstname +
+                                    " " +
+                                    patientData.middlename +
+                                    " " +
+                                    patientData.lastname
+                                    : "Anonymous"
                                     }}
                                     <br />
                                     Gender: {{ patientData.gender ? patientData.gender : "Male" }}
                                     <br />
                                     Phone No:
                                     {{
-                                            patientData.phone_number ? patientData.phone_number : "nil"
+                                    patientData.phone_number ? patientData.phone_number : "nil"
                                     }}
                                     <br />
                                     Nationality:
                                     {{
-                                            patientData.nationality
-                                                ? patientData.nationality
-                                                : "Nigerian"
+                                    patientData.nationality
+                                    ? patientData.nationality
+                                    : "Nigerian"
                                     }}
                                     <br />
                                     Marital Status:
                                     {{
-                                            patientData.marital_status
-                                                ? patientData.marital_status
-                                                : "Single"
+                                    patientData.marital_status
+                                    ? patientData.marital_status
+                                    : "Single"
                                     }}
                                     <br />
                                     Religion:
@@ -213,9 +229,11 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
+import calcAge from '~/mixins/calcAge';
 export default {
     layout: "dashboard",
-
+    mixins: [calcAge],
     data() {
         return {
             items: [],
@@ -225,17 +243,29 @@ export default {
             clinic: "",
             department: "",
             encounter_time: "",
-            age: 0,
+            age: {
+                year: '',
+                month: '',
+                day: ''
+            }
         };
     },
-    mounted() {
+    created() {
         this.getPatientRecord();
     },
+    computed: {
+        dateSigned(){
+            return DateTime.fromISO(this.consultationData.signed_date).toLocaleString(DateTime.DATETIME_SHORT)
+        }
+    },
     methods: {
-        refreshMe() {
+        showSignature() {
             this.getPatientRecord();
         },
 
+        signAndCloseEnc() {
+            this.$bvModal.show('sign')  
+        },
         async getPatientRecord() {
             try {
                 this.isLoading = true;
@@ -243,7 +273,7 @@ export default {
                     `encounters/encounter/${this.$route.params.id}`,
                     
                 );
-                this.consultationData = response;
+                this.consultationData = await response;
                 this.clinic = response.clinic.name;
                 this.department = response.clinic.name
                     ? response.clinic.Department.name
@@ -251,6 +281,7 @@ export default {
                 this.patientData = response.patient;
                 let time = this.consultationData.encounter_datetime;
                 let y = new Date(time).toLocaleDateString();
+                debugger
                 let z = new Date(time).toTimeString().substring(0, 5);
                 this.encounter_time = y + ", " + z;
                 this.calcAge(this.patientData.date_of_birth)
@@ -275,27 +306,63 @@ export default {
         calcAge(e) {
             // **********calc year***********
             let presentDate = new Date().getFullYear();
+
             let yearOfBirth = e.substring(0, 4);
 
             let diff = presentDate - yearOfBirth;
             let x = parseInt(diff);
             if (x === 0) {
-                this.age = 0;
-                // this.month = 0;
+                this.age.year = 0;
+                this.age.month = 0;
             } else {
-                this.age = x;
+                this.age.year = x;
             }
 
             if (monthOfBirth < month) {
-                this.age;
+                this.age.year;
             } else {
-                if (this.age === 0) {
-                    this.age;
+                if (this.age.year === 0) {
+                    this.age.year;
                 } else {
-                    this.age--;
+                    this.age.year--;
                 }
             }
 
+            // **************calc month***********
+            let tempMonth;
+            let month = new Date().getMonth();
+            let monthOfBirth = parseInt(e.substring(5, 7));
+            // tempMonth = monthOfBirth - month
+            if (presentDate === yearOfBirth) {
+                this.patient.age.month = 0;
+            } else {
+                tempMonth = 12 - monthOfBirth;
+            }
+
+            if (monthOfBirth <= month) {
+                this.age.month = month - monthOfBirth;
+                // this.patient.age.month + 1;
+            } else if (month + 1 === monthOfBirth) {
+                this.age.month = 0;
+            } else {
+                this.age.month = tempMonth + month;
+                // this.patient.age.month + 1;
+            }
+
+            // **************calc day**************
+            let day = new Date().getDate();
+            let dayOfBirth = e.substring(8, 10);
+            // this.patient.age.day = new Date().getDate();
+
+            if (day > dayOfBirth) {
+                this.age.day = day - dayOfBirth;
+            } else if (day === dayOfBirth) {
+                this.age.day = 0;
+            } else {
+                this.age.day = day;
+            }
+
+            // *********************************
         },
     },
 };
@@ -318,11 +385,6 @@ export default {
 li {
     cursor: pointer;
     border: 0.5px solid #fff;
-}
-
-.margin-fix {
-    margin: 1rem 0 6rem;
-    background: #fff;
 }
 </style>
 

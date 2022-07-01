@@ -35,7 +35,8 @@
 
       <div style="height: 38px" class="w-100 mt-4 text-16 d-flex justify-content-end">
 
-        <BaseButton watchRequest :disabled="allow" @click.prevent="addRos" class="btn-primary">Save</BaseButton>
+        <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
+          @click.prevent="addRos" class="btn-primary">Save</BaseButton>
       </div>
     </div>
 
@@ -133,7 +134,7 @@ export default {
       this.isLoading = true;
       try {
         let response = await this.$axios.$post(
-          `encounters/update_patient_chart/${this.consultationData.encounter_id}/`,
+          `encounters/${this.consultationData.id}/charts/`,
           {
             chart: {
               ros: this.ros,
