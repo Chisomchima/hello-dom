@@ -33,7 +33,15 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
+
     link: [
+      {
+        rel: "stylesheet",
+        href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+        integrity: "sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==",
+        crossorigin: "anonymous",
+        referrerpolicy: "no-referrer",
+      }
       // { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       // {
       //   rel: 'stylesheet',
@@ -143,8 +151,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.BASE_URL,
-    APP_NAME_LONG:process.env.APP_NAME_LONG || "HEHEH",
-    APP_NAME_SHORT:process.env.APP_NAME_SHORT || "Hello",
+    APP_NAME_LONG: process.env.APP_NAME_LONG || "HEHEH",
+    APP_NAME_SHORT: process.env.APP_NAME_SHORT || "Hello",
   },
 
   env: {
