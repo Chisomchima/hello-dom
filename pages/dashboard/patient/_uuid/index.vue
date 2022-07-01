@@ -29,8 +29,10 @@
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>
-      <UtilsCardTab title="Bill Estimate">
-        <h5>Coming Soon</h5>
+      <UtilsCardTab title="Finance" :tabs="tabs">
+        <UtilsSubCardTab title="Billing">
+          <DashboardPatientBilling :init-active="true" />
+        </UtilsSubCardTab>
       </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
@@ -48,8 +50,16 @@ export default {
       console.log(error)
     }
   },
+  data() {
+    return {
+      tabs: true,
+    }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
+ul > li {
+  padding: 5px;
+}
 </style>

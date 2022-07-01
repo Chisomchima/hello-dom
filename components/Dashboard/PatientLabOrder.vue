@@ -12,17 +12,12 @@
           :pages="pages"
           :items="items"
           :busy="busy"
+          :dropdown-item="['print']"
           @page-changed="pageChange($event)"
+          @row-clicked="showDetails($event.lab_panel_orders)"
         >
-          <template #info="{ data }">
-            <button
-              class="btn btn-primary"
-              @click="showDetails(data.item.lab_panel_orders)"
-            >
-              showDetails
-            </button>
-          </template>
           <template #print="{ data }">
+            <b-icon name="print"></b-icon>
             <button class="btn btn-primary" @click="save_file(data.item)">
               Print
             </button>
@@ -52,19 +47,28 @@ export default {
       fields: [
         {
           key: 'asn',
+          label:'ASN'
         },
         {
-          key: 'ordered_datetime',
+          key: 'ordered_by',
           formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('DDD')
+            return value.first_name + ' ' + value.last_name
           },
         },
         {
-          key: 'info',
+          key: 'service_center.name',
+          label: 'Service Center',
         },
         {
-          key: 'print',
-          label: '',
+          key: 'ordered_datetime',
+          label: 'Data&Time',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
+          },
+        },
+        {
+          key: 'dots',
+          label:''
         },
       ],
     }

@@ -1,6 +1,20 @@
 <template>
   <div>
-    <div class="page-heading mb-4">Patient Search</div>
+    <div class="row">
+      <div class="col-12 mb-3">
+        <div class="d-flex justify-content-between">
+          <div class="page-heading mb-4">Patient Records</div>
+          <div>
+            <BaseButton
+              class="btn-primary btn-lg"
+              @click="$router.push('/dashboard/patient/add')"
+              >Create Patient</BaseButton
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-12 mb-4">
         <div class="card">
@@ -39,8 +53,8 @@ export default {
       genders: ['male', 'female'],
       busy: false,
       currentFilter: {},
-      newCount:0,
-      nurseCount:0,
+      newCount: 0,
+      nurseCount: 0,
       fields: [
         {
           key: 'uhid',
@@ -48,15 +62,25 @@ export default {
           // width: '20%',
         },
         {
-          key: 'firstname',
-          label: 'First Name',
-        },
-        {
-          key: 'lastname',
-          label: 'Last Name',
+          key: 'name',
+          label: 'Name',
+          formatter: (value, key, item) => {
+            return (
+              item.salutation +
+              ' ' +
+              item.firstname +
+              ' ' +
+              item.middlename +
+              ' ' +
+              item.lastname
+            )
+          },
         },
         {
           key: 'gender',
+        },
+         {
+          key: 'date_of_birth',
         },
         {
           key: 'phone_number',

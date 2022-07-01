@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Encounter Work list</div>
           <div>
-            <BaseButton class="btn-outline-primary">New Encounter</BaseButton>
+            <BaseButton class="btn-primary btn-lg" @click="$bvModal.show('Add-encounter')">New Encounter</BaseButton>
           </div>
         </div>
       </div>
@@ -30,12 +30,14 @@
             :pages="pages"
             :items="items"
             :busy="busy"
+            :dropdown-item="['nurse_vital']"
             @page-changed="filter($event, currentFilter)"
             @row-clicked="viewPatientData"
           />
         </UtilsFilterComponent>
       </div>
     </div>
+    <DashboardModalNewEncounter @get-encounter="filter(1,{})" />
   </div>
 </template>
 
@@ -89,7 +91,7 @@ export default {
           },
         },
         { key: 'status', label: 'Status', sortable: true },
-        { key: 'action', label: '', sortable: false },
+        { key: 'dots', label:'', sortable: false },
       ],
     }
   },

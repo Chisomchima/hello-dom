@@ -1,23 +1,48 @@
 <template>
   <div class="table-responsive">
-    <b-table :items="items" :fields="sortable_cols" stacked="md" :filter="filter" hover striped responsive show-empty
-      sort-icon-left :busy="busy" :per-page="perPage" class="custom-table" :class="classCustom"
-      :table-class="tableClass" @row-clicked="$emit('row-clicked', $event)">
+    <b-table
+      :items="items"
+      :fields="sortable_cols"
+      stacked="md"
+      :filter="filter"
+      hover
+      striped
+      responsive
+      show-empty
+      sort-icon-left
+      :busy="busy"
+      :per-page="perPage"
+      class="custom-table"
+      :class="classCustom"
+      :table-class="tableClass"
+      @row-clicked="$emit('row-clicked', $event)"
+    >
       <template #table-busy>
         <div class="p-4">
-          <b-skeleton-table :rows="4" :columns="4" :table-props="{ bordered: true, striped: true }"></b-skeleton-table>
+          <b-skeleton-table
+            :rows="4"
+            :columns="4"
+            :table-props="{ bordered: true, striped: true }"
+          ></b-skeleton-table>
         </div>
       </template>
 
       <template #cell(current_academic_year)="data">
         <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-        <span class="badge" :class="[data.value ? 'badge-success' : 'badge-danger']">{{ data.value ? 'Active' :
-          'Inactive' }}</span>
+        <span
+          class="badge"
+          :class="[data.value ? 'badge-success' : 'badge-danger']"
+          >{{ data.value ? 'Active' : 'Inactive' }}</span
+        >
       </template>
 
       <template #cell(color)="data">
         <slot name="color" :data="data">
-          <div class="rounded-circle" style="height: 25px; width: 25px" :style="{ backgroundColor: data.value }"></div>
+          <div
+            class="rounded-circle"
+            style="height: 25px; width: 25px"
+            :style="{ backgroundColor: data.value }"
+          ></div>
         </slot>
       </template>
       <template #cell(week)="data">
@@ -62,17 +87,26 @@
 
       <template #table-colgroup="scope">
         <template v-for="field in scope.fields">
-          <col v-if="field.key === 'last_name' || field.key === 'first_name'" :key="field.key"
-            :style="{ width: '10rem' }" />
+          <col
+            v-if="field.key === 'last_name' || field.key === 'first_name'"
+            :key="field.key"
+            :style="{ width: '10rem' }"
+          />
         </template>
       </template>
 
       <template #head(last_name)>
         <span>Surname</span>
       </template>
+      
 
       <template #cell(house)="data">
         <slot name="house" :data="data">{{ data.value }}</slot>
+        <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
+      </template>
+
+       <template #cell(clear)="data">
+        <slot name="clear" :data="data">{{ data.value }}</slot>
         <!-- <span class="text-capitalize"> {{ data.value }}</span> -->
       </template>
 
@@ -110,7 +144,27 @@
       </template>
 
       <template #cell(status)="data">
-        <slot name="status" :data="data">{{ data.value }}</slot>
+        <slot name="status" :data="data">
+          <span
+            v-if="data.item.status === 'New'"
+            class="text-14 badge-warning rounded text-center p-1 text-white"
+            style="margin: 0"
+            >{{ data.item.status }}</span
+          >
+          <span
+            v-else-if="data.item.status === 'NS'"
+            class="text-14 badge-info rounded text-center p-1 text-white"
+          >
+            {{data.item.status }}
+          </span>
+
+          <span
+            v-else
+            class="text-14 badge-danger rounded text-center p-1 text-white"
+          >
+            {{ data.item.status }}
+          </span>
+        </slot>
       </template>
       <template #cell(info)="data">
         <slot name="info" :data="data">{{ data.value }}</slot>
@@ -152,10 +206,18 @@
 
       <template #cell(actions)="row">
         <div class="text-left w-auto">
-          <button v-if="!disableEditAction" class="btn" @click="$emit('edit', row.item)">
+          <button
+            v-if="!disableEditAction"
+            class="btn"
+            @click="$emit('edit', row.item)"
+          >
             <span class="iconify" data-icon="ant-design:edit-twotone"></span>
           </button>
-          <button v-if="!disableDeleteAction" class="btn" @click="$emit('delete', row.item)">
+          <button
+            v-if="!disableDeleteAction"
+            class="btn"
+            @click="$emit('delete', row.item)"
+          >
             <span class="iconify text-danger" data-icon="mi:delete"></span>
           </button>
         </div>
@@ -173,8 +235,13 @@
             <b-icon icon="three-dots-vertical"></b-icon>
           </template>
           <template v-if="dropdownItem.length > 0">
-            <b-dropdown-item v-for="(dropdown, index) in dropdownItem" :key="index" class="text-capitalize"
-              @click="$emit(dropdown, row.item)">{{ dropdown.split('_').join(' ') }}</b-dropdown-item>
+            <b-dropdown-item
+              v-for="(dropdown, index) in dropdownItem"
+              :key="index"
+              class="text-capitalize"
+              @click="$emit(dropdown, row.item)"
+              >{{ dropdown.split('_').join(' ') }}</b-dropdown-item
+            >
           </template>
         </b-dropdown>
       </template>
@@ -189,8 +256,16 @@
       </template>
     </b-table>
 
-    <b-pagination v-if="paginate" v-model="currentPage" :total-rows="totalRows" :per-page="perPage" align="right"
-      size="sm" class="my-0" @change="$emit('page-changed', $event)"></b-pagination>
+    <b-pagination
+      v-if="paginate"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      align="right"
+      size="sm"
+      class="my-0"
+      @change="$emit('page-changed', $event)"
+    ></b-pagination>
   </div>
 </template>
 
@@ -270,13 +345,13 @@ export default {
   data() {
     return {
       totalRows: 0,
-      currentPage:1
+      currentPage: 1,
     }
   },
   computed: {
     sortable_cols() {
       return this.fields.map((f) => {
-        const notSortColumn = ['actions', 'download', 'liveClass']
+        const notSortColumn = ['actions', 'download', 'liveClass', 'dots']
         // eslint-disable-next-line prefer-const
         let tmp = f
         if (notSortColumn.includes(tmp.key)) {
