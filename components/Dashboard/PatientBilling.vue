@@ -30,6 +30,15 @@
               <!-- <span class="text">"dcdfv"</span> -->
             </label>
           </template>
+
+          <template #cleared_status="{ data }">
+            <span v-if="data.item.cleared_status === 'CLEARED'" class="badge badge-primary">{{
+              data.item.cleared_status
+            }}</span>
+             <span v-if="data.item.cleared_status === 'UNCLEARED'" class="badge badge-warning">{{
+              data.item.cleared_status
+            }}</span>
+          </template>
         </TableComponent>
         <DashboardModalProcessBillModal @ok="payment($event)" />
       </template>

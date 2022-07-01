@@ -179,6 +179,9 @@
       <template #cell(print)="data">
         <slot name="print" :data="data"></slot>
       </template>
+       <template #cell(cleared_status)="item">
+        <slot name="cleared_status" :data="item"></slot>
+      </template>
 
       <template #cell(type)="item">
         <slot name="type" :data="item"></slot>
