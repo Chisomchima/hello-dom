@@ -37,6 +37,16 @@ export default axios => ({
         return axios.$put(`/imaging/imaging_observation/${id}/`, body);
     },
 
-
+    getOrder(params) {
+        return axios.$get('/imaging/imaging_order/', {
+            params
+        });
+    },
+    saveOrder(body) {
+        return axios.$post('/imaging/imaging_order/', body);
+    },
+    editOrder(id,body) {
+        return axios.$put(`/imaging/imaging_order/${id}/`, body);
+    },
 
 });
