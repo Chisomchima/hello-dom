@@ -19,8 +19,8 @@ mb-3
                                         <input v-model="panel.name" type="text" placeholder="Name"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
@@ -36,8 +36,8 @@ mb-3
                                                     :reduce="(option) => option" multiple taggable>
                                                 </VSelect>
                                                 <span class="text-12" style="color: red">{{
-                                                errors[0]
-                                                }}</span>
+                                                    errors[0]
+                                                    }}</span>
                                             </validation-provider>
                                             <!-- </div> -->
 
@@ -52,8 +52,8 @@ mb-3
                                             v-model="typeId">
                                         </VSelect>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
@@ -64,8 +64,8 @@ mb-3
                                             v-model="unitId">
                                         </VSelect>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -75,14 +75,14 @@ mb-3
                                         <input v-model="panel.bill_price" type="number" placeholder="Biling price"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
-                                    <small class="text-grey text-12">Biling description </small>
-                                    <input v-model="panel.bill_description" type="text" placeholder="Biling description"
+                                    <small class="text-grey text-12">Cost price </small>
+                                    <input v-model="panel.cost_price" type="number" placeholder="Cost price"
                                         class="form-control ng-untouched ng-pristine ng-valid" />
                                 </div>
                             </div>
@@ -123,8 +123,8 @@ mb-3
                                         <input v-model="editPanel.name" type="text" placeholder="Name"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
@@ -141,8 +141,8 @@ mb-3
                                                             :reduce="(option) => option" :loading="cue" multiple
                                                             taggable></v-select>
                                                         <span class="text-12" style="color: red">{{
-                                                        errors[0]
-                                                        }}</span>
+                                                            errors[0]
+                                                            }}</span>
                                                     </validation-provider>
                                                 </div>
                                             </div>
@@ -156,8 +156,8 @@ mb-3
                                             :options="specimensForModal" :loading="cue1" v-model="sswap">
                                         </v-select>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
@@ -167,8 +167,8 @@ mb-3
                                             :options="unitsForModal" :loading="cue2" v-model="lswap">
                                         </v-select>
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
@@ -178,15 +178,14 @@ mb-3
                                         <input v-model="editPanel.bill_price" type="number" placeholder="Biling price"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
                                         <span class="text-12" style="color: red">{{
-                                        errors[0]
-                                        }}</span>
+                                            errors[0]
+                                            }}</span>
                                     </validation-provider>
                                 </div>
 
                                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
-                                    <small class="text-grey text-12">Biling description </small>
-                                    <input v-model="editPanel.bill_description" type="text"
-                                        placeholder="Biling description"
+                                    <small class="text-grey text-12">Cost price</small>
+                                    <input v-model="editPanel.cost_price" type="number" placeholder="Cost price"
                                         class="form-control ng-untouched ng-pristine ng-valid" />
                                 </div>
 
@@ -262,7 +261,7 @@ specimen_type: null,
 lab_unit: null,
 active: true,
 bill_price: null,
-bill_description: ''
+cost_price: null
 },
 sswap: "",
 lswap: "",
@@ -272,7 +271,7 @@ obv: [],
 specimen_type: null,
 lab_unit: null,
 bill_price: null,
-bill_description: '',
+cost_price: null,
 active: true,
 },
 lab_unit: "",
@@ -379,7 +378,7 @@ this.cue2 = false;
 this.uniqueId = e.id;
 this.editPanel.name = e.identity;
         this.editPanel.bill_price = e.bill_price,
-    this.editPanel.bill_description = e.bill_description
+    this.editPanel.cost_price = e.cost_price
 
 this.sswap = e.specimen_type;
 this.lswap = e.lab_unit;
@@ -515,7 +514,7 @@ lab_unit: iterator.lab_unit,
 active: true,
     id: iterator.id,
     bill_price: iterator.bill_price,
-    bill_description: iterator.bill_description
+    cost_price: iterator.cost_price
 });
 }
 

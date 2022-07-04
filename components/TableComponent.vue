@@ -241,7 +241,7 @@
               v-for="(dropdown, index) in dropdownItem"
               :key="index"
               class="text-capitalize"
-              @click="$emit('dropdown', row.item)"
+              @click="$emit(dropdown, row.item)"
               >{{ dropdown.split('_').join(' ') }}</b-dropdown-item
             >
           </template>
