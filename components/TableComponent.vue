@@ -18,7 +18,7 @@
       :table-class="tableClass"
       :tbody-tr-class="disabledTableRowMethod"
       @row-hovered="rowHovered($event)"
-      @row-clicked="checkForBillStatusOnRowClick($event)"
+      @row-clicked="$emit('row-clicked', $event)"
     >
       <template #table-busy>
         <div class="p-4">
@@ -424,17 +424,17 @@ export default {
       // if (item.status === 'awesome') return 'disabledTableRowMethod'
     },
 
-    checkForBillStatusOnRowClick(item) {
-      if (item.bill) {
-        if (item.bill.cleared_status !== 'CLEARED') {
-          return
-        } else {
-          this.$emit('row-clicked', item)
-          return
-        }
-      }
-      this.$emit('row-clicked', item)
-    },
+    // checkForBillStatusOnRowClick(item) {
+    //   if (item.bill) {
+    //     if (item.bill.cleared_status !== 'CLEARED') {
+    //       return
+    //     } else {
+    //       this.$emit('row-clicked', item)
+    //       return
+    //     }
+    //   }
+    //   this.$emit('row-clicked', item)
+    // },
 
     rowHovered() {
       console.log('HEHEH')
