@@ -2,7 +2,7 @@
   <div>
     <UtilsFilterComponent disable-visualization disable-pagination>
       <template #besideFilterButton>
-        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
+        <BaseButton class="btn-outline-primary" @click="$bvModal.show('add_encounters')"
           >New Encounter</BaseButton
         >
       </template>
@@ -56,6 +56,13 @@ export default {
           label: 'Clinic',
         },
         {
+          key: 'encounter_datetime',
+          label:'Date&Time',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
+          },
+        },
+        {
           key: 'provider',
           formatter: (val) => {
             if (val.first_name || val.last_name) {
@@ -64,13 +71,6 @@ export default {
             else {
               return ''
             }
-          },
-        },
-        {
-          key: 'encounter_datetime',
-          label:'Date&Time',
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
           },
         },
         {
