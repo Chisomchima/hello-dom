@@ -135,7 +135,8 @@
                 class="account-image"
                 :src="user.avatar ? user.avatar : fallbackAvatar"
               /> -->
-              <img class="account-image" :src="fallbackAvatar" />
+              <b-avatar ></b-avatar>
+              <!-- <img class="account-image" :src="require('')" /> -->
             </div>
             <div class="ml-2">
               <div v-if="user" class="account-name text-left">

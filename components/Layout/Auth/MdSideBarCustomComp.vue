@@ -70,7 +70,7 @@ export default {
 
         {
           title: 'Settings',
-          icon: 'fa fa-user',
+          icon: 'fas fa-cog',
           child: [
             {
               title: 'Laboratory Settings',

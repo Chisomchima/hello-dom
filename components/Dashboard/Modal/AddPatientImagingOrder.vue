@@ -254,9 +254,13 @@ export default {
 
     clear() {
       this.dataObject = {
+        img_obv: [],
+        ordering_physician: '',
+        referral_facility: '',
+        comments: '',
+        service_center: null,
         patient: {},
-        name: '',
-        order_no: '',
+        stat: false,
       }
       this.$emit('hide')
     },
