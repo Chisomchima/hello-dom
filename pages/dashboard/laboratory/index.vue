@@ -99,7 +99,7 @@
                         " :style="`background: ${data.item.panel.specimen_type.color}`" class="first pointer"></div>
 
                             <div style="width: 5rem;" class="text-12 ml-1 text-truncate">
-                                {{data.item.panel.name}}
+                                {{data.item.panel.specimen_type.name}}
                             </div>
                         </div>
                     </template>

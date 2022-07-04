@@ -18,11 +18,15 @@
         <div class="bg-light text-12 border-radius mb-3" v-else>
             <div class="d-flex justify-content-end mb-2 bg-light">
                 <div v-if="consultationData.status === 'DS'" class="ml-2">
-                    <button disabled class="btn btn-outline-success ">
+                    <!-- <button disabled class="btn btn-outline-success ">
                         Signed
-                    </button>
+                    </button> -->
+                    <div style="width: 5rem" class="badge-success rounded text-center">
+                        Signed
+                    </div>
                 </div>
-                <BaseButton v-if="consultationData.status === 'NS'" @click="signAndCloseEnc" class="btn-outline-primary"
+                <BaseButton v-if="consultationData.status === 'NS' || consultationData.status === 'NEW'"
+                    @click="signAndCloseEnc" class="btn-success"
                     :disabled="consultationData ? (consultationData.bill.cleared_status === 'CLEARED' ? false : true) : ''">
                     Sign
                 </BaseButton>

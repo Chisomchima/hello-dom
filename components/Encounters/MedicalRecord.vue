@@ -31,7 +31,13 @@ export default {
 
         { key: "encounter_type", label: "Encounter Type", sortable: true },
         { key: "provider", label: "Provider", sortable: true },
-        { key: "status", label: "Status", sortable: true },
+        {
+          key: "status", formatter: (val) => {
+            
+             if (val === "DS") {
+              return val = 'Signed'
+            }
+          }, label: "Status", sortable: true },
         { key: "action", label: "", sortable: false },
       ],
     };
