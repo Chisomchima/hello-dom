@@ -34,12 +34,19 @@
             :pages="pages"
             :items="items"
             :busy="busy"
+            :dropdown-item="['order_lab', 'order_encounter', 'order_imaging']"
             @page-changed="filter($event, currentFilter)"
             @row-clicked="goToProfile($event)"
+            @order_lab="goToLab($event)"
+            @order_encounter="showEncounterModal($event)"
+            @order_imaging="showImagingModal($event)"
           />
         </UtilsFilterComponent>
       </div>
     </div>
+    <DashboardModalAddLabOrder :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddEncounter :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddPatientImagingOrder :data="modalData" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -51,6 +58,7 @@ export default {
   data() {
     return {
       genders: ['male', 'female'],
+      modalData: {},
       busy: false,
       currentFilter: {},
       newCount: 0,
@@ -79,11 +87,15 @@ export default {
         {
           key: 'gender',
         },
-         {
+        {
           key: 'date_of_birth',
         },
         {
           key: 'phone_number',
+        },
+        {
+          label: '',
+          key: 'dots',
         },
       ],
     }
@@ -111,6 +123,21 @@ export default {
         },
       })
     },
+    goToLab(e) {
+      this.modalData = e
+      this.$bvModal.show('modal')
+      console.log(e)
+    },
+
+    showEncounterModal(e) {
+      this.modalData = e
+      this.$bvModal.show('add_encounters')
+    },
+
+    showImagingModal(e){
+      this.modalData =e;
+      this.$bvModal.show('add_imaging');
+    }
   },
 }
 </script>

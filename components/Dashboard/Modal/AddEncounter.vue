@@ -1,6 +1,7 @@
 <template>
   <div>
     <ModalWrapper
+      id="add_encounters"
       size="lg"
       title="Add Encounter"
       @show="getData()"
@@ -142,7 +143,11 @@ export default {
             encounter_type: this.encounterType,
             patient: this.data,
           })
-          this.$bvModal.hide('modal')
+          this.$bvModal.hide('add_encounters')
+          this.$toast({
+          type: 'success',
+          text: 'Ordered Encounter Successfully',
+        })
           this.$emit('refresh')
         }
       } catch (error) {

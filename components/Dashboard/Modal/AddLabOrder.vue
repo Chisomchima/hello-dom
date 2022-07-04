@@ -86,7 +86,7 @@
 
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Stat" :rules="[]">
-                <input id="" v-model="stat" type="checkbox"   name="" />
+                <input id="" v-model="stat" type="checkbox" name="" />
               </ValidationProviderWrapper>
             </div>
 
@@ -130,6 +130,7 @@ export default {
   },
   methods: {
     async getData() {
+      this.currentData = this.data
       try {
         const serviceCenters = await this.$api.laboratory.getServiceCenter({
           size: 1000,
@@ -152,6 +153,10 @@ export default {
           stat: this.stat,
         })
         this.$bvModal.hide('modal')
+         this.$toast({
+          type: 'success',
+          text: 'Ordered Lab Successfully',
+        })
         this.$emit('refresh')
       }
     },

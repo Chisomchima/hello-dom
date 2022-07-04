@@ -41,11 +41,11 @@
           </div>
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper
-              name="Billing Description"
+              name="Cost Price"
               :rules="[]"
             >
               <input
-                v-model="dataObject.bill_description"
+                v-model="dataObject.cost_price"
                 type="text"
                 class="form-control"
               />
@@ -75,7 +75,7 @@ export default {
         img_unit_id: 0,
         status: '',
         bill_price: '',
-        bill_description: '',
+        cost_price: '',
       },
     }
   },

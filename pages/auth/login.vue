@@ -2,7 +2,7 @@
   <div class="d-flex flex-column width50 mx-auto">
     <div class="row text-center my-3">
       <div class="col text-left">
-        <h2 class="text-left font-family_brown font-weight-bold">Sign in to SlateMD</h2>
+        <h2 class="text-left font-family_brown font-weight-bold">Sign in</h2>
       </div>
     </div>
     <ValidationObserver>
