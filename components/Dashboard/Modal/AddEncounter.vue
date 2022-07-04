@@ -6,6 +6,7 @@
       title="Add Encounter"
       @show="getData()"
       @ok="save()"
+      @hide="clear()"
     >
       <ValidationObserver ref="form">
         <form>
@@ -71,10 +72,7 @@
             </div>
 
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper
-                name="Encounter Type"
-                :rules="['']"
-              >
+              <ValidationProviderWrapper name="Encounter Type" :rules="['']">
                 <VSelect
                   v-model="encounterType"
                   :options="encounterTypes"
@@ -145,14 +143,20 @@ export default {
           })
           this.$bvModal.hide('add_encounters')
           this.$toast({
-          type: 'success',
-          text: 'Ordered Encounter Successfully',
-        })
+            type: 'success',
+            text: 'Ordered Encounter Successfully',
+          })
           this.$emit('refresh')
         }
       } catch (error) {
         console.log(error)
       }
+    },
+
+    clear() {
+      this.provider = null
+      this.clinic = null
+      this.encounterType = null
     },
   },
 }

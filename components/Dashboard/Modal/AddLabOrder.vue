@@ -5,6 +5,7 @@
       title="Add Lab Order"
       @show="getData()"
       @ok="save()"
+      @hide="clear()"
     >
       <ValidationObserver ref="form">
         <form>
@@ -12,7 +13,7 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="UHID" :rules="['required']">
                 <input
-                  :value="data.uhid"
+                  :value="currentData.uhid"
                   class="form-control"
                   type="text"
                   readonly
@@ -26,7 +27,7 @@
               >
                 <input
                   class="form-control"
-                  :value="`${data.salutation} ${data.firstname} ${data.lastname} `"
+                  :value="`${currentData.salutation} ${currentData.firstname} ${currentData.lastname} `"
                   type="text"
                   readonly
                 />
@@ -37,7 +38,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  :value="data.date_of_birth"
+                  :value="currentData.date_of_birth"
                   readonly
                 />
               </ValidationProviderWrapper>
@@ -45,7 +46,11 @@
 
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Gender" :rules="['required']">
-                <input :value="data.gender" class="form-control" readonly />
+                <input
+                  :value="currentData.gender"
+                  class="form-control"
+                  readonly
+                />
               </ValidationProviderWrapper>
             </div>
 
@@ -128,6 +133,15 @@ export default {
       stat: false,
     }
   },
+
+  watch: {
+    data: {
+      handler(newVal) {
+        this.currentData = newVal
+      },
+      deep: true,
+    },
+  },
   methods: {
     async getData() {
       this.currentData = this.data
@@ -153,12 +167,21 @@ export default {
           stat: this.stat,
         })
         this.$bvModal.hide('modal')
-         this.$toast({
+        this.$toast({
           type: 'success',
           text: 'Ordered Lab Successfully',
         })
         this.$emit('refresh')
       }
+    },
+
+    clear() {
+      this.currentData = {}
+      this.lapPanel = ''
+      this.serviceCenter = null
+      this.encounterType = null
+      this.comments = ''
+      this.stat = false
     },
   },
 }
