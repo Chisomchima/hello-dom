@@ -153,10 +153,12 @@
 
     <div class="mb-2">
       <div class="row">
-        <!-- <div class="col-6">
-          <BaseButton class="w-100"> Filter </BaseButton>
-        </div> -->
-        <div class="col-4 align-self-end offset-md-8">
+         <div class="col-2 offset-md-8">
+          <BaseButton class="w-100" @click="applyFilter(filters)">
+            Filter
+          </BaseButton>
+        </div>
+        <div class="col-2 align-self-end">
           <BaseButton class="w-100 btn-danger" @click="clear()">
             Clear
           </BaseButton>
@@ -167,7 +169,7 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
+// import { debounce } from 'lodash'
 
 export default {
   data() {
@@ -194,25 +196,28 @@ export default {
         encounter_id: '',
         date_before: '',
         date_after: '',
-        worklist: true
+        worklist: true,
       },
     }
   },
   watch: {
-    filters: {
-      handler: debounce(function (newVal) {
-        if (newVal.by.length > 0) {
-          
-          const newFilterObject = { ...newVal, [newVal.by]: newVal.entry, worklist: true }
-          console.log(newFilterObject)
-          this.$emit('filter', newFilterObject)
-        } else {
-          this.$emit('filter', newVal)
-        }
-      }, 500),
-      deep: true,
-      immediate: true,
-    },
+    // filters: {
+    //   handler: debounce(function (newVal) {
+    //     if (newVal.by.length > 0) {
+    //       const newFilterObject = {
+    //         ...newVal,
+    //         [newVal.by]: newVal.entry,
+    //         worklist: true,
+    //       }
+    //       console.log(newFilterObject)
+    //       this.$emit('filter', newFilterObject)
+    //     } else {
+    //       this.$emit('filter', newVal)
+    //     }
+    //   }, 500),
+    //   deep: true,
+    //   immediate: true,
+    // },
     genders: {},
   },
   async created() {
@@ -249,6 +254,20 @@ export default {
         provider: [],
         status: '',
         encounter_id: '',
+      }
+      this.applyFilters(this.filters);
+    },
+    applyFilter(newVal) {
+      if (newVal.by.length > 0) {
+        const newFilterObject = {
+          ...newVal,
+          [newVal.by]: newVal.entry,
+          worklist: true,
+        }
+        // console.log(newFilterObject)
+        this.$emit('filter', newFilterObject)
+      } else {
+        this.$emit('filter', newVal)
       }
     },
   },
