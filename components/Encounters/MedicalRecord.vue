@@ -24,9 +24,8 @@ export default {
       page: 1,
       perPage: 12,
       fields: [
-        { key: "encounter_id", label: "Encounter ID", sortable: true },
-
         { key: "date", label: "Date", sortable: true },
+        { key: "encounter_id", label: "Encounter ID", sortable: true },
         { key: "department", label: "Department", sortable: true },
         { key: "clinic", label: "Clinic", sortable: true },
 
@@ -75,14 +74,18 @@ export default {
 
           let badgeColor = "";
           if (iterator.status === "New") {
-            badgeColor = "badge-warning";
+            badgeColor = "bg-warning";
           } else if (
             iterator.status === "Nurse seen." ||
             iterator.status === "Nurse seen" ||
             iterator.status === "NS"
           ) {
-            badgeColor = "badge-info";
-          } else {
+            badgeColor = "bg-info";
+          }
+          else if (iterator.status === 'DS') {
+            badgeColor = "bg-danger"
+          }
+          else {
             badgeColor = "unknown";
           }
 

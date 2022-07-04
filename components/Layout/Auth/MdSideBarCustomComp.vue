@@ -51,7 +51,14 @@ export default {
          {
           href: '/dashboard/laboratory',
           title: 'Laboratory Work List',
-          icon: 'fas fa-vial',
+           icon: 'fas fa-vial',
+           child: [
+             {
+               href: '/dashboard/laboratory/search-lab/',
+               title: 'Search Laboratory',
+               icon: 'fas fa-list-ul',
+             },
+           ],
         },
 
           {

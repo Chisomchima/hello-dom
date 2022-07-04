@@ -89,13 +89,19 @@
                         </div>
                     </template>
                     <template #panel="{ data }">
-                        <div style="
-                        width: 2rem;
-                        height: 1.9rem;
+                        <div class="d-flex align-items-center">
+                            <div style="
+                        width: 1.5rem;
+                        height: 1.5rem;
                         border-radius: 50%;
                         background: green;
                         border: 1px solid #727d71;
                         " :style="`background: ${data.item.panel.specimen_type.color}`" class="first pointer"></div>
+
+                            <div style="width: 5rem;" class="text-12 ml-1 text-truncate">
+                                {{data.item.panel.name}}
+                            </div>
+                        </div>
                     </template>
                     <template #cancel="{ data }">
                         <div>
@@ -160,7 +166,6 @@ export default {
             modalTitle: '',
             status: '',
             fields: [
-                { key: 'asn', label: 'ASN', sortable: true },
                 {
                     key: 'created_at',
                     label: 'Order date',
@@ -169,6 +174,8 @@ export default {
                         return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
                     },
                 },
+                { key: 'asn', label: 'ASN', sortable: true },
+                { key: 'patient.uhid', label: 'UHID', sortable: true },
                 {
                     key: 'patient',
                     label: 'Patient',
@@ -177,7 +184,12 @@ export default {
                         return val.salutation + ' ' + val.firstname + ' ' + val.lastname
                     },
                 },
-                { key: 'patient.uhid', label: 'UHID', sortable: true },
+                {
+                    key: 'panel.lab_unit.name',
+                    label: 'Lab Unit',
+                    sortable: true,
+                },
+                
                 {
                     key: 'panel.name',
                     label: 'Panel Name',

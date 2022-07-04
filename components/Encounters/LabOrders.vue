@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="pt-0 px-0 pb-0 mb-3">
-            <div class="text-20 d-flex justify-content-between align-items-center">
-                <h4 class="text-grey text-18">Lab Orders</h4>
+            <!-- <div class="text-20 d-flex justify-content-between align-items-center">
+
                 <div>
                     <button @click="newLabOrders" class="btn btn-outline-primary text-14">
                         New Lab Order
                     </button>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div>
@@ -138,9 +138,9 @@
                                 style="height: 38px; width: 5rem; text-align: center">
                                 Cancel
                             </button>
-                            
 
-                            <BaseButton @click.prevent="createLabOrder" class="btn-primary">Save
+
+                            <BaseButton @click.prevent="createLabOrder" class="btn-primary">Order
                             </BaseButton>
                         </div>
                         <div type="button" ref="runValidation" id="runValidation" @click="validate"></div>
@@ -148,10 +148,14 @@
                 </ValidationObserver>
             </b-modal>
         </div>
-        <table-component :paginate="true" :perPage="perPage" :busy="busy" :pages="pages" :items="itemsToShow"
-            :totalItems="totalPages" :current-page="currentPage" :dropdownItem="dropdownItem"
-            @page-changed="getPatientLabOrders($event)" :fields="fields">
-            <!-- <template #actions="{ data }">
+        <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+            <template #besideFilterButton>
+                <BaseButton class="btn-outline-primary" @click="newLabOrders">New Lab Order</BaseButton>
+            </template>
+            <table-component :paginate="true" :perPage="perPage" :busy="busy" :pages="pages" :items="itemsToShow"
+                :totalItems="totalPages" :current-page="currentPage" :dropdownItem="dropdownItem"
+                @page-changed="getPatientLabOrders($event)" :fields="fields">
+                <!-- <template #actions="{ data }">
               <pre>{{ data }}</pre>
               <button
                 class="btn btn-info"
@@ -161,61 +165,64 @@
                 Details
               </button>
             </template> -->
-            <template #row-details="{ data }">
-                <b-card v-if="data.item.lab_panel_orders.length >
+                <template #row-details="{ data }">
+
+                    <b-card v-if="data.item.lab_panel_orders.length >
                 0">
 
-                    <div v-for="(panel, index) in data.item.lab_panel_orders" :key="index">
-                        <!-- <pre>{{panel.panel}}</pre> -->
-                        <Accordion :activeIndex="0">
-                            <AccordionTab :header="panel.panel.name">
-                                <p class="my-2 text-capitalize text-14 text-info">
-                                    Status: {{ panel.status }}
-                                </p>
+                        <div v-for="(panel, index) in data.item.lab_panel_orders" :key="index">
+                            <!-- <pre>{{panel.panel}}</pre> -->
+                            <Accordion :activeIndex="0">
+                                <AccordionTab :header="panel.panel.name">
+                                    <p class="my-2 text-capitalize text-14 text-info">
+                                        Status: {{ panel.status }}
+                                    </p>
 
 
-                                <div class="mb-0 text-capitalize d-flex align-items-center text-14">
-                                    <div class="text-14 text-info">
-                                        Specimen-type: {{ panel.panel.specimen_type.name }}
-                                    </div>
+                                    <div class="mb-0 text-capitalize d-flex align-items-center text-14">
+                                        <div class="text-14 text-info">
+                                            Specimen-type: {{ panel.panel.specimen_type.name }}
+                                        </div>
 
-                                    <div style="
+                                        <div style="
                           width: 1rem;
                           height: 1rem;
                           border-radius: 50%;
                           background: green;
                           border: 1px solid #727d71;
                         " :style="`background: ${panel.panel.specimen_type.color}`" class="first pointer ml-2"></div>
-                                </div>
+                                    </div>
 
-                                <div class="table_container table-responsive mt-2 pt-2">
-                                    <TableComponent :paginate="false" :fields="nestedFields" :items="panel.panel.obv">
-                                        <template #reference_range="{ data: { item } }">
+                                    <div class="table_container table-responsive mt-2 pt-2">
+                                        <TableComponent :paginate="false" :fields="nestedFields"
+                                            :items="panel.panel.obv">
+                                            <template #reference_range="{ data: { item } }">
 
-                                            <div v-for="(seen, index) in item.reference_range" :key="index">
-                                                <span>
-                                                    {{ seen.name }}
-                                                </span>
-                                            </div>
-                                        </template>
-                                        <template #value="{ data: { item } }">
-                                            <div>
-                                                {{ item.value ? item.value : "No Value recorded" }}
-                                            </div>
-                                        </template>
-                                    </TableComponent>
-                                </div>
-                                <p class="my-2 text-capitalize text-14 text-info">
-                                    Comments: {{ panel.panel.comments }}
-                                </p>
-                            </AccordionTab>
+                                                <div v-for="(seen, index) in item.reference_range" :key="index">
+                                                    <span>
+                                                        {{ seen.name }}
+                                                    </span>
+                                                </div>
+                                            </template>
+                                            <template #value="{ data: { item } }">
+                                                <div>
+                                                    {{ item.value ? item.value : "No Value recorded" }}
+                                                </div>
+                                            </template>
+                                        </TableComponent>
+                                    </div>
+                                    <p class="my-2 text-capitalize text-14 text-info">
+                                        Comments: {{ panel.panel.comments }}
+                                    </p>
+                                </AccordionTab>
 
-                        </Accordion>
+                            </Accordion>
 
-                    </div>
-                </b-card>
-            </template>
-        </table-component>
+                        </div>
+                    </b-card>
+                </template>
+            </table-component>
+        </UtilsFilterComponent>
     </div>
 </template>
 
@@ -291,9 +298,28 @@ export default {
                 { key: "reference_range", label: "Reference Range", sortable: true },
             ],
             fields: [
-                { key: "asn", label: "ASN No.", sortable: true },
                 { key: "ordered_datetime", label: "Order Date", sortable: true },
+                { key: "asn", label: "ASN No.", sortable: true },
+                {
+                    key: 'service_center.name',
+                    label: 'Service center',
+                    sortable: true,
+                },
 
+                {
+                    key: 'ordered_by',
+                    label: 'Ordered By',
+                    sortable: true,
+                    formatter: (val) => {
+                        if (val.first_name || val.last_name) {
+                            return val.first_name + ' ' + val.last_name
+                        }
+                        else {
+                            return ''
+                        }
+                    },
+                },
+                // { key: 'panel', label: 'Specimen Type', sortable: true },
                 { key: "details", label: "Info", sortable: false },
             ],
             test: "",
@@ -460,6 +486,7 @@ export default {
                         patient: iterator.patient,
                         service_center: iterator.service_center,
                         ordered_datetime: iterator.ordered_datetime,
+                        ordered_by: iterator.ordered_by,
                         comments: iterator.comments,
                         ordered_datetime: b,
                     });

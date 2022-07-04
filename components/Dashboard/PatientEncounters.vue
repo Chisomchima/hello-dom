@@ -16,7 +16,7 @@
           @row-clicked="onRowClicked"
         >
           <template #status="{ data }">
-            <span v-if="data.item.status === 'NS'" class="badge badge-info">{{
+            <span v-if="data.item.status === 'NS'" class="badge bg-info">{{
               data.item.status
             }}</span>
           </template>
@@ -42,6 +42,13 @@ export default {
     return {
       fields: [
         {
+          key: 'encounter_datetime',
+          label: 'Date&Time',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
+          },
+        },
+        {
           key: 'encounter_id',
         },
         {
@@ -66,13 +73,7 @@ export default {
             }
           },
         },
-        {
-          key: 'encounter_datetime',
-          label:'Date&Time',
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
-          },
-        },
+        
         {
           key: 'status',
         },

@@ -17,7 +17,12 @@
 
         <div class="bg-light text-12 border-radius mb-3" v-else>
             <div class="d-flex justify-content-end mb-2 bg-light">
-                <BaseButton @click="signAndCloseEnc" class="btn-outline-primary"
+                <div v-if="consultationData.status === 'DS'" class="ml-2">
+                    <button disabled class="btn btn-outline-success ">
+                        Signed
+                    </button>
+                </div>
+                <BaseButton v-if="consultationData.status === 'NS'" @click="signAndCloseEnc" class="btn-outline-primary"
                     :disabled="consultationData ? (consultationData.bill.cleared_status === 'CLEARED' ? false : true) : ''">
                     Sign
                 </BaseButton>
@@ -75,7 +80,7 @@
                 </div>
                 <div class="
             d-flex
-            justify-content-end
+            justify-content-between
             col-md-5 col-sm-5 col-lg-5
             align-items-center
           ">
@@ -281,7 +286,7 @@ export default {
                 this.patientData = response.patient;
                 let time = this.consultationData.encounter_datetime;
                 let y = new Date(time).toLocaleDateString();
-                debugger
+        
                 let z = new Date(time).toTimeString().substring(0, 5);
                 this.encounter_time = y + ", " + z;
                 this.calcAge(this.patientData.date_of_birth)
