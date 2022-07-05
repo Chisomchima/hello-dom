@@ -93,4 +93,7 @@ sw.*
 .vscode
 .vscode/
 
+# theme
+theme/
+
 
