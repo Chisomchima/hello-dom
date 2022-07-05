@@ -332,7 +332,7 @@
                       </div>
                     </template>
                     <p class="my-2 text-capitalize text-14 text-info">
-                      Status: {{ panel.status === 'NEW' ? 'Open' : panel.status }}
+                      Status: {{ panel.status === 'NEW' ? 'Open' : (panel.status === 'fill result' ? 'Reported' : panel.status) }}
                     </p>
 
                     <div
