@@ -46,7 +46,7 @@
 
     <div class="row p-4">
       <div class="col-md-12">
-        <h3>Total: {{ total }}</h3>
+        <h3>Total: {{ numberWithCommas(total) }}</h3>
       </div>
       <div class="col-md-3">
         <BaseButton
@@ -63,6 +63,8 @@
 import { DateTime } from 'luxon'
 import { remove } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
+
+
 
 export default {
   mixins: [TableFunc],
@@ -197,6 +199,10 @@ export default {
         console.log(error)
       }
     },
+
+     numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
   },
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div class="table-responsive">
     <b-table
+      id="globalTable"
       :items="items"
       :fields="sortable_cols"
       stacked="md"
@@ -15,7 +16,9 @@
       class="custom-table"
       :class="classCustom"
       :table-class="tableClass"
-      @row-clicked="$emit('row-clicked', $event)"
+      :tbody-tr-class="disabledTableRowMethod"
+      @row-hovered="rowHovered($event)"
+      @row-clicked="checkForBillStatusOnRowClick($event)"
     >
       <template #table-busy>
         <div class="p-4">
@@ -179,7 +182,7 @@
       <template #cell(print)="data">
         <slot name="print" :data="data"></slot>
       </template>
-       <template #cell(cleared_status)="item">
+      <template #cell(cleared_status)="item">
         <slot name="cleared_status" :data="item"></slot>
       </template>
 
@@ -250,10 +253,26 @@
 
       <template #table-colgroup="scope">
         <template v-for="field in scope.fields">
-          <col v-if="field.key === 'email'" :key="field.key" :style="{ width: '15rem' }" />
-          <col v-else-if="field.key === 'date'" :key="field.key" :style="{ width: '10rem' }" />
-          <col v-else-if="field.key === 'service_name'" :key="field.key" :style="{ width: '50rem' }" />
-          <col v-else-if="field.key === 'order_no'" :key="field.key" :style="{ width: '20rem' }" />
+          <col
+            v-if="field.key === 'email'"
+            :key="field.key"
+            :style="{ width: '15rem' }"
+          />
+          <col
+            v-else-if="field.key === 'date'"
+            :key="field.key"
+            :style="{ width: '10rem' }"
+          />
+          <col
+            v-else-if="field.key === 'service_name'"
+            :key="field.key"
+            :style="{ width: '50rem' }"
+          />
+          <col
+            v-else-if="field.key === 'order_no'"
+            :key="field.key"
+            :style="{ width: '20rem' }"
+          />
         </template>
       </template>
     </b-table>
@@ -391,8 +410,43 @@ export default {
       this.totalRows = filteredItems.length
       // this.currentPage = 1
     },
+
+    disabledTableRowMethod(item, type) {
+      if (!item || type !== 'row') return
+      if (item.bill) {
+        if (item.bill.cleared_status !== 'CLEARED') {
+          // this.$refs.tooltip.$emit('enable')
+          return 'disabledTableRow'
+        }
+      }
+      return ''
+
+      // if (item.status === 'awesome') return 'disabledTableRowMethod'
+    },
+
+    checkForBillStatusOnRowClick(item) {
+      if (item.bill) {
+        if (item.bill.cleared_status !== 'CLEARED') {
+          this.$toast({
+            type: 'info',
+            text: 'Bill is not cleared',
+          })
+          return
+        } else {
+          this.$emit('row-clicked', item)
+          return
+        }
+      }
+      this.$emit('row-clicked', item)
+    },
+
+    rowHovered() {
+      console.log('HEHEH')
+      //  this.$refs.tooltip.$emit('enable')
+    },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

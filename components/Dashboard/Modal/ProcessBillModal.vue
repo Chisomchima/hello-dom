@@ -1,5 +1,10 @@
 <template>
-  <ModalWrapper submit-title="Make Payment" title="Confirm Payment" @ok="ok()" @hide="clear()">
+  <ModalWrapper
+    submit-title="Make Payment"
+    title="Confirm Payment"
+    @ok="ok()"
+    @hide="clear()"
+  >
     <ValidationObserver ref="form">
       <form>
         <div class="row">
@@ -10,9 +15,10 @@
                 type="text
               /> -->
               <input
-                v-model="dataObject.amount"
+                :value="formattedQty"
                 type="text"
                 class="form-control"
+                @input="handleQtyInput($event.target.value)"
               />
             </ValidationProviderWrapper>
           </div>
@@ -38,6 +44,14 @@ export default {
       },
     }
   },
+  computed: {
+    formattedQty () {
+      // Add the commas back to the string
+      const qty = this.dataObject.amount + ""
+      console.log(qty);
+      return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  },
   watch: {
     // editData: {
     //   handler(newVal) {
@@ -53,6 +67,13 @@ export default {
      ok() {
       this.$emit('ok',this.dataObject.amount)
     },
+
+    handleQtyInput (newValue) {
+      // console.log(newValue.target.value);
+      // Make sure the stored qty is not formatted
+      this.dataObject.amount = newValue.toString().replace(/\D/g, "")
+    },
+    
     // async save() {
     //   try {
     //     const data = await this.$api.imaging.saveServiceCenter(this.dataObject)

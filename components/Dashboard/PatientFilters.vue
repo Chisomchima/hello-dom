@@ -32,7 +32,7 @@
       <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">D.O.B</label>
-          <input v-model="filters.dob" type="text" class="form-control" />
+          <input v-model="filters.dob" type="date" class="form-control" />
         </div>
       </div>
       <div class="col-md-4">
@@ -49,10 +49,12 @@
 
     <div class="mb-2">
       <div class="row">
-        <!-- <div class="col-6">
-          <BaseButton class="w-100"> Filter </BaseButton>
-        </div> -->
-        <div class="col-4 align-self-end offset-md-8">
+         <div class="col-2 offset-md-8">
+          <BaseButton class="w-100" @click="$emit('filter', filters)">
+            Filter
+          </BaseButton>
+        </div>
+        <div class="col-2 align-self-end">
           <BaseButton class="w-100 btn-danger" @click="clear()">
             Clear
           </BaseButton>
@@ -79,12 +81,12 @@ export default {
     }
   },
   watch: {
-    filters: {
-      handler: debounce(function (newVal) {
-        this.$emit('filter', newVal)
-      }, 500),
-      deep: true,
-    },
+    // filters: {
+    //   handler: debounce(function (newVal) {
+    //     this.$emit('filter', newVal)
+    //   }, 500),
+    //   deep: true,
+    // },
     genders: {},
   },
   methods: {
@@ -95,6 +97,7 @@ export default {
         dob: '',
         gender: '',
       }
+      this.$emit('filter', this.filters)
     },
   },
 }

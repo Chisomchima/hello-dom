@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <landing-page />
+    <!-- <landing-page /> -->
   </div>
 </template>
 

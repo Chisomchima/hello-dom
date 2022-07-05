@@ -53,14 +53,37 @@ export default {
       busy: false,
       currentFilter: {},
       fields: [
-        { key: 'img_obv.name', label: 'Observation', sortable: true },
-        { key: 'patient.uhid', label: 'UHID', sortable: true },
         {
-          key: 'img_order',
-          label: 'Order By',
-          formatter: (val, key, item) => {
-            return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+          key: 'img_order.ordered_datetime',
+          label: 'Date',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
           },
+          sortable: true,
+        },
+         {
+          key: 'img_order.img_id',
+          label: 'imaging id',
+          // formatter: (val, key, item) => {
+          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+          // },
+          sortable: true,
+        },
+         {
+          key: 'img_order.service_center.name',
+          label: 'Service Center',
+          // formatter: (val, key, item) => {
+          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+          // },
+          sortable: true,
+        },
+
+        {
+          key: 'img_order.patient.uhid',
+          label: 'UHID',
+          // formatter: (val, key, item) => {
+          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+          // },
           sortable: true,
         },
         {
@@ -68,8 +91,17 @@ export default {
           label: 'Patient',
           sortable: true,
           formatter: (val) => {
-            return val.firstname + ' ' + val.lastname
+            return val.salutation + ' ' +val.firstname + ' ' + val.lastname
           },
+        },
+        { key: 'img_obv.name', label: 'Observation', sortable: true },
+        {
+          key: 'img_order',
+          label: 'Order By',
+          formatter: (val, key, item) => {
+            return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+          },
+          sortable: true,
         },
         { key: 'status', label: 'Status', sortable: true },
         { key: 'dots', label: '', sortable: false },

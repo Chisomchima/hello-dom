@@ -9,13 +9,15 @@
           @click="$router.push(`/`)"
         >
           <nuxt-link to="/">
-           <img
+
+           <b-avatar   class="rounded-circle" :alt="APP_NAME_LONG" src="@/assets/img/theme-image.jpeg"></b-avatar>
+           <!-- <img
            width="50px"
             src="@/assets/img/theme-image.jpeg"
             class="rounded-circle"
             :alt="APP_NAME_LONG"
             srcset=""
-          />
+          /> -->
             <!-- <h4 class="text-white">{{APP_NAME_LONG}}</h4> -->
           </nuxt-link>
         </div>
@@ -135,7 +137,8 @@
                 class="account-image"
                 :src="user.avatar ? user.avatar : fallbackAvatar"
               /> -->
-              <img class="account-image" :src="fallbackAvatar" />
+              <b-avatar ></b-avatar>
+              <!-- <img class="account-image" :src="require('')" /> -->
             </div>
             <div class="ml-2">
               <div v-if="user" class="account-name text-left">
