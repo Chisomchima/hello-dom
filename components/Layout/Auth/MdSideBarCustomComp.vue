@@ -54,7 +54,7 @@ export default {
            icon: 'fas fa-vial',
            child: [
              {
-               href: '/dashboard/laboratory/search-lab/',
+               href: '/dashboard/laboratory/',
                title: 'Search Laboratory',
                icon: 'fas fa-list-ul',
              },

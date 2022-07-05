@@ -60,8 +60,8 @@
                                     {{ data.item.status }}
                                 </div>
                                 <div v-if="data.item.status === 'approved'">
-                                    <!-- @click="save_file(data.item)" -->
-                                    <div class="d-flex">
+
+                                    <div @click="save_file(data.item)" class="d-flex">
                                         <span style="width: 3rem" class="
                     text-center text-capitalize text-12
                     text-info
@@ -206,6 +206,28 @@ export default {
       await this.getLabOrders()  
     },
     methods: {
+        save_file(e) {
+            this.downloading = true
+            fetch(`${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download`, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
+                },
+            })
+                .then(res => res.blob()) // Gets the response and returns it as a blob
+                .then(blob => {
+                    let objectURL = URL.createObjectURL(blob);
+                    let link = document.createElement('a');
+                    link.download = `Lab Report_${e.asn})`;
+                    link.href = objectURL;
+                    this.downloading = false
+                    link.click();
+                }).catch(err => {
+                    console.log(err);
+                    this.downloading = false
+                }
+                );
+
+        },
         async getLabOrders(page, e) {
             this.currentFilter = e
             try {

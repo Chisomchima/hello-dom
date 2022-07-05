@@ -152,10 +152,11 @@
             <template #besideFilterButton>
                 <BaseButton class="btn-outline-primary" @click="newLabOrders">New Lab Order</BaseButton>
             </template>
-            <table-component :paginate="true" :perPage="perPage" :busy="busy" :pages="pages" :items="itemsToShow"
-                :totalItems="totalPages" :current-page="currentPage" :dropdownItem="dropdownItem"
-                @page-changed="getPatientLabOrders($event)" :fields="fields">
-                <!-- <template #actions="{ data }">
+            <b-overlay variant="light" spinner-variant="primary" spinner-type="grow" :show="downloading" rounded="sm">
+                <table-component :paginate="true" :perPage="perPage" :busy="busy" :pages="pages" :items="itemsToShow"
+                    :totalItems="totalPages" :current-page="currentPage" :dropdownItem="dropdownItem"
+                    @page-changed="getPatientLabOrders($event)" :fields="fields">
+                    <!-- <template #actions="{ data }">
               <pre>{{ data }}</pre>
               <button
                 class="btn btn-info"
@@ -165,63 +166,87 @@
                 Details
               </button>
             </template> -->
-                <template #row-details="{ data }">
+                    <template #download="{ data }">
+                        <pre class="d-none">{{data}}</pre>
+                        <span @click="save_file(data.item)" class="
+                  text-center text-capitalize text-12
+                  text-info
+                  pointer
+                ">
+                            <span v-if="false">
+                                <b-spinner label="loading" variant="primary" type="grow"
+                                    style="width: 1.5rem; height: 1.5rem" class="text-center">
+                                </b-spinner>
+                            </span>
+                            <span v-else>
+                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24"
+                                    height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
+                                    <path fill="currentColor"
+                                        d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5Zm9 0a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5h8v-.5Zm-8 7v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5Z" />
+                                </svg>
+                            </span>
 
-                    <b-card v-if="data.item.lab_panel_orders.length >
+                        </span>
+
+                    </template>
+                    <template #row-details="{ data }">
+
+                        <b-card v-if="data.item.lab_panel_orders.length >
                 0">
 
-                        <div v-for="(panel, index) in data.item.lab_panel_orders" :key="index">
-                            <!-- <pre>{{panel.panel}}</pre> -->
-                            <Accordion :activeIndex="0">
-                                <AccordionTab :header="panel.panel.name">
-                                    <p class="my-2 text-capitalize text-14 text-info">
-                                        Status: {{ panel.status }}
-                                    </p>
+                            <div v-for="(panel, index) in data.item.lab_panel_orders" :key="index">
+                                <!-- <pre>{{panel.panel}}</pre> -->
+                                <Accordion :activeIndex="0">
+                                    <AccordionTab :header="panel.panel.name">
+                                        <p class="my-2 text-capitalize text-14 text-info">
+                                            Status: {{ panel.status }}
+                                        </p>
 
 
-                                    <div class="mb-0 text-capitalize d-flex align-items-center text-14">
-                                        <div class="text-14 text-info">
-                                            Specimen-type: {{ panel.panel.specimen_type.name }}
-                                        </div>
+                                        <div class="mb-0 text-capitalize d-flex align-items-center text-14">
+                                            <div class="text-14 text-info">
+                                                Specimen-type: {{ panel.panel.specimen_type.name }}
+                                            </div>
 
-                                        <div style="
+                                            <div style="
                           width: 1rem;
                           height: 1rem;
                           border-radius: 50%;
                           background: green;
                           border: 1px solid #727d71;
                         " :style="`background: ${panel.panel.specimen_type.color}`" class="first pointer ml-2"></div>
-                                    </div>
+                                        </div>
 
-                                    <div class="table_container table-responsive mt-2 pt-2">
-                                        <TableComponent :paginate="false" :fields="nestedFields"
-                                            :items="panel.panel.obv">
-                                            <template #reference_range="{ data: { item } }">
+                                        <div class="table_container table-responsive mt-2 pt-2">
+                                            <TableComponent :paginate="false" :fields="nestedFields"
+                                                :items="panel.panel.obv">
+                                                <template #reference_range="{ data: { item } }">
 
-                                                <div v-for="(seen, index) in item.reference_range" :key="index">
-                                                    <span>
-                                                        {{ seen.name }}
-                                                    </span>
-                                                </div>
-                                            </template>
-                                            <template #value="{ data: { item } }">
-                                                <div>
-                                                    {{ item.value ? item.value : "No Value recorded" }}
-                                                </div>
-                                            </template>
-                                        </TableComponent>
-                                    </div>
-                                    <p class="my-2 text-capitalize text-14 text-info">
-                                        Comments: {{ panel.panel.comments }}
-                                    </p>
-                                </AccordionTab>
+                                                    <div v-for="(seen, index) in item.reference_range" :key="index">
+                                                        <span>
+                                                            {{ seen.name }}
+                                                        </span>
+                                                    </div>
+                                                </template>
+                                                <template #value="{ data: { item } }">
+                                                    <div>
+                                                        {{ item.value ? item.value : "No Value recorded" }}
+                                                    </div>
+                                                </template>
+                                            </TableComponent>
+                                        </div>
+                                        <p class="my-2 text-capitalize text-14 text-info">
+                                            Comments: {{ panel.panel.comments }}
+                                        </p>
+                                    </AccordionTab>
 
-                            </Accordion>
+                                </Accordion>
 
-                        </div>
-                    </b-card>
-                </template>
-            </table-component>
+                            </div>
+                        </b-card>
+                    </template>
+                </table-component>
+                </b-overlay>
         </UtilsFilterComponent>
     </div>
 </template>
@@ -274,7 +299,7 @@ export default {
             labUnits: [],
             labPanels: [],
             mutatedPanels: [],
-
+            downloading: false,
             currentPage: 1,
             itemsToShow: [],
             labOrderData: {
@@ -321,6 +346,7 @@ export default {
                 },
                 // { key: 'panel', label: 'Specimen Type', sortable: true },
                 { key: "details", label: "Info", sortable: false },
+                { key: "download", label: "Print", sortable: false },
             ],
             test: "",
         };
@@ -368,6 +394,29 @@ export default {
     methods: {
         enableButton() {
             this.enabled = !this.enabled;
+        },
+
+        save_file(e) {
+            this.downloading = true
+            fetch(`${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download/`, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
+                },
+            })
+                .then(res => res.blob()) // Gets the response and returns it as a blob
+                .then(blob => {
+                    let objectURL = URL.createObjectURL(blob);
+                    let link = document.createElement('a');
+                    link.download = `Lab Report_${e.asn})`;
+                    link.href = objectURL;
+                    this.downloading = false
+                    link.click();
+                }).catch(err => {
+                    console.log(err);
+                    this.downloading = false
+                }
+                );
+
         },
 
         resetModal() {
@@ -489,6 +538,7 @@ export default {
                         ordered_by: iterator.ordered_by,
                         comments: iterator.comments,
                         ordered_datetime: b,
+                        id: iterator.id
                     });
                 }
 
