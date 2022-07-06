@@ -49,8 +49,8 @@
 
     <div class="mb-2">
       <div class="row">
-         <div class="col-2 offset-md-8">
-          <BaseButton class="w-100" @click="$emit('filter', filters)">
+        <div class="col-2 offset-md-8">
+          <BaseButton class="w-100" @click="filterFunc(filters)">
             Filter
           </BaseButton>
         </div>
@@ -83,11 +83,26 @@ export default {
   watch: {
     // filters: {
     //   handler: debounce(function (newVal) {
-    //     this.$emit('filter', newVal)
+    //    // this.$emit('filter', newVal)
+    //    this.$router.replace({
+    //     name:this.$router.name,
+    //     query:{
+    //       ...this.$router.query,
+    //       filter:JSON.stringify(newVal)
+    //     }
+    //    });
     //   }, 500),
     //   deep: true,
     // },
+    // "$route.query.filter"(newVal){
+    //   console.log(JSON.parse(newVal));
+    // },
     genders: {},
+  },
+  created() {
+    if (this.$route.query.filter) {
+      this.filters = JSON.parse(this.$route.query.filter)
+    }
   },
   methods: {
     clear() {
@@ -97,7 +112,17 @@ export default {
         dob: '',
         gender: '',
       }
-      this.$emit('filter', this.filters)
+      this.filterFunc(this.filters)
+    },
+
+    filterFunc(newVal) {
+      this.$router.push({
+        name: this.$router.name,
+        query: {
+          ...this.$router.query,
+          filter: JSON.stringify(newVal),
+        },
+      })
     },
   },
 }

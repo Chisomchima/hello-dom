@@ -28,6 +28,7 @@ export default {
           type: 'select',
           select_label: 'salutations',
           options: [],
+          col:'col-md-3',
           value: '',
         },
         {
@@ -35,18 +36,21 @@ export default {
           name: 'First Name',
           rules: ['required'],
           value: '',
+           col:'col-md-3',
         },
         {
           key: 'middlename',
           name: 'Middle Name',
           rules: [''],
           value: '',
+           col:'col-md-3',
         },
         {
           key: 'lastname',
           name: 'Last Name',
           rules: ['required'],
           value: '',
+           col:'col-md-3',
         },
         {
           key: 'date_of_birth',

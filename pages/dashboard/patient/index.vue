@@ -46,12 +46,16 @@
     </div>
     <DashboardModalAddLabOrder :data="modalData" @refresh="pageChange()" />
     <DashboardModalAddEncounter :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddPatientImagingOrder :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddPatientImagingOrder
+      :data="modalData"
+      @refresh="pageChange()"
+    />
   </div>
 </template>
 
 <script>
 import TableFunc from '~/mixins/TableCompFun'
+import { ObjectValuesAreTruthful } from '@/utils/friendly-helpers'
 
 export default {
   mixins: [TableFunc],
@@ -100,6 +104,22 @@ export default {
       ],
     }
   },
+
+  watch: {
+    '$route.query.filter': {
+      handler(newVal) {
+        if (newVal) {
+          const filterObject = JSON.parse(newVal)
+          const hasValues = ObjectValuesAreTruthful(filterObject)
+          if (hasValues) {
+            this.filter(1, filterObject)
+          }
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   methods: {
     async filter(page = 1, e) {
       this.currentFilter = e
@@ -134,10 +154,10 @@ export default {
       this.$bvModal.show('add_encounters')
     },
 
-    showImagingModal(e){
-      this.modalData =e;
-      this.$bvModal.show('add_imaging');
-    }
+    showImagingModal(e) {
+      this.modalData = e
+      this.$bvModal.show('add_imaging')
+    },
   },
 }
 </script>
