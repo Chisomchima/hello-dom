@@ -17,7 +17,6 @@
       :class="classCustom"
       :table-class="tableClass"
       :tbody-tr-class="disabledTableRowMethod"
-      @row-hovered="rowHovered($event)"
       @row-clicked="checkForBillStatusOnRowClick($event)"
     >
       <template #table-busy>
@@ -371,13 +370,20 @@ export default {
   },
   computed: {
     sortable_cols() {
+      console.log(this.fields)
       return this.fields.map((f) => {
+        const disabledOpacity = ['dots', 'status', 'actions', 'dots', 'dot']
         const notSortColumn = ['actions', 'download', 'liveClass', 'dots']
         // eslint-disable-next-line prefer-const
         let tmp = f
+        if (disabledOpacity.includes(tmp.key)) {
+          tmp.tdClass = 'removeTableDisabled'
+        }
+
         if (notSortColumn.includes(tmp.key)) {
           return tmp
         }
+
         if (tmp.key === 'avatar') {
           tmp.sortable = false
         } else if (
