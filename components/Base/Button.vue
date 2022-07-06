@@ -1,6 +1,6 @@
 <template>
   <button
-    class="btn btn-primary"
+    class="btn"
     :class="extraClass"
     :disabled="isLoading || disabled"
     @click="$emit('click', $event)"
@@ -28,7 +28,7 @@ export default Vue.extend({
     },
     extraClass: {
       type: String,
-      default: '',
+      default: 'btn-primary',
     },
     disabled: {
       type: Boolean,

@@ -16,13 +16,13 @@
     </div>
 
     <div class="row">
-      <!-- <div class="col-md-12 mb-4">
+      <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
-            <DashboardEncounterFilters @filter="filter(1, $event)" />
+            <DashboardImagingFilters @filter="filter(1, $event)" />
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="col-md-12">
         <UtilsFilterComponent
           disable-pagination
@@ -35,11 +35,57 @@
             :items="items"
             :busy="busy"
             @page-changed="filter($event, currentFilter)"
-          />
+          >
+            <template #status="{ data }">
+              <template v-if="data.item.status === 'NEW'">
+                <button
+                  :disabled="data.item.bill.cleared_status !== 'CLEARED'"
+                  class="btn btn-outline-primary btn-sm"
+                  @click="captureImaging(data.item)"
+                >
+                  Capture
+                </button>
+              </template>
+               <template v-if="data.item.status === 'CAPTURED'">
+                <button
+                :disabled="data.item.bill.cleared_status !== 'CLEARED'"
+                  class="btn btn-outline-warning btn-sm"
+                  @click="captureReport(data.item)"
+                >
+                  Report
+                </button>
+              </template>
+
+                <template v-if="data.item.status === 'AWAITING_APPROVAL'">
+                <button
+                  class="btn btn-sm btn-outline-info text-nowrap"
+                  @click="awaitApproval(data.item)"
+                >
+                  AWAITING APPROVAL
+                </button>
+              </template>
+            </template>
+          </TableComponent>
         </UtilsFilterComponent>
       </div>
     </div>
     <DashboardModalAddImagingOrder @refresh="filter(1, {})" />
+    <DashboardModalImagingOrderCapture
+      :data="modalData"
+      @hide="modalData = {}"
+      @refresh="filter(1, currentFilter)"
+    />
+    <DashboardModalImagingOrderReport
+      :data="modalData"
+      @hide="modalData = {}"
+      @refresh="filter(1, currentFilter)"
+    />
+
+    <DashboardModalImagingOrderAwaitingApproval
+      :data="modalData"
+      @hide="modalData = {}"
+      @refresh="filter(1, currentFilter)"
+    />
   </div>
 </template>
 
@@ -50,6 +96,7 @@ export default {
   mixins: [TableFunc],
   data() {
     return {
+      modalData: {},
       busy: false,
       currentFilter: {},
       fields: [
@@ -57,19 +104,21 @@ export default {
           key: 'img_order.ordered_datetime',
           label: 'Date',
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
+            return DateTime.fromISO(value).toLocaleString(
+              DateTime.DATETIME_SHORT
+            )
           },
           sortable: true,
         },
-         {
+        {
           key: 'img_order.img_id',
-          label: 'imaging id',
+          label: 'ASN',
           // formatter: (val, key, item) => {
           //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
           // },
           sortable: true,
         },
-         {
+        {
           key: 'img_order.service_center.name',
           label: 'Service Center',
           // formatter: (val, key, item) => {
@@ -91,7 +140,7 @@ export default {
           label: 'Patient',
           sortable: true,
           formatter: (val) => {
-            return val.salutation + ' ' +val.firstname + ' ' + val.lastname
+            return val.salutation + ' ' + val.firstname + ' ' + val.lastname
           },
         },
         { key: 'img_obv.name', label: 'Observation', sortable: true },
@@ -99,7 +148,7 @@ export default {
           key: 'img_order',
           label: 'Order By',
           formatter: (val, key, item) => {
-            return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+            return val.ordered_by.first_name + ' ' + val.ordered_by.first_name
           },
           sortable: true,
         },
@@ -126,6 +175,21 @@ export default {
         this.busy = false
       }
     },
+
+    captureImaging(e) {
+      this.modalData = e
+      this.$bvModal.show('imaging_order_capture_id')
+    },
+    captureReport(e) {
+      this.modalData = e
+      this.$bvModal.show('imaging_order_report_id')
+    },
+
+    awaitApproval(e) {
+      this.modalData = e
+      this.$bvModal.show('imaging_order_awaiting_approval')
+    },
+    
   },
 }
 </script>

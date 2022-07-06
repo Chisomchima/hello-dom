@@ -54,4 +54,8 @@ export default axios => ({
             params
         });
     },
+
+    patchObservationOrder(id,body) {
+        return axios.$patch(`/imaging/imaging_observation_order/${id}/`, body);
+    },
 });
