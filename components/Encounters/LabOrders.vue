@@ -548,7 +548,7 @@ export default {
         `${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download/`,
         {
           headers: {
-            Authorization: `Token ${localStorage.getItem(`HEALTH-TOKEN`)}`,
+            Authorization: `Token ${this.$store.state.auth.token}`,
           },
         }
       )

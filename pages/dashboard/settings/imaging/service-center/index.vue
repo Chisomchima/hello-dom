@@ -5,7 +5,7 @@
       <UtilsCardTab title="Service Center">
         <DashboardImagingServiceCenterSettings />
       </UtilsCardTab>
-      <UtilsCardTab title="Lab Unit">
+      <UtilsCardTab title="Modality Unit">
        <DashboardImagingServiceUnitSettings />
       </UtilsCardTab>
     </UtilsBaseCardTab>

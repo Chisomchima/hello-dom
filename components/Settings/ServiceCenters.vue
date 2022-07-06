@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+            <UtilsFilterComponent @search-input="searchMe($event)" disable-pagination :disable-visualization="true" search-placeholder="Search">
                 <template #besideFilterButton>
                     <BaseButton class="btn-outline-primary" @click="$bvModal.show('Add-service')">Add Service Center
                     </BaseButton>
@@ -191,11 +191,13 @@ export default {
                 }
             }
         },
-
-        async getServiceCenter() {
+        searchMe(e) {
+            this.getServiceCenter(1, e)
+        },
+        async getServiceCenter(page = 1, e="") {
             try {
                 this.busy = true;
-                let uri = `laboratory/service_center/?page=${this.page}&size=${this.perPage}`;
+                let uri = `laboratory/service_center/?page=${page}&name=${e}&size=${this.perPage}`;
 
                 const response = await this.$axios.$get(uri);
 
@@ -208,6 +210,7 @@ export default {
                         id: iterator.id,
                     });
                 }
+                this.busy = false;
             } catch (error) {
                 console.log(error);
             } finally {

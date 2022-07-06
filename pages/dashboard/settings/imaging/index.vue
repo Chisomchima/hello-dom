@@ -46,12 +46,12 @@ export default {
         {
           name: 'Service centers',
           icon: 'fas fa-notes-medical',
-          route: '/dashboard/settings/laboratory/service-center/',
+          route: '/dashboard/settings/imaging/service-center/',
         },
         {
           name: 'Service config',
           icon: 'fas fa-user-md',
-          route: '/dashboard/settings/laboratory/service-config/',
+          route: '/dashboard/settings/imaging/service-config/',
         },
       ],
     }

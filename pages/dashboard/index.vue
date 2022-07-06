@@ -54,9 +54,9 @@ export default {
           route: '/dashboard/opd',
         },
         {
-          name: 'Laboratory Setting',
+          name: 'Settings',
           icon: 'fas fa-cog',
-          route: '/dashboard/settings/laboratory/service-center',
+          route: '/dashboard/settings/',
         },
         {
           name: 'Laboratory',

@@ -12,7 +12,7 @@ export default axios => ({
     },
 
     getLabUnit(params) {
-        return axios.$get('/imaging/lab_unit/', {
+        return axios.$get('/imaging/modality/', {
             params
         });
     },
