@@ -45,12 +45,12 @@ export default {
       cards: [
         {
           name: 'Laboratory settings',
-          icon: 'fas fa-notes-medical',
+          icon: 'fa fa-cogs',
           route: '/dashboard/settings/laboratory/',
         },
         {
           name: 'Imaging settings',
-          icon: 'fas fa-user-md',
+          icon: 'fa fa-cogs',
           route: '/dashboard/settings/imaging',
         },
       ],

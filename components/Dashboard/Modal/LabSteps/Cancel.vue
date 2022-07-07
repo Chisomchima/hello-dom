@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ModalWrapper size="md" id="cancelRequest" title="Submit for approval" @ok="cancelRequest()">
+        <ModalWrapper size="md" id="cancelRequest" title="Cancel lab request" :submitTitle="`Yes`" @ok="cancelRequest()">
             <ValidationObserver ref="form">
                 <form>
                     <div class="container">

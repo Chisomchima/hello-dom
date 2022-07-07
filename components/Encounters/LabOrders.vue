@@ -1,16 +1,5 @@
 <template>
   <div>
-    <div class="pt-0 px-0 pb-0 mb-3">
-      <!-- <div class="text-20 d-flex justify-content-between align-items-center">
-
-                <div>
-                    <button @click="newLabOrders" class="btn btn-outline-primary text-14">
-                        New Lab Order
-                    </button>
-                </div>
-            </div> -->
-    </div>
-
     <div>
       <b-modal
         id="Add-laborder"
@@ -20,10 +9,6 @@
         ref="orderModal"
         @hide="closeModal()"
       >
-        <!-- <div>
-          <h4 class="text-20">Patient Details</h4>
-          <hr />
-        </div> -->
         <ValidationObserver v-slot="{ validate }">
           <form class="mx-3">
             <div class="mt-4">
@@ -56,13 +41,6 @@
                 </div>
                 <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
                   <small class="text-grey text-12">Patient Details</small>
-
-                  <!-- <v-select
-                    class="style-chooser text-grey text-14"
-                    placeholder="Name"
-                    :options="patients"
-                    label="name| phone_number"
-                  ></v-select> -->
                   <input
                     type="text"
                     disabled

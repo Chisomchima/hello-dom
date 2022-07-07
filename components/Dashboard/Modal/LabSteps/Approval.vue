@@ -42,7 +42,10 @@
                                 </template>
                                 <template #reference_range="{ data }">
                                     <div class="p-2" v-for="(ref,index) in data.item.reference_range" :key="index">
-                                        {{ref.name}}
+                                        <!-- {{ref.name}} -->
+                                         <input type="text" :disabled="enabled" placeholder="Value"
+                                                v-model="ref.name"
+                                                class="form-control ng-untouched ng-pristine ng-valid" />
                                     </div>
                                 </template>
                             </TableComponent>

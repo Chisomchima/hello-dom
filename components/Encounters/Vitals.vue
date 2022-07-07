@@ -101,30 +101,30 @@
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
           <small class="text-grey text-12">AVPU</small>
-          <v-select v-model="vitals.avpu" class="style-chooser" placeholder="AVPU"></v-select>
+          <v-select v-model="vitals.avpu" class="style-chooser" ></v-select>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
           <small class="text-grey text-12">Trauma</small>
-          <v-select v-model="vitals.trauma" class="style-chooser" placeholder="Trauma"></v-select>
+          <v-select v-model="vitals.trauma" class="style-chooser" ></v-select>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
           <small class="text-grey text-12">Mobility</small>
-          <v-select v-model="vitals.mobility" class="style-chooser" placeholder="Mobility"></v-select>
+          <v-select v-model="vitals.mobility" class="style-chooser" ></v-select>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
           <small class="text-grey text-12">Oxygen Supplementation</small>
-          <v-select class="style-chooser" v-model="vitals.oxygen" placeholder="Oxygen Supplementation"></v-select>
+          <v-select class="style-chooser" v-model="vitals.oxygen" ></v-select>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 w-100">
           <small class="text-grey text-12">Fluid intake</small>
-          <v-select v-model="vitals.intake" class="style-chooser" placeholder="Fluid intake"></v-select>
+          <v-select v-model="vitals.intake" class="style-chooser" ></v-select>
         </div>
 
         <div class="col-lg-6 col-md-12 col-sm-12">
           <div class="d-flex text-16 justify-content-between align-items-end">
             <div class="col-lg-6 col-md-6 pl-0 col-sm-12">
               <small class="text-grey text-12">Fluid output</small>
-              <v-select v-model="vitals.output" class="style-chooser" placeholder="Fluid output"></v-select>
+              <v-select v-model="vitals.output" class="style-chooser" ></v-select>
             </div>
 
             <div class="col-lg-6 col-md-6 px-0 col-sm-12">

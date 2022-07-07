@@ -70,14 +70,14 @@
                                 </div>
                                 <div v-if="data.item.status === 'approved'">
 
-                                    <div @click="save_file(data.item)" class="d-flex">
+                                    <div  class="d-flex">
                                         <span style="width: 1rem" class="
                     text-center text-12
                     text-info
                     pointer
                     mx-3
                     ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
+                                            <svg @click="save_file(data.item)" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
                                                 width="24" height="24" preserveAspectRatio="xMidYMid meet"
                                                 viewBox="0 0 20 20">
                                                 <path fill="currentColor"
@@ -270,6 +270,23 @@ export default {
             this.modalTitle = 'Recieve Specimen'
             this.status = 'fill result'
             this.id = e.id;
+
+            for (const iterator of e.panel.obv) {
+                if (iterator.type.name === "Options") {
+                    this.showOptions = true;
+                } else {
+                    this.showOptions = false;
+                }
+                if (
+                    iterator.type.name === "Integer" ||
+                    iterator.type.name === "Float"
+                ) {
+                    this.manageInput = "number";
+                } else {
+                    this.manageInput = "text";
+                }
+            }
+            
         },
         openEditPanel(e) {
             console.log(e)

@@ -20,8 +20,10 @@
                                 <div
                                     v-if="data.item.type.name === 'Integer' || data.item.type.name === 'Float' || data.item.type.name === 'Text'">
                                     <ValidationProviderWrapper :rules="['required']">
-                                        <input :type="manageInput" placeholder="Value" v-model="data.item.value"
+                                        <div class="p-2">
+                                            <input :type="manageInput" placeholder="Value" v-model="data.item.value"
                                             class="form-control ng-untouched ng-pristine ng-valid" />
+                                        </div>
                                     </ValidationProviderWrapper>
                                 </div>
 
@@ -35,7 +37,10 @@
                             </template>
                             <template #reference_range="{ data }">
                                 <div class="p-2" v-for="(ref,index) in data.item.reference_range" :key="index">
-                                    {{ref.name}}
+                                    <!-- {{ref.name}} -->
+                                    <input type="text" :disabled="enabled" placeholder="Value"
+                                    v-model="ref.name"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
                                 </div>
                             </template>
                         </TableComponent>

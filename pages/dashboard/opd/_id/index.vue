@@ -109,48 +109,46 @@
             justify-content-between
             col-md-5 col-sm-5 col-lg-5
             align-items-center
-          "
-        >
-          <div class="px-2">
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>UHID:</b> {{ patientData.uhid }}
-              </p>
-            </div>
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>Name:</b>
-                {{
-                  patientData.firstname
-                    ? patientData.firstname + ' ' + patientData.lastname
-                    : 'nil'
-                }}
-              </p>
-            </div>
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>D.O.B:</b> {{ patientData.date_of_birth }}
-              </p>
-            </div>
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>Age(Y-M-D)</b> {{ this.age.year }} - {{ this.age.month }} -
-                {{ this.age.day }}
-              </p>
-            </div>
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>Gender:</b>
-                {{ patientData.gender ? patientData.gender : 'nil' }}
-              </p>
-            </div>
-            <div class="px-2">
-              <p class="text-14 mb-0 text-grey">
-                <b>Payer:</b>
-                {{ patientData.payer ? patientData.payer : ' nil ' }}
-              </p>
-            </div>
-          </div>
+          ">
+                    <div class="px-2">
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>UHID:</b> {{ patientData.uhid }}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey text-capitalize">
+                                <b>Name:</b>
+                                {{
+                                patientData.firstname
+                                ? patientData.firstname + " " + patientData.lastname
+                                : "nil"
+                                }}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>D.O.B:</b> {{ patientData.date_of_birth }}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>Age(Y-M-D)</b> {{this.age.year}} - {{this.age.month}} - {{this.age.day}}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>Gender:</b>
+                                {{ patientData.gender ? patientData.gender : "nil" }}
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <p class="text-14 mb-0 text-grey">
+                                <b>Payer:</b>
+                                {{ patientData.payer ? patientData.payer : " nil " }}
+                            </p>
+                        </div>
+                    </div>
 
           <div class="px-0">
             <div id="button-2" class="theme-color-text">
@@ -442,18 +440,26 @@ export default {
 }
 </script>
 
-<style scoped>
-.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-  background: #ffffff;
-  border-color: #2196f3;
-  color: #00a859;
+<style lang="scss" >
+.tabview-custom {
+
+    .headings {
+        color: $COLOR_THREE;
+    }
+    .tabview-custom svg, .tabview-custom i {
+        color: $COLOR_THREE;
+    }
+    .p-tabview p {
+    line-height: 1.5;
+    margin: 0;
+}
 }
 
-.page-item.active .page-link {
-  z-index: 3;
-  color: #fff;
-  background-color: #00a859;
-  border-color: #00a859;
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffffff;
+    border-color: $COLOR_THREE !important;
+    color: $COLOR_THREE;
 }
 
 li {

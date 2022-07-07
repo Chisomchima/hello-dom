@@ -248,6 +248,7 @@ export default {
         month: null,
         day: null,
       }
+      this.patientDetails = 'Type UHID to search...'
       this.$bvModal.hide('Add-encounter')
       this.patientData.gender = null
       this.patientData.date_of_birth = null
@@ -315,7 +316,7 @@ export default {
         if (response.results < 1) {
           this.patientData = {}
 
-          this.patientData = 'No matching records...'
+          this.patientDetails = 'No matching records...'
           ;(this.age.year = ''), (this.age.month = ''), (this.age.day = '')
           this.encounterData.patient = {}
         }
@@ -324,6 +325,7 @@ export default {
         this.searchingPatient = false
       } catch (error) {
         console.log(error)
+        this.searchingPatient = false
       }
     },
     calcAge(e) {
