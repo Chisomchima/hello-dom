@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BackwardNavigation/>
+    <BackwardNavigation />
     <UtilsHeaderCardWithAvatar
       :title="`${data.salutation} ${data.firstname} ${data.lastname}`"
       :data="data"
@@ -28,6 +28,9 @@
             <EncountersLabOrders :patientData="data" />
           </div>
         </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Imaging">
+          <DashboardPatientImaging :data="data" />
       </UtilsCardTab>
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>

@@ -7,6 +7,7 @@
           <VSelect
             v-model="filters.service_center"
             label="name"
+             :multiple="true"
              :reduce="(opt) => opt.id"
             :options="service_centers"
           />
@@ -100,13 +101,12 @@ export default {
       modalities: [],
       filters: {
         service_center: '',
-        modality: '',
+        modality: [],
         status: '',
         asn: '',
         patient_uhid: '',
         patient_name: '',
         patient_phone: '',
-        worklist: true,
       },
     }
   },

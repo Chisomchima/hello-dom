@@ -170,7 +170,7 @@ export default {
       this.currentPage = page
       try {
         this.busy = true
-        const data = await this.$api.imaging.getObservationOrder({ ...e, page })
+        const data = await this.$api.imaging.getObservationOrder({ ...e, page, worklist:true })
         this.items = data.results
         this.pages = data.total_pages
         console.log(data)

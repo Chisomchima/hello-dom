@@ -316,7 +316,7 @@ export default {
     },
     perPage: {
       type: Number,
-      default: 12,
+      default: 10,
     },
     /**
      * @description

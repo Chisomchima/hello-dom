@@ -94,7 +94,8 @@ export default {
       try {
         this.busy = true
         const data = await this.$api.encounter.getPatient(
-          this.$route.params.uuid
+          this.$route.params.uuid,
+          page
         )
         console.log(data)
         this.items = data.results
