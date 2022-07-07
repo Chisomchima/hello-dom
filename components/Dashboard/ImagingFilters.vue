@@ -100,7 +100,7 @@ export default {
       service_centers: [],
       modalities: [],
       filters: {
-        service_center: '',
+        service_center: [],
         modality: [],
         status: '',
         asn: '',
