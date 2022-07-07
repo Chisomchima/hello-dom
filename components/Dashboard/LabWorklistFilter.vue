@@ -167,6 +167,7 @@ export default {
         ...newVal,
         'status': newVal.status,
         'worklist': true,
+        'patient_uhid': newVal.uhid
       }
       this.$emit('filters', newFilterObject)
     },

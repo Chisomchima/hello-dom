@@ -133,7 +133,7 @@
       </b-modal>
     </div>
     <div>
-      <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+      <UtilsFilterComponent @search-input="searchMe($event)" disable-pagination :disable-visualization="true" search-placeholder="Search">
         <template #besideFilterButton>
           <BaseButton class="btn-outline-primary" @click="openLabObservationsModal">Add Observation
           </BaseButton>
@@ -414,6 +414,10 @@ export default {
     openLabObservationsModal() {
       this.$bvModal.show("Add-observations");
     },
+    searchMe(e){
+      console.log(e)
+      this.getObservations(1, e)
+    },
     closeEditModal() {
       this.$bvModal.hide("Edit-laboratory");
       this.editObservation = {
@@ -565,15 +569,16 @@ export default {
       }
     },
 
-    async getObservations(page = 1) {
+    async getObservations(page = 1, e = "") {
       try {
         this.busy = true;
-        let uri = `laboratory/lab_observation/?page=${page}&size=${this.perPage}`;
+        let uri = `laboratory/lab_observation/?page=${page}&name=${e}&size=${this.perPage}`;
 
         const response = await this.$axios.$get(uri);
 
         this.observations = response.results;
         this.pages = response.total_pages;
+        this.busy = false;
       } catch (error) {
         console.log(error);
       } finally {

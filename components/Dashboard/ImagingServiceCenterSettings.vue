@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsFilterComponent disable-visualization disable-pagination>
+    <UtilsFilterComponent @search-input="searchMe($event)" disable-visualization disable-pagination>
       <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
           >Add Service Center</BaseButton
@@ -48,10 +48,15 @@ export default {
     await this.pageChange(1)
   },
   methods: {
-    async pageChange(page = 1) {
+    searchMe(e){
+
+      this.pageChange(1, {name:e})
+    },
+    async pageChange(page = 1, e={}) {
+      
       try {
         this.busy = true
-        const data = await this.$api.imaging.getServiceCenter({ page })
+        const data = await this.$api.imaging.getServiceCenter({ page, ...e })
         this.items = data.results
         this.pages = data.total_pages
         this.busy = false

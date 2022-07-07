@@ -44,14 +44,14 @@ export default {
     return {
       cards: [
         {
-          name: 'Service centers',
+          name: 'Laboratory settings',
           icon: 'fas fa-notes-medical',
-          route: '/dashboard/settings/laboratory/service-center/',
+          route: '/dashboard/settings/laboratory/',
         },
         {
-          name: 'Service config',
+          name: 'Imaging settings',
           icon: 'fas fa-user-md',
-          route: '/dashboard/settings/laboratory/service-config/',
+          route: '/dashboard/settings/imaging',
         },
       ],
     }

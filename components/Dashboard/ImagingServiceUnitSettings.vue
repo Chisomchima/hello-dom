@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsFilterComponent disable-visualization disable-pagination>
+    <UtilsFilterComponent @search-input="searchMe($event)" disable-visualization disable-pagination>
       <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
           >Lab Unit</BaseButton
@@ -52,10 +52,13 @@ export default {
     await this.pageChange(1)
   },
   methods: {
-    async pageChange(page = 1) {
+    searchMe(e) {
+      this.pageChange(1, {name:e})
+    },
+    async pageChange(page = 1, e={}) {
       try {
         this.busy = true
-        const data = await this.$api.imaging.getLabUnit({ page })
+        const data = await this.$api.imaging.getLabUnit({ page, ...e})
         this.items = data.results
         this.pages = data.total_pages
         this.busy = false

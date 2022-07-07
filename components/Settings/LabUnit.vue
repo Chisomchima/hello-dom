@@ -52,7 +52,7 @@
     </div>
 
     <div>
-      <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+      <UtilsFilterComponent @search-input="searchMe($event)" disable-pagination :disable-visualization="true" search-placeholder="Search">
         <template #besideFilterButton>
           <BaseButton class="btn-outline-primary" @click="openLabUnitModal">Add Lab unit
           </BaseButton>
@@ -166,6 +166,9 @@ export default {
     this.getUnits();
   },
   methods: {
+    searchMe(e) {
+      this.getUnits(1, e)
+    },
     openLabUnitModal() {
       this.$bvModal.show("Add-unit");
     },
@@ -251,10 +254,10 @@ export default {
       }
     },
 
-    async getUnits(page = 1) {
+    async getUnits(page = 1, e = "") {
       try {
         this.busy = true;
-        let uri = `laboratory/lab_unit/?page=${page}&size=${this.perPage}`;
+        let uri = `laboratory/lab_unit/?page=${page}&name=${e}&size=${this.perPage}`;
 
         const response = await this.$axios.$get(uri);
 
@@ -280,6 +283,7 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
+        this.busy = false;
       }
     },
   },
