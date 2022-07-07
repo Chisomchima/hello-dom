@@ -19,7 +19,7 @@
       <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
-            <DashboardImagingFilters @filter="filter(1, $event)" />
+            <DashboardImagingFilters @filter="filter(currentPage, $event)" />
           </div>
         </div>
       </div>
@@ -46,9 +46,9 @@
                   Capture
                 </button>
               </template>
-               <template v-if="data.item.status === 'CAPTURED'">
+              <template v-if="data.item.status === 'CAPTURED'">
                 <button
-                :disabled="data.item.bill.cleared_status !== 'CLEARED'"
+                  :disabled="data.item.bill.cleared_status !== 'CLEARED'"
                   class="btn btn-outline-warning btn-sm"
                   @click="captureReport(data.item)"
                 >
@@ -56,7 +56,7 @@
                 </button>
               </template>
 
-                <template v-if="data.item.status === 'AWAITING_APPROVAL'">
+              <template v-if="data.item.status === 'AWAITING_APPROVAL'">
                 <button
                   class="btn btn-sm btn-outline-info text-nowrap"
                   @click="awaitApproval(data.item)"
@@ -69,22 +69,24 @@
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddImagingOrder @refresh="filter(1, {})" />
+    <DashboardModalAddImagingOrder
+      @refresh="filter(currentPage, currentFilter)"
+    />
     <DashboardModalImagingOrderCapture
       :data="modalData"
       @hide="modalData = {}"
-      @refresh="filter(1, currentFilter)"
+      @refresh="filter(currentPage, currentFilter)"
     />
     <DashboardModalImagingOrderReport
       :data="modalData"
       @hide="modalData = {}"
-      @refresh="filter(1, currentFilter)"
+      @refresh="filter(currentPage, currentFilter)"
     />
 
     <DashboardModalImagingOrderAwaitingApproval
       :data="modalData"
       @hide="modalData = {}"
-      @refresh="filter(1, currentFilter)"
+      @refresh="filter(currentPage, currentFilter)"
     />
   </div>
 </template>
@@ -92,12 +94,14 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
+import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc],
+  mixins: [TableFunc, FilterLogic],
   data() {
     return {
       modalData: {},
       busy: false,
+      currentPage: 1,
       currentFilter: {},
       fields: [
         {
@@ -157,12 +161,13 @@ export default {
       ],
     }
   },
-  mounted() {
-    this.filter(1, {})
-  },
+  // mounted() {
+  //   // this.filter(1, {})
+  // },
   methods: {
     async filter(page, e) {
       this.currentFilter = e
+      this.currentPage = page
       try {
         this.busy = true
         const data = await this.$api.imaging.getObservationOrder({ ...e, page })
@@ -189,7 +194,6 @@ export default {
       this.modalData = e
       this.$bvModal.show('imaging_order_awaiting_approval')
     },
-    
   },
 }
 </script>

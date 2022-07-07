@@ -55,10 +55,9 @@
 
 <script>
 import TableFunc from '~/mixins/TableCompFun'
-import { ObjectValuesAreTruthful } from '@/utils/friendly-helpers'
-
+import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc],
+  mixins: [TableFunc,FilterLogic],
   data() {
     return {
       genders: ['male', 'female'],
@@ -103,22 +102,6 @@ export default {
         },
       ],
     }
-  },
-
-  watch: {
-    '$route.query.filter': {
-      handler(newVal) {
-        if (newVal) {
-          const filterObject = JSON.parse(newVal)
-          const hasValues = ObjectValuesAreTruthful(filterObject)
-          if (hasValues) {
-            this.filter(1, filterObject)
-          }
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
   },
   methods: {
     async filter(page = 1, e) {

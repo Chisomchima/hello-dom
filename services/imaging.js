@@ -12,15 +12,15 @@ export default axios => ({
     },
 
     getLabUnit(params) {
-        return axios.$get('/imaging/lab_unit/', {
+        return axios.$get('/imaging/modality/', {
             params
         });
     },
     saveLabUnit(body) {
-        return axios.$post('/imaging/lab_unit/', body);
+        return axios.$post('/imaging/modality/', body);
     },
     editLabUnit(id,body) {
-        return axios.$put(`/imaging/lab_unit/${id}/`, body);
+        return axios.$put(`/imaging/modality/${id}/`, body);
     },
 
 

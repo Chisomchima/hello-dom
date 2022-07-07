@@ -117,9 +117,8 @@ export default {
 
     filterFunc(newVal) {
       this.$router.push({
-        name: this.$router.name,
         query: {
-          ...this.$router.query,
+          ...this.$route.query,
           filter: JSON.stringify(newVal),
         },
       })
