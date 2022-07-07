@@ -70,6 +70,7 @@ export default {
 
         {
           title: 'Settings',
+          href: '/dashboard/settings',
           icon: 'fas fa-cog',
           child: [
             {
@@ -77,11 +78,11 @@ export default {
               child: [
                 {
                   href: '/dashboard/settings/laboratory/service-center',
-                  title: 'Service Center',
+                  title: 'Laboratory center',
                 },
                 {
                   href: '/dashboard/settings/laboratory/service-config',
-                  title: 'Service Configuration',
+                  title: 'Laboratory configuration',
                 },
               ],
             },
@@ -90,11 +91,11 @@ export default {
               child: [
                 {
                   href: '/dashboard/settings/imaging/service-center',
-                  title: 'Service Center',
+                  title: 'Imaging Center',
                 },
                 {
                   href: '/dashboard/settings/imaging/service-config',
-                  title: 'Service Configuration',
+                  title: 'Imaging Configuration',
                 },
               ],
             },

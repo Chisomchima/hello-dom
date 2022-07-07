@@ -95,7 +95,7 @@
                             </p>
                         </div>
                         <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
+                            <p class="text-14 mb-0 text-grey text-capitalize">
                                 <b>Name:</b>
                                 {{
                                 patientData.firstname
@@ -183,7 +183,7 @@
                 </div>
             </div>
             <TabView class="tabview-custom">
-                <TabPanel class="dark-panel">
+                <TabPanel>
                     <template #header>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-clipboard2-pulse" viewBox="0 0 16 16">
@@ -194,7 +194,7 @@
                             <path
                                 d="M9.979 5.356a.5.5 0 0 0-.968.04L7.92 10.49l-.94-3.135a.5.5 0 0 0-.926-.08L4.69 10H4.5a.5.5 0 0 0 0 1H5a.5.5 0 0 0 .447-.276l.936-1.873 1.138 3.793a.5.5 0 0 0 .968-.04L9.58 7.51l.94 3.135A.5.5 0 0 0 11 11h.5a.5.5 0 0 0 0-1h-.128L9.979 5.356Z" />
                         </svg>
-                        <span class="ml-2">Consultation</span>
+                        <span class="ml-2 headings">Consultation</span>
                     </template>
                     <EncountersConsultation :consultationData="consultationData" @refreshMe="refreshMe"
                         @clearance="clearance" />
@@ -209,7 +209,7 @@
                             <path fill-rule="evenodd"
                                 d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
                         </svg>
-                        <span class="ml-2">Medical Records</span>
+                        <span class="ml-2 headings">Medical Records</span>
                     </template>
                     <EncountersMedicalRecord :consultationData="consultationData" />
                 </TabPanel>
@@ -222,14 +222,14 @@
                             <path fill="currentColor"
                                 d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
                         </svg>
-                        <span class="ml-2">Lab Orders</span>
+                        <span class="ml-2 headings">Lab Orders</span>
                     </template>
                     <EncountersLabOrders :patientData="patientData" />
                 </TabPanel>
                 <TabPanel>
                     <template #header>
                         <i class="pi pi-user"></i>
-                        <span class="ml-2">Previous Medicine</span>
+                        <span class="ml-2 headings">Previous Medicine</span>
                     </template>
                 </TabPanel>
             </TabView>
@@ -377,18 +377,26 @@ export default {
 };
 </script>
 
-<style scoped>
-.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    background: #ffffff;
-    border-color: #2196f3;
-    color: #00a859;
+<style lang="scss" >
+.tabview-custom {
+
+    .headings {
+        color: $COLOR_THREE;
+    }
+    .tabview-custom svg, .tabview-custom i {
+        color: $COLOR_THREE;
+    }
+    .p-tabview p {
+    line-height: 1.5;
+    margin: 0;
+}
 }
 
-.page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #00a859;
-    border-color: #00a859;
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffffff;
+    border-color: $COLOR_THREE !important;
+    color: $COLOR_THREE;
 }
 
 li {

@@ -45,12 +45,12 @@ export default {
       cards: [
         {
           name: 'Service centers',
-          icon: 'fas fa-notes-medical',
+          icon: 'fa fa-sliders',
           route: '/dashboard/settings/laboratory/service-center/',
         },
         {
           name: 'Service config',
-          icon: 'fas fa-user-md',
+          icon: 'fa fa-sliders',
           route: '/dashboard/settings/laboratory/service-config/',
         },
       ],

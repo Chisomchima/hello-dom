@@ -37,7 +37,7 @@ export default {
         async setStatusToSpecimenRecieved() {
             try {
                 let response = await this.$axios.$patch(
-                    `laboratory/lab_panel_order/${this.id}/status/`,
+                    `laboratory/lab_panel_order/${this.id}/`,
                     { status: this.status, comments: this.comments }
                 );
                 this.$emit('refresh')

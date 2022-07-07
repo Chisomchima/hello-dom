@@ -140,7 +140,7 @@ export default {
     '@nuxtjs/style-resources',
   ],
   primevue: {
-    theme: "saga-green",
+    // theme: "blue-light",
     ripple: true,
     components: ["Button", "Menu", "TabView", "TabPanel", "Accordion"],
   },
