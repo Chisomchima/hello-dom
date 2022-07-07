@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       genders: ['Male', 'Female'],
-      statuses: ['NEW', 'CAPTURED', 'AWAITING APPROVAL'],
+      statuses: ['NEW', 'CAPTURED', 'AWAITING_APPROVAL'],
       service_centers: [],
       modalities: [],
       filters: {
