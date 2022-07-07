@@ -23,7 +23,8 @@
       @done="submit()"
     >
       <template #default="{ currentStep }">
-        <transition name="fade">
+        <DashboardPatientForm ref="patientForm" :current-position="currentStep" />
+        <!-- <transition name="fade">
           <DashboardPatientRegistrationStepOne
             v-show="currentStep === 0"
             ref="stepOne"
@@ -46,7 +47,7 @@
             v-show="currentStep === 3"
             ref="stepFour"
           />
-        </transition>
+        </transition> -->
       </template>
     </DashboardStepWrapper>
   </div>
@@ -57,6 +58,8 @@ import { map } from 'lodash'
 export default {
   data() {
     return {
+      cPage:0,
+      nPage:0,
       stepOne: [],
       stepTwo: [],
       stepThree: [],
@@ -65,58 +68,11 @@ export default {
   },
   mounted() {},
   methods: {
-    async checkPage({ currentPage, nextPage }) {
-      // console.log(currentPage,nextPage)
-      if (currentPage === 0) {
-        const data = await this.$refs.stepOne.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-
-        this.stepOne = results
-        // console.log(this.stepOne)
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-        // console.log(this.stepOne)
-      }
-      if (currentPage === 1) {
-        const data = await this.$refs.stepTwo.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-        this.stepTwo = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-      }
-      if (currentPage === 2) {
-        const data = await this.$refs.stepThree.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-        this.stepThree = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-      }
-      if (currentPage === 3) {
-        const data = await this.$refs.stepFour.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-        this.stepFour = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-        }
-      }
+    async checkPage({ _currentPage, nextPage }) {
+     const data =   await  this.$refs.patientForm.checkFormValidity();
+     if(data){
+      this.$refs.stepWrapper.goto(nextPage);
+     }
     },
 
     async submit() {
