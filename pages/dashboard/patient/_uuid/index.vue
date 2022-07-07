@@ -1,7 +1,11 @@
 <template>
   <div>
-    <UtilsHeaderCardWithAvatar :title="`${data.salutation} ${data.firstname} ${data.lastname}`" :data="data"
-      :enable-action="true" :display-key="[
+    <BackwardNavigation />
+    <UtilsHeaderCardWithAvatar
+      :title="`${data.salutation} ${data.firstname} ${data.lastname}`"
+      :data="data"
+      :enable-action="true"
+      :display-key="[
         'uhid',
         'date_of_birth',
         'gender',
@@ -9,7 +13,8 @@
         'religion',
         'nationality',
         'phone_number',
-      ]">
+      ]"
+    >
     </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Encounter">
@@ -23,6 +28,9 @@
             <EncountersLabOrders :patientData="data" />
           </div>
         </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Imaging">
+          <DashboardPatientImaging :data="data" />
       </UtilsCardTab>
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>

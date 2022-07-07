@@ -1,3 +1,11 @@
-.disabledTableRow{
+/* .disabledTableRow{
     filter:opacity(0.3)
+} */
+
+.disabledTableRow > td{
+    filter:opacity(0.4)
+}
+
+.removeTableDisabled{
+    filter:opacity(1) !important;
 }

@@ -17,28 +17,29 @@
     <slot></slot>
     <template #modal-footer="{ cancel }">
       <!-- Emulate built in modal footer ok and cancel button actions -->
-
-      <div class="d-flex w-100 justify-content-between px-5">
-        <div>
-          <b-button
-            size="sm"
-            variant="light"
-            class="px-5 text-secondary mr-2"
-            @click="cancel()"
-          >
-            Cancel
-          </b-button>
+      <slot name="footer" :cancel="cancel">
+        <div class="d-flex w-100 justify-content-between px-5">
+          <div>
+            <b-button
+              size="sm"
+              variant="light"
+              class="px-5 text-secondary mr-2"
+              @click="cancel()"
+            >
+              Cancel
+            </b-button>
+          </div>
+          <div>
+            <BaseButton
+              class="px-5"
+              :extra-class="buttonColor"
+              @click="$emit('ok', $event)"
+            >
+              {{ submitTitle }}
+            </BaseButton>
+          </div>
         </div>
-        <div>
-          <BaseButton
-            class="px-5"
-            :extra-class="buttonColor"
-            @click="$emit('ok', $event)"
-          >
-            {{ submitTitle }}
-          </BaseButton>
-        </div>
-      </div>
+      </slot>
       <!-- Button with custom close trigger value -->
     </template>
   </b-modal>
@@ -49,7 +50,7 @@ export default {
   props: {
     buttonColor: {
       type: String,
-      default: 'info',
+      default: 'btn-primary',
     },
     noFooter: {
       type: Boolean,
@@ -87,8 +88,8 @@ export default {
   methods: {
     cancel() {
       this.$emit('clearForm', true)
-    }
-  }
+    },
+  },
 }
 </script>
 

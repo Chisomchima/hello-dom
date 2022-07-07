@@ -17,10 +17,10 @@ export default axios => ({
         });
     },
     saveLabUnit(body) {
-        return axios.$post('/imaging/lab_unit/', body);
+        return axios.$post('/imaging/modality/', body);
     },
     editLabUnit(id,body) {
-        return axios.$put(`/imaging/lab_unit/${id}/`, body);
+        return axios.$put(`/imaging/modality/${id}/`, body);
     },
 
 
@@ -53,5 +53,9 @@ export default axios => ({
         return axios.$get('/imaging/imaging_observation_order/', {
             params
         });
+    },
+
+    patchObservationOrder(id,body) {
+        return axios.$patch(`/imaging/imaging_observation_order/${id}/`, body);
     },
 });

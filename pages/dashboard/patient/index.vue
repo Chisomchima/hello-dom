@@ -46,15 +46,18 @@
     </div>
     <DashboardModalAddLabOrder :data="modalData" @refresh="pageChange()" />
     <DashboardModalAddEncounter :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddPatientImagingOrder :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddPatientImagingOrder
+      :data="modalData"
+      @refresh="pageChange()"
+    />
   </div>
 </template>
 
 <script>
 import TableFunc from '~/mixins/TableCompFun'
-
+import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc],
+  mixins: [TableFunc,FilterLogic],
   data() {
     return {
       genders: ['male', 'female'],
@@ -134,10 +137,10 @@ export default {
       this.$bvModal.show('add_encounters')
     },
 
-    showImagingModal(e){
-      this.modalData =e;
-      this.$bvModal.show('add_imaging');
-    }
+    showImagingModal(e) {
+      this.modalData = e
+      this.$bvModal.show('add_imaging')
+    },
   },
 }
 </script>

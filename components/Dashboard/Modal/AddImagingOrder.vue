@@ -59,7 +59,7 @@
 
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper
-              name="Observations"
+              name="Scan"
               :rules="['required']"
             >
               <VSelect
