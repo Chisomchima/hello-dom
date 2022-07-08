@@ -26,7 +26,7 @@
                                     <div
                                         v-if="data.item.type.name === 'Integer' || data.item.type.name === 'Float' || data.item.type.name === 'Text'">
                                         <ValidationProviderWrapper :rules="['required']">
-                                            <input :type="manageInput" :disabled="enabled" placeholder="Value"
+                                            <input :type="manageInput" :disabled="disabled" placeholder="Value"
                                                 v-model="data.item.value"
                                                 class="form-control ng-untouched ng-pristine ng-valid" />
                                         </ValidationProviderWrapper>
@@ -43,7 +43,7 @@
                                 <template #reference_range="{ data }">
                                     <div class="p-2" v-for="(ref,index) in data.item.reference_range" :key="index">
                                         <!-- {{ref.name}} -->
-                                         <input type="text" :disabled="enabled" placeholder="Value"
+                                         <input type="text" :disabled="disabled" placeholder="Value"
                                                 v-model="ref.name"
                                                 class="form-control ng-untouched ng-pristine ng-valid" />
                                     </div>
@@ -164,12 +164,13 @@ export default {
                 comments: "",
                 obv: [],
             },
-            enabled: true,
+            disabled: true,
             isbusy: false,
             fillControl: false,
             approveControl: true,
             editMode: false,
             isbusy2: false,
+            rejecting: false,
             fields: [
                 {
                     key: 'name',
@@ -243,7 +244,7 @@ export default {
         },
         async setStatusToReject() {
             try {
-                this.isbusy = true;
+                this.rejecting = true;
                 let response = await this.$axios.$patch(
                     `laboratory/lab_panel_order/${this.labOrderPanel.id}/`,
                     { status: "fill result" }
@@ -257,26 +258,27 @@ export default {
             } catch {
                 this.$toast.error(`Unable to change status`);
             } finally {
-                this.isbusy = false;
+                this.rejecting = false;
             }
         },
         cancelPanelOrder() {
             this.$bvModal.hide("Edit-laborder");
             this.approveControl = true;
-            this.enable = true;
+            this.disabled = true;
             this.editMode = false;
+            // this.fillControl = true;
         },
         enableButton() {
-            this.enabled = !this.enabled;
+            this.disabled = false;
             this.approveControl = false;
-            this.fillControl = false;
+            // this.fillControl = false;
             this.editMode = true;
         },
         disabledButton() {
-            console.log('yay')
+            // console.log('yay')
             this.enabled = !this.enabled;
             this.approveControl = true;
-            this.fillControl = false;
+            // this.fillControl = false;
             this.editMode = false;
         },
         async saveAndApprove() {
