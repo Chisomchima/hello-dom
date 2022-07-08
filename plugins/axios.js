@@ -30,6 +30,16 @@ export default function ({ $axios, $toast, store, redirect }) {
       return Promise.reject(error)
     }
 
+    if (error.response && error.response.status === 403) {
+      debugger;
+      store.commit('auth/SET_PAGE_DISABLED', true)
+      $toast({
+        type: 'error',
+        text: error.response.data.message,
+      })
+      return Promise.reject(error)
+    }
+
     if (error.response && error.response.status === 400) {
       $toast({
         type: 'error',

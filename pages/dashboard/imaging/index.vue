@@ -206,10 +206,15 @@ export default {
       const result = await this.showDeleteMessageBox(
         'Do you want to cancel Imaging Order'
       )
-      if (result) {
-        await this.$api.imaging.patchObservationOrder(e.id, {
-          status:'CANCELED',
-        })
+      try {
+        if (result) {
+          await this.$api.imaging.patchObservationOrder(e.id, {
+            status: 'CANCELLED',
+          })
+          this.filter(this.currentPage,this.currentFilter);
+        }
+      } catch (error) {
+        console.log(error)
       }
     },
   },

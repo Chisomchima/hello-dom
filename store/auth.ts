@@ -12,6 +12,7 @@ export const state = () => ({
     user: {} as UserDetails | null,
     token: null as unknown as string || null,
     userSigningUp: '' as string,
+    disablePage: false as Boolean
 })
 
 export type RootState = ReturnType<typeof state>
@@ -30,6 +31,10 @@ export const mutations: MutationTree<RootState> = {
     },
     SET_SIGNUP_USER: (state, value) => {
         state.userSigningUp = value;
+    },
+    SET_PAGE_DISABLED: (state, value) => {
+        debugger;
+        state.disablePage = value;
     }
 }
 
@@ -69,6 +74,7 @@ export const actions: ActionTree<RootState, RootState> = {
                 token: null,
                 user: { avatar: null, first_name: null, last_name: null },
                 userSigningUp: '',
+                disablePage:false,
             },
             roles: {
                 roles: [] as [],
