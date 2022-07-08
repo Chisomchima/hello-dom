@@ -20,7 +20,12 @@
               v-else-if="form.type === 'checkbox'"
               class="exercise-option-check green-check"
             >
-              <input v-model="form.value" type="checkbox" name="customRadio" />
+              <input
+                v-model="form.value"
+                type="checkbox"
+                name="customRadio"
+                @input="onInput({ key: form.key, value: form.value })"
+              />
               <span class="checkmark"></span>
               <span class="text">{{ form.name }}</span>
             </label>
@@ -30,6 +35,7 @@
               cols="10"
               rows="10"
               class="form-control"
+              @input="onInput({ key: form.key, value: form.value })"
             >
             </textarea>
             <input
@@ -429,6 +435,8 @@ export default {
           this.setOptions('state_of_origin', res.results)
         })
       }
+
+      this.$emit('input:data',{ key, value })
     },
   },
 }
