@@ -96,4 +96,5 @@ sw.*
 # theme
 theme/
 
+ecosystem.config.js
 
