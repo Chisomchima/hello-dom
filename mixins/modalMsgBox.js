@@ -1,8 +1,8 @@
 export default {
   methods: {
-    async showDeleteMessageBox() {
+    async showDeleteMessageBox(text = 'Please confirm that you want to delete record.') {
       const result = await this.$bvModal.msgBoxConfirm(
-        'Please confirm that you want to delete record.',
+      text,
         {
           title: 'Please Confirm',
           okVariant: 'danger',

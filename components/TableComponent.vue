@@ -274,6 +274,7 @@
           />
         </template>
       </template>
+      
     </b-table>
 
     <b-pagination
