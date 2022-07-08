@@ -248,7 +248,7 @@ export default {
        try {
           this.downloading = true
           let response = await this.$axios.$get(
-            `laboratory/lab_order/${e.id}/reports/mail/`)
+            `laboratory/lab_panel_order/${e.id}/reports/mail/`)
           this.$toast({
             type: 'success',
             text: 'Mail sent',
