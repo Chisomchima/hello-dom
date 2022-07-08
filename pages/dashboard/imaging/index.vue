@@ -34,7 +34,9 @@
             :pages="pages"
             :items="items"
             :busy="busy"
+            :dropdown-item="['print', 'email', 'cancel']"
             @page-changed="filter($event, currentFilter)"
+            @cancel="cancelImaging($event)"
           >
             <template #status="{ data }">
               <template v-if="data.item.status === 'NEW'">
@@ -95,8 +97,9 @@
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
+import modalMsgBox from '~/mixins/modalMsgBox'
 export default {
-  mixins: [TableFunc, FilterLogic],
+  mixins: [TableFunc, FilterLogic, modalMsgBox],
   data() {
     return {
       modalData: {},
@@ -170,7 +173,11 @@ export default {
       this.currentPage = page
       try {
         this.busy = true
-        const data = await this.$api.imaging.getObservationOrder({ ...e, page, worklist:true })
+        const data = await this.$api.imaging.getObservationOrder({
+          ...e,
+          page,
+          worklist: true,
+        })
         this.items = data.results
         this.pages = data.total_pages
         console.log(data)
@@ -193,6 +200,17 @@ export default {
     awaitApproval(e) {
       this.modalData = e
       this.$bvModal.show('imaging_order_awaiting_approval')
+    },
+
+    async cancelImaging(e) {
+      const result = await this.showDeleteMessageBox(
+        'Do you want to cancel Imaging Order'
+      )
+      if (result) {
+        await this.$api.imaging.patchObservationOrder(e.id, {
+          status:'CANCELED',
+        })
+      }
     },
   },
 }

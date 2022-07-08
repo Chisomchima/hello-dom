@@ -7,5 +7,5 @@
 }
 
 .removeTableDisabled{
-    filter:opacity(1) !important;
+    filter:none !important;
 }
