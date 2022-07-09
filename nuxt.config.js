@@ -120,9 +120,6 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    // https://pwa.nuxtjs.org/
-    '@nuxtjs/pwa',
-
     '@nuxtjs/fontawesome',
   ],
 
@@ -175,11 +172,6 @@ export default {
       brands: true
     }
   },
-
-  workbox: {
-    preCaching: ['/error404.png', '/networkerror.svg'],
-  },
-
   styleResources: {
     scss: [
       '~/assets/css/_variable.scss',
