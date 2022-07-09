@@ -248,7 +248,7 @@ export default {
             this.currentFilter = e
             try {
                 this.busy = true;
-                const data = await this.$api.laborder.getLabOrders({ ...e, page})
+                const data = await this.$api.laborder.getLabOrders({ ...e, page, 'worklist': true,})
                 this.itemsToShow = data.results
                 this.pages = data.total_pages
             } catch (error){}
