@@ -115,6 +115,7 @@ export default {
         status: '',
         asn: '',
         uhid: '',
+        worklist: true,
       },
       service_centers: [],
       lab_units: [],
@@ -166,7 +167,7 @@ export default {
       const newFilterObject = {
         ...newVal,
         'status': newVal.status,
-        'worklist': true,
+        
         'patient_uhid': newVal.uhid
       }
       this.$emit('filters', newFilterObject)
