@@ -75,9 +75,13 @@
                 </div>
                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                   <small class="text-grey text-12">Unit of measurement*</small>
-
+                  <validation-provider rules="required" v-slot="{ errors }">
                   <input v-model="observation.uom" type="text" placeholder="uom"
                     class="form-control ng-untouched ng-pristine ng-valid" />
+                    <span class="text-12" style="color: red">{{
+                            errors[0]
+                            }}</span>
+                    </validation-provider>
                 </div>
 
                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
@@ -87,10 +91,12 @@
                       <div style="position: relative" class="mb-2 d-flex w-100"
                         v-for="(option, index) in observation.reference_range" :key="index">
                         <div class="w-100">
+                          
                           <input v-model="option.name" type="text" placeholder="" class="
                               form-control
                               ng-untouched ng-pristine ng-valid
                             " />
+                           
                         </div>
 
                         <div @click="deleteReference(index)" style="left: 20px" class="text-info pointer">
@@ -122,7 +128,7 @@
                   style="height: 38px; width: 5rem; text-align: center">
                   Cancel
                 </button>
-                <BaseButton class="btn-primary" @click="addObservation">Save
+                <BaseButton class="btn-primary" @click.prevent="addObservation">Save
                 </BaseButton>
               </div>
 
@@ -317,7 +323,7 @@
                 </span>
                 <span v-else>Save</span>
               </button> -->
-              <BaseButton class="btn-primary" @click="editObservationfunc">Save
+              <BaseButton class="btn-primary" @click.prevent="editObservationfunc">Save
               </BaseButton>
             </div>
 
@@ -566,6 +572,12 @@ export default {
         } finally {
           this.isbusy = false;
         }
+      }
+      else{
+        this.$toast({
+            type: 'info',
+            text: 'Please fill required fields'
+          })
       }
     },
 
