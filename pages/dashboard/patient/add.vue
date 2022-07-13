@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Patient Registration</div>
           <div>
-            <BaseButton class="btn-primary" @click="submitButton()">Save</BaseButton>
+            <BaseButton class="btn-primary  btn-lg" @click="submitButton()">Save</BaseButton>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
         'Payer Information',
       ]"
       @requestPageChange="checkPage($event)"
-      @done="submit()"
+      @done="submitButton()"
     >
       <template #default="{ currentStep }">
         <DashboardPatientForm
@@ -177,13 +177,13 @@ export default {
     },
     log(e) {
       this.dataVal[e.key] = e.value
-      console.log(this.dataVal)
     },
     formatData(item) {
       const customObj = {
         ...item,
         is_baby: item.is_baby ? item.is_baby : false,
         gender: item.gender ? item.gender.gender : null,
+        occupation: item.occupations ? item.occupations.occupation : null,
         nationality: item.nationality ? item.nationality.country : null,
         religion: item.religion ? item.religion.religion : null,
         marital_status: item.marital_status
@@ -221,7 +221,7 @@ export default {
 
       return customObj
 
-      return item
+      // return item
     },
   },
 }

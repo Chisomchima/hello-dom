@@ -63,6 +63,11 @@ export default {
       required: true,
       default: 0,
     },
+    editFormData: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -253,6 +258,9 @@ export default {
           name: 'Occupation',
           rules: [''],
           value: '',
+          type: 'select',
+          select_label:'occupation',
+          options: [],
         },
         {
           key: 'religion',
@@ -379,6 +387,18 @@ export default {
       },
       deep: true,
     },
+    editFormData: {
+      handler(newVal) {
+        for (const key in newVal) {
+          // console.log(`${key}: ${newVal[key]}`)
+          const index = this.formConfig.findIndex((item) => item.key === key)
+          if (index > -1) {
+            this.formConfig[index].value = newVal[key]
+          }
+        }
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.$api.core.gender({ size: 1000 }).then((res) => {
@@ -399,6 +419,10 @@ export default {
 
     this.$api.core.religion({ size: 1000 }).then((res) => {
       this.setOptions('religion', res.results)
+    })
+
+    this.$api.core.occupation({ size: 1000 }).then((res) => {
+      this.setOptions('occupations', res.results)
     })
   },
   created() {
@@ -436,7 +460,7 @@ export default {
         })
       }
 
-      this.$emit('input:data',{ key, value })
+      this.$emit('input:data', { key, value })
     },
   },
 }
