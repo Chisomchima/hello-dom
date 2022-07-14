@@ -1,11 +1,11 @@
 <template>
   <div>
-     <div class="row">
+    <div class="row">
       <div class="col-12 mb-3">
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Patient Registration</div>
           <div>
-            <BaseButton class="btn-primary" @click="submit()">Save</BaseButton>
+            <BaseButton class="btn-primary  btn-lg" @click="submitButton()">Save</BaseButton>
           </div>
         </div>
       </div>
@@ -20,10 +20,15 @@
         'Payer Information',
       ]"
       @requestPageChange="checkPage($event)"
-      @done="submit()"
+      @done="submitButton()"
     >
       <template #default="{ currentStep }">
-        <transition name="fade">
+        <DashboardPatientForm
+          ref="patientForm"
+          :current-position="currentStep"
+          @input:data="log($event)"
+        />
+        <!-- <transition name="fade">
           <DashboardPatientRegistrationStepOne
             v-show="currentStep === 0"
             ref="stepOne"
@@ -46,7 +51,7 @@
             v-show="currentStep === 3"
             ref="stepFour"
           />
-        </transition>
+        </transition> -->
       </template>
     </DashboardStepWrapper>
   </div>
@@ -57,6 +62,9 @@ import { map } from 'lodash'
 export default {
   data() {
     return {
+      cPage: 0,
+      nPage: 0,
+      dataVal: {},
       stepOne: [],
       stepTwo: [],
       stepThree: [],
@@ -65,57 +73,25 @@ export default {
   },
   mounted() {},
   methods: {
-    async checkPage({ currentPage, nextPage }) {
-      // console.log(currentPage,nextPage)
-      if (currentPage === 0) {
-        const data = await this.$refs.stepOne.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-
-        this.stepOne = results
-        // console.log(this.stepOne)
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-        // console.log(this.stepOne)
+    async checkPage({ _currentPage, nextPage }) {
+      const data = await this.$refs.patientForm.checkFormValidity()
+      if (data) {
+        this.$refs.stepWrapper.goto(nextPage)
       }
-      if (currentPage === 1) {
-        const data = await this.$refs.stepTwo.submit()
+    },
 
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
+    async submitButton() {
+      try {
+        const customObj = this.formatData(this.dataVal)
+        const res = await this.$api.patient.savePatient(customObj)
+        this.$router.push({
+          name: 'dashboard-patient-uuid',
+          params: {
+            uuid: res.id,
+          },
         })
-        this.stepTwo = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-      }
-      if (currentPage === 2) {
-        const data = await this.$refs.stepThree.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-        this.stepThree = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-          return
-        }
-      }
-      if (currentPage === 3) {
-        const data = await this.$refs.stepFour.submit()
-
-        const results = map(data, function (value) {
-          return { [value.key]: value.value }
-        })
-        this.stepFour = results
-        if (data !== undefined) {
-          this.$refs.stepWrapper.goto(nextPage)
-        }
+      } catch (error) {
+        console.log(error)
       }
     },
 
@@ -139,7 +115,7 @@ export default {
         console.log(dataObject)
         const customObj = {
           ...dataObject,
-          is_baby:dataObject.is_baby ? dataObject.is_baby : false,
+          is_baby: dataObject.is_baby ? dataObject.is_baby : false,
           gender: dataObject.gender ? dataObject.gender.gender : null,
           nationality: dataObject.nationality
             ? dataObject.nationality.country
@@ -185,19 +161,67 @@ export default {
 
             // payment_scheme: dataObject
           },
-          salutation:dataObject.salutation.salutations
+          salutation: dataObject.salutation.salutations,
         }
 
-       const response = await this.$api.patient.savePatient(customObj)
+        const response = await this.$api.patient.savePatient(customObj)
         this.$router.push({
-          name:'dashboard-patient-uuid',
-          params:{
-            uuid:response.id
-          }
+          name: 'dashboard-patient-uuid',
+          params: {
+            uuid: response.id,
+          },
         })
       } catch (error) {
         console.log(error)
       }
+    },
+    log(e) {
+      this.dataVal[e.key] = e.value
+    },
+    formatData(item) {
+      const customObj = {
+        ...item,
+        is_baby: item.is_baby ? item.is_baby : false,
+        gender: item.gender ? item.gender.gender : null,
+        occupation: item.occupations ? item.occupations.occupation : null,
+        nationality: item.nationality ? item.nationality.country : null,
+        religion: item.religion ? item.religion.religion : null,
+        marital_status: item.marital_status
+          ? item.marital_status.marital_status
+          : null,
+        state_id: item.state_of_origin ? item.state_of_origin : null,
+        identity: {
+          type: item.id_type ? item.id_type : null,
+          number: item.id_number ? item.id_number : null,
+          validity: item.id_validity ? item.id_validity : null,
+        },
+        home_address: {
+          address: item.address ? item.address : null,
+          city: item.address_city ? item.address_city : null,
+          country: item.address_country ? item.address_country : null,
+        },
+        next_of_kin: {
+          name: item.relation_name ? item.relation_name : null,
+          relationship: item.relationship ? item.relationship : null,
+          address: item.relation_address ? item.relation_address : null,
+          city: item.relation_city ? item.relation_city : null,
+          country: item.relation_country ? item.relation_country : null,
+          postal_code: item.relation_postal_code
+            ? item.relation_postal_code
+            : null,
+
+          phone_number: item.relation_phone_num
+            ? item.relation_phone_num
+            : null,
+
+          // payment_scheme: dataObject
+        },
+        salutation: item.salutation.salutations,
+      }
+
+      return customObj
+
+      // return item
     },
   },
 }

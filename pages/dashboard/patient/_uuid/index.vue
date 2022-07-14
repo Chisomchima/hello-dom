@@ -14,6 +14,7 @@
         'nationality',
         'phone_number',
       ]"
+      @edit="editRoute()"
     >
     </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
@@ -30,7 +31,7 @@
         </keep-alive>
       </UtilsCardTab>
       <UtilsCardTab title="Imaging">
-          <DashboardPatientImaging :data="data" />
+        <DashboardPatientImaging :data="data" />
       </UtilsCardTab>
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
@@ -59,7 +60,18 @@ export default {
   data() {
     return {
       tabs: true,
+      data: null,
     }
+  },
+  methods: {
+    editRoute() {
+      this.$router.push({
+        name: 'dashboard-patient-uuid-edit',
+        params: {
+          uuid: this.data.id,
+        },
+      })
+    },
   },
 }
 </script>
