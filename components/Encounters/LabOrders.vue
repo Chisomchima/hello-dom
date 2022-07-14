@@ -224,13 +224,11 @@
       >
         <table-component
           :paginate="true"
-          :perPage="perPage"
           :busy="busy"
           :pages="pages"
           :items="itemsToShow"
-          :totalItems="totalPages"
+          
           :current-page="currentPage"
-          :dropdownItem="dropdownItem"
           @page-changed="getPatientLabOrders($event)"
           :fields="fields"
         >
@@ -412,7 +410,7 @@ export default {
         status: '',
         lab_order: '',
       },
-      pages: 0,
+      pages: 1,
       modalTitle: 'Order lab panel',
       commitPanel: {
         comments: '',

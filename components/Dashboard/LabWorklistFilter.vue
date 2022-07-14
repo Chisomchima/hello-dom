@@ -67,29 +67,18 @@
           class="form-control ng-untouched ng-pristine ng-valid"
         />
       </div>
-
-      <!-- <div class="col-lg-4 col-md-6 col-sm-12 align-self-end">
-        <BaseButton class="w-100 btn-danger" @click="clear()">
+      <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
+        
+          <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+          Filter
+        </BaseButton>
+        <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
           Clear
         </BaseButton>
-      </div> -->
 
-      <!-- <div class="
-              col-lg-4 col-md-6 col-sm-12
-              d-flex
-              justify-content-center
-              pt-3
-              text-14
-            ">
-               
-                <div class="col-4 align-self-end offset-md-8">
-                    <BaseButton class="w-100 btn-danger" @click="clearSearchParams()">
-                        Clear
-                    </BaseButton>
-                </div>
-            </div> -->
+      </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-2 offset-md-8">
         <BaseButton class="w-100" @click="applyFilters(filters)">
           Filter
@@ -100,7 +89,7 @@
           Clear
         </BaseButton>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -137,19 +126,19 @@ export default {
     // },
     'filters.service_center': {
       handler: debounce(function () {
-        this.applyFilters(this.filters);
+        this.filterFunc(this.filters);
       }, 500),
       deep: true,
     },
     'filters.lab_unit': {
       handler: debounce(function () {
-       this.applyFilters(this.filters);
+       this.filterFunc(this.filters);
       }, 500),
       deep: true,
     },
     'filters.status': {
       handler: debounce(function () {
-        this.applyFilters(this.filters);
+        this.filterFunc(this.filters);
       }, 500),
       deep: true,
     },
@@ -158,7 +147,7 @@ export default {
     if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
-    this.applyFilters(this.filters);
+    this.filterFunc(this.filters);
     try {
       const { results: service_centers } = await this.$api.core.serviceCenter({
         size: 1000,
@@ -182,23 +171,27 @@ export default {
         asn: '',
         uhid: '',
       }
-      this.applyFilters(this.filters)
+      // this.applyFilters(this.filters);
+       this.filterFunc(this.filters)
     },
 
-    applyFilters(newVal) {
-      const newFilterObject = {
-        ...newVal,
-        status: newVal.status,
-
-        patient_uhid: newVal.uhid,
-      }
+    // applyFilters(newVal) {
+    //   const newFilterObject = {
+    //     ...newVal,
+    //     'status': newVal.status,
+        
+    //     'patient_uhid': newVal.uhid
+    //   }
+    //   this.$emit('filters', newFilterObject)
+    // },
+    filterFunc(newVal) {
       this.$router.push({
+        name: this.$router.name,
         query: {
-          ...this.$route.query,
-          filter: JSON.stringify(newFilterObject),
+          ...this.$router.query,
+          filter: JSON.stringify(newVal),
         },
       })
-      // this.$emit('filters', newFilterObject)
     },
   },
 }

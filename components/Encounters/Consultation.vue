@@ -35,7 +35,7 @@
         <EncountersExam :consultationData="consultationData" />
       </div>
       <div v-if="tab4" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
-        <EncountersComplaints :consultationData="consultationData" @refresh="refresh" />
+        <EncountersComplaints :consultationData="consultationData" @refresh="$emit('refreshMe', true)" />
       </div>
       <div v-if="tab5" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersDiagnosis :consultationData="consultationData" />

@@ -16,8 +16,10 @@
     </div>
 
     <div class="bg-light text-12 border-radius mb-3" v-else>
-      <div class="d-flex justify-content-end mb-2 bg-light">
-        <div v-if="consultationData.status === 'DS'" class="ml-2">
+      <div class="d-flex justify-content-between align-items-center mb-2 bg-light">
+      <BackwardNavigation />
+       <div>
+         <div v-if="consultationData.status === 'DS'" class="ml-2">
           <!-- <button disabled class="btn btn-outline-success ">
                         Signed
                     </button> -->
@@ -42,9 +44,11 @@
         >
           Sign
         </BaseButton>
+       </div>
 
-        <DashboardModalDoctorSign @refresh="showSignature" />
+        
       </div>
+      <DashboardModalDoctorSign @refresh="showSignature" />
       <div
         style="border-radius: 4px"
         class="
@@ -239,7 +243,7 @@
           <EncountersConsultation
             :consultationData="consultationData"
             @refreshMe="refreshMe"
-            @clearance="clearance"
+
           />
         </TabPanel>
 
@@ -286,8 +290,12 @@
           </template>
           <EncountersLabOrders :patientData="patientData" />
         </TabPanel>
-        <TabPanel header="Imaging">
-             <DashboardPatientImaging :data="patientData" />
+        <TabPanel>
+          <template #header>
+            <i class="fas fa-x-ray"></i>
+            <span class="ml-2">Imaging</span>
+          </template>
+          <DashboardPatientImaging :data="patientData" />
         </TabPanel>
         <TabPanel>
           <template #header>
@@ -334,6 +342,10 @@ export default {
   },
   methods: {
     showSignature() {
+      this.getPatientRecord()
+    },
+
+    refreshMe(){
       this.getPatientRecord()
     },
 
