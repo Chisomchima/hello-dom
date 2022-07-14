@@ -392,8 +392,8 @@ export default {
         bill_price: null,
         cost_price: null,
       },
-      sswap: '',
-      lswap: '',
+      sswap: null,
+      lswap: null,
       editPanel: {
         name: '',
         obv: [],
@@ -403,10 +403,10 @@ export default {
         cost_price: null,
         active: true,
       },
-      lab_unit: '',
-      specimen_type: '',
-      typeId: '',
-      unitId: '',
+      lab_unit: null,
+      specimen_type: null,
+      typeId: null,
+      unitId: null,
       page: 1,
       pager: 1,
       perPage: 20,
@@ -432,15 +432,19 @@ export default {
         { key: 'lab_unit', label: 'Lab Unit', sortable: true },
         { key: 'edit', label: '', sortable: false },
       ],
-      uniqueId: '',
+      uniqueId: null,
     }
   },
   watch: {
     typeId() {
-      this.panel.specimen_type = this.typeId.id
+      if(this.typeId !== null){
+        this.panel.specimen_type = this.typeId.id
+      }
     },
     unitId() {
-      this.panel.lab_unit = this.unitId.id
+      if(this.unitId !== null){
+        this.panel.lab_unit = this.unitId.id
+      }
     },
     // "editPanel.lab_unit": {
     //   handler() {
@@ -469,8 +473,8 @@ export default {
       this.panel = {
         name: '',
         obv: [],
-        specimen_type: '',
-        lab_unit: '',
+        specimen_type: null,
+        lab_unit: null,
         active: false,
       }
     },

@@ -50,12 +50,12 @@ export default {
 
          {
           href: '/dashboard/laboratory',
-          title: 'Laboratory Work List',
+          title: 'Laboratory',
            icon: 'fas fa-vial',
            child: [
              {
                href: '/dashboard/laboratory/',
-               title: 'Search Laboratory',
+               title: 'Laboratory Work List',
                icon: 'fas fa-list-ul',
              },
            ],
@@ -63,8 +63,15 @@ export default {
 
           {
           href: '/dashboard/imaging',
-          title: 'Imaging Work List',
+          title: 'Imaging',
           icon: 'fas fa-x-ray',
+           child: [
+             {
+               href: '/dashboard/imaging/',
+               title: 'Imaging Work List',
+               icon: 'fas fa-list-ul',
+             },
+           ],
         },
 
 

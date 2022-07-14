@@ -163,8 +163,9 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
+import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-    mixins: [TableFunc],
+    mixins: [TableFunc, FilterLogic],
     data() {
         
         return {
