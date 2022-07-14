@@ -10,6 +10,9 @@ export default {
                     if (hasValues) {
                         this.filter(1, filterObject)
                     }
+                    // }else{
+                    //     this.filter(1, {})
+                    // }
                 }
             },
             deep: true,

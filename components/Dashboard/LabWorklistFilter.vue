@@ -135,8 +135,30 @@ export default {
     //   deep: true,
     //   immediate: true,
     // },
+    'filters.service_center': {
+      handler: debounce(function () {
+        this.applyFilters(this.filters);
+      }, 500),
+      deep: true,
+    },
+    'filters.lab_unit': {
+      handler: debounce(function () {
+       this.applyFilters(this.filters);
+      }, 500),
+      deep: true,
+    },
+    'filters.status': {
+      handler: debounce(function () {
+        this.applyFilters(this.filters);
+      }, 500),
+      deep: true,
+    },
   },
   async created() {
+    if (this.$route.query.filter) {
+      this.filters = JSON.parse(this.$route.query.filter)
+    }
+    this.applyFilters(this.filters);
     try {
       const { results: service_centers } = await this.$api.core.serviceCenter({
         size: 1000,
@@ -160,17 +182,23 @@ export default {
         asn: '',
         uhid: '',
       }
-      this.applyFilters(this.filters);
+      this.applyFilters(this.filters)
     },
 
     applyFilters(newVal) {
       const newFilterObject = {
         ...newVal,
-        'status': newVal.status,
-        
-        'patient_uhid': newVal.uhid
+        status: newVal.status,
+
+        patient_uhid: newVal.uhid,
       }
-      this.$emit('filters', newFilterObject)
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          filter: JSON.stringify(newFilterObject),
+        },
+      })
+      // this.$emit('filters', newFilterObject)
     },
   },
 }

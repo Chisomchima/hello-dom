@@ -30,10 +30,10 @@
                     <template #status="{ data }">
                         <div>
                             <div style="width: 9rem">
-                                <button :disabled="data.item.bill.cleared_status === 'UNCLEARED'"
-                                    @click="openSpecimenTaken(data.item)" v-if="data.item.status === 'NEW'"
-                                    class="text-center text-capitalize text-12"
-                                    :class="data.item.bill.cleared_status === 'UNCLEARED' ? 'btn btn-warning' : 'btn btn-outline-info '">
+                                <button v-if="data.item.status === 'NEW'"
+                                    :disabled="data.item.bill.cleared_status === 'UNCLEARED'" class="text-center text-capitalize text-12"
+                                    :class="data.item.bill.cleared_status === 'UNCLEARED' ? 'btn btn-warning' : 'btn btn-outline-info '"
+                                    @click="openSpecimenTaken(data.item)">
                                     {{
                                     data.item.status === "NEW"
                                     ? "take specimen" : data.item.status
@@ -44,28 +44,28 @@
                             <div>
 
 
-                                <div @click="openFillResult(data.item)" v-if="data.item.status === 'recieve specimen'"
-                                    style="width: 9rem" class="
+                                <div v-if="data.item.status === 'recieve specimen'" style="width: 9rem"
+                                    class="
                   text-center text-capitalize text-12
                   btn btn-outline-info
                   pointer
-                ">
+                " @click="openFillResult(data.item)">
                                     {{ data.item.status }}
                                 </div>
-                                <div @click="openEditPanel(data.item)" v-if="data.item.status === 'fill result'"
-                                    style="width: 8rem" class="
+                                <div v-if="data.item.status === 'fill result'" style="width: 8rem"
+                                    class="
                   text-center text-capitalize text-12
                   btn btn-outline-info
                   pointer
-                ">
+                " @click="openEditPanel(data.item)">
                                     {{ data.item.status }}
                                 </div>
                                 <div v-if="data.item.status === 'awaiting approval'"
-                                    @click="setStatusToApproved(data.item)" style="width: 9rem" class="
+                                    style="width: 9rem" class="
                     text-center text-capitalize text-12
                     btn btn-outline-info
                     pointer
-                ">
+                " @click="setStatusToApproved(data.item)">
                                     {{ data.item.status }}
                                 </div>
                                 <div v-if="data.item.status === 'approved'">
@@ -77,15 +77,15 @@
                     pointer
                     mx-3
                     ">
-                                            <svg @click="save_file(data.item)" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
-                                                width="24" height="24" preserveAspectRatio="xMidYMid meet"
-                                                viewBox="0 0 20 20">
+                                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24"
+                                                height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20"
+                                                @click="save_file(data.item)">
                                                 <path fill="currentColor"
                                                     d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5Zm9 0a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5h8v-.5Zm-8 7v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5Z" />
                                             </svg>
                                         </span>
 
-                                        <span  @click="mailReport(data.item)" style="width: 1rem" class="text-success text-center mx-3">
+                                        <span  style="width: 1rem" class="text-success text-center mx-3" @click="mailReport(data.item)">
                                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36"><path fill="currentColor" d="M33.68 15.26H32v11.45l-7.36-7.36l-1.41 1.41L30.46 28H5.66l7-7.24l-1.44-1.39L4 26.84V9.52l12.43 12.37a2 2 0 0 0 2.82 0l6.66-6.63h-2.83l-5.24 5.21L5.31 8h14.75l1.15-2H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V15.24Z" class="clr-i-outline--alerted clr-i-outline-path-1--alerted"/><path fill="currentColor" d="m26.85 1l-5.72 9.91a1.28 1.28 0 0 0 1.1 1.91h11.45a1.28 1.28 0 0 0 1.1-1.91L29.06 1a1.28 1.28 0 0 0-2.21 0Z" class="clr-i-outline--alerted clr-i-outline-path-2--alerted clr-i-alert"/><path fill="none" d="M0 0h36v36H0z"/></svg>
                                         </span>
 
@@ -119,8 +119,8 @@
                     </template>
                     <template #action="{ data }">
                         <div>
-                            <div @click="cancelRequestModal(data.item)" style="width: 6rem"
-                                class="text-center text-12 pointer btn btn-outline-danger">
+                            <div style="width: 6rem" class="text-center text-12 pointer btn btn-outline-danger"
+                                @click="cancelRequestModal(data.item)">
                                 Cancel
                             </div>
                         </div>
@@ -137,22 +137,22 @@
 
         <!-- ***********workflow********* -->
         <div>
-            <DashboardModalLabStepsSpecimenHandler @refresh="getLabOrders()" :status="status" :modalTitle="modalTitle"
-                :id="id" />
+            <DashboardModalLabStepsSpecimenHandler :id="id" :status="status" :modal-title="modalTitle"
+                @refresh="getLabOrders()" />
         </div>
 
         <div>
-            <DashboardModalLabStepsResultHandler @refresh="getLabOrders()" :labOrderPanel="labOrderPanel"
-                :manageInput="manageInput" :id="id" />
+            <DashboardModalLabStepsResultHandler :id="id" :lab-order-panel="labOrderPanel"
+                :manage-input="manageInput" @refresh="getLabOrders()" />
         </div>
 
         <div>
-            <DashboardModalLabStepsApproval @refresh="getLabOrders()" :labOrderPanel="labOrderPanel" :status="status"
-                :id="id" />
+            <DashboardModalLabStepsApproval :id="id" :lab-order-panel="labOrderPanel" :status="status"
+                @refresh="getLabOrders()" />
         </div>
 
         <div>
-            <DashboardModalLabStepsCancel @refresh="getLabOrders()" :labOrderPanel="labOrderPanel" />
+            <DashboardModalLabStepsCancel :lab-order-panel="labOrderPanel" @refresh="getLabOrders()" />
         </div>
 
         <!-- ********************************* -->
@@ -163,6 +163,7 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
+import { ObjectValuesAreTruthful } from '@/utils/friendly-helpers'
 export default {
     mixins: [TableFunc],
     data() {
@@ -218,8 +219,20 @@ export default {
             ],
         }
     },
-    async mounted() {
-      await this.getLabOrders()  
+     watch: {
+        '$route.query.filter': {
+            handler(newVal) {
+                if (newVal) {
+                    const filterObject = JSON.parse(newVal)
+                    const hasValues = ObjectValuesAreTruthful(filterObject)
+                    if (hasValues) {
+                        this.getLabOrders(1, filterObject)
+                    }
+                }
+            },
+            deep: true,
+            immediate: true,
+        },
     },
     methods: {
         save_file(e) {
@@ -231,8 +244,8 @@ export default {
             })
                 .then(res => res.blob()) // Gets the response and returns it as a blob
                 .then(blob => {
-                    let objectURL = URL.createObjectURL(blob);
-                    let link = document.createElement('a');
+                    const objectURL = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
                     link.download = `Lab Report_${e.asn})`;
                     link.href = objectURL;
                     this.downloading = false
@@ -247,7 +260,7 @@ export default {
          async mailReport(e){
        try {
           this.downloading = true
-          let response = await this.$axios.$get(
+          const response = await this.$axios.$get(
             `laboratory/lab_panel_order/${e.id}/reports/mail/`)
           this.$toast({
             type: 'success',
@@ -360,7 +373,7 @@ export default {
         },
         async setStatusToAwaitingApproval() {
             try {
-                let response = await this.$axios.$patch(
+                const response = await this.$axios.$patch(
                     `laboratory/lab_panel_order/${this.id}/`,
                     { status: "awaiting approval" }
                 );
@@ -378,7 +391,7 @@ export default {
             this.status = 'cancelled'
             this.$bvModal.show("cancelRequest");
         },
-    }
+    },
 
 }
 </script>

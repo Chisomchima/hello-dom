@@ -169,7 +169,7 @@
 </template>
 
 <script>
-// import { debounce } from 'lodash'
+import { debounce } from 'lodash'
 
 export default {
   data() {
@@ -201,6 +201,35 @@ export default {
     }
   },
   watch: {
+
+    'filters.department': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+    
+    'filters.provider': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+     'filters.clinic': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+
+    'filters.status': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+
+
     // filters: {
     //   handler: debounce(function (newVal) {
     //     if (newVal.by.length > 0) {
@@ -221,6 +250,10 @@ export default {
     genders: {},
   },
   async created() {
+     if (this.$route.query.filter) {
+      this.filters = JSON.parse(this.$route.query.filter)
+    }
+    this.applyFilter(this.filters)
     try {
       const providers = await this.$api.core.providers({
         size: 1000,
@@ -265,11 +298,20 @@ export default {
           worklist: true,
         }
         // console.log(newFilterObject)
-        this.$emit('filter', newFilterObject)
+        this.filterFunc(newFilterObject)
       } else {
-        this.$emit('filter', newVal)
+        this.filterFunc(newVal)
       }
     },
+    filterFunc(newVal) {
+      this.$router.push({
+        name: this.$router.name,
+        query: {
+          ...this.$router.query,
+          filter: JSON.stringify(newVal),
+        },
+      })
+    }
   },
 }
 </script>

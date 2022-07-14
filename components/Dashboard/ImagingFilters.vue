@@ -7,8 +7,8 @@
           <VSelect
             v-model="filters.service_center"
             label="name"
-             :multiple="true"
-             :reduce="(opt) => opt.id"
+            :multiple="true"
+            :reduce="(opt) => opt.id"
             :options="service_centers"
           />
         </div>
@@ -20,7 +20,7 @@
             v-model="filters.modality"
             label="name"
             :multiple="true"
-             :reduce="(opt) => opt.id"
+            :reduce="(opt) => opt.id"
             :options="modalities"
           />
         </div>
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">Patient Name</label>
           <input
@@ -58,9 +58,9 @@
             class="form-control"
           />
         </div>
-      </div>
+      </div> -->
 
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">Patient Phone Number</label>
           <input
@@ -69,20 +69,20 @@
             class="form-control"
           />
         </div>
-      </div>
-    </div>
+      </div> -->
 
-    <div class="mb-2">
-      <div class="row">
-        <div class="col-2 offset-md-8">
-          <BaseButton class="w-100" @click="filterFunc(filters)">
-            Filter
-          </BaseButton>
-        </div>
-        <div class="col-2 align-self-end">
-          <BaseButton class="w-100 btn-danger" @click="clear()">
-            Clear
-          </BaseButton>
+      <div class="col-md-4">
+        <div class="row mt-4">
+          <div class="col-6">
+            <BaseButton class="w-100" @click="filterFunc(filters)">
+              Filter
+            </BaseButton>
+          </div>
+          <div class="col-6">
+            <BaseButton class="w-100 btn-danger" @click="clear()">
+              Clear
+            </BaseButton>
+          </div>
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-// import { debounce } from 'lodash'
+import { debounce } from 'lodash'
 
 export default {
   data() {
@@ -105,49 +105,54 @@ export default {
         status: '',
         asn: '',
         patient_uhid: '',
-        patient_name: '',
-        patient_phone: '',
+        // patient_name: '',
+        // patient_phone: '',
       },
     }
   },
   watch: {
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //    // this.$emit('filter', newVal)
-    //    this.$router.replace({
-    //     name:this.$router.name,
-    //     query:{
-    //       ...this.$router.query,
-    //       filter:JSON.stringify(newVal)
-    //     }
-    //    });
-    //   }, 500),
-    //   deep: true,
-    // },
-    // "$route.query.filter"(newVal){
-    //   console.log(JSON.parse(newVal));
-    // },
+    'filters.status': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+    
+    'filters.modality': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+     'filters.service_center': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+
     genders: {},
   },
   created() {
     if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
+    this.filterFunc(this.filters)
 
     this.getServiceCenters()
     this.getModality()
   },
   methods: {
     clear() {
-      this.filters =  {
+      this.filters = {
         service_center: '',
         modality: '',
         status: '',
         asn: '',
         patient_uhid: '',
-        patient_name: '',
-        patient_phone: '',
-      };
+        // patient_name: '',
+        // patient_phone: '',
+      }
       this.filterFunc(this.filters)
     },
 
