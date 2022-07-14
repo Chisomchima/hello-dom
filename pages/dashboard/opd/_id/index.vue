@@ -243,7 +243,7 @@
           <EncountersConsultation
             :consultationData="consultationData"
             @refreshMe="refreshMe"
-            @clearance="clearance"
+
           />
         </TabPanel>
 
@@ -290,8 +290,12 @@
           </template>
           <EncountersLabOrders :patientData="patientData" />
         </TabPanel>
-        <TabPanel header="Imaging">
-             <DashboardPatientImaging :data="patientData" />
+        <TabPanel>
+          <template #header>
+            <i class="fas fa-x-ray"></i>
+            <span class="ml-2">Imaging</span>
+          </template>
+          <DashboardPatientImaging :data="patientData" />
         </TabPanel>
         <TabPanel>
           <template #header>
@@ -338,6 +342,10 @@ export default {
   },
   methods: {
     showSignature() {
+      this.getPatientRecord()
+    },
+
+    refreshMe(){
       this.getPatientRecord()
     },
 

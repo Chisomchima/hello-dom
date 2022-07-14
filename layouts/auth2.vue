@@ -9,8 +9,11 @@
       <div class="container-fluid">
         <!-- <breadcrumb /> -->
         <Nuxt />
+        
       </div>
     </div>
+
+    <LayoutFooter/>
   </div>
 </template>
 
