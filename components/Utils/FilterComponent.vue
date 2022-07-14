@@ -131,7 +131,24 @@
         </div>
       </div>
       <hr />
-      <slot :visualization="visualization"></slot>
+      <slot
+        v-if="!$store.state.auth.disablePage"
+        :visualization="visualization"
+      ></slot>
+      <div v-else class="text-center m-auto mt-5">
+        <font-awesome-icon
+          icon="fas fa-lock"
+          class="mb-4 text-primary"
+          style="font-size: 60px"
+        />
+        <h3 class="text-capitalize">
+          you don't have permission to view this information
+        </h3>
+        <p class="text-center paragraph-denied">
+          You do not have permission to access this information. please contact your
+          systems administrator.
+        </p>
+      </div>
     </div>
   </div>
 </template>
