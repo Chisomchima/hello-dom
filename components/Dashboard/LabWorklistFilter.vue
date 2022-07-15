@@ -48,7 +48,9 @@
           label="display"
         ></v-select>
       </div>
-
+    </div>
+    <hr>
+    <div class="row">
       <div class="col-lg-4 col-md-6 col-sm-12">
         <small class="text-grey text-12">Patient UHID</small>
         <input
@@ -70,7 +72,7 @@
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
         
           <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
-          Filter
+          Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
           Clear

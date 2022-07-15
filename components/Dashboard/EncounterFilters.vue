@@ -46,7 +46,7 @@
       </div>
       <div class="col-md-4">
         <div class="mb-2">
-          <label class="form-control-label">Date Before</label>
+          <label class="form-control-label">Date from</label>
           <input
             v-model="filters.date_before"
             type="date"
@@ -58,36 +58,13 @@
 
       <div class="col-md-4">
         <div class="mb-2">
-          <label class="form-control-label">Date After</label>
+          <label class="form-control-label">Date to</label>
           <input
             v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
           />
-        </div>
-      </div>
-      <div class="mb-2 col-md-4">
-        <label class="form-control-label">UHID/NAME</label>
-        <div class="row">
-          <div class="col-md-6">
-            <VSelect
-              v-model="filters.by"
-              style="font-size: 15px"
-              label="label"
-              placeholder="By"
-              :reduce="(option) => option.name"
-              :options="[
-                { name: 'patient_name', label: 'Name' },
-                { name: 'patient_uhid', label: 'UHID' },
-                { name: 'encounter_id', label: 'Encounter ID' },
-              ]"
-            >
-            </VSelect>
-          </div>
-          <div class="col-md-6">
-            <input v-model="filters.entry" type="text" class="form-control" />
-          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -148,10 +125,51 @@
             </template>
           </VSelect>
         </div>
+      </div> 
+    </div>
+
+    <hr class="m-2">
+
+    <div class="row justify-content-between">
+        <div class="mb-0 col-md-4">
+        <label class="form-control-label">UHID/NAME</label>
+        <div class="row">
+          <div class="col-md-6">
+            <VSelect
+              v-model="filters.by"
+              style="font-size: 15px"
+              label="label"
+              placeholder="By"
+              :reduce="(option) => option.name"
+              :options="[
+                { name: 'patient_name', label: 'Name' },
+                { name: 'patient_uhid', label: 'UHID' },
+                { name: 'encounter_id', label: 'Encounter ID' },
+              ]"
+            >
+            </VSelect>
+          </div>
+          <div class="col-md-6">
+            <input v-model="filters.entry" type="text" class="form-control" />
+          </div>
+        </div>
+      </div>
+
+     
+
+      <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
+        
+          <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+          Search
+        </BaseButton>
+        <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
+          Clear
+        </BaseButton>
+
       </div>
     </div>
 
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <div class="row">
          <div class="col-2 offset-md-8">
           <BaseButton class="w-100" @click="applyFilter(filters)">
@@ -164,7 +182,7 @@
           </BaseButton>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

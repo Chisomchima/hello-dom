@@ -31,7 +31,12 @@
           <VSelect v-model="filters.status" :options="statuses" />
         </div>
       </div>
-      <div class="col-md-4">
+
+    </div>
+
+    <hr>
+    <div class="row">
+            <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">UHID</label>
           <input
@@ -75,7 +80,7 @@
         <div class="row mt-4">
           <div class="col-6">
             <BaseButton class="w-100" @click="filterFunc(filters)">
-              Filter
+              Search
             </BaseButton>
           </div>
           <div class="col-6">

@@ -39,8 +39,8 @@ export default {
           key: 'name',
         },
         {
-          key: 'img_unit.name',
-          label: 'img unit',
+          key: 'modality.name',
+          label: 'Modality',
         },
 
         //  {
@@ -77,7 +77,7 @@ export default {
       }
     },
     edit(e) {
-      this.editObj = { img_unit_id: e.img_unit.id, ...e }
+      this.editObj = { ...e , modality: e.modality.id}
       this.$bvModal.show('modal')
       console.log(e)
     },

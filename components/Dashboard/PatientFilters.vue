@@ -51,7 +51,7 @@
       <div class="row">
         <div class="col-2 offset-md-8">
           <BaseButton class="w-100" @click="filterFunc(filters)">
-            Filter
+            Search
           </BaseButton>
         </div>
         <div class="col-2 align-self-end">

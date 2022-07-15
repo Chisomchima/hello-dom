@@ -20,7 +20,7 @@
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Image unit" :rules="['required']">
               <VSelect
-                v-model="dataObject.img_unit_id"
+                v-model="dataObject.modality"
                 label="name"
                 :reduce="(opt) => opt.id"
                 :options="labUnits"
@@ -72,7 +72,7 @@ export default {
       dataObject: {
         name: '',
         active: true,
-        img_unit_id: 0,
+        modality: 0,
         status: '',
         bill_price: '',
         cost_price: '',

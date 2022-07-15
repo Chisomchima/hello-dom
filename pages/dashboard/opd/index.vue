@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-12 mb-3">
-        <div class="d-flex justify-content-between">
-          <div class="page-heading mb-4">Encounter Work list</div>
+      <div class="col-12 mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="page-heading mb-0">Encounter Work list</div>
           <div>
             <BaseButton class="btn-primary btn-lg" @click="$bvModal.show('Add-encounter')">New Encounter</BaseButton>
           </div>
