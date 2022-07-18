@@ -257,7 +257,7 @@ export default {
                 );
 
         },
-         async mailReport(e){
+    async mailReport(e){
        try {
           this.downloading = true
           const response = await this.$axios.$get(

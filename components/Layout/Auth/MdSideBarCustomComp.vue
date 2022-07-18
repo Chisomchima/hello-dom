@@ -73,8 +73,11 @@ export default {
              },
            ],
         },
-
-
+          {
+          href: '/dashboard/cso',
+          title: 'Customer Support Officer',
+          icon: 'fas fa-list-ol',
+        },
         {
           title: 'Settings',
           href: '/dashboard/settings',

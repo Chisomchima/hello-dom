@@ -34,15 +34,14 @@
         <v-select
           v-model="filters.status"
           class="text-grey text-14"
-          placeholder="status"
+          placeholder="Status"
           :options="[
             { name: 'NEW', display: 'Take specimen' },
 
             { name: 'recieve specimen', display: 'Recieve specimen' },
             { name: 'fill result', display: 'Fill result' },
             { name: 'awaiting approval', display: 'Awaiting approval' },
-            { name: 'approved', display: 'Approved' },
-            { name: 'cancelled', display: 'Cancelled' },
+            
           ]"
           :reduce="(option) => option.name"
           label="display"

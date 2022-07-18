@@ -19,6 +19,7 @@
             aria-selected="true"
             >{{ tab.title }}</a
           >
+          <slot name="counts"></slot>
         </li>
       </ul>
     </div>
