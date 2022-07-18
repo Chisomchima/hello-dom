@@ -199,7 +199,6 @@ export default {
                 const data = await this.$api.laborder.getLabOrders({ ...e, page, by: entry, worklist: false, status: 'approved', })
                 this.itemsToShow = data.results
                 this.pages = data.total_pages
-                data.total_count
                 this.$emit('count', data.total_count)
             } catch (error){}
             finally {

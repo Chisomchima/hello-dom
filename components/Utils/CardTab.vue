@@ -10,7 +10,6 @@
           @click="selectTab(index)"
         >
           {{ subTab.title }}
-          <slot name="count"></slot>
         </li>
       </ul>
     </div>

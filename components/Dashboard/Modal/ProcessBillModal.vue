@@ -22,6 +22,21 @@
               />
             </ValidationProviderWrapper>
           </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Payment Method" :rules="['required']">
+             <VSelect
+                class="text-grey text-14"
+                placeholder="Type to search"
+                label="name"
+                
+                :options="paymentMethod"
+                :reduce="(option) => option"
+                multiple
+                taggable
+              >
+            </VSelect>
+            </ValidationProviderWrapper>
+          </div>
         </div>
       </form>
     </ValidationObserver>
@@ -42,6 +57,7 @@ export default {
       dataObject: {
         amount: '',
       },
+      paymentMethod: []
     }
   },
   computed: {
@@ -51,6 +67,13 @@ export default {
       console.log(qty);
       return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
+  },
+  async mounted(){
+    const data = await this.$api.finance.paymentMethods({
+      size: 1000
+    })
+    console.log('Im mounted', data.results)
+    this.paymentMethod = data.results
   },
   watch: {
     // editData: {

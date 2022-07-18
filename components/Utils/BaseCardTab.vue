@@ -5,21 +5,22 @@
         <li
           v-for="(tab, index) in tabs"
           :key="index"
-          class="nav-item"
+          class="nav-item d-flex"
           role="presentation"
           @click="selectTab(index)"
         >
-          <a
+          <a     
             :class="[index === selectedIndex ? 'active' : '']"
-            class="nav-link"
+            class="nav-link d-flex align-items-center"
             data-toggle="pill"
             href="#pills-attendance"
             role="tab"
             aria-controls="pills-attendance"
             aria-selected="true"
-            >{{ tab.title }}</a
+            >{{ tab.title }}
+            
+            </a
           >
-          <slot name="counts"></slot>
         </li>
       </ul>
     </div>
@@ -41,6 +42,10 @@ export default {
       type: String,
       default: '',
     },
+    counts: {
+      type: Array,
+      default: [0 , 0]
+    }
   },
 
   data() {
@@ -48,15 +53,18 @@ export default {
       selectedTab: 0,
       tabs: [],
       subTabs: false,
+      array: [0, 0]
     }
   },
   mounted() {
     this.tabs = this.$children
     const urlTab = this.checkUrlForTab()
     this.selectTab(urlTab)
+    
   },
   methods: {
     selectTab(tabIndex) {
+      this.array = this.counts
       this.selectedIndex = tabIndex
       // loop over all the tabs
       this.tabs.forEach((control, index) => {
