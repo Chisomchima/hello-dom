@@ -49,6 +49,7 @@
                           class="text-grey text-14"
                           placeholder="Type to search"
                           label="name"
+                          @search="filterOBV($event)"
                           v-model="panel.obv"
                           :options="observationWithoutPagination"
                           :loading="cue"
@@ -380,6 +381,8 @@
 </template>
 
 <script>
+import { debounce } from 'lodash'
+
 export default {
   data() {
     return {
@@ -433,6 +436,7 @@ export default {
         { key: 'edit', label: '', sortable: false },
       ],
       uniqueId: null,
+      searchQuery: ''
     }
   },
   watch: {
@@ -446,27 +450,34 @@ export default {
         this.panel.lab_unit = this.unitId.id
       }
     },
-    // "editPanel.lab_unit": {
-    //   handler() {
-    //     let edit = this.editPanel.lab_unit;
-    //     this.editPanel.lab_unit = edit.id
-    //   },
-    //   deep: true,
-    // },
-    // "editPanel.specimen_type": {
-    //   handler() {
-    //     this.editPanel.specimen_type = this.editPanel.specimen_type.id;
-    //   },
-    //   deep: true,
-    // },
+   searchQuery: {
+      handler: debounce(async function () {
+         this.cue = true
+        let temp = await this.$api.core.observations({ size: 1000 , name: this.searchQuery})
+        console.log(temp)
+          if(temp.results> 0){
+            this.observationWithoutPagination = temp.results
+          }
+          else{
+            this.observationWithoutPagination = []
+            // this.searchQuery = ''
+          }
+        
+        this.cue = false
+      }, 1000),
+      deep: true,
+    },
   },
   mounted() {
     this.getLabPanels()
   },
   methods: {
     searchMe(e){
-
-        this.getLabPanels(1, e)
+      this.getLabPanels(1, e)
+    },
+    async filterOBV(e){
+      this.searchQuery = e
+      console.log(e)
     },
     closeModal() {
       this.$bvModal.hide('Add-panel')
@@ -490,24 +501,23 @@ export default {
     },
     async openLabPanelModal() {
       this.$bvModal.show('Add-panel')
-      if (this.observationWithoutPagination.length < 1) {
+    
         this.cue = true
-        let temp = await this.$api.core.observations({ size: 1000 })
-        this.observationWithoutPagination = temp.results
-        this.cue = false
-      }
-      if (this.specimensForModal.length < 1) {
+        let temp1 = await this.$api.core.observations({ size: 1000 })
+        this.observationWithoutPagination = temp1.results
+        this.cue =  false
+
+        
         this.cue1 = true
-        let temp = await this.$api.core.specimens({ size: 1000 })
-        this.specimensForModal = temp.results
+        let temp2 = await this.$api.core.specimens({ size: 1000 })
+        this.specimensForModal = temp2.results
         this.cue1 = false
-      }
-      if (this.unitsForModal.length < 1) {
+    
         this.cue2 = true
-        let temp = await this.$api.core.labUnits({ size: 1000 })
-        this.unitsForModal = temp.results
+        let temp3 = await this.$api.core.labUnits({ size: 1000 })
+        this.unitsForModal = temp3.results
         this.cue2 = false
-      }
+     
     },
 
     async openEditPanel(e) {
@@ -524,7 +534,7 @@ export default {
       this.$bvModal.show('Edit-panel')
       if (this.observationWithoutPagination.length < 1) {
         this.cue = true
-        let temp = await this.$api.core.observations({ size: 1000 })
+        let temp = await this.$api.core.observations({ size: 12 })
         this.observationWithoutPagination = temp.results
         this.cue = false
       }

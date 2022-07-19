@@ -40,7 +40,7 @@
             }}</span>
           </template>
         </TableComponent>
-        <DashboardModalProcessBillModal @ok="payment($event)" />
+        <DashboardModalProcessBillModal :nameData="data" @ok="payment($event)" />
       </template>
     </UtilsFilterComponent>
 
@@ -69,10 +69,10 @@ import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 export default {
   mixins: [TableFunc],
   props: {
-    // data: {
-    //   type: Object,
-    //   required: true,
-    // },
+    data: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -173,7 +173,9 @@ export default {
         })
       }
     },
-    async payment(amount) {
+    async payment(event) {
+      console.log(event.method)
+      return
       try {
         const patient = await this.$api.patient.getPatient(this.$route.params.uuid);
         let billID = [];
@@ -186,7 +188,8 @@ export default {
         await this.$api.finance.makePayment({
           bills: billID,
           patient,
-          total_amount: amount,
+          total_amount: event.amount,
+          methods: event.methods
         })
         this.$toast({
           type: 'success',

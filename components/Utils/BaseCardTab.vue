@@ -18,7 +18,9 @@
             aria-controls="pills-attendance"
             aria-selected="true"
             >{{ tab.title }}
-            
+            <div  style="height: 1.2rem; width: 1.2rem; " class="bg-success text-white ml-2 text-center align-text-bottom">
+            <span  class="mt-3">{{array[index]}}</span>
+            </div>
             </a
           >
         </li>
@@ -44,7 +46,7 @@ export default {
     },
     counts: {
       type: Array,
-      default: [0 , 0]
+      default: () => [0 , 0]
     }
   },
 
@@ -60,11 +62,11 @@ export default {
     this.tabs = this.$children
     const urlTab = this.checkUrlForTab()
     this.selectTab(urlTab)
-    
+    this.array = this.counts
   },
   methods: {
     selectTab(tabIndex) {
-      this.array = this.counts
+      
       this.selectedIndex = tabIndex
       // loop over all the tabs
       this.tabs.forEach((control, index) => {

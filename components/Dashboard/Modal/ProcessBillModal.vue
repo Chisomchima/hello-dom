@@ -23,7 +23,7 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Payment Method" :rules="['required']">
+            <ValidationProviderWrapper name="Payment Method" :rules="['']">
              <VSelect
                 class="text-grey text-14"
                 placeholder="Type to search"
@@ -51,11 +51,17 @@ export default {
       require: false,
       default: () => ({}),
     },
+    nameData: {
+      type: Object,
+      require: false,
+      default: () => ({}),
+    },
   },
   data() {
     return {
       dataObject: {
         amount: '',
+        method: []
       },
       paymentMethod: []
     }
@@ -70,7 +76,7 @@ export default {
   },
   async mounted(){
     const data = await this.$api.finance.paymentMethods({
-      size: 1000
+      size: 1000, name: this.nameData.firstname
     })
     console.log('Im mounted', data.results)
     this.paymentMethod = data.results
@@ -88,7 +94,7 @@ export default {
   },
   methods: {
      ok() {
-      this.$emit('ok',this.dataObject.amount)
+      this.$emit('ok',this.dataObject)
     },
 
     handleQtyInput (newValue) {

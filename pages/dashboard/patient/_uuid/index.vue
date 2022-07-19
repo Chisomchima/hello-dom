@@ -38,7 +38,7 @@
       </UtilsCardTab>
       <UtilsCardTab title="Finance" :tabs="tabs">
         <UtilsSubCardTab title="Billing">
-          <DashboardPatientBilling :init-active="true" />
+          <DashboardPatientBilling :data="data" :init-active="true" />
         </UtilsSubCardTab>
       </UtilsCardTab>
     </UtilsBaseCardTab>
