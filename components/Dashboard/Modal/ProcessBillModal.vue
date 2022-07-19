@@ -5,6 +5,9 @@
     @ok="ok()"
     @hide="clear()"
   >
+  <div class="p-2">
+    Total: {{total ? total.toLocaleString('en-US') : ''}}
+  </div>
     <ValidationObserver ref="form">
       <form>
         <div class="row">
@@ -22,7 +25,7 @@
               />
             </ValidationProviderWrapper>
           </div>
-          <div class="col-md-12 mb-2">
+          <!-- <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Payment Method" :rules="['']">
              <VSelect
                 class="text-grey text-14"
@@ -36,7 +39,7 @@
               >
             </VSelect>
             </ValidationProviderWrapper>
-          </div>
+          </div> -->
         </div>
       </form>
     </ValidationObserver>
@@ -56,12 +59,16 @@ export default {
       require: false,
       default: () => ({}),
     },
+    total: {
+      type: Number,
+      require: false,
+      default: () => 0
+    }
   },
   data() {
     return {
       dataObject: {
         amount: '',
-        method: []
       },
       paymentMethod: []
     }
@@ -72,7 +79,7 @@ export default {
       const qty = this.dataObject.amount + ""
       console.log(qty);
       return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    }
+    },
   },
   async mounted(){
     const data = await this.$api.finance.paymentMethods({
@@ -94,7 +101,7 @@ export default {
   },
   methods: {
      ok() {
-      this.$emit('ok',this.dataObject)
+      this.$emit('ok',this.dataObject.amount)
     },
 
     handleQtyInput (newValue) {
@@ -129,7 +136,7 @@ export default {
 
     clear() {
       this.dataObject = {
-        name: '',
+        amount: '',
       }
       this.$emit('hide')
     },

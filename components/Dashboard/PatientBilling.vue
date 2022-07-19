@@ -40,7 +40,7 @@
             }}</span>
           </template>
         </TableComponent>
-        <DashboardModalProcessBillModal :nameData="data" @ok="payment($event)" />
+        <DashboardModalProcessBillModal :total="total" :nameData="data" @ok="payment($event)" />
       </template>
     </UtilsFilterComponent>
 
@@ -138,7 +138,15 @@ export default {
     total() {
       let total = 0
       this.unClearedBill.forEach((item) => {
-        total += Number.parseFloat(item.selling_price)
+        if(item.cleared_status === 'UNCLEARED'){
+          total += Number.parseFloat(item.selling_price)
+        }
+        else{
+        this.$toast({
+        type: 'info',
+        text: `Bill has already being cleared`,
+      })
+        }
       })
       return total
     },
@@ -173,9 +181,7 @@ export default {
         })
       }
     },
-    async payment(event) {
-      console.log(event.method)
-      return
+    async payment(amount) {
       try {
         const patient = await this.$api.patient.getPatient(this.$route.params.uuid);
         let billID = [];
@@ -188,8 +194,7 @@ export default {
         await this.$api.finance.makePayment({
           bills: billID,
           patient,
-          total_amount: event.amount,
-          methods: event.methods
+          total_amount: amount,
         })
         this.$toast({
           type: 'success',

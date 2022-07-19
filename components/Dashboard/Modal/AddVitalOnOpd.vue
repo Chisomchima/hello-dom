@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6 w-100">
-                    <small class="text-grey text-12">Temperature °F</small><input type="number"
+                    <small class="text-grey text-12">Temperature °C</small><input type="number"
                         v-model="vitals.temperature" placeholder="Temperature"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>

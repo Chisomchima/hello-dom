@@ -49,7 +49,6 @@
                           class="text-grey text-14"
                           placeholder="Type to search"
                           label="name"
-                          @search="filterOBV($event)"
                           v-model="panel.obv"
                           :options="observationWithoutPagination"
                           :loading="cue"
@@ -450,23 +449,23 @@ export default {
         this.panel.lab_unit = this.unitId.id
       }
     },
-   searchQuery: {
-      handler: debounce(async function () {
-         this.cue = true
-        let temp = await this.$api.core.observations({ size: 1000 , name: this.searchQuery})
-        console.log(temp)
-          if(temp.results> 0){
-            this.observationWithoutPagination = temp.results
-          }
-          else{
-            this.observationWithoutPagination = []
-            // this.searchQuery = ''
-          }
+  //  searchQuery: {
+  //     handler: debounce(async function () {
+  //        this.cue = true
+  //       let temp = await this.$api.core.observations({ size: 1000 , name: this.searchQuery})
+  //       console.log(temp)
+  //         if(temp.results> 0){
+  //           this.observationWithoutPagination = temp.results
+  //         }
+  //         else{
+  //           this.observationWithoutPagination = []
+  //           // this.searchQuery = ''
+  //         }
         
-        this.cue = false
-      }, 1000),
-      deep: true,
-    },
+  //       this.cue = false
+  //     }, 1000),
+  //     deep: true,
+  //   },
   },
   mounted() {
     this.getLabPanels()
@@ -475,10 +474,10 @@ export default {
     searchMe(e){
       this.getLabPanels(1, e)
     },
-    async filterOBV(e){
-      this.searchQuery = e
-      console.log(e)
-    },
+    // async filterOBV(e){
+    //   this.searchQuery = e
+    //   console.log(e)
+    // },
     closeModal() {
       this.$bvModal.hide('Add-panel')
       this.panel = {
@@ -534,7 +533,7 @@ export default {
       this.$bvModal.show('Edit-panel')
       if (this.observationWithoutPagination.length < 1) {
         this.cue = true
-        let temp = await this.$api.core.observations({ size: 12 })
+        let temp = await this.$api.core.observations({ size: 1000 })
         this.observationWithoutPagination = temp.results
         this.cue = false
       }

@@ -539,61 +539,64 @@ export default {
       this.enabled = !this.enabled
     },
 
-     save_file(e){
-         this.downloading = true
-            fetch(`${process.env.BASE_URL}laboratory/lab_panel_order/${e.id}/reports/download`, {
-                headers: {
-                    Authorization: `Token ${this.$store.state.auth.token}`,
-                },
-            }).then(response => {
-                if(response.status === '200'){
-                   response => response.blob().then(
-                    blob => {
-                    const objectURL = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `Lab Report_${e.asn})`;
-                    link.href = objectURL;
-                    this.downloading = false
-                    link.click();
-                    }
-                   )
-                }
-                else if(response.status === '403'){
-                    this.downloading = false
-                     this.$toast({
-                    type: 'info',
-                    text: `You don't have the permission to perform this action`,
-                })
-                }
-                else{
-                    this.downloading = false
-                    this.$toast({
-                    type: 'error',
-                    text: `An error occured`,
-                })
-                }
-            })
-    },
-
-    async mailReport(e){
-       try {
+     async mailReport(e){
+        try {
           this.downloading = true
-          let response = await this.$axios.$get(
-            `laboratory/lab_order/${e.id}/reports/mail/`)
-          this.$toast({
+          const response = await this.$axios.$get(
+            `laboratory/lab_panel_order/${e.id}/reports/mail/`)
+          console.log(response)
+          
+            this.$toast({
             type: 'success',
             text: 'Mail sent',
           })
           this.downloading = false
         } catch {
-          this.$toast({
-            type: 'error',
-            text: 'Mail not sent, please ensure that a mail address was provided',
-          })
+        //   this.$toast({
+        //     type: 'error',
+        //     text: 'Mail not sent, please ensure that a mail address was provided',
+        //   })
         } finally {
           this.downloading = false
         }
     },
+    async  save_file(e) {
+    this.downloading = true
+	const response = await fetch(`${process.env.BASE_URL}laboratory/lab_panel_order/${e.id}/reports/download`, {
+        headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+        },
+    })
+    console.log(response)
+	if (response.status === 200) {
+        const data = await response.blob();
+		
+        const objectURL = URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.download = `Lab Report_${e.asn})`;
+        link.href = objectURL;
+        this.downloading = false
+        link.click();
+	}
+    else if(response.status === 403){
+        this.downloading = false
+        this.$toast({
+        type: 'info',
+        text: `You don't have the permission to perform this action`,
+    })
+    }
+
+    else{
+        this.downloading = false
+        this.$toast({
+        type: 'error',
+        text: `An error occured`,
+    })
+    }
+
+	
+
+},
 
     resetModal() {
       this.test = ''

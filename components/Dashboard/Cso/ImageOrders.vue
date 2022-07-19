@@ -5,6 +5,13 @@
     </div>
     <hr class="m-2">
     <div>
+      <b-overlay
+        variant="light"
+        spinner-variant="primary"
+        spinner-type="grow"
+        :show="downloading"
+        rounded="sm"
+    >
         <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" 
             @page-changed="getLabOrders($event, currentFilter)"
         >
@@ -31,6 +38,7 @@
           </div>
         </template>
         </TableComponent>
+         </b-overlay>
     </div>
   </div>
 </template>
@@ -109,48 +117,61 @@ export default {
         this.filter(1)
     },
     methods: {
-    async mailReport(e){
-        return
+      async mailReport(e){
         try {
           this.downloading = true
           const response = await this.$axios.$get(
-            `laboratory/lab_panel_order/${e.id}/reports/mail/`)
+            `imaging/imaging_observation_order/${e.id}/reports/mail/`)
           this.$toast({
             type: 'success',
             text: 'Mail sent',
           })
+
           this.downloading = false
+          this.filter(1)
         } catch {
-          this.$toast({
-            type: 'error',
-            text: 'Mail not sent, please ensure that a mail address was provided',
-          })
+          
         } finally {
           this.downloading = false
         }
     },
-    save_file(e) {
-        return
-        this.downloading = true
-            fetch(`${process.env.BASE_URL}laboratory/lab_panel_order/${e.id}/reports/download`, {
-                headers: {
-                    Authorization: `Token ${this.$store.state.auth.token}`,
-                },
-            })
-                .then(res => res.blob()) // Gets the response and returns it as a blob
-                .then(blob => {
-                    const objectURL = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `Lab Report_${e.asn})`;
-                    link.href = objectURL;
-                    this.downloading = false
-                    link.click();
-                }).catch(err => {
-                    console.log(err);
-                    this.downloading = false
-                }
-            );
-    },
+    async  save_file(e) {
+      console.log(e)
+    this.downloading = true
+	const response = await fetch(`${process.env.BASE_URL}imaging/imaging_observation_order/${e.id}/reports/download`, {
+        headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+        },
+    })
+    console.log(response)
+	if (response.status === 200) {
+        const data = await response.blob();
+		
+        const objectURL = URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.download = `Imaging Report_${e.img_order.img_id})`;
+        link.href = objectURL;
+        this.downloading = false
+        this.filter(1)
+        link.click();
+	}
+    else if(response.status === 403){
+        this.downloading = false
+        this.$toast({
+        type: 'info',
+        text: `You don't have the permission to perform this action`,
+    })
+    }
+
+    else{
+        this.downloading = false
+        this.$toast({
+        type: 'error',
+        text: `An error occured`,
+    })
+    }
+},
+ 
      async filter(page, e) {
       this.currentFilter = e
       this.currentPage = page
@@ -160,7 +181,8 @@ export default {
           ...e,
           page,
           worklist: false,
-          'status': 'APPROVED'
+          'status': 'APPROVED',
+          sent: false
         })
         this.items = data.results
         this.pages = data.total_pages
@@ -172,8 +194,8 @@ export default {
       }
     },
     search(e){
-        console.log(e)
-        this.filter(1, e)
+      console.log(e)
+      this.filter(1, e)
     }
     }
 

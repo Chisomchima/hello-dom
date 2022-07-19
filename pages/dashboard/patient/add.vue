@@ -83,6 +83,7 @@ export default {
     async submitButton() {
       try {
         const customObj = this.formatData(this.dataVal)
+        console.log(customObj)
         const res = await this.$api.patient.savePatient(customObj)
         this.$router.push({
           name: 'dashboard-patient-uuid',
@@ -117,6 +118,7 @@ export default {
           ...dataObject,
           is_baby: dataObject.is_baby ? dataObject.is_baby : false,
           gender: dataObject.gender ? dataObject.gender.gender : null,
+          middlename: dataObject.middlename ? dataObject.middlename : '',
           nationality: dataObject.nationality
             ? dataObject.nationality.country
             : null,
@@ -183,6 +185,7 @@ export default {
         ...item,
         is_baby: item.is_baby ? item.is_baby : false,
         gender: item.gender ? item.gender.gender : null,
+        middlename: item.middlename ? item.middlename : '',
         occupation: item.occupations ? item.occupations.occupation : null,
         nationality: item.nationality ? item.nationality.country : null,
         religion: item.religion ? item.religion.religion : null,

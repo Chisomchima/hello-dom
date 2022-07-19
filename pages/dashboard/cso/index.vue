@@ -5,12 +5,12 @@
             <div class="card">
                 <div class="">
                 <UtilsBaseCardTab :counts="counts">
-                    <UtilsCardTab  :title="`Lab Orders`">
+                    <UtilsCardTab  :title="`Lab Orders ${labCount ? labCount : ''}`">
                         <keep-alive>
                             <DashboardCsoLabOrders @count="getLabCount"/>
                         </keep-alive>
                     </UtilsCardTab>
-                    <UtilsCardTab  :title="`Imaging`">
+                    <UtilsCardTab  :title="`Imaging ${imageCount ? imageCount : ''}`">
                         <keep-alive>
                             <DashboardCsoImageOrders @image="getImageCount"/>
                         </keep-alive>
@@ -36,12 +36,12 @@ export default {
     methods: {
         getLabCount(e){
             console.log(e)
-            // this.labCount = e
+            this.labCount = e
             // this.counts[0] = e
         },
         getImageCount(e){
             console.log(e)
-            // this.imageCount = e
+            this.imageCount = e
             // this.counts[1] = e
         },
 
@@ -76,8 +76,8 @@ export default {
     },
     },
     mounted(){
-      this.filter() 
-      this.getLabOrders() 
+      // this.filter() 
+      // this.getLabOrders() 
     }
 }
 </script>
