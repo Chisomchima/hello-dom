@@ -33,7 +33,6 @@ export const mutations: MutationTree<RootState> = {
         state.userSigningUp = value;
     },
     SET_PAGE_DISABLED: (state, value) => {
-        debugger;
         state.disablePage = value;
     }
 }

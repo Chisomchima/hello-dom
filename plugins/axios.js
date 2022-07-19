@@ -31,10 +31,9 @@ export default function ({ $axios, $toast, store, redirect }) {
     }
 
     if (error.response && error.response.status === 403) {
-      debugger;
       store.commit('auth/SET_PAGE_DISABLED', true)
       $toast({
-        type: 'error',
+        type: 'info',
         text: error.response.data.message,
       })
       return Promise.reject(error)
@@ -51,13 +50,13 @@ export default function ({ $axios, $toast, store, redirect }) {
     if (error.response && error.response.status === 404) {
       $toast({
         type: 'error',
-        text: 'Not Found',
+        text: error.response.data.message,
       })
     } else {
-      $toast({
-        type: 'error',
-        text: (error.response.data.message) || 'Error Occurred',
-      })
+      // $toast({
+      //   type: 'error',
+      //   text: 'Error Occurred',
+      // })
 
       return Promise.reject(error)
     }

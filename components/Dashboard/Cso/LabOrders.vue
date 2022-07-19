@@ -116,7 +116,7 @@ export default {
           this.downloading = true
           const response = await this.$axios.$get(
             `laboratory/lab_panel_order/${e.id}/reports/mail/`)
-          console.log(response)
+          console.log(response.message)
           
             this.$toast({
             type: 'success',
@@ -124,10 +124,11 @@ export default {
           })
           this.getLabOrders(1)
           this.downloading = false
-        } catch {
+        } catch(error) {
+            console.log(error)
         //   this.$toast({
         //     type: 'error',
-        //     text: 'Mail not sent, please ensure that a mail address was provided',
+        //     text: error,
         //   })
         } finally {
           this.downloading = false
