@@ -109,6 +109,16 @@ export default {
     },
     mounted(){
         this.getLabOrders(1)
+        function vowelsAndConsonants(s) {
+            let mix = s.split('')
+            
+            for(let x = 0; x < mix.length; x++){
+                if(mix[x] === 'a'){
+                    console.log(mix[x])
+                }
+            }
+        }
+        vowelsAndConsonants('haudasarasdas')
     },
     methods: {
     async mailReport(e){
