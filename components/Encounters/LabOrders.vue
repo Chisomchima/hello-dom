@@ -489,7 +489,7 @@ export default {
         },
         // { key: 'panel', label: 'Specimen Type', sortable: true },
         { key: 'details', label: 'Info', sortable: false },
-        { key: 'download', label: 'Print', sortable: false },
+        { key: 'download', label: '', sortable: false },
       ],
       test: '',
     }
