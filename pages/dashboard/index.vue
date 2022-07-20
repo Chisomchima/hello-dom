@@ -12,7 +12,7 @@
         >
           <div class="card-body">
             <div class="row">
-              <div class="col">
+              <div class="col text-truncate">
                 <h3
                   class="h5 text-uppercase mb-0 font-weight-bold text-primary"
                 >
@@ -54,11 +54,6 @@ export default {
           route: '/dashboard/opd',
         },
         {
-          name: 'Settings',
-          icon: 'fas fa-cog',
-          route: '/dashboard/settings/',
-        },
-        {
           name: 'Laboratory',
           icon: 'fas fa-vial',
           route: '/dashboard/laboratory/',
@@ -67,6 +62,16 @@ export default {
           name: 'Imaging',
           icon: 'fas fa-x-ray',
           route: '/dashboard/imaging/',
+        },
+        {
+          name: 'Customer Support Officer',
+          icon: 'fas fa-list-ol',
+          route: '/dashboard/cso/',
+        },
+        {
+          name: 'Settings',
+          icon: 'fas fa-cog',
+          route: '/dashboard/settings/',
         },
       ],
     }

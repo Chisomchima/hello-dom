@@ -8,6 +8,12 @@
         <li @click="complaint" :class="hide4 ? 'bg-primary color' : ''" class="p-2">
           Chief Complaint
         </li>
+        <li @click="hx" :class="hideX ? 'bg-primary color' : ''" class="p-2">
+          Social HX
+        </li>
+        <li @click="medicalHistory" :class="hideY ? 'bg-primary color' : ''" class="p-2">
+          Medical HX
+        </li>
         <li @click="ros" :class="hide2 ? 'bg-primary color' : ''" class="p-2">
           Review of Systems
         </li>
@@ -46,6 +52,12 @@
       <div v-if="tab7" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
         <EncountersPlan :consultationData="consultationData" />
       </div>
+      <div v-if="tabx" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
+        <EncountersHx :consultationData="consultationData" />
+      </div>
+      <div v-if="taby" style="max-width: 80vw" class="trans pl-3 col-sm-9 col-lg-11 col-md-10 w-100">
+        <EncountersMedicalHistory :consultationData="consultationData" />
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +79,8 @@ export default {
       tab5: false,
       tab6: false,
       tab7: false,
+      tabx: false,
+      taby: false,
       hide1: true,
       hide2: false,
       hide3: false,
@@ -74,6 +88,8 @@ export default {
       hide5: false,
       hide6: false,
       hide7: false,
+      hideX: false,
+      hideY: false,
     };
   },
   watch: {
@@ -98,6 +114,12 @@ export default {
     tab7() {
       this.hide7 = !this.hide7;
     },
+    tabx() {
+      this.hideX = !this.hideX;
+    },
+    taby() {
+      this.hideY = !this.hideY;
+    },
   },
   mounted() {},
   methods: {
@@ -115,6 +137,8 @@ export default {
       this.tab5 = false;
       this.tab6 = false;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     ros() {
       this.tab2 = true;
@@ -124,6 +148,8 @@ export default {
       this.tab5 = false;
       this.tab6 = false;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     exam() {
       this.tab1 = false;
@@ -133,6 +159,8 @@ export default {
       this.tab5 = false;
       this.tab6 = false;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     complaint() {
       this.tab1 = false;
@@ -142,6 +170,8 @@ export default {
       this.tab5 = false;
       this.tab6 = false;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     diagnosis() {
       this.tab1 = false;
@@ -151,6 +181,8 @@ export default {
       this.tab5 = true;
       this.tab6 = false;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     order() {
       this.tab1 = false;
@@ -160,6 +192,8 @@ export default {
       this.tab5 = false;
       this.tab6 = true;
       this.tab7 = false;
+      this.tabx = false;
+      this.taby = false;
     },
     plan() {
       this.tab1 = false;
@@ -169,6 +203,30 @@ export default {
       this.tab5 = false;
       this.tab6 = false;
       this.tab7 = true;
+      this.tabx = false;
+      this.taby = false;
+    },
+    hx() {
+      this.tab1 = false;
+      this.tab2 = false;
+      this.tab3 = false;
+      this.tab4 = false;
+      this.tab5 = false;
+      this.tab6 = false;
+      this.tab7 = false;
+      this.tabx = true;
+      this.taby = false;
+    },
+    medicalHistory() {
+      this.tab1 = false;
+      this.tab2 = false;
+      this.tab3 = false;
+      this.tab4 = false;
+      this.tab5 = false;
+      this.tab6 = false;
+      this.tab7 = false;
+      this.tabx = false;
+      this.taby = true;
     },
   },
 };

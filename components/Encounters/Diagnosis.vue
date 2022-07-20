@@ -1,5 +1,21 @@
 <template>
-  <div>
+ <div>
+  <div v-if="busy">
+        <b-row>
+        <b-col cols="12" class="mt-4 ml-3">
+          <b-skeleton animation="wave" width="70%"></b-skeleton>
+          <b-skeleton animation="wave" width="65%"></b-skeleton>
+          <b-skeleton animation="wave" width="60%"></b-skeleton>
+        </b-col>
+        <b-col cols="12" class="mt-3 ml-3">
+          <b-skeleton animation="fade" width="70%"></b-skeleton>
+          <b-skeleton animation="fade" width="65%"></b-skeleton>
+          <b-skeleton animation="fade" width="60%"></b-skeleton>
+        </b-col>
+        
+        </b-row>
+    </div>
+   <div v-else>
     <div class="d-flex align-items-center justify-content-between">
       <h4 class="text-grey text-18 mb-0">Diagnosis</h4>
       <div @click="showComment" style="cursor: pointer" v-show="step" id="button-20">
@@ -30,20 +46,35 @@
     </div>
 
     <br />
-    <div v-show="tag">
-      <textarea v-model="diagnosis" class="p-3 form-control ng-untouched ng-pristine ng-valid" cols="40"
-        rows="10"></textarea>
+    <div v-show="tag" class="mr-3">
+      <!-- <textarea v-model="diagnosis" class="p-3 form-control ng-untouched ng-pristine ng-valid" cols="40"
+        rows="10"></textarea> -->
 
-      <div style="height: 38px" class="w-100 mt-4 text-16 d-flex justify-content-end">
+      <div class="row">
+        <div class="col-lg-8 col-md-6 col-sm-6">
+        <small class="text-grey text-14">Comment</small><input type="text" 
+            placeholder="Type here..." v-model="diagnosis.comment" class="form-control ng-untouched ng-pristine ng-valid" />
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6 w-100">
+        <small class="text-grey text-14">Options</small>
+        <v-select class="text-14" v-model="diagnosis.option" style="height: 35px;" :options="options" ></v-select>
+      </div>
+      </div>
+
+      <div style="height: 38px" class="w-100 mt-3 mr-5 text-16 d-flex justify-content-end">
 
         <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
-          @click.prevent="addDiagnosis" class="btn-primary">Save</BaseButton>
+          @click.prevent="addDiagnosis" class="btn-primary mr-3">Save</BaseButton>
       </div>
     </div>
 
     <div class="pt-3" v-if="comments.length > 0">
-      <div v-for="(comment, index) in comments" :key="index" class="card text-14 px-3 pt-3 pb-1 mb-2 pt-2 shadow-sm">
-        {{ comment.value }}
+      <div v-for="(comment, index) in comments" :key="index" class="d-flex align-items-center">
+        <div :style="{background: comment.value.option === 'working'? '#e9ff70' : '#80ed99'  }" class="card text-14 px-3 pt-3 pb-2 mb-2 pt-2 w-100 shadow-sm">
+       <div>
+         <div class="" v-if="comment.value">
+          {{ comment.value.comment || comment.value }}
+        </div>
         <div class="d-flex justify-content-end">
           <p class="text-12 mb-0">
             <span class="text-12 text-capitalize">
@@ -58,6 +89,13 @@
             </span>
           </p>
         </div>
+       </div>
+      </div>
+
+      <div class="mx-2 mb-2" v-if="comment.value.option === 'working'">
+        <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
+          @click.prevent="confirmDiagnosis(comment.value)" class="btn-primary mr-3">Confirm</BaseButton>
+       </div>
       </div>
     </div>
 
@@ -84,6 +122,7 @@
       </div>
     </div>
   </div>
+ </div>
 </template>
 
 <script>
@@ -92,17 +131,26 @@ export default {
     return {
       tag: false,
       isLoading: false,
+      busy: false,
       kink: false,
       allow: true,
       step: true,
-      diagnosis: "",
+      diagnosis: {
+        comment: '',
+        option: ''
+      },
+      diagnosisCopy: '',
       form: {},
       comments: [],
+      options: [
+        'working',
+        'confirmed'
+      ]
     };
   },
   watch: {
     diagnosis() {
-      if (this.diagnosis != "") {
+      if (this.diagnosis.comment != "") {
         this.allow = false;
       } else {
         this.allow = true;
@@ -130,10 +178,37 @@ export default {
 
         this.form = response;
         this.comments = response.result;
+        this.busy = false;
       } catch {}
+      finally{
+        this.busy = false;
+      }
+    },
+    async confirmDiagnosis(e){
+      this.diagnosisCopy = e.comment
+      console.log(this.diagnosisCopy)
+      try {
+        let response = await this.$axios.$post(
+          `encounters/${this.consultationData.id}/charts/`,
+          {
+            chart: {
+              diag: {
+                comment: this.diagnosisCopy,
+                option: 'confirmed'
+              },
+            },
+          }
+        );
+        this.getDiagnosis();
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          text: '',
+        })
+      } finally {
+      }
     },
     async addDiagnosis() {
-      console.log(this.diagnosis);
       this.isLoading = true;
       try {
         let response = await this.$axios.$post(
@@ -153,7 +228,10 @@ export default {
           type: 'success',
           text: 'Diagnosis added',
         })
-        this.diagnosis = "";
+        this.diagnosis = {
+        comment: '',
+        option: ''
+        };
       } catch (error) {
         this.$toast({
           type: 'error',

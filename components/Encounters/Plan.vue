@@ -1,5 +1,21 @@
 <template>
   <div>
+     <div v-if="busy">
+        <b-row>
+        <b-col cols="12" class="mt-4 ml-3">
+          <b-skeleton animation="wave" width="70%"></b-skeleton>
+          <b-skeleton animation="wave" width="65%"></b-skeleton>
+          <b-skeleton animation="wave" width="60%"></b-skeleton>
+        </b-col>
+        <b-col cols="12" class="mt-3 ml-3">
+          <b-skeleton animation="fade" width="70%"></b-skeleton>
+          <b-skeleton animation="fade" width="65%"></b-skeleton>
+          <b-skeleton animation="fade" width="60%"></b-skeleton>
+        </b-col>
+        
+        </b-row>
+    </div>
+    <div v-else>
     <div class="d-flex align-items-center justify-content-between">
       <h4 class="text-grey text-18 mb-0">Plan</h4>
       <div @click="showComment" style="cursor: pointer" v-show="step" id="button-299">
@@ -82,6 +98,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -90,6 +107,7 @@ export default {
     return {
       tag: false,
       isLoading: false,
+      busy: false,
       kink: false,
       allow: true,
       step: true,
@@ -123,11 +141,14 @@ export default {
         let response = await this.$axios.$get(
           `encounters/${this.$route.params.id}/charts/plan/`
         );
-        console.log(response);
 
         this.form = response;
+        this.busy = false;
         this.comments = response.result;
       } catch {}
+      finally{
+        this.busy = false;
+      }
     },
     async addPlan() {
       this.isLoading = true;

@@ -1,5 +1,15 @@
 <template>
-  <div>
+ <div>
+   <div v-if="buffering">
+        <div class="mt-3 mx-5">
+          <b-skeleton-table
+        :rows="3"
+        :columns="3"
+        :table-props="{ bordered: true, striped: true }"
+        ></b-skeleton-table>
+        </div>
+    </div>
+   <div v-else>
     <div style="max-width: 95%; cursor: pointer" class="d-flex sleek justify-content-between">
       <div>
         <h4 class="pl-2 text-18 mb-0 text-grey">Vitals</h4>
@@ -168,12 +178,14 @@
       </div>
     </div>
   </div>
+ </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      buffering: false,
       height: null,
       weight: null,
       step: true,
@@ -253,7 +265,7 @@ export default {
   methods: {
     async getVitals() {
       try {
-        this.busy = true;
+        this.buffering = true;
         let response = await this.$axios.$get(
           `encounters/${this.$route.params.id}/charts/vitals/`
         );
@@ -289,9 +301,10 @@ export default {
             urine_output: iterator.value.urine_output,
           });
         }
+        this.buffering = false;
       } catch {
       } finally {
-        this.busy = false;
+        this.buffering = false;
       }
     },
     async updateStatus() {
@@ -348,7 +361,6 @@ export default {
         })
         
       } finally {
-        this.busy = true;
         this.busy = false;
         this.isLoading = false;
         this.vitals.bmi = null;

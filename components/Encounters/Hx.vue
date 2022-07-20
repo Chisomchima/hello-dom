@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <div>
     <div v-if="busy">
         <b-row>
         <b-col cols="12" class="mt-4 ml-3">
@@ -15,10 +15,10 @@
         
         </b-row>
     </div>
-    <div v-else>
+  <div v-else>
     <div class="d-flex align-items-center justify-content-between">
-      <h4 class="text-grey text-18 mb-0">Physical Exam</h4>
-      <div @click="showComment" style="cursor: pointer" v-show="step" id="button-34">
+      <h4 class="text-grey text-18 mb-0">Family and Social History</h4>
+      <div @click="showComment" style="cursor: pointer" v-show="step" id="button-299">
         <div class="text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
             class="bi bi-plus-square-fill" viewBox="0 0 16 16">
@@ -27,7 +27,7 @@
           </svg>
         </div>
 
-        <b-tooltip target="button-34" placement="bottom"> Add Exam </b-tooltip>
+        <b-tooltip target="button-299" placement="bottom"> Add Record </b-tooltip>
       </div>
       <div @click.prevent="closeForm" id="button-22" v-show="kink">
         <div class="text-primary">
@@ -45,13 +45,13 @@
 
     <br />
     <div v-show="tag">
-      <textarea v-model="exam" class="p-3 form-control ng-untouched ng-pristine ng-valid" cols="40"
+      <textarea v-model="social" class="p-3 form-control ng-untouched ng-pristine ng-valid" cols="40"
         rows="10"></textarea>
 
       <div style="height: 38px" class="w-100 mt-4 text-16 d-flex justify-content-end">
-        <BaseButton :disabled="consultationData.bill.cleared_status==='CLEARED' ? false : true" @click.prevent="addExam"
-          class="btn-primary">Save</BaseButton>
 
+        <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
+          @click.prevent="addSocial" class="btn-primary">Save</BaseButton>
       </div>
     </div>
 
@@ -98,7 +98,7 @@
       </div>
     </div>
   </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -111,14 +111,14 @@ export default {
       kink: false,
       allow: true,
       step: true,
-      exam: "",
+      social: "",
       form: {},
       comments: [],
     };
   },
   watch: {
-    exam() {
-      if (this.exam != "") {
+    social() {
+      if (this.social != "") {
         this.allow = false;
       } else {
         this.allow = true;
@@ -132,35 +132,33 @@ export default {
     },
   },
   mounted() {
-    if (this.comments.length < 1) {
-      this.getExam();
-    }
+    this.getSocials();
   },
   methods: {
-    async getExam() {
+    async getSocials() {
       try {
         this.busy = true;
         let response = await this.$axios.$get(
-          `encounters/${this.$route.params.id}/charts/exam/`
+          `encounters/${this.$route.params.id}/charts/social/`
         );
+        console.log(response);
 
         this.form = response;
         this.comments = response.result;
         this.busy = false;
-        console.log(response);
       } catch {}
       finally{
         this.busy = false;
       }
     },
-    async addExam() {
+    async addSocial() {
       this.isLoading = true;
       try {
         let response = await this.$axios.$post(
           `encounters/${this.consultationData.id}/charts/`,
           {
             chart: {
-              exam: this.exam,
+              social: this.social,
             },
           }
         );
@@ -168,19 +166,20 @@ export default {
         this.tag = false;
         this.kink = false;
         this.step = true;
-
         this.$toast({
           type: 'success',
-          text: 'Exam added',
+          text: 'Record added successfully',
         })
-        this.exam = "";
-        this.getExam();
+       
+        this.social = "";
       } catch (error) {
         this.$toast({
           type: 'error',
-          text: 'Unable to add diagnosis',
+          text: 'Unable to add record',
         })
+        
       } finally {
+        this.getSocials();
         this.isLoading = false;
       }
     },
@@ -193,7 +192,7 @@ export default {
       this.tag = false;
       this.kink = false;
       this.step = true;
-      this.exam = "";
+      this.social = "";
     },
   },
 };
