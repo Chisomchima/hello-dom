@@ -86,6 +86,9 @@
       <template #cell()="data">
         <span class="text-capitalize"> {{ data.value }}</span>
       </template>
+      <template #cell(value.option)="data">
+        <slot name="option" :data="data"></slot>
+      </template>
 
       <template #table-colgroup="scope">
         <template v-for="field in scope.fields">
@@ -261,6 +264,11 @@
             v-else-if="field.key === 'date'"
             :key="field.key"
             :style="{ width: '10rem' }"
+          />
+          <col
+            v-else-if="field.key === 'value.option'"
+            :key="field.key"
+            :style="{ width: '18rem' }"
           />
           <col
             v-else-if="field.key === 'service_name'"
