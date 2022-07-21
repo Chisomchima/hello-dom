@@ -21,9 +21,9 @@
           Physical Exam
         </li>
 
-        <li @click="diagnosis" :class="hide5 ? 'bg-primary color' : ''" class="p-2">
+        <!-- <li @click="diagnosis" :class="hide5 ? 'bg-primary color' : ''" class="p-2">
           Diagnosis
-        </li>
+        </li> -->
         <li @click="order" :class="hide6 ? 'bg-primary color' : ''" class="p-2">
           Order
         </li>
