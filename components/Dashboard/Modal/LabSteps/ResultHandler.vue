@@ -14,7 +14,7 @@
                 <form>
                     <div>
 
-                        <TableComponent :items="labOrderPanel.panel.obv" :fields="fields" :paginate="false">
+                        <TableComponent :items="labOrderPanel.panel.obv" :perPage="1000" :fields="fields" :paginate="false">
                             <template #value="{ data }">
 
                                 <div
