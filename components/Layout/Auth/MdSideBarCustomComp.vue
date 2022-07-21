@@ -75,7 +75,7 @@ export default {
         },
           {
           href: '/dashboard/cso',
-          title: 'Customer Support Officer',
+          title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
         },
         {

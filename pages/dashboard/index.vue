@@ -64,7 +64,7 @@ export default {
           route: '/dashboard/imaging/',
         },
         {
-          name: 'Customer Support Officer',
+          name: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
           route: '/dashboard/cso/',
         },
