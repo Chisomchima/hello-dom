@@ -12,7 +12,7 @@
         >
           <div class="card-body">
             <div class="row">
-              <div class="col">
+              <div class="col text-truncate">
                 <h3
                   class="h5 text-uppercase mb-0 font-weight-bold text-primary"
                 >
@@ -46,7 +46,7 @@ export default {
         {
           name: 'Finance settings',
           icon: 'fa fa-cogs',
-          route: '/dashboard/settings/imaging',
+          route: '/dashboard/settings/finance',
         },
         {
           name: 'Laboratory settings',
