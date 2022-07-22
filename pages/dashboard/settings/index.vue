@@ -44,6 +44,11 @@ export default {
     return {
       cards: [
         {
+          name: 'Finance settings',
+          icon: 'fa fa-cogs',
+          route: '/dashboard/settings/imaging',
+        },
+        {
           name: 'Laboratory settings',
           icon: 'fa fa-cogs',
           route: '/dashboard/settings/laboratory/',
