@@ -3,10 +3,10 @@
     <ModalWrapper
       size="md"
       id="addPayer"
-      :title="modalTitle"
+      :title="title"
       @clearForm="clear()"
       @hide="clear()"
-      @ok="addPayer"
+      @ok="ok"
       >
         <ValidationObserver ref="form">
         <form>
@@ -60,7 +60,7 @@ export default {
     editData: {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
-          this.edit = newVal
+          this.payer = newVal
         }
       },
       immediate: true,
@@ -72,6 +72,11 @@ export default {
       type: Object,
       require: false,
       default: () => ({}),
+    },
+    title: {
+      type: String,
+      require: false,
+      default: () => ('Add payer'),
     },
   },
   mounted(){
