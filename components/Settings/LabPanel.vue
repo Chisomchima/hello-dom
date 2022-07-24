@@ -205,7 +205,7 @@
                               label="name"
                               v-model="editPanel.obv"
                               :options="observationWithoutPagination"
-                              :reduce="(option) => option"
+                              
                               :loading="cue"
                               multiple
                               taggable
@@ -603,7 +603,7 @@ export default {
         try {
           this.isbusy = true
 
-          let response = await this.$axios.$put(
+          let response = await this.$axios.$patch(
             `laboratory/lab_panel/${this.uniqueId}/`,
 
             this.editPanel

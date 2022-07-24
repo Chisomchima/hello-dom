@@ -18,7 +18,11 @@
             </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Type" :rules="['']">
-                    <v-select :options="['Self']" v-model="scheme.type" class="style-chooser" ></v-select>
+                <v-select
+                  :options="['Self']"
+                  v-model="scheme.type"
+                  class="style-chooser"
+                ></v-select>
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-12 mb-2">
@@ -39,7 +43,6 @@
                 />
               </ValidationProviderWrapper>
             </div>
-            
           </div>
         </form>
       </ValidationObserver>
@@ -55,14 +58,24 @@ export default {
       scheme: {
         name: '',
         type: '',
-        price_list: 0,
-        payer: 0,
+        price_list: null,
+        payer: null,
+        created_by: {
+        },
+        updated_by: {
+        },
       },
       edit: {
-       name: '',
+        name: '',
         type: '',
         price_list: null,
         payer: null,
+        created_by: {
+         
+        },
+        updated_by: {
+          
+        },
       },
       modalTitle: 'Add Scheme',
     }
@@ -103,8 +116,8 @@ export default {
       }
     },
     async addScheme() {
-        ~~this.scheme.price_list
-        ~~this.scheme.payer
+      this.scheme.price_list = ~~this.scheme.price_list
+      this.scheme.payer = ~~this.scheme.payer
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.addScheme(this.scheme)
@@ -129,12 +142,17 @@ export default {
       }
     },
     clear() {
-      
-       this.scheme = {
+      this.scheme = {
         name: '',
         type: '',
-        price_list: 0,
-        payer: 0,
+        price_list: null,
+        payer: null,
+        created_by: {
+          
+        },
+        updated_by: {
+         
+        },
       }
     },
   },

@@ -6,7 +6,7 @@
         <button @click="openModal" class="btn btn-outline-primary">Add Payer</button>
         </template>
         
-            <TableComponent @page-changed="getPayers($event, filter)" :perPage="filter.size" :items="payers" :pages="pages" :busy="busy" :fields="fields">
+            <TableComponent @row-clicked="gotoPayer($event)" @page-changed="getPayers($event, filter)" :perPage="filter.size" :items="payers" :pages="pages" :busy="busy" :fields="fields">
             <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18"
@@ -82,6 +82,14 @@ export default {
         openModal(){
             this.$bvModal.show('addPayer')
             this.newTitle = 'Add payer'
+        },
+        gotoPayer(e){
+            this.$router.push({
+        name: 'dashboard-settings-finance-id',
+        params: {
+          id: e.id,
+        },
+      })
         },
         searchPayers(e){
             console.log(e)

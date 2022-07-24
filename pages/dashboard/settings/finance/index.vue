@@ -19,7 +19,7 @@
           </UtilsCardTab>
          <UtilsCardTab title="Billable Items">
                 <keep-alive>
-                    <DashboardFinanceBillableItem />
+                    <DashboardFinanceBillableItems />
                 </keep-alive>
           </UtilsCardTab>
     </UtilsBaseCardTab>
