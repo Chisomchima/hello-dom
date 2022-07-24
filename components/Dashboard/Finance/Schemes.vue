@@ -1,12 +1,12 @@
 <template>
   <div>
     <div>
-        <UtilsFilterComponent @search-input="searchPayers" @view-by="getSome($event)" :disableVisualization="true">
+        <UtilsFilterComponent @search-input="searchSchemes" @view-by="getSome($event)" :disableVisualization="true">
         <template #besideFilterButton>
-        <button @click="openModal" class="btn btn-outline-primary">Add Payer</button>
+        <button @click="openModal" class="btn btn-outline-primary">Add Scheme</button>
         </template>
         
-            <TableComponent @page-changed="getPayers($event, filter)" :perPage="filter.size" :items="payers" :pages="pages" :busy="busy" :fields="fields">
+            <TableComponent @page-changed="getSchemes($event, filter)" :perPage="filter.size" :items="payers" :pages="pages" :busy="busy" :fields="fields">
             <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18"
@@ -21,7 +21,7 @@
             </TableComponent>
         </UtilsFilterComponent>
         <div>
-            <DashboardModalFinanceAddPayer :editData="modalData" :title="newTitle" @refresh="refreshMe" />
+            <DashboardModalFinanceAddScheme :editData="modalData" :title="newTitle" @refresh="refreshMe" />
         </div>
     </div>
   </div>
@@ -69,36 +69,36 @@ export default {
         }
     },
     mounted(){
-        this.getPayers()
+        this.getSchemes()
     },
     watch: {
         "filter.fetchBy"(){
             if(this.filter.size !== 10){
-                this.getPayers(this.currentPage, this.filter)
+                this.getSchemes(this.currentPage, this.filter)
             }
         }
     },
     methods: {
         openModal(){
-            this.$bvModal.show('addPayer')
-            this.newTitle = 'Add payer'
+            this.$bvModal.show('addScheme')
+            this.newTitle = 'Add Scheme'
         },
-        searchPayers(e){
+        searchSchemes(e){
             console.log(e)
             this.filter.name = e
-            this.getPayers(this.currentPage, this.filter)
+            this.getSchemes(this.currentPage, this.filter)
         },
         getSome(e){
             // console.log(e)
             this.filter.size = e
-            this.getPayers(this.currentPage, this.filter)
+            this.getSchemes(this.currentPage, this.filter)
         },
-        async getPayers(page = 1, e = {size: 10, name: ''}){
+        async getSchemes(page = 1, e = {size: 10, name: ''}){
            this.filter = e 
             
            this.currentPage = page
             try{
-            let response = await this.$api.finance_settings.getPayers({...e, page: page})
+            let response = await this.$api.finance_settings.getSchemes({...e, page: page})
            
             this.payers = response.results
             this.pages = response.total_pages
@@ -111,11 +111,11 @@ export default {
         },
         edit(e){
             this.modalData = e
-            this.newTitle = 'Edit payer'
-            this.$bvModal.show('addPayer')
+            this.newTitle = 'Edit Scheme'
+            this.$bvModal.show('addScheme')
         },
         refreshMe(){
-            this.getPayers(this.currentPage)
+            this.getSchemes(this.currentPage)
         }
     }
 }
