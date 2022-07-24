@@ -8,7 +8,7 @@
         
             <TableComponent @row-clicked="gotoPayer($event)" @page-changed="getPayers($event, filter)" :perPage="filter.size" :items="payers" :pages="pages" :busy="busy" :fields="fields">
             <template #edit="{ data }">
-            <div @click="edit(data.item)" class="text-start">
+            <button @click.prevent="edit(data.item)" class="text-start btn">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="18" height="18"
                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                 <path fill="currentColor"
@@ -16,7 +16,7 @@
                 <path fill="currentColor"
                   d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z" />
               </svg>
-            </div>
+            </button>
           </template>
             </TableComponent>
         </UtilsFilterComponent>
