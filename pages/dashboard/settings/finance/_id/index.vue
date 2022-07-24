@@ -77,9 +77,11 @@ export default {
       }
         }
     },
-    mounted(){
+    async mounted(){
         this.getPayers()
-    },
+        let response = await this.$api.finance_settings.viewPayer(this.$route.params.id)
+        console.log(response)
+        },
     watch: {
         "filter.fetchBy"(){
             if(this.filter.size !== 10){

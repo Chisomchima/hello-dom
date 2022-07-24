@@ -14,4 +14,7 @@ export default axios => ({
     getSchemes(body) {
         return axios.$get(`/finance/payer_schemes/`, body);
     },
+    viewPayer(id) {
+        return axios.$get(`/finance/payers/${id}`);
+    },
 })
