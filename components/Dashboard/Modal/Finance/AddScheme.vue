@@ -19,13 +19,13 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Type" :rules="['']">
                 <v-select
-                  :options="['Self']"
+                  :options="['SELF', 'INSURANCE']"
                   v-model="scheme.type"
                   class="style-chooser"
                 ></v-select>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-12 mb-2">
+            <!-- <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Payer" :rules="['']">
                 <input
                   class="form-control"
@@ -33,14 +33,19 @@
                   type="number"
                 />
               </ValidationProviderWrapper>
-            </div>
+            </div> -->
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Price List" :rules="['']">
-                <input
+                <!-- <input
                   class="form-control"
                   v-model="scheme.price_list"
                   type="number"
-                />
+                /> -->
+                 <v-select
+                  :options="[]"
+                  v-model="scheme.price_list"
+                  class="style-chooser"
+                ></v-select>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -58,26 +63,13 @@ export default {
       scheme: {
         name: '',
         type: '',
-        price_list: null,
         payer: null,
-        created_by: {
-        },
-        updated_by: {
-        },
       },
-      edit: {
+      editData: {
         name: '',
         type: '',
-        price_list: null,
         payer: null,
-        created_by: {
-         
-        },
-        updated_by: {
-          
-        },
       },
-      modalTitle: 'Add Scheme',
     }
   },
   watch: {
@@ -103,7 +95,8 @@ export default {
       default: () => 'Add Scheme',
     },
   },
-  mounted() {},
+  mounted() {
+  },
 
   methods: {
     async ok() {
@@ -116,28 +109,29 @@ export default {
       }
     },
     async addScheme() {
-      this.scheme.price_list = ~~this.scheme.price_list
+      // this.scheme.price_list = ~~this.scheme.price_list
+      this.scheme.payer = this.$route.params.id
       this.scheme.payer = ~~this.scheme.payer
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.addScheme(this.scheme)
           this.$emit('refresh')
-          this.$bvModal.hide('addPayer')
-          // console.log(data)
+          this.$bvModal.hide('addScheme')
+
         } catch (error) {
           console.log(error)
         }
       }
     },
-    async editPayer() {
+    async editScheme() {
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.editPayer(
             this.scheme,
-            this.scheme.id
+            this.$route.params.id
           )
           this.$emit('refresh')
-          this.$bvModal.hide('addPayer')
+          this.$bvModal.hide('addScheme')
         } catch (error) {}
       }
     },
@@ -145,14 +139,7 @@ export default {
       this.scheme = {
         name: '',
         type: '',
-        price_list: null,
         payer: null,
-        created_by: {
-          
-        },
-        updated_by: {
-         
-        },
       }
     },
   },

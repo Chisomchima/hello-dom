@@ -3,24 +3,24 @@
   <h5>Finance Settings</h5>
     <UtilsBaseCardTab>
          <UtilsCardTab title="Payers">
-                <keep-alive>
-                    <DashboardFinancePayers />
-                </keep-alive>
+              <keep-alive>
+                  <DashboardFinancePayers />
+              </keep-alive>
           </UtilsCardTab>
          <UtilsCardTab title="Schemes">
-                <keep-alive>
-                    <DashboardFinanceSchemes />
-                </keep-alive>
+              <keep-alive>
+                  <DashboardFinanceSchemes />
+              </keep-alive>
           </UtilsCardTab>
          <UtilsCardTab title="Price Lists">
-                <keep-alive>
-                    <DashboardFinancePriceList />
-                </keep-alive>
+              <keep-alive>
+                  <DashboardFinancePriceList />
+              </keep-alive>
           </UtilsCardTab>
          <UtilsCardTab title="Billable Items">
-                <keep-alive>
-                    <DashboardFinanceBillableItems />
-                </keep-alive>
+              <keep-alive>
+                  <DashboardFinanceBillableItems />
+              </keep-alive>
           </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>

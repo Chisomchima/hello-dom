@@ -60,7 +60,8 @@ export default {
     editData: {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
-          this.payer = newVal
+          let data = newVal
+          this.payer = data
         }
       },
       immediate: true,
@@ -80,6 +81,7 @@ export default {
     },
   },
   mounted(){
+    // this.payer = this.editData
   },
   
   methods: {

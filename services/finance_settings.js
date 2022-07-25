@@ -11,8 +11,8 @@ export default axios => ({
     addScheme(body) {
         return axios.$post(`/finance/payer_schemes/`, body);
     },
-    getSchemes(body) {
-        return axios.$get(`/finance/payer_schemes/`, body);
+    getPayerSchemes(params) {
+        return axios.$get(`/finance/payer_schemes/`, {params});
     },
     viewPayer(id) {
         return axios.$get(`/finance/payers/${id}`);
