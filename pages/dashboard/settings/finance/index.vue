@@ -12,7 +12,7 @@
                   <DashboardFinanceSchemes />
               </keep-alive>
           </UtilsCardTab>
-         <UtilsCardTab title="Price Lists">
+         <UtilsCardTab title="Pricelists">
               <keep-alive>
                   <DashboardFinancePriceList />
               </keep-alive>

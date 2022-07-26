@@ -56,6 +56,16 @@ export default {
           sortable: true,
         },
         {
+          key: 'email',
+          label: 'Email',
+          sortable: true,
+        },
+        {
+          key: 'mobile_number',
+          label: 'Phone Number',
+          sortable: true,
+        },
+        {
           key: 'edit',
           label: '',
           sortable: false,

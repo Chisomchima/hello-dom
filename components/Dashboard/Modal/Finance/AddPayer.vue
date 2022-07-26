@@ -32,6 +32,30 @@
                 />
               </ValidationProviderWrapper>
             </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="Email"
+                :rules="['email']"
+              >
+                <input
+                  class="form-control"
+                 v-model="payer.email"
+                  type="text"
+                />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="Phone number"
+                :rules="['digits:11']"
+              >
+                <input
+                  class="form-control"
+                 v-model="payer.mobile_number"
+                  type="text"
+                />
+              </ValidationProviderWrapper>
+            </div>
             
           </div>
         </form>
@@ -48,10 +72,14 @@ export default {
       payer: {
         name: '',
         address: '',
+        email: '',
+        mobile_number: ''
       },
       edit:{
         name: '',
         address: '',
+        email: '',
+        mobile_number: ''
       },
       modalTitle:'Add Payer',
     }
@@ -60,8 +88,13 @@ export default {
     editData: {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
-          let data = newVal
-          this.payer = data
+          let data = {...newVal}
+          // console.log(data)
+          this.payer.name = data.name
+          this.payer.address = data.address
+          this.payer.mobile_number = data.mobile_number
+          this.payer.email = data.email
+          this.payer.id = data.id
         }
       },
       immediate: true,
@@ -81,7 +114,6 @@ export default {
     },
   },
   mounted(){
-    // this.payer = this.editData
   },
   
   methods: {
@@ -122,6 +154,8 @@ export default {
       this.payer = {
         name: '',
         address: '',
+        email: '',
+        mobile_number: ''
       }
     },
   },

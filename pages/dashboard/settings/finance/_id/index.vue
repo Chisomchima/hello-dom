@@ -5,7 +5,7 @@
       <UtilsHeaderCard
         :enable-action="true"
         :title="data.name"
-        :display-key="['name', 'address']"
+        :display-key="['address', 'mobile_number', 'email']"
         :data="data"
       ></UtilsHeaderCard>
       <UtilsBaseCardTab>
@@ -90,6 +90,11 @@ export default {
         {
           key: 'type',
           label: 'Type',
+          sortable: true,
+        },
+        {
+          key: 'price_list',
+          label: 'Pricelist',
           sortable: true,
         },
         {
