@@ -43,11 +43,11 @@ export default {
   data() {
     return {
       cards: [
-        {
-          name: 'Finance settings',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/finance',
-        },
+        // {
+        //   name: 'Finance settings',
+        //   icon: 'fa fa-cogs',
+        //   route: '/dashboard/settings/finance',
+        // },
         {
           name: 'Laboratory settings',
           icon: 'fa fa-cogs',
