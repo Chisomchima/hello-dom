@@ -64,11 +64,13 @@ export default {
         name: '',
         type: '',
         payer: null,
+        price_list: null
       },
       editData: {
         name: '',
         type: '',
         payer: null,
+        price_list: null
       },
     }
   },

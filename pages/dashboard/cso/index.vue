@@ -4,13 +4,13 @@
         <div class="col-md-12 mb-4">
             <div class="card">
                 <div class="">
-                <UtilsBaseCardTab :counts="counts">
-                    <UtilsCardTab  :title="`Lab Orders ${labCount ? labCount : ''}`">
+                <UtilsBaseCardTab>
+                    <UtilsCardTab  :title="`Lab Orders ${labCount ? count : ''}`">
                         <keep-alive>
                             <DashboardCsoLabOrders @count="getLabCount"/>
                         </keep-alive>
                     </UtilsCardTab>
-                    <UtilsCardTab  :title="`Imaging ${imageCount ? imageCount : ''}`">
+                    <UtilsCardTab  :title="`Imaging ${imageCount ? count1 : ''}`">
                         <keep-alive>
                             <DashboardCsoImageOrders @image="getImageCount"/>
                         </keep-alive>
@@ -33,6 +33,14 @@ export default {
             counts: [0, 0]
         }
     }, 
+    computed:{
+    count(){
+      return `<span><span class="badge badge-success ml-2 rounded-circle">${this.labCount}</span></span>`
+    },
+    count1(){
+      return `<span><span class="badge badge-success ml-2 rounded-circle">${this.imageCount}</span></span>`
+    }
+    },
     methods: {
         getLabCount(e){
             console.log(e)
@@ -82,6 +90,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.badge {
+    font-size: 13px;
+    padding: 0.25rem 0.5rem;
+    line-height: 100%;
+    text-align: center;
+    /* border: 1px solid #000; */
+    border-radius: 4px;
+}
 </style>

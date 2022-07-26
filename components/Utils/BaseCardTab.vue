@@ -17,7 +17,8 @@
             role="tab"
             aria-controls="pills-attendance"
             aria-selected="true"
-            >{{ tab.title }}
+            v-html="tab.title"
+            >
             <!-- <div  style="height: 1.2rem; width: 1.2rem; " class="bg-success text-white ml-2 text-center align-text-bottom">
             <span  class="mt-3">{{array[index]}}</span>
             </div> -->

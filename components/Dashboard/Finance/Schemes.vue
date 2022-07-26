@@ -15,7 +15,7 @@
         <TableComponent
           @page-changed="getSchemes($event, filter)"
           :perPage="filter.size"
-          :items="payers"
+          :items="schemes"
           :pages="pages"
           :busy="busy"
           :fields="fields"
@@ -45,7 +45,7 @@
         </TableComponent>
       </UtilsFilterComponent>
       <div>
-        <DashboardModalFinanceAddScheme
+        <DashboardModalFinanceAddSchemeWithPayer
           :editData="modalData"
           :title="newTitle"
           @refresh="refreshMe"
@@ -62,18 +62,12 @@ export default {
   mixins: [TableCompFun],
   data() {
     return {
-      payers: [],
+      schemes: [],
       modalData: {
         name: '',
         type: '',
         price_list: null,
         payer: null,
-        created_by: {
-          
-        },
-        updated_by: {
-         
-        },
       },
       fetchBy: null,
       queryString: '',
@@ -115,7 +109,7 @@ export default {
   },
   methods: {
     openModal() {
-      this.$bvModal.show('addScheme')
+      this.$bvModal.show('addSchemewithpayer')
       this.newTitle = 'Add Scheme'
     },
     searchSchemes(e) {
@@ -138,7 +132,7 @@ export default {
           page: page,
         })
 
-        this.payers = response.results
+        this.schemes = response.results
         this.pages = response.total_pages
 
         this.currentPage = response.current_page
@@ -150,7 +144,7 @@ export default {
     edit(e) {
       this.modalData = e
       this.newTitle = 'Edit Scheme'
-      this.$bvModal.show('addScheme')
+      this.$bvModal.show('addSchemewithpayer')
     },
     refreshMe() {
       this.getSchemes(this.currentPage)

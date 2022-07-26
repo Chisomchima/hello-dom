@@ -2,7 +2,7 @@
   <div>
     <ModalWrapper
       size="md"
-      id="addScheme"
+      id="addSchemewithpayer"
       :title="title"
       @clearForm="clear()"
       @hide="clear()"
@@ -28,8 +28,10 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Payer" :rules="['']">
                 <v-select
-                  :options="[]"
+                  :options="payers"
+                  label="name"
                   v-model="scheme.payer"
+                  :reduce="(option) => option.id"
                   class="style-chooser"
                 ></v-select>
               </ValidationProviderWrapper>
@@ -60,6 +62,7 @@
 export default {
   data() {
     return {
+        payers: [],
       scheme: {
         name: '',
         type: '',
@@ -97,7 +100,9 @@ export default {
       default: () => 'Add Scheme',
     },
   },
-  mounted() {
+  async mounted() {
+    let payers = await this.$api.finance_settings.getPayers({size: 10000})
+    this.payers = payers.results
   },
 
   methods: {
