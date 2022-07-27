@@ -83,16 +83,16 @@ export default {
           href: '/dashboard/settings',
           icon: 'fas fa-cog',
           child: [
-            //  {
-            //   title: 'Finance Settings',
-            //   child: [
-            //     {
-            //       href: '/dashboard/settings/finance/',
-            //       title: 'Finance Config',
-            //     },
+             {
+              title: 'Finance Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/finance/',
+                  title: 'Finance Config',
+                },
                 
-            //   ],
-            // },
+              ],
+            },
             {
               title: 'Laboratory Settings',
               child: [

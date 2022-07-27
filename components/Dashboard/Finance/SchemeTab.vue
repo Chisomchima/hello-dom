@@ -21,7 +21,7 @@
           :fields="fields"
         >
         <template #type="{ data }">
-            <span>{{data.item.type}}</span>
+            <span class="text-capitalize">{{data.item.type}}</span>
           </template>
           <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">
@@ -84,8 +84,13 @@ export default {
           sortable: true,
         },
         {
-          key: 'address',
-          label: 'Address',
+          key: 'type',
+          label: 'Type',
+          sortable: true,
+        },
+        {
+          key: 'price_list',
+          label: 'Pricelist',
           sortable: true,
         },
         {
@@ -100,7 +105,7 @@ export default {
       },
     }
   },
-  mounted() {
+  async mounted() {
     this.getSchemes()
   },
   watch: {
@@ -129,8 +134,9 @@ export default {
       this.filter = e
 
       this.currentPage = page
+     
       try {
-        let response = await this.$api.finance_settings.getSchemes({
+        let response = await this.$api.finance_settings.getPayerSchemes({
           ...e,
           page: page,
         })

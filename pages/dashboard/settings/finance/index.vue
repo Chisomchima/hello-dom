@@ -7,11 +7,11 @@
                   <DashboardFinancePayers />
               </keep-alive>
           </UtilsCardTab>
-         <UtilsCardTab title="Schemes">
+        <UtilsCardTab title="Schemes">
               <keep-alive>
-                  <DashboardFinanceSchemes />
+                  <DashboardFinanceSchemeTab />
               </keep-alive>
-          </UtilsCardTab>
+        </UtilsCardTab>
          <UtilsCardTab title="Pricelists">
               <keep-alive>
                   <DashboardFinancePriceList />

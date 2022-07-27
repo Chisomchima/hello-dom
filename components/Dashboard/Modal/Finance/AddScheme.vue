@@ -78,7 +78,13 @@ export default {
     editData: {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
-          this.scheme = newVal
+         let data = {...newVal}
+          this.scheme.name = data.name
+          this.scheme.type = data.type
+          this.scheme.price_list = data.price_list
+          this.scheme.id = data.id
+          this.scheme.id = data.id
+          this.scheme.payer = data.payer
         }
       },
       immediate: true,
