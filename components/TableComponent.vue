@@ -285,7 +285,15 @@
       
     </b-table>
 
-    <b-pagination
+    <div class="d-flex justify-content-end">
+      <div v-if="showBaseCount" class="w-50">
+        <div class="text-primary mt-1 text-center text-14">
+        {{ showFrom }} - {{ showTo }} of {{ totalRecords }}
+        </div>
+      </div>
+
+    <div class="w-25">
+      <b-pagination
       v-if="paginate"
       v-model="currentPage"
       :total-rows="totalRows"
@@ -295,6 +303,8 @@
       class="my-0"
       @change="$emit('page-changed', $event)"
     ></b-pagination>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -305,10 +315,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    // currentPage: {
-    //   type: Number,
-    //   default: 1,
-    // },
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
 
     classCustom: {
       type: String,
@@ -334,6 +344,14 @@ export default {
     pages: {
       type: Number,
       default: 0,
+    },
+    totalRecords: {
+      type: Number,
+      default: 0,
+    },
+    showBaseCount: {
+      type: Boolean,
+      default: false,
     },
     busy: {
       type: Boolean,
@@ -407,6 +425,25 @@ export default {
         }
         return tmp
       })
+    },
+
+    showFrom() {
+      return (this.currentPage - 1) * (this.perPage + 1) ? (this.currentPage - 1) * (this.perPage + 1) : (this.currentPage - 1) * (this.perPage + 1) + 1;
+    },
+
+    showTo() {
+      if (parseInt(this.currentPage) === 1) {
+        return parseInt(this.perPage);
+      } else {
+        return parseInt(this.showFrom) + parseInt(this.perPage);
+      }
+    },
+    totalRecords() {
+      if (this.recordCount) {
+        return parseInt(this.recordCount);
+      } else {
+        return parseInt(this.totalRows);
+      }
     },
   },
   watch: {
