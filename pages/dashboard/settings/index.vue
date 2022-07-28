@@ -1,5 +1,6 @@
 <template>
   <div>
+  <h3 class="page-heading">Settings</h3>
     <div class="row">
       <div
         v-for="(card, index) in cards"
@@ -44,17 +45,17 @@ export default {
     return {
       cards: [
         {
-          name: 'Finance settings',
+          name: 'Finance',
           icon: 'fa fa-cogs',
           route: '/dashboard/settings/finance',
         },
         {
-          name: 'Laboratory settings',
+          name: 'Laboratory',
           icon: 'fa fa-cogs',
           route: '/dashboard/settings/laboratory/',
         },
         {
-          name: 'Imaging settings',
+          name: 'Imaging',
           icon: 'fa fa-cogs',
           route: '/dashboard/settings/imaging',
         },
