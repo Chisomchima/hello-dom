@@ -95,4 +95,7 @@ export default Vue.extend({
   // background-color: $COLOR_THREE;
   color: $COLOR_THREE !important;
 }
+li{
+  font-size: 14px;
+}
 </style>

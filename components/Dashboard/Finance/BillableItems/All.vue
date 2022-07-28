@@ -1,39 +1,28 @@
 <template>
   <div>
-  <BackwardNavigation/>
     <div>
-      <UtilsHeaderCard
-        :enable-action="true"
-        :title="data.name"
-        :display-key="['address', 'mobile_number', 'email']"
-        :data="data"
-      ></UtilsHeaderCard>
-      <UtilsBaseCardTab>
-         <UtilsCardTab title="Schemes">
-          <keep-alive>
-        <UtilsFilterComponent
-        @search-input="searchScheme"
+      <UtilsFilterComponent
+        @search-input="searchSchemes"
         @view-by="getSome($event)"
         :disableVisualization="true"
+        :searchPlaceholder="placeholder"
       >
-        <template #besideFilterButton>
-          <button @click="openModal" class="btn btn-outline-primary">
-            Add Scheme
-          </button>
-        </template>
         <TableComponent
-          @page-changed="getPayerSchemes($event, filter)"
+          @page-changed="getBillableItems($event, filter)"
           :perPage="filter.size"
           :items="schemes"
           :pages="pages"
           :busy="busy"
           :fields="fields"
+          :showBaseCount="trigger"
+          :currentPage="currentPage"
+          :totalRecords="totalRecords"
         >
           <template #type="{ data }">
-            <span>{{data.item.type}}</span>
+            <span class="text-capitalize">{{ data.item.type }}</span>
           </template>
           <template #edit="{ data }">
-            <button @click.prevent="edit(data.item)" class="text-start btn">
+            <div @click="edit(data.item)" class="text-start">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
@@ -52,50 +41,78 @@
                   d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z"
                 />
               </svg>
-            </button>
+            </div>
           </template>
         </TableComponent>
       </UtilsFilterComponent>
-                </keep-alive>
-          </UtilsCardTab>
-      </UtilsBaseCardTab>
- 
-
-      <DashboardModalFinanceAddScheme @refresh="refreshMe" :title="newTitle" :editData="modalData" />
+      <div>
+        <DashboardModalFinanceEditItems
+          :editData="modalData"
+          :title="newTitle"
+          @refresh="refreshMe"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import TableCompFun from '~/mixins/TableCompFun'
+import { debounce } from 'lodash'
 export default {
   mixins: [TableCompFun],
   data() {
     return {
       schemes: [],
+      placeholder: 'Search by description',
       modalData: {
+        name: '',
+        type: '',
+        price_list: null,
+        payer: null,
       },
-      payerData: {},
       fetchBy: null,
       queryString: '',
       pages: 1,
+      totalRecords: 0,
       currentPage: 1,
       newTitle: '',
       fields: [
         {
-          key: 'name',
-          label: 'Name',
+          key: 'item_code',
+          label: 'Code',
           sortable: true,
         },
         {
-          key: 'type',
-          label: 'Type',
+          key: 'module',
+          label: 'Module',
           sortable: true,
         },
         {
-          key: 'price_list',
-          label: 'Pricelist',
+          key: 'description',
+          label: 'Description',
           sortable: true,
+        },
+        {
+          key: 'selling_price',
+          label: 'Selling Price',
+          sortable: true,
+          formatter: (value) => {
+            return value ? value.toLocaleString('en-US') : ''
+          },
+        },
+        {
+          key: 'cost',
+          label: 'Cost Price',
+          sortable: true,
+          formatter: (value) => {
+            return value
+              ? value.toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'NGN',
+                })
+              : ''
+          },
         },
         {
           key: 'edit',
@@ -105,63 +122,51 @@ export default {
       ],
       filter: {
         size: 10,
-        name: '',
-        payer: this.$route.params.id
+        module: '',
       },
     }
   },
-  async asyncData({ $api, route }) {
-    try {
-      const data = await $api.finance_settings.viewPayer(route.params.id)
-      return {
-        data,
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  },
   async mounted() {
-    this.getPayerSchemes()
+    this.getBillableItems()
   },
   watch: {
-    // 'filter.size'() {
-    //   if (this.filter.size !== 10) {
-    //     this.getPayerSchemes(this.currentPage, this.filter)
-    //   }
-    // },
+    'filter.fetchBy'() {
+      if (this.filter.size !== 10) {
+        this.getBillableItems(this.currentPage, this.filter)
+      }
+    },
+  },
+  computed: {
+    trigger(){
+      if(this.items.length != 0){
+        return true
+      }
+    }
   },
   methods: {
-    openModal() {
-      this.$bvModal.show('addScheme')
-      this.newTitle = 'Add Scheme'
-    },
-    gotoPayer(e) {
-      this.$router.push({
-        name: 'dashboard-settings-finance-id',
-        params: {
-          id: e.id,
-        },
-      })
-    },
-    searchScheme(e) {
+    searchSchemes(e) {
       this.filter.name = e
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getBillableItems(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getBillableItems(this.currentPage, this.filter)
     },
-    async getPayerSchemes(page = 1, e = { size: 10, name: '', payer: this.$route.params.id }) {
+    async getBillableItems(page = 1, e = { size: 10, module: '' }) {
       this.filter = e
+
       this.currentPage = page
+
       try {
-        let response = await this.$api.finance_settings.getPayerSchemes({
+        let response = await this.$api.finance_settings.getBillableItems({
           ...e,
           page: page,
-          payer: this.$route.params.id
         })
+
         this.schemes = response.results
         this.pages = response.total_pages
+        this.totalRecords = response.total_count
+
         this.currentPage = response.current_page
         this.busy = false
       } catch {
@@ -170,11 +175,11 @@ export default {
     },
     edit(e) {
       this.modalData = e
-      this.newTitle = 'Edit Scheme'
-      this.$bvModal.show('addScheme')
+      this.newTitle = 'Edit Billable Item'
+      this.$bvModal.show('editBill')
     },
     refreshMe() {
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getBillableItems(this.currentPage)
     },
   },
 }

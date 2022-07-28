@@ -17,4 +17,10 @@ export default axios => ({
     viewPayer(id) {
         return axios.$get(`/finance/payers/${id}`);
     },
+    getBillableItems(params){
+        return axios.$get(`/finance/billable_items/`, {params})
+    },
+    editBillableItems(body, id){
+        return axios.$patch(`/finance/billable_items/${id}/`, {body})
+    }
 })
