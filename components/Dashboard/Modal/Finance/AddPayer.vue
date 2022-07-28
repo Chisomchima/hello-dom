@@ -25,11 +25,13 @@
                 name="Address"
                 :rules="['']"
               >
-                <input
+                <!-- <input
                   class="form-control"
                  v-model="payer.address"
                   type="text"
-                />
+                /> -->
+                <textarea class="form-control"
+                 v-model="payer.address" cols="30" rows="6"></textarea>
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-12 mb-2">

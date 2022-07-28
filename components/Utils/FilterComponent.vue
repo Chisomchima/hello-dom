@@ -168,7 +168,7 @@ export default Vue.extend({
     },
     options: {
       type: Array,
-      default: () => [5, 10, 20, 25, 50, 100],
+      default: () => [25, 50, 100, 500],
     },
     disablePagination: {
       type: Boolean,
