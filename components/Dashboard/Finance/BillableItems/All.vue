@@ -10,7 +10,7 @@
         <TableComponent
           @page-changed="getBillableItems($event, filter)"
           :perPage="filter.size"
-          :items="schemes"
+          :items="items"
           :pages="pages"
           :busy="busy"
           :fields="fields"
@@ -63,7 +63,7 @@ export default {
   mixins: [TableCompFun],
   data() {
     return {
-      schemes: [],
+      items: [],
       placeholder: 'Search by description',
       modalData: {
         name: '',
@@ -163,7 +163,7 @@ export default {
           page: page,
         })
 
-        this.schemes = response.results
+        this.items = response.results
         this.pages = response.total_pages
         this.totalRecords = response.total_count
 
