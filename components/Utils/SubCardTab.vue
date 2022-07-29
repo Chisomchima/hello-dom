@@ -1,5 +1,5 @@
 <template>
-  <div v-if="active" ref="subCardTab" style="padding: 1.25 rem">
+  <div v-if="active" ref="subCardTab">
     <slot></slot>
   </div>
 </template>

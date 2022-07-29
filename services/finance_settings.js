@@ -21,6 +21,6 @@ export default axios => ({
         return axios.$get(`/finance/billable_items/`, {params})
     },
     editBillableItems(body, id){
-        return axios.$patch(`/finance/billable_items/${id}/`, {body})
+        return axios.$patch(`/finance/billable_items/${id}/`, body)
     }
 })

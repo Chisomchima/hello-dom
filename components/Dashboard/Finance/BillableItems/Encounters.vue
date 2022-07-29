@@ -75,7 +75,7 @@ export default {
       queryString: '',
       pages: 1,
       currentPage: 1,
-       totalRecords: 0,
+      totalRecords: 0,
       newTitle: '',
       fields: [
         {
@@ -123,6 +123,7 @@ export default {
       filter: {
         size: 10,
         module: 'ENCOUNTERS',
+        desciption: ''
       },
     }
   },
@@ -145,7 +146,7 @@ export default {
   },
   methods: {
     searchSchemes(e) {
-      this.filter.name = e
+      this.filter.desciption = e
       this.getBillableItems(this.currentPage, this.filter)
     },
     getSome(e) {

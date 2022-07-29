@@ -46,7 +46,7 @@
         </TableComponent>
       </UtilsFilterComponent>
       <div>
-        <DashboardModalFinanceAddSchemeWithPayer
+       <DashboardModalFinanceEditItems
           :editData="modalData"
           :title="newTitle"
           @refresh="refreshMe"
@@ -123,6 +123,7 @@ export default {
       filter: {
         size: 10,
         module: 'IMAGING',
+        desciption: ''
       },
     }
   },
@@ -149,12 +150,10 @@ export default {
       this.newTitle = 'Add Scheme'
     },
     searchSchemes(e) {
-      console.log(e)
-      this.filter.name = e
+      this.filter.desciption = e
       this.getSchemes(this.currentPage, this.filter)
     },
     getSome(e) {
-      // console.log(e)
       this.filter.size = e
       this.getSchemes(this.currentPage, this.filter)
     },

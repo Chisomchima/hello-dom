@@ -12,15 +12,6 @@
         <form>
           <div class="row">
             <div class="col-md-12 mb-2">
-              <ValidationProviderWrapper name="Description" :rules="['']">
-                <input
-                  v-model="billable.description"
-                  class="form-control"
-                  type="text"
-                />
-              </ValidationProviderWrapper>
-            </div>
-            <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Selling Price" :rules="['']">
                 <input
                   v-model="billable.selling_price"
@@ -54,7 +45,6 @@ export default {
       billable: {
         id: '',
         item_code: '',
-        description: '',
         selling_price: null,
         cost: null,
       },
@@ -66,7 +56,6 @@ export default {
         if (Object.keys(newVal).length > 0) {
           let data = { ...newVal }
           this.billable.item_code = data.item_code
-          this.billable.description = data.description
           this.billable.selling_price = data.selling_price
           this.billable.id = data.id
           this.billable.cost = data.cost
@@ -112,7 +101,6 @@ export default {
       this.billable = {
         id: '',
         item_code: '',
-        description: '',
         selling_price: null,
         cost: null,
       }

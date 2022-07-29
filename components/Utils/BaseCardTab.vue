@@ -31,7 +31,7 @@
     <div
       id="pills-tabContent"
       class="tab-content card-body"
-      :style="{ padding: subTabs ? '0px' : '1.25rem' }"
+      :style="{ padding: subTabs ? '0px' : '0' }"
     >
       <slot></slot>
     </div>

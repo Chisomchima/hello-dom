@@ -18,19 +18,21 @@
               </keep-alive>
           </UtilsCardTab>
          <UtilsCardTab title="Billable Items" :tabs="tabs">
-         <UtilsSubCardTab title="All" >
+         <UtilsBaseCardTab>
+          <UtilsCardTab title="All" >
            <DashboardFinanceBillableItemsAll />
-        </UtilsSubCardTab>
-        <UtilsSubCardTab title="Encounters" >
-           <DashboardFinanceBillableItemsEncounters />
-        </UtilsSubCardTab>
-        <UtilsSubCardTab title="Imaging" >
-           <DashboardFinanceBillableItemsImaging />
-        </UtilsSubCardTab>
-        <UtilsSubCardTab title="Laboratory" >
-           <DashboardFinanceBillableItemsLaboratory />
-        </UtilsSubCardTab>
-        </UtilsCardTab>
+          </UtilsCardTab>
+          <UtilsCardTab title="Encounters" >
+            <DashboardFinanceBillableItemsEncounters />
+          </UtilsCardTab>
+          <UtilsSubCardTab title="Imaging" >
+            <DashboardFinanceBillableItemsImaging />
+          </UtilsSubCardTab>
+          <UtilsSubCardTab title="Laboratory" >
+            <DashboardFinanceBillableItemsLaboratory />
+          </UtilsSubCardTab>
+          </UtilsBaseCardTab>
+          </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>
