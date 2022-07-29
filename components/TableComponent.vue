@@ -288,7 +288,7 @@
     <div class="d-flex justify-content-end">
       <div v-if="showBaseCount" class="w-50">
         <div class="text-primary mt-1 text-center text-14">
-        {{ showFrom }} - {{ showTo }} of {{ totalRecords }}
+        {{ showFrom }} - {{ showTo }} of {{ totalRecord }}
         </div>
       </div>
 
@@ -392,7 +392,7 @@ export default {
   data() {
     return {
       totalRows: 0,
-      currentPage: 1,
+      // currentPage: 1,
     }
   },
   computed: {
@@ -438,7 +438,7 @@ export default {
         return parseInt(this.showFrom) + parseInt(this.perPage);
       }
     },
-    totalRecords() {
+    totalRecord() {
       if (this.recordCount) {
         return parseInt(this.recordCount);
       } else {

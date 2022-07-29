@@ -7,6 +7,13 @@
         :disableVisualization="true"
         :searchPlaceholder="placeholder"
       >
+       <template #besideFilterButton>
+          <b-dropdown id="dropdown-1" right variant="outline-success" text="Actions" class="m-md-2">
+            <b-dropdown-item  @click="upload">Upload billable item sheet</b-dropdown-item>
+            <b-dropdown-divider>Upload</b-dropdown-divider>
+            <b-dropdown-item>Download billable item sheet</b-dropdown-item>
+          </b-dropdown>
+        </template>
         <TableComponent
           @page-changed="getSchemes($event, filter)"
           :perPage="filter.size"
@@ -18,8 +25,8 @@
           :currentPage="currentPage"
           :totalRecords="totalRecords"
         >
-        <template #type="{ data }">
-            <span class="text-capitalize">{{data.item.type}}</span>
+          <template #type="{ data }">
+            <span class="text-capitalize">{{ data.item.type }}</span>
           </template>
           <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">
@@ -52,6 +59,10 @@
           @refresh="refreshMe"
         />
       </div>
+
+      <div class="input-field">
+        <input type="file" accept=".xlsx, .xls," ref="file" />
+      </div>
     </div>
   </div>
 </template>
@@ -75,9 +86,9 @@ export default {
       queryString: '',
       pages: 1,
       currentPage: 1,
-        totalRecords: 0,
+      totalRecords: 0,
       newTitle: '',
-     fields: [
+      fields: [
         {
           key: 'item_code',
           label: 'Code',
@@ -123,7 +134,7 @@ export default {
       filter: {
         size: 10,
         module: 'LABORATORY',
-        desciption: ''
+        desciption: '',
       },
     }
   },
@@ -138,11 +149,11 @@ export default {
     },
   },
   computed: {
-    trigger(){
-      if(this.items.length != 0){
+    trigger() {
+      if (this.items.length != 0) {
         return true
       }
-    }
+    },
   },
   methods: {
     openModal() {
@@ -161,7 +172,7 @@ export default {
       this.filter = e
 
       this.currentPage = page
-     
+
       try {
         let response = await this.$api.finance_settings.getBillableItems({
           ...e,
@@ -170,7 +181,7 @@ export default {
 
         this.items = response.results
         this.pages = response.total_pages
-         this.totalRecords = response.total_count
+        this.totalRecords = response.total_count
         this.currentPage = response.current_page
         this.busy = false
       } catch {
@@ -184,6 +195,10 @@ export default {
     },
     refreshMe() {
       this.getSchemes(this.currentPage)
+    },
+    upload() {
+      console.log('ghjdj')
+      this.$refs.file.click()
     },
   },
 }

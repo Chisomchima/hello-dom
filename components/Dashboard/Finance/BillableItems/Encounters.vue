@@ -7,6 +7,13 @@
         :disableVisualization="true"
         :searchPlaceholder="placeholder"
       >
+        <template #besideFilterButton>
+          <b-dropdown id="dropdown-1" right variant="outline-success" text="Actions" class="m-md-2">
+            <b-dropdown-item  @click="upload">Upload billable item sheet</b-dropdown-item>
+            <b-dropdown-divider>Upload</b-dropdown-divider>
+            <b-dropdown-item>Download billable item sheet</b-dropdown-item>
+          </b-dropdown>
+        </template>
         <TableComponent
           @page-changed="getBillableItems($event, filter)"
           :perPage="filter.size"
@@ -51,6 +58,10 @@
           :title="newTitle"
           @refresh="refreshMe"
         />
+      </div>
+
+      <div class="input-field">
+        <input type="file" accept=".xlsx, .xls," ref="file" />
       </div>
     </div>
   </div>
@@ -123,7 +134,7 @@ export default {
       filter: {
         size: 10,
         module: 'ENCOUNTERS',
-        desciption: ''
+        desciption: '',
       },
     }
   },
@@ -138,11 +149,11 @@ export default {
     },
   },
   computed: {
-    trigger(){
-      if(this.items.length != 0){
+    trigger() {
+      if (this.items.length != 0) {
         return true
       }
-    }
+    },
   },
   methods: {
     searchSchemes(e) {
@@ -166,7 +177,7 @@ export default {
 
         this.items = response.results
         this.pages = response.total_pages
-         this.totalRecords = response.total_count
+        this.totalRecords = response.total_count
 
         this.currentPage = response.current_page
         this.busy = false
@@ -181,6 +192,10 @@ export default {
     },
     refreshMe() {
       this.getBillableItems(this.currentPage)
+    },
+    upload() {
+      console.log('ghjdj')
+      this.$refs.file.click()
     },
   },
 }

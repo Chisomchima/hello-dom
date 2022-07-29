@@ -7,6 +7,13 @@
         :disableVisualization="true"
         :searchPlaceholder="placeholder"
       >
+       <template #besideFilterButton>
+          <b-dropdown id="dropdown-1" right variant="outline-success" text="Actions" class="m-md-2">
+            <b-dropdown-item  @click="upload">Upload billable item sheet</b-dropdown-item>
+            <b-dropdown-divider>Upload</b-dropdown-divider>
+            <b-dropdown-item>Download billable item sheet</b-dropdown-item>
+          </b-dropdown>
+        </template>
         <TableComponent
           @page-changed="getSchemes($event, filter)"
           :perPage="filter.size"
@@ -51,6 +58,9 @@
           :title="newTitle"
           @refresh="refreshMe"
         />
+      </div>
+        <div class="input-field">
+        <input type="file" accept=".xlsx, .xls," ref="file"/>
       </div>
     </div>
   </div>
@@ -185,6 +195,10 @@ export default {
     refreshMe() {
       this.getSchemes(this.currentPage)
     },
+     upload(){
+        console.log('ghjdj')
+        this.$refs.file.click()
+    }
   },
 }
 </script>
