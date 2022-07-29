@@ -22,5 +22,17 @@ export default axios => ({
     },
     editBillableItems(body, id){
         return axios.$patch(`/finance/billable_items/${id}/`, body)
-    }
+    },
+    addPriceList(body) {
+        return axios.$post(`/finance/price_lists/`, body);
+    },
+    getPriceList(params){
+        return axios.$get('/finance/price_lists/', {params});
+    },
+    editPriceList(body, id){
+        return axios.$patch(`/finance/price_lists/${id}/`, body)
+    },
+    viewPricelist(id) {
+        return axios.$get(`/finance/price_lists/${id}`);
+    },
 })
