@@ -9,7 +9,7 @@
         :data="data"
       ></UtilsHeaderCard>
       <UtilsBaseCardTab>
-         <UtilsCardTab title="Schemes">
+         <UtilsCardTab title="Pricelist">
           <keep-alive>
         <UtilsFilterComponent
         @search-input="searchScheme"
@@ -22,9 +22,9 @@
           </button>
         </template>
         <TableComponent
-          @page-changed="getPayerSchemes($event, filter)"
+          @page-changed="getPricelistItems($event, filter)"
           :perPage="filter.size"
-          :items="schemes"
+          :items="items"
           :pages="pages"
           :busy="busy"
           :fields="fields"
@@ -72,7 +72,7 @@ export default {
   mixins: [TableCompFun],
   data() {
     return {
-      schemes: [],
+      items: [],
       modalData: {
       },
       payerData: {},
@@ -112,7 +112,7 @@ export default {
   },
   async asyncData({ $api, route }) {
     try {
-      const data = await $api.finance_settings.viewPayer(route.params.id)
+      const data = await $api.finance_settings.viewPricelist(route.params.id)
       return {
         data,
       }
@@ -121,12 +121,12 @@ export default {
     }
   },
   async mounted() {
-    this.getPayerSchemes()
+    this.getPricelistItems()
   },
   watch: {
     // 'filter.size'() {
     //   if (this.filter.size !== 10) {
-    //     this.getPayerSchemes(this.currentPage, this.filter)
+    //     this.getPricelistItems(this.currentPage, this.filter)
     //   }
     // },
   },
@@ -145,22 +145,22 @@ export default {
     },
     searchScheme(e) {
       this.filter.name = e
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getPricelistItems(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getPricelistItems(this.currentPage, this.filter)
     },
-    async getPayerSchemes(page = 1, e = { size: 10, name: '', payer: this.$route.params.id }) {
+    async getPricelistItems(page = 1, e = { size: 10, name: '', payer: this.$route.params.id }) {
       this.filter = e
       this.currentPage = page
       try {
-        let response = await this.$api.finance_settings.getPayerSchemes({
+        let response = await this.$api.finance_settings.getPricelistItems({
           ...e,
           page: page,
           payer: this.$route.params.id
         })
-        this.schemes = response.results
+        this.items = response.results
         this.pages = response.total_pages
         this.currentPage = response.current_page
         this.busy = false
@@ -170,11 +170,11 @@ export default {
     },
     edit(e) {
       this.modalData = e
-      this.newTitle = 'Edit Scheme'
+      this.newTitle = 'Edit Pricelist Item'
       this.$bvModal.show('addScheme')
     },
     refreshMe() {
-      this.getPayerSchemes(this.currentPage, this.filter)
+      this.getPricelistItems(this.currentPage, this.filter)
     },
   },
 }
