@@ -35,4 +35,13 @@ export default axios => ({
     viewPricelist(id) {
         return axios.$get(`/finance/price_lists/${id}`);
     },
+    getPriceListItems(params){
+        return axios.$get('/finance/price_list_items/', {params});
+    },
+    bulkUploadPriceListItems(body, id){
+        return axios.$post(`/finance/price_lists/${id}/price_list_items/spreadsheet_upload/`, body)
+    },
+    bulkUploadBillableItems(body){
+        return axios.$post(`finance/billable_items/spreadsheet_upload/`, body)
+    },
 })

@@ -17,14 +17,14 @@
                   <DashboardFinancePriceList />
               </keep-alive>
           </UtilsCardTab>
-         <UtilsCardTab title="Billable Items" :tabs="tabs">
+         <UtilsCardTab class="" title="Billable Items" :tabs="tabs">
          <UtilsBaseCardTab>
-          <UtilsCardTab title="All" >
+          <UtilsSubCardTab title="All" >
            <DashboardFinanceBillableItemsAll />
-          </UtilsCardTab>
-          <UtilsCardTab title="Encounters" >
+          </UtilsSubCardTab>
+          <UtilsSubCardTab title="Encounters" >
             <DashboardFinanceBillableItemsEncounters />
-          </UtilsCardTab>
+          </UtilsSubCardTab>
           <UtilsSubCardTab title="Imaging" >
             <DashboardFinanceBillableItemsImaging />
           </UtilsSubCardTab>

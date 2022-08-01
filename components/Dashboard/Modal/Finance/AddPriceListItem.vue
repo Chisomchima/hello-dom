@@ -2,7 +2,7 @@
   <div>
     <ModalWrapper
       size="md"
-      id="addPriceList"
+      id="addPriceListItem"
       :title="title"
       @clearForm="clear()"
       @hide="clear()"

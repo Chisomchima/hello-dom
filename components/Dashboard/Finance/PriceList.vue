@@ -13,13 +13,16 @@
         </template>
 
         <TableComponent
-          @row-clicked="gotoPayer($event)"
+          @row-clicked="gotoPricelistItem($event)"
           @page-changed="getPriceList($event, filter)"
           :perPage="filter.size"
-          :items="payers"
+          :items="items"
           :pages="pages"
           :busy="busy"
           :fields="fields"
+          :showBaseCount="trigger"
+          :currentPage="currentPage"
+           :totalRecords="totalRecords"
         >
           <template #edit="{ data }">
             <button @click.prevent="edit(data.item)" class="text-start btn">
@@ -63,7 +66,7 @@ export default {
   mixins: [TableCompFun],
   data() {
     return {
-      payers: [],
+      items: [],
       modalData: {
         name: '',
         address: '',
@@ -72,6 +75,7 @@ export default {
       queryString: '',
       pages: 1,
       currentPage: 1,
+      totalRecords: 0,
       newTitle: '',
       fields: [
         {
@@ -106,14 +110,21 @@ export default {
       }
     },
   },
+  computed: {
+    trigger() {
+      if (this.items.length != 0) {
+        return true
+      }
+    },
+  },
   methods: {
     openModal() {
       this.$bvModal.show('addPriceList')
       this.newTitle = 'Add pricelist'
     },
-    gotoPayer(e) {
+    gotoPricelistItem(e) {
       this.$router.push({
-        name: 'dashboard-settings-finance-pricelist',
+        name: 'dashboard-settings-finance-pricelist-id',
         params: {
           id: e.id,
         },
@@ -139,9 +150,9 @@ export default {
           page: page,
         })
 
-        this.payers = response.results
+        this.items = response.results
         this.pages = response.total_pages
-
+         this.totalRecords = response.total_count
         this.currentPage = response.current_page
         this.busy = false
       } catch {
@@ -155,6 +166,47 @@ export default {
     },
     refreshMe() {
       this.getPriceList(this.currentPage)
+    },
+
+    //  upload(){
+    //   this.$bvModal.show('addPriceList')
+    //     // this.$refs.file.click()
+    // },
+
+    async save_file(e) {
+      this.downloading = true
+      const response = await fetch(
+        `${process.env.BASE_URL}laboratory/lab_panel_order/${e.id}/reports/download`,
+        {
+          headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+          },
+        }
+      )
+      console.log(response)
+      if (response.status === 200) {
+        const data = await response.blob()
+
+        const objectURL = URL.createObjectURL(data)
+        const link = document.createElement('a')
+        link.download = `Lab Report_${e.asn})`
+        link.href = objectURL
+        this.downloading = false
+        this.getLabOrders(1)
+        link.click()
+      } else if (response.status === 403) {
+        this.downloading = false
+        this.$toast({
+          type: 'info',
+          text: `You don't have the permission to perform this action`,
+        })
+      } else {
+        this.downloading = false
+        this.$toast({
+          type: 'error',
+          text: `An error occured`,
+        })
+      }
     },
   },
 }

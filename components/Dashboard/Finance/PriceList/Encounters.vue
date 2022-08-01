@@ -2,10 +2,9 @@
   <div>
     <div>
       <UtilsFilterComponent
-        @search-input="searchSchemes"
+        @search-input="searchPricelist"
         @view-by="getSome($event)"
         :disableVisualization="true"
-        :searchPlaceholder="placeholder"
       >
         <template #besideFilterButton>
           <div class="d-flex align-items-center">
@@ -24,17 +23,20 @@
               class="m-md-2"
             >
               <b-dropdown-item @click.prevent="upload"
-                >Upload billable item sheet</b-dropdown-item
+                >Upload pricelist items</b-dropdown-item
               >
-              <b-dropdown-divider>Upload</b-dropdown-divider>
+              <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-item @click.prevent="save_file"
-                >Download billable item sheet</b-dropdown-item
+                >Download pricelist</b-dropdown-item
+              >
+              <b-dropdown-item @click.prevent="downloadTemplate"
+                >Download pricelist template</b-dropdown-item
               >
             </b-dropdown>
           </div>
         </template>
         <TableComponent
-          @page-changed="getBillableItems($event, filter)"
+          @page-changed="getPricelistItems($event, filter)"
           :perPage="filter.size"
           :items="items"
           :pages="pages"
@@ -45,10 +47,10 @@
           :totalRecords="totalRecords"
         >
           <template #type="{ data }">
-            <span class="text-capitalize">{{ data.item.type }}</span>
+            <span>{{ data.item.type }}</span>
           </template>
           <template #edit="{ data }">
-            <div @click="edit(data.item)" class="text-start">
+            <button @click.prevent="edit(data.item)" class="text-start btn">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
@@ -67,24 +69,16 @@
                   d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z"
                 />
               </svg>
-            </div>
+            </button>
           </template>
         </TableComponent>
       </UtilsFilterComponent>
       <div>
-        <DashboardModalFinanceEditItems
-          :editData="modalData"
-          :title="newTitle"
+        <DashboardModalFinanceAddBulkPriceList
           @refresh="refreshMe"
+          :title="newTitle"
+          :editData="modalData"
         />
-      </div>
-
-      <div>
-        <DashboardModalFinanceAddBulkBillableItems/>
-      </div>
-
-      <div class="input-field">
-        <input type="file" accept=".xlsx, .xls," ref="file" />
       </div>
     </div>
   </div>
@@ -98,23 +92,33 @@ export default {
   data() {
     return {
       items: [],
-      placeholder: 'Search by description',
       modalData: {
         name: '',
-        type: '',
-        price_list: null,
-        payer: null,
+        address: '',
+      },
+      downloading: false,
+      priceListItem: {
+        co_pay: {
+          type: '',
+          value: '',
+        },
+        bill_item_code: '',
+        selling_price: '',
+        is_auth_req: null,
+        is_capitated: null,
+        module: '',
+        is_exclusive: null,
+        post_auth_allowed: null,
       },
       fetchBy: null,
       queryString: '',
       pages: 1,
       totalRecords: 0,
       currentPage: 1,
-      downloading: false,
       newTitle: '',
       fields: [
         {
-          key: 'item_code',
+          key: 'bill_item_code',
           label: 'Code',
           sortable: true,
         },
@@ -124,30 +128,29 @@ export default {
           sortable: true,
         },
         {
-          key: 'description',
-          label: 'Description',
-          sortable: true,
-        },
-        {
           key: 'selling_price',
-          label: 'Selling Price',
+          label: 'Selling price',
           sortable: true,
-          formatter: (value) => {
-            return value ? value.toLocaleString('en-US') : ''
-          },
         },
         {
-          key: 'cost',
-          label: 'Cost Price',
+          key: 'is_capitated',
+          label: 'Capitated',
           sortable: true,
-          formatter: (value) => {
-            return value
-              ? value.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'NGN',
-                })
-              : ''
-          },
+        },
+        {
+          key: 'is_exclusive',
+          label: 'Exclusive',
+          sortable: true,
+        },
+        {
+          key: 'is_auth_req',
+          label: 'Require Auth',
+          sortable: true,
+        },
+        {
+          key: 'post_auth_allowed',
+          label: 'Post Auth',
+          sortable: true,
         },
         {
           key: 'edit',
@@ -157,22 +160,22 @@ export default {
       ],
       filter: {
         size: 10,
-        module: '',
-        desciption: '',
+        module: 'ENCOUNTERS',
+        name: '',
       },
     }
   },
-  async mounted() {
-    this.getBillableItems()
+  mounted() {
+    this.getPriceListItems()
   },
   watch: {
     'filter.fetchBy'() {
       if (this.filter.size !== 10) {
-        this.getBillableItems(this.currentPage, this.filter)
+        this.getPriceListItems(this.currentPage, this.filter)
       }
     },
   },
-  computed: {
+   computed: {
     trigger() {
       if (this.items.length != 0) {
         return true
@@ -180,28 +183,38 @@ export default {
     },
   },
   methods: {
-    searchSchemes(e) {
-      this.filter.desciption = e
-      this.getBillableItems(this.currentPage, this.filter)
+    openModal() {
+      this.$bvModal.show('addPriceListItem')
+      this.newTitle = 'Add pricelist item'
+    },
+    upload() {
+      this.$bvModal.show('addPriceListBulk')
+    },
+    searchPricelist(e) {
+      console.log(e)
+      this.filter.name = e
+      this.getPriceListItems(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getBillableItems(this.currentPage, this.filter)
+      this.getPriceListItems(this.currentPage, this.filter)
     },
-    async getBillableItems(page = 1, e = { size: 10, module: '' }) {
+    async getPriceListItems(
+      page = 1,
+      e = { size: 10, name: '', module: 'ENCOUNTERS' }
+    ) {
       this.filter = e
 
       this.currentPage = page
-
       try {
-        let response = await this.$api.finance_settings.getBillableItems({
+        let response = await this.$api.finance_settings.getPriceListItems({
           ...e,
           page: page,
         })
 
         this.items = response.results
         this.pages = response.total_pages
-        this.totalRecords = response.total_count
+         this.totalRecords = response.total_count
 
         this.currentPage = response.current_page
         this.busy = false
@@ -211,20 +224,16 @@ export default {
     },
     edit(e) {
       this.modalData = e
-      this.newTitle = 'Edit Billable Item'
-      this.$bvModal.show('editBill')
+      this.newTitle = 'Edit pricelist'
+      this.$bvModal.show('addPriceListItem')
     },
     refreshMe() {
-      this.getBillableItems(this.currentPage)
+      this.getPriceListItems(this.currentPage)
     },
-    upload() {
-      this.$bvModal.show('addBillableBulk')
-    },
-
     async save_file() {
       this.downloading = true
       const response = await fetch(
-        `${process.env.BASE_URL}finance/billable_items/spreadsheet_download/`,
+        `${process.env.BASE_URL}finance/price_lists/${this.$route.params.id}/price_list_items/spreadsheet_download/?module=ENCOUNTERS`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
@@ -237,7 +246,42 @@ export default {
 
         const objectURL = URL.createObjectURL(data)
         const link = document.createElement('a')
-        link.download = `Billable Item Sheet`
+        link.download = `Template`
+        link.href = objectURL
+        this.downloading = false
+        link.click()
+      } else if (response.status === 403) {
+        this.downloading = false
+        this.$toast({
+          type: 'info',
+          text: `You don't have the permission to perform this action`,
+        })
+      } else {
+        this.downloading = false
+        this.$toast({
+          type: 'error',
+          text: `An error occured`,
+        })
+      }
+    },
+
+    async downloadTemplate() {
+      this.downloading = true
+      const response = await fetch(
+        `${process.env.BASE_URL}finance/billable_items/price_lists/spreadsheet_template/`,
+        {
+          headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+          },
+        }
+      )
+      console.log(response)
+      if (response.status === 200) {
+        const data = await response.blob()
+
+        const objectURL = URL.createObjectURL(data)
+        const link = document.createElement('a')
+        link.download = `Template`
         link.href = objectURL
         this.downloading = false
         link.click()
