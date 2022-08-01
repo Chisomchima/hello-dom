@@ -22,14 +22,13 @@
 
     <template #empty>
       <div class="p-4">
-        
         <div class="d-flex justify-content-center">
           <img src="~assets/img/empty-list.svg" alt=""/>
         </div>
         <p class="text-14 text-center text-primary">No records to show</p>
       </div>
-      
     </template>
+
       <template #table-busy>
         <div class="p-4">
           <b-skeleton-table
