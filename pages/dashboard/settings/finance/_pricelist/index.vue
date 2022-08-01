@@ -110,19 +110,19 @@ export default {
       },
     }
   },
-  async asyncData({ $api, route }) {
-    try {
-      const data = await $api.finance_settings.viewPricelist(route.params.id)
-      return {
-        data,
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  },
-  async mounted() {
-    this.getPricelistItems()
-  },
+//   async asyncData({ $api, route }) {
+//     try {
+//       const data = await $api.finance_settings.viewPricelist(route.params.id)
+//       return {
+//         data,
+//       }
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   },
+//   async mounted() {
+//     this.getPricelistItems()
+//   },
   watch: {
     // 'filter.size'() {
     //   if (this.filter.size !== 10) {
