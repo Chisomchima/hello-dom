@@ -27,11 +27,120 @@
     >
       <template #default="{ currentStep }">
         <DashboardPatientForm
+        v-show="currentStep != 3"
           ref="patientForm"
           :edit-form-data="data"
           :current-position="currentStep"
           @input:data="log($event)"
         />
+
+        <div v-show="currentStep === 3">
+          <div class="mt-4 w-100">
+            <div class="d-flex" v-for="(form, index) in dataVal.payment_scheme" :key="index">
+              <div class="d-flex flex-wrap" style="width:98%">
+                <div class="col-lg-3 col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Scheme" :rules="['']">
+                    <VSelect
+                      label="name"
+                       class="text-14"
+                      v-model="form.payer_scheme"
+                      :options="payerSchemes"
+                    ></VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+<!-- :disabled="(form.payer_scheme_id ? form.payer_scheme_id.type === 'SELF' : form.payer_scheme_id.type === 'INSURANCE') ? true : false" -->
+                <div class="col-lg-3 col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Enrollee ID" :rules="['']">
+                    <input
+                      class="form-control"
+                      :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      v-model="form.enrollee_id"
+                      type="text"
+                    />
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-lg-3 col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Relationship" :rules="['']">
+                    <VSelect
+                      label="name"
+                      class="text-14"
+                      :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      :options="[
+                        'Principal',
+                        'Dependent',
+                      ],"
+                      v-model="form.payer_relationship"
+                    ></VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-lg-3 col-md-3 mb-2">
+                  <ValidationProviderWrapper
+                    name="Expiration date"
+                    :rules="['']"
+                  >
+                    <input
+                    :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      class="form-control"
+                      v-model="form.exp_date"
+                      type="date"
+                    />
+                  </ValidationProviderWrapper>
+                </div>
+              </div>
+              <span
+                @click="remove(index)"
+                class="
+                  text-primary
+                  mt-3
+                  point
+                  d-flex
+                  align-items-center
+                  justify-content-end
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="img"
+                  width="22"
+                  height="22"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 24 24"
+                >
+                  <g fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" d="M16 12H8" />
+                    <circle cx="12" cy="12" r="10" />
+                  </g>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <span>
+            <span
+            class="text-primary ml-2 point d-flex align-items-center"
+          >
+            <svg
+            @click="double"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="24"
+              height="30"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 16 16"
+            >
+              <g fill="currentColor">
+                <path
+                  d="M8 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 8 5Z"
+                />
+                <path
+                  d="M2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8Zm6-5a5 5 0 1 0 0 10A5 5 0 0 0 8 3Z"
+                />
+              </g></svg
+            ><span class="text-12">Add</span></span
+          >
+          </span>
+        </div>
         <!-- <transition name="fade">
           <DashboardPatientRegistrationStepOne
             v-show="currentStep === 0"
@@ -93,7 +202,16 @@ export default {
   data() {
     return {
       data: '',
-      dataVal: {},
+      dataVal: {
+        payment_scheme: [
+          {
+            payer_scheme: null,
+            enrollee_id: '',
+            relationship: '',
+            exp_date: '',
+          },
+        ],
+      },
     }
   },
   methods: {

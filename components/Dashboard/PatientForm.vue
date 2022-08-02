@@ -10,6 +10,7 @@
           <ValidationProviderWrapper :name="form.name" :rules="form.rules">
             <VSelect
               v-if="form.type === 'select'"
+              class="text-14"
               v-model="form.value"
               :options="form.options"
               :label="form.select_label"
@@ -106,7 +107,7 @@ export default {
           'relation_city',
           'relation_country',
         ],
-        ['payer', 'sponsor', 'network'],
+        [],
       ],
       formConfig: [
         {
@@ -259,7 +260,7 @@ export default {
           rules: [''],
           value: '',
           type: 'select',
-          select_label:'occupation',
+          select_label: 'occupation',
           options: [],
         },
         {
@@ -360,21 +361,40 @@ export default {
         },
 
         {
-          key: 'payer',
-          name: 'Payer',
+          key: 'scheme',
+          name: 'Scheme',
           rules: [],
           value: '',
+           select_label: 'name',
+          type: 'select',
+          col: 'col-md-3',
         },
         {
-          key: 'sponsor',
-          name: 'Sponsor',
+          key: 'enrollee_id',
+          name: 'Enrollee ID',
           rules: [],
+          type: 'text',
+          col: 'col-md-3',
         },
         {
-          key: 'network',
-          name: 'Network',
+          key: 'relationship_payer',
+          name: 'Relationship',
           rules: [],
           value: '',
+          type: 'select',
+          col: 'col-md-3',
+          options: [
+            'Principle',
+            'Dependent',
+          ],
+        },
+        {
+          key: 'expiration_date',
+          name: 'Expiration date',
+          rules: [],
+          value: '',
+          type: 'date',
+          col: 'col-md-3',
         },
       ],
     }
@@ -423,6 +443,10 @@ export default {
 
     this.$api.core.occupation({ size: 1000 }).then((res) => {
       this.setOptions('occupations', res.results)
+    })
+    this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
+      this.setOptions('scheme', res.results)
+      console.log(res.results)
     })
   },
   created() {
