@@ -443,9 +443,12 @@ export default {
     },
 
     showTo() {
-      if (parseInt(this.currentPage) === 1 && this.totalRecords != 1) {
+      if (parseInt(this.currentPage) === 1 && this.totalRecords > 10) {
         return parseInt(this.perPage);
       } else if(this.totalRecords === 1 || this.totalRecords < 10){
+        return parseInt(this.totalRecords)
+      }
+      else if(this.totalRecords < 10){
         return parseInt(this.totalRecords)
       }
       else {
@@ -456,7 +459,7 @@ export default {
       if (this.totalRecords === 1 && this.totalRecords < 10) {
         return parseInt(this.totalRecords);
       } else {
-        return parseInt(this.totalRows);
+        return parseInt(this.totalRecords);
       }
     },
   },
