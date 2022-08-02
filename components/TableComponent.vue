@@ -29,6 +29,7 @@
       </div>
     </template>
 
+
       <template #table-busy>
         <div class="p-4">
           <b-skeleton-table
@@ -442,15 +443,18 @@ export default {
     },
 
     showTo() {
-      if (parseInt(this.currentPage) === 1) {
+      if (parseInt(this.currentPage) === 1 && this.totalRecords != 1) {
         return parseInt(this.perPage);
-      } else {
+      } else if(this.totalRecords === 1){
+        return parseInt(this.totalRecords)
+      }
+      else {
         return parseInt(this.showFrom) + parseInt(this.perPage);
       }
     },
     totalRecord() {
-      if (this.recordCount) {
-        return parseInt(this.recordCount);
+      if (this.totalRecords === 1) {
+        return parseInt(this.totalRecords);
       } else {
         return parseInt(this.totalRows);
       }
