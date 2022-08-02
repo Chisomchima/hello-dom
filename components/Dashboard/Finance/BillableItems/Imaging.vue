@@ -180,6 +180,7 @@ export default {
 
         this.items = response.results
         this.pages = response.total_pages
+        this.totalRecords = response.total_count
 
         this.currentPage = response.current_page
         this.busy = false
