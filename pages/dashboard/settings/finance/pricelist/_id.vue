@@ -1,6 +1,7 @@
 <template>
   <div>
     <BackwardNavigation />
+    <h5>Pricelist Items</h5>
     <div>
       <UtilsHeaderCard
         :enable-action="true"

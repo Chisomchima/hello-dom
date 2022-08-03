@@ -29,9 +29,9 @@
               <b-dropdown-item @click.prevent="save_file"
                 >Download pricelist</b-dropdown-item
               >
-              <b-dropdown-item @click.prevent="downloadTemplate"
+              <!-- <b-dropdown-item @click.prevent="downloadTemplate"
                 >Download pricelist template</b-dropdown-item
-              >
+              > -->
             </b-dropdown>
           </div>
         </template>

@@ -8,10 +8,19 @@
         :searchPlaceholder="placeholder"
       >
         <template #besideFilterButton>
-          <b-dropdown id="dropdown-1" right variant="outline-success" text="Actions" class="m-md-2">
-            <b-dropdown-item  @click="upload">Upload billable item sheet</b-dropdown-item>
-            <b-dropdown-divider>Upload</b-dropdown-divider>
+          <b-dropdown
+            id="dropdown-1"
+            right
+            variant="outline-success"
+            text="Actions"
+            class="m-md-2"
+          >
+            <b-dropdown-item @click="upload"
+              >Upload billable item sheet</b-dropdown-item
+            >
+            <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item>Download billable item sheet</b-dropdown-item>
+            <!-- <b-dropdown-item @click.prevent="downloadTemplate">Download pricelist template</b-dropdown-item> -->
           </b-dropdown>
         </template>
         <TableComponent
@@ -196,6 +205,40 @@ export default {
     upload() {
       console.log('ghjdj')
       this.$refs.file.click()
+    },
+         async downloadTemplate() {
+      this.downloading = true
+      const response = await fetch(
+        `${process.env.BASE_URL}finance/billable_items/price_lists/spreadsheet_template/`,
+        {
+          headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+          },
+        }
+      )
+      console.log(response)
+      if (response.status === 200) {
+        const data = await response.blob()
+
+        const objectURL = URL.createObjectURL(data)
+        const link = document.createElement('a')
+        link.download = `Template`
+        link.href = objectURL
+        this.downloading = false
+        link.click()
+      } else if (response.status === 403) {
+        this.downloading = false
+        this.$toast({
+          type: 'info',
+          text: `You don't have the permission to perform this action`,
+        })
+      } else {
+        this.downloading = false
+        this.$toast({
+          type: 'error',
+          text: `An error occured`,
+        })
+      }
     },
   },
 }
