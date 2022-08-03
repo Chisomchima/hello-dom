@@ -64,8 +64,8 @@
                       class="text-14"
                       :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
                       :options="[
-                        'Principal',
-                        'Dependent',
+                        'PRINCIPAL',
+                        'DEPENDANT',
                       ],"
                       v-model="form.relationship"
                     ></VSelect>
@@ -151,15 +151,14 @@ export default {
     return {
       cPage: 0,
       nPage: 0,
-      mute: false,
       payerSchemes: [],
       dataVal: {
         payment_scheme: [
           {
             payer_scheme: null,
-            enrollee_id: '',
-            relationship: '',
-            exp_date: '',
+            enrollee_id: null,
+            relationship: null,
+            exp_date: null,
           },
         ],
       },
@@ -178,9 +177,9 @@ export default {
     double() {
       this.dataVal.payment_scheme.push({
         payer_scheme: null,
-        enrollee_id: '',
-        relationship: '',
-        exp_date: '',
+        enrollee_id: null,
+        relationship: null,
+        exp_date: null,
       })
       console.log(this.dataVal.payment_scheme)
     },

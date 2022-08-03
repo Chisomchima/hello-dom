@@ -6,7 +6,7 @@ export default axios => ({
         return axios.$get(`patient/patients/${id}`);
     },
     editPatient(id,body) {
-        return axios.$patch(`patient/patients/${id}/`,body);
+        return axios.$put(`patient/patients/${id}/`,body);
     },
     getPatientbyUHID(uhid) {
         return axios.$get(`patient/patients/?uhid=${uhid}`);

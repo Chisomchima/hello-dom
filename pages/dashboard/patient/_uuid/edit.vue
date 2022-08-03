@@ -36,7 +36,7 @@
 
         <div v-show="currentStep === 3">
           <div class="mt-4 w-100">
-            <div class="d-flex" v-for="(form, index) in dataVal.payment_scheme" :key="index">
+            <div class="d-flex" v-for="(form, index) in data.payment_scheme" :key="index">
               <div class="d-flex flex-wrap" style="width:98%">
                 <div class="col-lg-3 col-md-3 mb-2">
                   <ValidationProviderWrapper name="Scheme" :rules="['']">
@@ -66,8 +66,8 @@
                       class="text-14"
                       :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
                       :options="[
-                        'Principal',
-                        'Dependent',
+                        'PRINCIPAL',
+                        'DEPENDANT',
                       ],"
                       v-model="form.relationship"
                     ></VSelect>
@@ -82,6 +82,7 @@
                     :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
                       class="form-control"
                       v-model="form.exp_date"
+                      :min="getDate"
                       type="date"
                     />
                   </ValidationProviderWrapper>
@@ -141,30 +142,6 @@
           >
           </span>
         </div>
-        <!-- <transition name="fade">
-          <DashboardPatientRegistrationStepOne
-            v-show="currentStep === 0"
-            ref="stepOne"
-          />
-        </transition>
-        <transition name="fade">
-          <DashboardPatientRegistrationStepTwo
-            v-show="currentStep === 1"
-            ref="stepTwo"
-          />
-        </transition>
-        <transition name="fade">
-          <DashboardPatientRegistrationStepThree
-            v-show="currentStep === 2"
-            ref="stepThree"
-          />
-        </transition>
-        <transition name="fade">
-          <DashboardPatientRegistrationStepFour
-            v-show="currentStep === 3"
-            ref="stepFour"
-          />
-        </transition> -->
       </template>
     </DashboardStepWrapper>
   </div>
@@ -191,7 +168,14 @@ export default {
         relation_postal_code: data.next_of_kin.postal_code,
         relation_phone_num: data.next_of_kin.phone_number,
         state_of_origin: data.state_id,
-        payment_scheme: data.payment_scheme
+        payment_scheme: data.payment_scheme ? data.payment_scheme : [
+          {
+            payer_scheme: null,
+            enrollee_id: null,
+            relationship: null,
+            exp_date: null,
+          },
+        ]
       }
       return {
         data: obj,
@@ -204,34 +188,28 @@ export default {
     this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
       this.payerSchemes = res.results
     })
+    // this.getDate
   },
   data() {
     return {
       data: '',
+      getDate: '',
       dataVal: {
-        payment_scheme: [
-          {
-            payer_scheme: null,
-            enrollee_id: '',
-            relationship: '',
-            exp_date: '',
-          },
-        ],
       },
     }
   },
   methods: {
     double() {
-      this.dataVal.payment_scheme.push({
+      this.data.payment_scheme.push({
         payer_scheme: null,
-        enrollee_id: '',
-        relationship: '',
-        exp_date: '',
+        enrollee_id: null,
+        relationship: null,
+        exp_date: null,
       })
-      console.log(this.dataVal.payment_scheme)
+      console.log(this.data.payment_scheme)
     },
     remove(e) {
-      this.dataVal.payment_scheme.splice(e, 1)
+      this.data.payment_scheme.splice(e, 1)
     },
     async checkPage({ _currentPage, nextPage }) {
       const data = await this.$refs.patientForm.checkFormValidity()
