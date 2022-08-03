@@ -69,7 +69,7 @@
                         'Principal',
                         'Dependent',
                       ],"
-                      v-model="form.payer_relationship"
+                      v-model="form.relationship"
                     ></VSelect>
                   </ValidationProviderWrapper>
                 </div>
@@ -191,6 +191,7 @@ export default {
         relation_postal_code: data.next_of_kin.postal_code,
         relation_phone_num: data.next_of_kin.phone_number,
         state_of_origin: data.state_id,
+        payment_scheme: data.payment_scheme
       }
       return {
         data: obj,
@@ -198,6 +199,11 @@ export default {
     } catch (error) {
       console.log(error)
     }
+  },
+   mounted() {
+    this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
+      this.payerSchemes = res.results
+    })
   },
   data() {
     return {
@@ -215,6 +221,18 @@ export default {
     }
   },
   methods: {
+    double() {
+      this.dataVal.payment_scheme.push({
+        payer_scheme: null,
+        enrollee_id: '',
+        relationship: '',
+        exp_date: '',
+      })
+      console.log(this.dataVal.payment_scheme)
+    },
+    remove(e) {
+      this.dataVal.payment_scheme.splice(e, 1)
+    },
     async checkPage({ _currentPage, nextPage }) {
       const data = await this.$refs.patientForm.checkFormValidity()
       if (data) {

@@ -67,7 +67,7 @@
                         'Principal',
                         'Dependent',
                       ],"
-                      v-model="form.payer_relationship"
+                      v-model="form.relationship"
                     ></VSelect>
                   </ValidationProviderWrapper>
                 </div>
