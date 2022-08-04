@@ -44,4 +44,16 @@ export default axios => ({
     bulkUploadBillableItems(body){
         return axios.$post(`finance/billable_items/spreadsheet_upload/`, body)
     },
+
+    // **********************************
+
+    addPaymentMethod(body){
+        return axios.$post(`finance/payment_methods/`, body)
+    },
+    getPaymentMethods(params){
+        return axios.$get(`finance/payment_methods/`, {params})
+    },
+    editPaymentMethod(body, id){
+        return axios.$patch(`/finance/price_lists/${id}/`, body)
+    },
 })

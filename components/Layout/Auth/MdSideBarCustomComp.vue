@@ -87,8 +87,12 @@ export default {
               title: 'Finance Settings',
               child: [
                 {
-                  href: '/dashboard/settings/finance/',
-                  title: 'Finance Config',
+                  href: '/dashboard/settings/finance/items/',
+                  title: 'Billable items',
+                },
+                {
+                  href: '/dashboard/settings/finance/payment-method/',
+                  title: 'Payment methods',
                 },
                 
               ],

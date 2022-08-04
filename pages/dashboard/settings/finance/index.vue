@@ -1,53 +1,71 @@
 <template>
   <div>
-  <h5>Finance Settings</h5>
-    <UtilsBaseCardTab>
-         <UtilsCardTab title="Payers">
-              <keep-alive>
-                  <DashboardFinancePayers />
-              </keep-alive>
-          </UtilsCardTab>
-        <UtilsCardTab title="Schemes">
-              <keep-alive>
-                  <DashboardFinanceSchemeTab />
-              </keep-alive>
-        </UtilsCardTab>
-         <UtilsCardTab title="Pricelists">
-              <keep-alive>
-                  <DashboardFinancePriceList />
-              </keep-alive>
-          </UtilsCardTab>
-         <UtilsCardTab class="" title="Billable Items" :tabs="tabs">
-         <UtilsBaseCardTab>
-          <UtilsSubCardTab title="All" >
-           <DashboardFinanceBillableItemsAll />
-          </UtilsSubCardTab>
-          <UtilsSubCardTab title="Encounters" >
-            <DashboardFinanceBillableItemsEncounters />
-          </UtilsSubCardTab>
-          <UtilsSubCardTab title="Imaging" >
-            <DashboardFinanceBillableItemsImaging />
-          </UtilsSubCardTab>
-          <UtilsSubCardTab title="Laboratory" >
-            <DashboardFinanceBillableItemsLaboratory />
-          </UtilsSubCardTab>
-          </UtilsBaseCardTab>
-          </UtilsCardTab>
-    </UtilsBaseCardTab>
+    <div class="row">
+      <div
+        v-for="(card, index) in cards"
+        :key="index"
+        class="col-md-4 col-12 col-sm-6"
+      >
+        <div
+          class="card card-stats mb-4 mb-xl-0 shadow-sm p-3 card-hover pointer my-3"
+          @click="goToRoute(card.route)"
+        >
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h3
+                  class="h5 text-uppercase mb-0 font-weight-bold text-primary"
+                >
+                  {{ card.name }}
+                </h3>
+              </div>
+              <div class="col-auto">
+                <!-- <div
+              class="icon icon-shape bg-danger text-white shadow"
+            > -->
+                <font-awesome-icon
+                  :icon="card.icon"
+                  class="h2 mb-0 text-primary"
+                />
+
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-    data() {
+  data() {
     return {
-      tabs: true,
-      data: null,
+      cards: [
+        {
+          name: 'Billable items',
+          icon: 'fa fa-sliders',
+          route: '/dashboard/settings/finance/items/',
+        },
+        {
+          name: 'Payment method',
+          icon: 'fa fa-sliders',
+          route: '/dashboard/settings/finance/payment-method/',
+        },
+      ],
     }
+  },
+  methods: {
+    goToRoute(e) {
+      this.$router.push(e)
+    },
   },
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.card-hover:hover {
+  border: 3px solid $COLOR_TWO;
+}
 </style>
