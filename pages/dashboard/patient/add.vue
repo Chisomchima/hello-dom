@@ -274,9 +274,9 @@ export default {
               ? dataObject.relation_phone_num
               : null,
 
-            // payment_scheme: dataObject
           },
           salutation: dataObject.salutation.salutations,
+          payment_scheme: dataObject.payment_scheme[0].payer_scheme === null ? [] : dataObject.payment_scheme
         }
 
         const response = await this.$api.patient.savePatient(customObj)
@@ -334,6 +334,7 @@ export default {
           // payment_scheme: dataObject
         },
         salutation: item.salutation.salutations,
+        payment_scheme: item.payment_scheme[0].payer_scheme === null ? [] : item.payment_scheme
       }
 
       return customObj
