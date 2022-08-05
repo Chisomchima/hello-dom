@@ -136,7 +136,6 @@ export default {
       this.getPriceList(this.currentPage, this.filter)
     },
     getSome(e) {
-      // console.log(e)
       this.filter.size = e
       this.getPriceList(this.currentPage, this.filter)
     },
