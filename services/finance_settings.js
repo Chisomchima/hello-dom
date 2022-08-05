@@ -8,6 +8,9 @@ export default axios => ({
     editPayer(body, id){
         return axios.$patch(`/finance/payers/${id}/`, body)
     },
+    editScheme(body, id){
+        return axios.$put(`/finance/payer_schemes/${id}/`, body)
+    },
     addScheme(body) {
         return axios.$post(`/finance/payer_schemes/`, body);
     },
@@ -54,6 +57,6 @@ export default axios => ({
         return axios.$get(`finance/payment_methods/`, {params})
     },
     editPaymentMethod(body, id){
-        return axios.$patch(`/finance/price_lists/${id}/`, body)
+        return axios.$patch(`/finance/payment_methods/${id}/`, body)
     },
 })
