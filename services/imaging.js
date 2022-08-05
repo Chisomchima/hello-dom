@@ -37,6 +37,10 @@ export default axios => ({
         return axios.$put(`/imaging/imaging_observation/${id}/`, body);
     },
 
+    deleteObv(id){
+        return axios.$delete(`imaging/imaging_observation/${id}/`)
+    },
+
     getOrder(params) {
         return axios.$get('/imaging/imaging_order/', {
             params
