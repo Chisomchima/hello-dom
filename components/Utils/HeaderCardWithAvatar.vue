@@ -62,20 +62,22 @@
                   <span
                     v-if="typeof value != 'object'"
                     class="class-details-data_value"
-                    ><slot :name="name" :value="value">{{ value }}</slot></span
-                  >
+                    ><slot :name="name" :value="value">{{ value }}</slot>
+                  </span>
                   <template v-else>
+                   <!-- v-for="(val, index) in value"
+                      :key="index" -->
                     <span
-                      v-for="(val, index) in value"
-                      :key="index"
-                      class="class-details-data_value"
-                      ><slot :name="name" :value="val">{{ val }}</slot></span
+                      class="class-details-data_value text-truncate"
+                      ><slot :name="name" :value="val">{{ value[0].payer_scheme.name }}</slot></span
                     >
+                    <span @click="check" class="badge-info p-1 text-12 rounded point">more</span>
                   </template>
                 </div>
+               
               </div>
-              <div class="d-none">
-                <h5>hey</h5>
+              <div class="row">
+                
               </div>
             </div>
             <div class="col-md-2">
@@ -134,6 +136,9 @@ export default Vue.extend({
     deleteIt() {
       this.$emit('delete')
     },
+    check(){
+      this.$emit('payers')
+    }
   },
 })
 </script>

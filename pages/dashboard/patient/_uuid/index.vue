@@ -13,8 +13,10 @@
         'religion',
         'nationality',
         'phone_number',
+        'payment_scheme'
       ]"
       @edit="editRoute()"
+      @payers="checkPayersDetails"
     >
     </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
@@ -42,6 +44,8 @@
         </UtilsSubCardTab>
       </UtilsCardTab>
     </UtilsBaseCardTab>
+
+    <DashboardModalPayerDetails :data="data.payment_scheme"/>
   </div>
 </template>
 
@@ -72,6 +76,10 @@ export default {
         },
       })
     },
+    checkPayersDetails(){
+      console.log('check')
+      this.$bvModal.show('payerDetails')
+    }
   },
 }
 </script>

@@ -18,7 +18,7 @@
     <template #modal-footer="{ cancel }">
       <!-- Emulate built in modal footer ok and cancel button actions -->
       <slot name="footer" :cancel="cancel">
-        <div class="d-flex w-100 justify-content-between px-5">
+        <div :class="arrangement ? `justify-content-between` : `justify-content-center`" class="d-flex w-100  px-5">
           <div>
             <b-button
               size="sm"
@@ -26,10 +26,10 @@
               class="px-5 text-secondary mr-2"
               @click="cancel()"
             >
-              Cancel
+              {{cancelText}}
             </b-button>
           </div>
-          <div>
+          <div v-if="arrangement">
             <BaseButton
               class="px-5"
               :extra-class="buttonColor"
@@ -84,6 +84,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    arrangement: {
+      type: Boolean,
+      default: true
+    },
+    cancelText:{
+      type: String,
+      default: 'Cancel'
+    }
   },
   methods: {
     cancel() {
