@@ -58,7 +58,7 @@ export default Vue.extend({
         fields: [
         {
           key: 'payer_scheme.name',
-          label: 'Enrollee ID',
+          label: 'Name',
           sortable: true,
         },
         {
