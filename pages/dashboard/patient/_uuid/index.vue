@@ -42,7 +42,7 @@
         <div class=" text-14 text-grey text-right p-2">
           Deposit balance: 10,000   |
         </div>
-        <div class=" text-14 text-grey text-right p-2">
+        <div class=" text-14 text-grey text-right pl-0 pr-2 py-2">
           Reserve balance: 6,000
         </div>
       </div>

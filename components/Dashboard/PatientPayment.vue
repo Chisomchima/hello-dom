@@ -2,12 +2,12 @@
   <div>
     <div>
       <UtilsFilterComponent
-        @search-input="searchPricelist"
+        @search-input="searchPayments"
         @view-by="getSome($event)"
         :disableVisualization="true"
       >
         <TableComponent
-          @page-changed="getPriceList($event, filter)"
+          @page-changed="getPayments($event, filter)"
           :perPage="filter.size"
           :items="items"
           :pages="pages"
@@ -24,9 +24,10 @@
 </template>
 
 <script>
-// import TableCompFun from '~/mixins/TableCompFun'
+import TableCompFun from '~/mixins/TableCompFun'
+import { DateTime } from 'luxon'
 export default {
-//   mixins: [TableCompFun],
+  mixins: [TableCompFun],
   data() {
     return {
       items: [],
@@ -35,22 +36,23 @@ export default {
       totalRecords: 0,
       fields: [
         {
-          key: 'amount',
+          key: 'total_amount',
           label: 'Amount',
           sortable: true,
         },
-        {
-          key: 'payment_method',
-          label: 'Payment method',
-          sortable: true,
-        },
+        // {
+        //   key: 'payment_method',
+        //   label: 'Payment method',
+        //   sortable: true,
+        // },
         {
           key: 'payment_type',
           label: 'Payment type',
           sortable: true,
         },
         {
-          key: 'transaction_date',
+          key: 'created_at',
+           label: 'Transaction date',
           formatter: (value) => {
             return DateTime.fromISO(value).toLocaleString(
               DateTime.DATETIME_SHORT
@@ -65,12 +67,12 @@ export default {
     }
   },
   mounted() {
-    // this.getPriceList()
+    this.getPayments()
   },
   watch: {
     'filter.fetchBy'() {
       if (this.filter.size !== 10) {
-        this.getPriceList(this.currentPage, this.filter)
+        this.getPayments(this.currentPage, this.filter)
       }
     },
   },
@@ -82,21 +84,21 @@ export default {
     },
   },
   methods: {
-    searchPricelist(e) {
+    searchPayments(e) {
       console.log(e)
       this.filter.name = e
-      this.getPriceList(this.currentPage, this.filter)
+      this.getPayments(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getPriceList(this.currentPage, this.filter)
+      this.getPayments(this.currentPage, this.filter)
     },
-    async getPriceList(page = 1, e = { size: 10, name: '' }) {
+    async getPayments(page = 1, e = { size: 10, name: '' }) {
       this.filter = e
 
       this.currentPage = page
       try {
-        let response = await this.$api.finance_settings.getPriceList({
+        let response = await this.$api.finance_settings.getPayments({
           ...e,
           page: page,
         })
@@ -111,7 +113,7 @@ export default {
       }
     },
     refreshMe() {
-      this.getPriceList(this.currentPage)
+      this.getPayments(this.currentPage)
     },
   },
 }

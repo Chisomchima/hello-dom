@@ -59,4 +59,8 @@ export default axios => ({
     editPaymentMethod(body, id){
         return axios.$patch(`/finance/payment_methods/${id}/`, body)
     },
+
+    getPayments(params){
+        return axios.$get(`/finance/payments/`, {params})
+    }
 })
