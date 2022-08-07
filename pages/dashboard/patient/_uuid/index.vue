@@ -12,8 +12,7 @@
         'marital_status',
         'religion',
         'nationality',
-        'phone_number',
-        'payment_scheme'
+        'phone_number'
       ]"
       @edit="editRoute()"
       @payers="checkPayersDetails"
@@ -39,8 +38,19 @@
         <h5>Coming Soon</h5>
       </UtilsCardTab>
       <UtilsCardTab title="Finance" :tabs="tabs">
+      <div class="d-flex justify-content-end pt-1">
+        <div class=" text-14 text-grey text-right p-2">
+          Deposit balance: 10,000   |
+        </div>
+        <div class=" text-14 text-grey text-right p-2">
+          Reserve balance: 6,000
+        </div>
+      </div>
         <UtilsSubCardTab title="Billing">
           <DashboardPatientBilling :data="data" :init-active="true" />
+        </UtilsSubCardTab>
+        <UtilsSubCardTab title="Payments">
+          <DashboardPatientPayment :data="data" :init-active="true" />
         </UtilsSubCardTab>
       </UtilsCardTab>
     </UtilsBaseCardTab>

@@ -15,11 +15,6 @@
           @page-changed="pageChange"
           @row-clicked="onRowClicked"
         >
-          <template #status="{ data }">
-            <span v-if="data.item.status === 'NS'" class="badge bg-info">{{
-              data.item.status
-            }}</span>
-          </template>
         </TableComponent>
       </template>
     </UtilsFilterComponent>
