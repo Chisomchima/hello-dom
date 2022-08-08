@@ -40,10 +40,10 @@
       <UtilsCardTab title="Finance" :tabs="tabs">
       <div class="d-flex justify-content-end pt-1">
         <div class=" text-14 text-grey text-right p-2">
-          Deposit balance: 10,000   |
+          Deposit balance: {{data.deposit}}   
         </div>
         <div class=" text-14 text-grey text-right pl-0 pr-2 py-2">
-          Reserve balance: 6,000
+        | Reserve balance: {{data.reserve}}
         </div>
       </div>
         <UtilsSubCardTab title="Billing">
