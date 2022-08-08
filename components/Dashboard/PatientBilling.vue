@@ -1,11 +1,6 @@
 <template>
   <div>
     <UtilsFilterComponent disable-visualization>
-      <!-- <template #besideFilterButton>
-        <BaseButton class="btn-outline-primary" @click="$bvModal.show('modal')"
-          >New Encounter</BaseButton
-        >
-      </template> -->
       <template>
         <TableComponent
           :fields="fields"
@@ -40,7 +35,8 @@
             }}</span>
           </template>
         </TableComponent>
-        <DashboardModalProcessBillModal :total="total" :nameData="data" @ok="payment($event)" />
+        <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
+        <DashboardModalPayerDetails/>
       </template>
     </UtilsFilterComponent>
 
@@ -78,25 +74,6 @@ export default {
     return {
       busy: false,
       items: [
-        // {
-        //   id: 0,
-        //   bill_item_code: 'string',
-        //   cost_price: '-5453069.',
-        //   selling_price: '-15510',
-        //   cleared_status: 'CLEARED',
-        //   quantity: 2147483647,
-        //   bill_source: 'string',
-        //   billed_to_type: 'SELF',
-        //   co_pay: '8683292.8',
-        //   service_center: 'string',
-        //   description: 'string',
-        //   is_service_rendered: true,
-        //   is_invoiced: true,
-        //   is_lapidated: true,
-        //   auth_code: 'string',
-        //   transaction_date: '2022-06-30T14:00:59.059Z',
-        //   billed_to: 0,
-        // },
       ],
       fields: [
         {
@@ -124,9 +101,6 @@ export default {
         {
           key: 'selling_price',
         },
-        // {
-        //   key: 'billed_to_type',
-        // },
         {
           key: 'cleared_status',
         },
@@ -173,6 +147,7 @@ export default {
       }
     },
     addToClear(e, item) {
+      console.log(e, item)
       if (e) {
         this.unClearedBill.push(item)
       } else {
@@ -181,7 +156,16 @@ export default {
         })
       }
     },
-    async payment(amount) {
+    deleteGoods(e){
+      if(e){
+        this.unClearedBill.filter((el) => {
+            if(el === e){
+              this.unClearedBill.splice(e, 1)
+            }
+        })
+      }
+    },
+    async payment(info) {
       try {
         const patient = await this.$api.patient.getPatient(this.$route.params.uuid);
         let billID = [];
@@ -193,8 +177,8 @@ export default {
         }
         await this.$api.finance.makePayment({
           bills: billID,
-          patient,
-          total_amount: amount,
+          patient: this.data.id,
+          payments: info,
         })
         this.$toast({
           type: 'success',

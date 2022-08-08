@@ -217,6 +217,9 @@
       <template #cell(cancel)="item">
         <slot name="cancel" :data="item"></slot>
       </template>
+      <template #cell(delete)="item">
+        <slot name="delete" :data="item"></slot>
+      </template>
 
       <template #cell(download)="data">
         <slot name="download" :data="data">{{ data.value }}</slot>

@@ -19,6 +19,9 @@ export default axios => ({
     getPatientByUHID(uhid) {
         return axios.$get(`patient/patients/uhid/${uhid}/`);
     },
-
+    
+    getPayments(params){
+        return axios.$get(`/finance/payments/`, {params})
+    }
 
 });

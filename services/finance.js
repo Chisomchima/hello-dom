@@ -11,6 +11,6 @@ export default axios => ({
     },
 
     makePayment(body) {
-        return axios.$post('/finance/payments/', body);
+        return axios.$post('/finance/bills/pay/', body);
     }
 });

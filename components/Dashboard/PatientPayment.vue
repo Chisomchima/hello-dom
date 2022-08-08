@@ -98,7 +98,7 @@ export default {
 
       this.currentPage = page
       try {
-        let response = await this.$api.finance_settings.getPayments({
+        let response = await this.$api.patient.getPayments({
           ...e,
           page: page,
         })
