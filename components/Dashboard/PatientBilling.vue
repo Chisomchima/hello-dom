@@ -42,7 +42,7 @@
 
     <div class="row p-4">
       <div class="col-md-12">
-        <h3>Total: {{ numberWithCommas(total) }}</h3>
+        <h3>Total: ₦ {{ numberWithCommas(total) }}</h3>
       </div>
       <div class="col-md-3">
         <BaseButton

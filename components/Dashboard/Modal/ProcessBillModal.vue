@@ -63,7 +63,7 @@
       </TableComponent>
     </div>
     <div class="p-2 text-info">
-      Total: {{ total ? total.toLocaleString('en-US') : '' }}
+      Total: ₦ {{ total ? total.toLocaleString('en-US') : '' }}
     </div>
     <ValidationObserver ref="form">
       <form>
@@ -204,6 +204,7 @@ export default {
     },
   },
   async mounted() {
+    console.log(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(12));
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
     })
@@ -265,4 +266,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.b-table-sticky-header, .table-responsive, [class*=table-responsive-] {
+    margin-bottom: 0rem;
+}
 </style>
