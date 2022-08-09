@@ -1,6 +1,6 @@
 <template>
   <div class="filter-wrapper">
-    <div class="row justify-content-between">
+    <div class="row justify-content-between p-2">
         <div class="mb-0 col-md-6">
         <label class="form-control-label">UHID/NAME</label>
         <div class="row">

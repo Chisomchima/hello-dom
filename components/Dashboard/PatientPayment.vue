@@ -94,6 +94,7 @@ export default {
       this.getPayments(this.currentPage, this.filter)
     },
     async getPayments(page = 1, e = { size: 10, name: '' }) {
+      this.busy = true
       this.filter = e
 
       this.currentPage = page

@@ -112,6 +112,7 @@ export default {
             this.getPayers(this.currentPage, this.filter)
         },
         async getPayers(page = 1, e = {size: 10, name: ''}){
+          this.busy = true
            this.filter = e 
             
            this.currentPage = page

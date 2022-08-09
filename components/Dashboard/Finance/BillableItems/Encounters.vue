@@ -174,6 +174,7 @@ export default {
       this.getBillableItems(this.currentPage, this.filter)
     },
     async getBillableItems(page = 1, e = { size: 10, module: 'ENCOUNTERS' }) {
+      this.busy = true
       this.filter = e
 
       this.currentPage = page

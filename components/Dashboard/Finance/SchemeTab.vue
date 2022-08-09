@@ -131,6 +131,7 @@ export default {
       this.getSchemes(this.currentPage, this.filter)
     },
     async getSchemes(page = 1, e = { size: 10, name: '' }) {
+      this.busy = true
       this.filter = e
 
       this.currentPage = page
