@@ -12,7 +12,7 @@
         'marital_status',
         'religion',
         'nationality',
-        'phone_number'
+        'phone_number',
       ]"
       @edit="editRoute()"
       @payers="checkPayersDetails"
@@ -37,25 +37,34 @@
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>
-      <UtilsCardTab title="Finance" :tabs="tabs">
-      <div class="d-flex justify-content-end pt-1">
-        <div class=" text-14 text-grey text-right p-2">
-          Deposit balance: {{data.deposit ? data.deposit : ''}}   
+      <UtilsCardTab title="Finance">
+        <div class="d-flex justify-content-end pt-1">
+          <div class="text-14 text-grey text-right p-2">
+            Deposit balance: {{ data.deposit ? data.deposit : '' }}
+          </div>
+          <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
+            | Reserve balance: {{ data.reserve ? data.reserve : '' }}
+          </div>
         </div>
-        <div class=" text-14 text-grey text-right pl-0 pr-2 py-2">
-        | Reserve balance: {{data.reserve ? data.reserve : ''}}
-        </div>
-      </div>
-        <UtilsSubCardTab title="Billing">
-          <DashboardPatientBilling :data="data" :init-active="true" />
-        </UtilsSubCardTab>
-        <UtilsSubCardTab title="Payments">
-          <DashboardPatientPayment :data="data" :init-active="true" />
-        </UtilsSubCardTab>
+
+        <TabView class="tabview-custom">
+          <TabPanel class="dark-panel">
+            <template #header>
+            <span class="ml-2">Billing</span>
+          </template>
+            <DashboardPatientBilling :data="data"/> 
+          </TabPanel>
+          <TabPanel class="dark-panel" >
+          <template #header>
+            <span class="ml-2">Payments</span>
+          </template>
+           <DashboardPatientPayment :data="data"/>
+          </TabPanel>
+        </TabView>
       </UtilsCardTab>
     </UtilsBaseCardTab>
 
-    <DashboardModalPayerDetails :data="data.payment_scheme"/>
+    <DashboardModalPayerDetails :data="data.payment_scheme" />
   </div>
 </template>
 
@@ -86,16 +95,51 @@ export default {
         },
       })
     },
-    checkPayersDetails(){
+    checkPayersDetails() {
       console.log('check')
       this.$bvModal.show('payerDetails')
-    }
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-ul > li {
+  ul > li {
   padding: 5px;
+}
+</style>
+
+<style lang="scss">
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffffff;
+    border-color: $COLOR_THREE !important;
+    color: $COLOR_THREE;
+    font-size: 14px;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    border: solid #dee2e6;
+    border-width: 0 0 2px 0;
+    border-color: transparent transparent #dee2e6 transparent;
+    background: #ffffff;
+    font-size: 14px;
+    color: #6c757d;
+    /* padding: 1rem; */
+    font-weight: 600;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    transition: box-shadow 0.2s;
+    margin: 0 0 -2px 0;
+}
+
+.p-tabview .p-tabview-nav {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    /* border-width: 0 0 2px 0; */
+}
+
+li {
+  cursor: pointer;
+  border: 0.5px solid #fff;
 }
 </style>

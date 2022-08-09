@@ -27,16 +27,15 @@
           </template>
 
           <template #cleared_status="{ data }">
-            <span v-if="data.item.cleared_status === 'CLEARED'" class="badge badge-primary">{{
+            <span v-if="data.item.cleared_status === 'CLEARED'" class=" badge-primary rounded p-1">{{
               data.item.cleared_status
             }}</span>
-             <span v-if="data.item.cleared_status === 'UNCLEARED'" class="badge badge-warning">{{
+             <span v-if="data.item.cleared_status === 'UNCLEARED'" class=" badge-warning rounded p-1">{{
               data.item.cleared_status
             }}</span>
           </template>
         </TableComponent>
         <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
-        <DashboardModalPayerDetails/>
       </template>
     </UtilsFilterComponent>
 
@@ -157,13 +156,11 @@ export default {
       }
     },
     deleteGoods(e){
-      if(e){
-        this.unClearedBill.filter((el) => {
-            if(el === e){
-              this.unClearedBill.splice(e, 1)
-            }
+       this.unClearedBill = remove(this.unClearedBill, (n) => {
+          return n.id !== e.id 
         })
-      }
+
+      // this.unClearedBill.splice(e, 1)
     },
     async payment(info) {
       try {

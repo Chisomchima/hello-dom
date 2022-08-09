@@ -26,11 +26,11 @@
         <ul v-if="nameData.payment_scheme.length > 0" class="d-flex w-100 px-0 mb-0">
           <li style="list-style: none" v-for="(item, index) in nameData.payment_scheme" :key="index" class="px-2 text-14">
           <span class="class-details-data_value text-truncate">
-            {{ item.payer_scheme.name
+          | {{ item.payer_scheme.name
             }}
           </span>
           <span>
-            ({{item.payer_scheme.type}}) |
+            ({{item.payer_scheme.type}}) 
           </span>
           </li>
       </ul>
@@ -249,6 +249,7 @@ export default {
     },
 
     removeItem(e) {
+      console.log(e)
       this.$emit('removedItem', e)
     },
 
