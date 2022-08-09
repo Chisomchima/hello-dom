@@ -17,7 +17,7 @@
                   <DashboardFinancePriceList />
               </keep-alive>
           </UtilsCardTab>
-         <UtilsCardTab class="" title="Billable Items" :tabs="tabs">
+         <UtilsCardTab title="Billable Items">
          <UtilsBaseCardTab>
           <UtilsSubCardTab title="All" >
            <DashboardFinanceBillableItemsAll />
@@ -41,7 +41,6 @@
 export default {
     data() {
     return {
-      tabs: true,
       data: null,
     }
   },
