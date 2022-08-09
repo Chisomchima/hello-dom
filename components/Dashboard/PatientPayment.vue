@@ -36,21 +36,6 @@ export default {
       totalRecords: 0,
       fields: [
         {
-          key: 'total_amount',
-          label: 'Amount',
-          sortable: true,
-        },
-        // {
-        //   key: 'payment_method',
-        //   label: 'Payment method',
-        //   sortable: true,
-        // },
-        {
-          key: 'payment_type',
-          label: 'Payment type',
-          sortable: true,
-        },
-        {
           key: 'created_at',
            label: 'Transaction date',
           formatter: (value) => {
@@ -58,6 +43,21 @@ export default {
               DateTime.DATETIME_SHORT
             )
           },
+        },
+        {
+          key: 'total_amount',
+          label: 'Amount',
+          sortable: true,
+        },
+        {
+          key: 'payment_method.name',
+          label: 'Payment method',
+          sortable: true,
+        },
+        {
+          key: 'payment_type',
+          label: 'Payment type',
+          sortable: true,
         },
       ],
       filter: {

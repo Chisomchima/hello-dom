@@ -1,13 +1,20 @@
 <template>
   <div>
-    <UtilsFilterComponent disable-visualization>
+    <UtilsFilterComponent
+      @search-input="searchBills"
+      @view-by="getSome($event)"
+     disable-visualization>
       <template>
         <TableComponent
           :fields="fields"
+          :perPage="filter.size"
           :pages="pages"
           :items="items"
           :busy="busy"
-          @page-changed="pageChange"
+          @page-changed="pageChange($event, filter)"
+          :showBaseCount="trigger"
+          :currentPage="currentPage"
+          :totalRecords="totalRecords"
         >
           <template #status="{ data }">
             <span v-if="data.item.status === 'NS'" class="badge badge-info">{{
@@ -46,7 +53,7 @@
       <div class="col-md-3">
         <BaseButton
           class="btn-outline-primary btn-lg btn-block"
-          @click="$bvModal.show('modal')"
+          @click="proceedToPayout"
           >Pay</BaseButton
         >
       </div>
@@ -72,6 +79,9 @@ export default {
   data() {
     return {
       busy: false,
+      pages: 1,
+      currentPage: 1,
+      totalRecords: 0,
       items: [
       ],
       fields: [
@@ -105,8 +115,13 @@ export default {
         },
       ],
       unClearedBill: [],
+      filter: {
+        size: 10,
+        name: ''
+      },
     }
   },
+  
   computed: {
     total() {
       let total = 0
@@ -123,12 +138,27 @@ export default {
       })
       return total
     },
+
+    trigger() {
+      if (this.items.length != 0) {
+        return true
+      }
+    },
   },
   async mounted() {
-    await this.pageChange(1)
+    await this.pageChange()
   },
   methods: {
-    async pageChange(page = 1) {
+     searchBills(e) {
+      console.log(e)
+      this.filter.name = e
+      this.getPayments(this.currentPage, this.filter)
+    },
+    getSome(e) {
+      this.filter.size = e
+      this.getPayments(this.currentPage, this.filter)
+    },
+    async pageChange(page = 1, e = { size: 10, name: '' }) {
       try {
         this.busy = true
         const data = await this.$api.finance.bills({
@@ -138,6 +168,8 @@ export default {
         console.log(data)
         this.items = data.results
         this.pages = data.total_pages
+         this.totalRecords = data.total_count
+        this.currentPage = data.current_page
         this.busy = false
       } catch (error) {
         console.log(error)
@@ -152,6 +184,17 @@ export default {
       } else {
         this.unClearedBill = remove(this.unClearedBill, (n) => {
           return n.id !== item.id
+        })
+      }
+    },
+    proceedToPayout(){
+      if(this.total != 0){
+        this.$bvModal.show('modal')
+      }
+      else{
+        this.$toast({
+          type: 'info',
+          text: `No item in cart`,
         })
       }
     },
@@ -182,7 +225,7 @@ export default {
           text: 'Payment Successful',
         })
         this.$bvModal.hide('modal')
-        this.pageChange(1)
+        this.pageChange(this.currentPage)
         this.unClearedBill = []
       } catch (error) {
         console.log(error)
