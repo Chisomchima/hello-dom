@@ -37,7 +37,7 @@ export default {
       fields: [
         {
           key: 'created_at',
-           label: 'Transaction date',
+          label: 'Transaction date',
           formatter: (value) => {
             return DateTime.fromISO(value).toLocaleString(
               DateTime.DATETIME_SHORT
