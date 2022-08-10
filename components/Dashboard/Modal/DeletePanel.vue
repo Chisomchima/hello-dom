@@ -2,7 +2,7 @@
   <div>
     <ModalWrapper
       size="md"
-      id="deleteModal"
+      id="deletePanelModal"
       :title="title"
       @ok="deleteItem"
       submitTitle="Delete"
@@ -10,7 +10,7 @@
 
     <div>
         <h5 class="text-center">Please confirm this action</h5>
-        <p class="text-info text-14 text-center p-2">You are about to delete {{imaging.name}} observation</p>
+        <p class="text-info text-14 text-center p-2">You are about to delete {{panel.identity}} panel</p>
     </div>
       
     </ModalWrapper>
@@ -21,9 +21,9 @@
 export default {
   data() {
     return {
-        imaging: {
+        panel: {
             id: '',
-            name: ''
+            identity: ''
         }
     }
   },
@@ -32,8 +32,8 @@ export default {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
           let data = { ...newVal }
-          this.imaging.name = data.name
-          this.imaging.id = data.id
+          this.panel.identity = data.identity
+          this.panel.id = data.id
         }
       },
       immediate: true,
@@ -49,7 +49,7 @@ export default {
     title: {
       type: String,
       require: false,
-      default: () => 'Delete item',
+      default: () => 'Delete Panel',
     },
   },
   mounted() {
@@ -59,11 +59,11 @@ export default {
   methods: {
     async deleteItem() {
         try {
-          const data = await this.$api.imaging.deleteObv(
-            this.imaging.id
+          const data = await this.$api.laboratory.deletePanel(
+            this.panel.id
           )
           this.$emit('refresh')
-          this.$bvModal.hide('deleteModal')
+          this.$bvModal.hide('deletePanelModal')
         } catch (error) {
           console.log(error)
         }

@@ -1,9 +1,28 @@
 <template>
   <div>
+  <b-dropdown dropright no-caret id="dropdown-1" class="rounded-0">
+  <template #button-content>
+      <div class="col-md-2 text-14">Filter</div>
+    </template>
+    <b-dropdown-item @click="getUnclearedBill">Uncleared</b-dropdown-item>
+    <b-dropdown-item @click="getClearedBill">Cleared</b-dropdown-item>
+    <b-dropdown-divider></b-dropdown-divider>
+    <b-dropdown-item @click="getAllBills">All</b-dropdown-item>
+  </b-dropdown>
     <UtilsFilterComponent
       @search-input="searchBills"
       @view-by="getSome($event)"
      disable-visualization>
+      <div class="row align-items-center px-3 pb-1">
+        <h5 class="mb-0">Total: ₦ {{ numberWithCommas(total) }}</h5>
+      <div class="col-md-2">
+        <BaseButton
+          class="btn-outline-primary btn-lg btn-block"
+          @click="proceedToPayout"
+          >Pay</BaseButton
+        >
+      </div>
+    </div>
       <template>
         <TableComponent
           :fields="fields"
@@ -45,19 +64,6 @@
         <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
       </template>
     </UtilsFilterComponent>
-
-    <div class="row p-4">
-      <div class="col-md-12">
-        <h3>Total: ₦ {{ numberWithCommas(total) }}</h3>
-      </div>
-      <div class="col-md-3">
-        <BaseButton
-          class="btn-outline-primary btn-lg btn-block"
-          @click="proceedToPayout"
-          >Pay</BaseButton
-        >
-      </div>
-    </div>
   </div>
 </template>
 
@@ -117,7 +123,8 @@ export default {
       unClearedBill: [],
       filter: {
         size: 10,
-        name: ''
+        name: '',
+        status: ''
       },
     }
   },
@@ -149,21 +156,34 @@ export default {
     await this.pageChange()
   },
   methods: {
+    getUnclearedBill(){
+      this.filter.status = 'UNCLEARED'
+      this.pageChange(1, this.filter)
+    },
+    getClearedBill(){
+      this.filter.status = 'CLEARED'
+      this.pageChange(1, this.filter)
+    },
+    getAllBills(){
+      this.filter.status = ''
+      this.pageChange(1, this.filter)
+    },
      searchBills(e) {
       console.log(e)
       this.filter.name = e
-      this.getPayments(this.currentPage, this.filter)
+      this.pageChange(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getPayments(this.currentPage, this.filter)
+      this.pageChange(this.currentPage, this.filter)
     },
-    async pageChange(page = 1, e = { size: 10, name: '' }) {
+    async pageChange(page = 1, e = { size: 10, name: '', status:'' }) {
       try {
         this.busy = true
         const data = await this.$api.finance.bills({
           patient: this.$route.params.uuid,
           page,
+          ...e
         })
         console.log(data)
         this.items = data.results
@@ -239,5 +259,24 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 5rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
 </style>

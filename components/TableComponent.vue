@@ -226,7 +226,7 @@
       </template>
 
       <template #cell(actions)="row">
-        <div class="text-left w-auto">
+        <div class="text-right w-auto">
           <button
             v-if="!disableEditAction"
             class="btn"

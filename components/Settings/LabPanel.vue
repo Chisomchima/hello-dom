@@ -331,6 +331,8 @@
           :busy="busy"
           :pages="pages"
           :items="labPanels"
+          @edit="openEditPanel($event)"
+          @delete="deletePanel($event)"
           @page-changed="getLabPanels($event)"
         >
           <template #obv="{ data }">
@@ -376,6 +378,8 @@
         </table-component>
       </UtilsFilterComponent>
     </div>
+    <DashboardModalDeletePanel :editData="editObj"
+      @refresh="refreshMe"/>
   </div>
 </template>
 
@@ -394,6 +398,7 @@ export default {
         bill_price: null,
         cost_price: null,
       },
+      editObj: {},
       sswap: null,
       lswap: null,
       editPanel: {
@@ -432,7 +437,7 @@ export default {
 
         { key: 'specimen_type', label: 'Specimen Type', sortable: true },
         { key: 'lab_unit', label: 'Lab Unit', sortable: true },
-        { key: 'edit', label: '', sortable: false },
+        { key: 'actions', label: '', sortable: false },
       ],
       uniqueId: null,
       searchQuery: ''
@@ -449,23 +454,6 @@ export default {
         this.panel.lab_unit = this.unitId.id
       }
     },
-  //  searchQuery: {
-  //     handler: debounce(async function () {
-  //        this.cue = true
-  //       let temp = await this.$api.core.observations({ size: 1000 , name: this.searchQuery})
-  //       console.log(temp)
-  //         if(temp.results> 0){
-  //           this.observationWithoutPagination = temp.results
-  //         }
-  //         else{
-  //           this.observationWithoutPagination = []
-  //           // this.searchQuery = ''
-  //         }
-        
-  //       this.cue = false
-  //     }, 1000),
-  //     deep: true,
-  //   },
   },
   mounted() {
     this.getLabPanels()
@@ -474,10 +462,13 @@ export default {
     searchMe(e){
       this.getLabPanels(1, e)
     },
-    // async filterOBV(e){
-    //   this.searchQuery = e
-    //   console.log(e)
-    // },
+    refreshMe(){
+      this.getLabPanels(1)
+    },
+    deletePanel(e){
+      this.editObj = { ...e }
+      this.$bvModal.show('deletePanelModal')
+    },
     closeModal() {
       this.$bvModal.hide('Add-panel')
       this.panel = {

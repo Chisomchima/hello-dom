@@ -144,7 +144,7 @@
           <BaseButton class="btn-outline-primary" @click="openLabObservationsModal">Add Observation
           </BaseButton>
         </template>
-        <table-component :fields="fields" :perPage="perPage" :busy="busy" :items="observations" :pages="pages"
+        <table-component :fields="fields" @edit="OpenEditLabModal($event)" :perPage="perPage" :busy="busy" :items="observations" :pages="pages"
           @page-changed="getObservations($event)">
           <template #reference_range="{ data }">
             <div v-for="(pint, index) in data.item.reference_range" :key="index" class="text-start mb-1">
@@ -352,7 +352,7 @@ export default {
         { key: "type", label: "Type", sortable: true },
         { key: "uom", label: "UoM", sortable: true },
         { key: "reference_range", label: "Reference Range", sortable: true },
-        { key: "edit", label: "", sortable: false },
+        { key: "actions", label: "", sortable: false },
       ],
       uniqueId: "",
       observation: {

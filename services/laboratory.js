@@ -23,7 +23,14 @@ export default axios => ({
     },
     saveLabOrder(body) {
         return axios.$post('/laboratory/lab_order/', body)
-    }
+    },
 
+    // ***********settings****************
+    deleteSpecimen(id){
+        return axios.$delete(`laboratory/lab_specimen_type/${id}/`)
+    },
+    deletePanel(id){
+        return axios.$delete(`laboratory/lab_panel/${id}/`)
+    },
 
 });

@@ -166,6 +166,8 @@
           :busy="busy"
           :pages="pages"
           :items="specimens"
+          @delete="deleteSpecimen"
+          @edit="OpenEditSpecimen($event)"
           @page-changed="getSpecimens($event)"
         >
           <template #status="{ data }">
@@ -354,6 +356,9 @@
         </ValidationObserver>
       </div>
     </b-modal>
+
+    <DashboardModalDeleteSpecimen :editData="editObj"
+      @refresh="refreshMe"/>
   </div>
 </template>
 
@@ -386,7 +391,7 @@ export default {
         { key: 'color', label: 'Color', sortable: true },
         { key: 'description', label: 'Description', sortable: true },
 
-        { key: 'edit', label: '', sortable: false },
+        { key: 'actions', label: '', sortable: false },
       ],
       id: 0,
       specimen: {
@@ -399,6 +404,7 @@ export default {
         color: '',
         description: '',
       },
+      editObj: {}
     }
   },
   mounted() {
@@ -439,6 +445,9 @@ export default {
     searchMe(e) {
       this.getSpecimens(1, e)
     },
+    refreshMe(){
+      this.getSpecimens(1)
+    },
     async getSpecimens(page = 1,  e = "") {
       try {
         this.busy = true
@@ -470,6 +479,10 @@ export default {
       } finally {
         this.busy = false
       }
+    },
+    async deleteSpecimen(e){
+      this.editObj = { ...e }
+      this.$bvModal.show('deleteSpecimenModal')
     },
     async editSpecimenfunc() {
       if (this.$refs.runValidation) {
