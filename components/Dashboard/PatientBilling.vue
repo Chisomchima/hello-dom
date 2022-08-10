@@ -225,7 +225,7 @@ export default {
           text: 'Payment Successful',
         })
         this.$bvModal.hide('modal')
-        this.pageChange(this.currentPage)
+        this.pageChange(this.currentPage, this.filter)
         this.unClearedBill = []
       } catch (error) {
         console.log(error)

@@ -60,6 +60,12 @@
           </template>
            <DashboardPatientPayment :data="data"/>
           </TabPanel>
+          <TabPanel class="dark-panel" >
+          <template #header>
+            <span class="ml-2">Invoices</span>
+          </template>
+           <DashboardPatientInvoice :data="data"/>
+          </TabPanel>
         </TabView>
       </UtilsCardTab>
     </UtilsBaseCardTab>
