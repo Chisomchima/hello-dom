@@ -7,12 +7,12 @@
         :disableVisualization="true"
       >
         <TableComponent
-          @page-changed="getPayments($event, filter)"
+          @page-changed="getInvoices($event, filter)"
           :perPage="filter.size"
           :items="items"
           :pages="pages"
           :busy="busy"
-          :fields="[]"
+          :fields="fields"
           :showBaseCount="trigger"
           :currentPage="currentPage"
           :totalRecords="totalRecords"
@@ -37,7 +37,7 @@ export default {
       fields: [
         {
           key: 'created_at',
-           label: 'Transaction date',
+          label: 'Transaction date',
           formatter: (value) => {
             return DateTime.fromISO(value).toLocaleString(
               DateTime.DATETIME_SHORT
@@ -45,20 +45,20 @@ export default {
           },
         },
         {
-          key: 'total_amount',
+          key: 'paid_amount',
           label: 'Amount',
           sortable: true,
         },
-        {
-          key: 'payment_method.name',
-          label: 'Payment method',
-          sortable: true,
-        },
-        {
-          key: 'payment_type',
-          label: 'Payment type',
-          sortable: true,
-        },
+        // {
+        //   key: 'payment_method.name',
+        //   label: 'Payment method',
+        //   sortable: true,
+        // },
+        // {
+        //   key: 'payment_type',
+        //   label: 'Payment type',
+        //   sortable: true,
+        // },
       ],
       filter: {
         size: 10,
@@ -67,12 +67,12 @@ export default {
     }
   },
   mounted() {
-    // this.getPayments()
+    this.getInvoices()
   },
   watch: {
     'filter.fetchBy'() {
       if (this.filter.size !== 10) {
-        this.getPayments(this.currentPage, this.filter)
+        this.getInvoices(this.currentPage, this.filter)
       }
     },
   },
@@ -87,19 +87,19 @@ export default {
     searchPayments(e) {
       console.log(e)
       this.filter.name = e
-      this.getPayments(this.currentPage, this.filter)
+      this.getInvoices(this.currentPage, this.filter)
     },
     getSome(e) {
       this.filter.size = e
-      this.getPayments(this.currentPage, this.filter)
+      this.getInvoices(this.currentPage, this.filter)
     },
-    async getPayments(page = 1, e = { size: 10, name: '' }) {
+    async getInvoices(page = 1, e = { size: 10, name: '' }) {
       this.busy = true
       this.filter = e
 
       this.currentPage = page
       try {
-        let response = await this.$api.patient.getPayments({
+        let response = await this.$api.patient.getInvoices({
           ...e,
           page: page,
         })
@@ -114,7 +114,7 @@ export default {
       }
     },
     refreshMe() {
-      this.getPayments(this.currentPage)
+      this.getInvoices(this.currentPage)
     },
   },
 }

@@ -22,6 +22,9 @@ export default axios => ({
     
     getPayments(params){
         return axios.$get(`/finance/payments/`, {params})
-    }
+    },
 
+    getInvoices(params){
+        return axios.$get(`finance/invoices/`, {params})
+    }
 });
