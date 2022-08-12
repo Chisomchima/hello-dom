@@ -71,16 +71,18 @@
                       class="class-details-data_value text-truncate"
                       ><slot :name="name" :value="val">{{ value }}</slot></span
                     >
-                    <span @click="check" class="badge-info p-1 text-12 rounded point">more</span>
                   </template>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme.length > 0">
-                <span class="class-details-data_label"> Payment scheme(s):</span>
-                  <span class="class-details-data_value text-truncate">
-                    {{data.payment_scheme[0].payer_scheme.name}}<span @click="check" class="badge-info p-1 text-12 rounded point ml-2">more</span>
+
+                <div class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme.length != 0">
+                <span class="class-details-data_label"> Payment scheme(s): {{data.payment_scheme[0].payer_scheme.name}}</span>
+                  <span v-if="data.payment_scheme.length > 0" class="class-details-data_value text-truncate">
+                    <span @click="check" class="badge-info p-1 text-12 rounded point ml-2">more</span>
                   </span>
                 </div>
+                
               </div>
+              
              
             </div>
             <div class="col-md-2">
