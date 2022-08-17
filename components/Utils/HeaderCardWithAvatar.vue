@@ -74,7 +74,7 @@
                   </template>
                 </div>
 
-                <div class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme != null">
+                <div class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme != null && data.payment_scheme.length > 0">
                 <span class="class-details-data_label"> Payment scheme(s): {{data.payment_scheme ? data.payment_scheme[0].payer_scheme.name : ''}}</span>
                   <span v-if="data.payment_scheme.length > 0" class="class-details-data_value text-truncate">
                     <span @click="check" class="badge-info p-1 text-12 rounded point ml-2">more</span>
