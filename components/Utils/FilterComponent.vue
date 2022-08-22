@@ -11,6 +11,18 @@
           justify-content-between
         "
       >
+       <div>
+         <div class="d-none">
+          <b-dropdown dropright no-caret id="dropdown-1" class="rounded-0">
+          <template #button-content>
+            <div class="col-md-2 text-14">Filter</div>
+          </template>
+          <b-dropdown-item>Uncleared</b-dropdown-item>
+          <b-dropdown-item>Cleared</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-item>All</b-dropdown-item>
+        </b-dropdown>
+         </div>
         <slot name="beforeActions"></slot>
         <div
           class="
@@ -59,6 +71,7 @@
             </select>
           </div>
         </div>
+       </div>
         <slot name="besidesViewBy"></slot>
 
         <div
@@ -145,8 +158,8 @@
           you don't have permission to view this information
         </h3>
         <p class="text-center paragraph-denied">
-          You do not have permission to access this information. please contact your
-          systems administrator.
+          You do not have permission to access this information. please contact
+          your systems administrator.
         </p>
       </div>
     </div>
