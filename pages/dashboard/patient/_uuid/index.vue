@@ -15,6 +15,7 @@
         'phone_number',
       ]"
       @edit="editRoute()"
+      @make_deposit="$bvModal.show('depositModal')"
       @payers="checkPayersDetails"
     >
     </UtilsHeaderCardWithAvatar>
@@ -71,6 +72,7 @@
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
+    <DashboardModalPatientDepositModal :data="data" />
   </div>
 </template>
 

@@ -11,16 +11,16 @@
           justify-content-between
         "
       >
-       <div>
-         <div class="d-none">
-          <b-dropdown dropright no-caret id="dropdown-1" class="rounded-0">
+       <div class="d-flex">
+         <div v-if="dropdownFilter" class="pr-3">
+          <b-dropdown dropleft no-caret id="dropdown-1" class="rounded-0">
           <template #button-content>
             <div class="col-md-2 text-14">Filter</div>
           </template>
-          <b-dropdown-item>Uncleared</b-dropdown-item>
-          <b-dropdown-item>Cleared</b-dropdown-item>
+          <b-dropdown-item @click="uncleared">Uncleared</b-dropdown-item>
+          <b-dropdown-item @click="cleared" >Cleared</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item>All</b-dropdown-item>
+          <b-dropdown-item @click="all" >All</b-dropdown-item>
         </b-dropdown>
          </div>
         <slot name="beforeActions"></slot>
@@ -204,6 +204,10 @@ export default Vue.extend({
       type: String,
       default: 'list',
     },
+    dropdownFilter: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     const visualization: visualize = this.visual
@@ -220,6 +224,18 @@ export default Vue.extend({
         this.visualization === 'grid' ? 'list' : ('grid' as visualize)
       this.$emit('visualization', this.visualization)
     },
+    uncleared(){
+      this.$emit('uncleared')
+      console.log('yay')
+    },
+    cleared(){
+      this.$emit('cleared')
+      console.log('yay')
+    },
+    all(){
+      this.$emit('all')
+      console.log('yay')
+    }
   },
 })
 </script>

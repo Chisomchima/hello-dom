@@ -22,6 +22,9 @@
                 class="dropdown-menu dropdown-menu-right"
                 aria-labelledby="dropdownMenuButton"
               >
+              <a class="dropdown-item" href="#" @click.prevent="$emit('make_deposit')"
+                  >Make deposit</a
+                >
                 <a class="dropdown-item" href="#" @click.prevent="$emit('edit')"
                   >Edit</a
                 >

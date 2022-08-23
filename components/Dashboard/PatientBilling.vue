@@ -1,19 +1,6 @@
 <template>
   <div>
-  <b-dropdown dropright no-caret id="dropdown-1" class="rounded-0">
-  <template #button-content>
-      <div class="col-md-2 text-14">Filter</div>
-    </template>
-    <b-dropdown-item @click="getUnclearedBill">Uncleared</b-dropdown-item>
-    <b-dropdown-item @click="getClearedBill">Cleared</b-dropdown-item>
-    <b-dropdown-divider></b-dropdown-divider>
-    <b-dropdown-item @click="getAllBills">All</b-dropdown-item>
-  </b-dropdown>
-    <UtilsFilterComponent
-      @search-input="searchBills"
-      @view-by="getSome($event)"
-     disable-visualization>
-      <div class="row align-items-center px-3 pb-1">
+    <div class="row align-items-center px-3 pb-1">
         <h5 class="mb-0">Total: ₦ {{ numberWithCommas(total) }}</h5>
       <div class="col-md-2">
         <BaseButton
@@ -23,6 +10,15 @@
         >
       </div>
     </div>
+    <UtilsFilterComponent
+      @uncleared="getUnclearedBill"
+      @cleared="getClearedBill"
+      @all="getAllBills"
+      @search-input="searchBills"
+      @view-by="getSome($event)"
+      :dropdownFilter='true'
+     disable-visualization>
+      
       <template>
         <TableComponent
           :fields="fields"
