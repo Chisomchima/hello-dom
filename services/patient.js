@@ -26,5 +26,8 @@ export default axios => ({
 
     getInvoices(params){
         return axios.$get(`finance/invoices/`, {params})
+    },
+    makeDeposit(id,body){
+        return axios.$post(`patient/patients/${id}/deposit/`,body)
     }
 });

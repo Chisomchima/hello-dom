@@ -41,10 +41,10 @@
       <UtilsCardTab title="Finance">
         <div class="d-flex justify-content-end pt-1">
           <div class="text-14 text-grey text-right p-2">
-            Deposit balance: {{ data.deposit ? data.deposit : '' }}
+            Deposit balance: {{ data.deposit !== null ? depositBalance : '' }}
           </div>
           <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
-            | Reserve balance: {{ data.reserve ? data.reserve : '' }}
+            | Reserve balance: {{ data.reserve !== null ? reserveBalance : '' }}
           </div>
         </div>
 
@@ -72,7 +72,7 @@
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
-    <DashboardModalPatientDepositModal :data="data" />
+    <DashboardModalPatientDepositModal @refresh="refresh" :data="data" />
   </div>
 </template>
 
@@ -94,6 +94,14 @@ export default {
       data: null,
     }
   },
+  computed: {
+    depositBalance(){
+      return this.data.deposit.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    },
+    reserveBalance(){
+      return this.data.reserve.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+  },
   methods: {
     editRoute() {
       this.$router.push({
@@ -102,6 +110,9 @@ export default {
           uuid: this.data.id,
         },
       })
+    },
+    refresh(){
+      this.$nuxt.refresh()
     },
     checkPayersDetails() {
       console.log('check')
