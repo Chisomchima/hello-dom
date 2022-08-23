@@ -47,7 +47,7 @@ export default {
             try {
                 let response = await this.$axios.$patch(
                     `laboratory/lab_panel_order/${this.labOrderPanel.id}/`,
-                    { status: this.cancelStatus, comments: this.comments },
+                    { status: 'CANCELLED', comments: this.comments },
                 );
                 this.$bvModal.hide("cancelRequest");
                 this.$emit('refresh')
