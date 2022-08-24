@@ -41,10 +41,10 @@
       <UtilsCardTab title="Finance">
         <div class="d-flex justify-content-end pt-1">
           <div class="text-14 text-grey text-right p-2">
-            Deposit: {{ data.deposit !== null ? depositBalance : '' }}
+            Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
           </div>
           <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
-            | Reserve: {{ data.reserve !== null ? reserveBalance : '' }}
+            | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
           </div>
         </div>
 
@@ -73,6 +73,7 @@
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
     <DashboardModalPatientDepositModal @refresh="refresh" :data="data" />
+    <DashboardModalConfirmDepositPrint />
   </div>
 </template>
 

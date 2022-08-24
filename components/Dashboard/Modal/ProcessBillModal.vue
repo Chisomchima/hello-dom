@@ -1,7 +1,7 @@
 <template>
   <ModalWrapper
     submit-title="Make Payment"
-    title="Confirm Payment"
+    title="Payment"
     @ok="ok()"
     @hide="clear()"
     size="lg"
@@ -10,7 +10,7 @@
       <div class="col-md-3">
         <span class="text-grey">UHID:</span> {{ nameData.uhid }}
       </div>
-      <div class="col-md-3">
+      <div class="col-md-6">
         <span class="text-grey">Name:</span>
         {{
           nameData.salutation +
@@ -21,7 +21,10 @@
         }}
       </div>
     </div>
-    <div class="d-flex align-items-center">
+    <div class="col-md-3 text-14 px-0">
+        <span class="text-grey">Gender:</span> {{ nameData.gender }}
+      </div>
+    <!-- <div class="d-flex align-items-center">
       <div class="class-details-data_label">Scheme(s):</div>
       <ul
         v-if="nameData.payment_scheme.length > 0"
@@ -40,7 +43,7 @@
         </li>
       </ul>
       <div class="text-14 ml-2" v-else>Nil</div>
-    </div>
+    </div> -->
     <hr />
     <div>
       <TableComponent :items="goods" :paginate="false" :fields="fields">
@@ -112,7 +115,7 @@
           </div>
           <div class="text-primary point ml-2">
             <svg
-              @click="removePaymentMethod(index)"
+              @click="removePaymentMethod(index, item)"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
               role="img"
@@ -129,7 +132,7 @@
             </svg>
           </div>
         </div>
-        <div class="text-primary ml-2">
+        <div class="text-primary mt-3 ml-2">
           <svg
             class="point"
             @click="addPaymentMethod"
@@ -195,22 +198,22 @@ export default {
         },
       ],
       fields: [
-        // {
-        //   key: 'bill_item_code',
-        //   label: 'Code',
-        // },
         {
           key: 'bill_source',
           label: 'Bill Source',
         },
         {
-          key: 'billed_to_type',
-          label: 'Payment type',
+          key: 'description',
+          label: 'Description',
         },
 
         {
           key: 'quantity',
           label: 'Qty',
+        },
+        {
+          key: 'cost',
+          label: 'Unit',
         },
         {
           key: 'selling_price',
@@ -231,6 +234,14 @@ export default {
       return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
   },
+  watch: {
+    payAmount(){
+      this.balance = this.total - this.payAmount
+    },
+    total(){
+      this.balance = this.total - this.payAmount
+    }
+  },
   async mounted() {
     this.balance = this.total
     console.log(
@@ -245,18 +256,11 @@ export default {
     console.log('Im mounted', data.results)
     this.paymentMethod = data.results
   },
-  watch: {
-    payAmount(){
-      this.balance = this.total - this.payAmount
-    },
-    total(){
-      this.balance = this.total - this.payAmount
-    }
-  },
+  
   methods: {
     ok() {
       let calc = 0
-      let arr = this.payments
+      const arr = this.payments
       console.log(arr)
       arr.map((el) => {
         calc += parseFloat(el.amount.replace(/,/g , ''))
@@ -287,15 +291,13 @@ export default {
 },
 
     handleQtyInput(newValue, index) {
-      if(newValue != ''){
+      if(newValue !== ''){
         this.payments[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
       }
       else{
         this.payments[index].amount = ''
       }
 
-
-      
       let calc = 0
       for(let x = 0; x < this.payments.length; x++){
       let cover = this.payments[x].amount
@@ -312,8 +314,17 @@ export default {
         amount: '',
       })
     },
-    removePaymentMethod(e) {
+    removePaymentMethod(e, item) {
       this.payments.splice(e, 1)
+      console.log(item)
+      let cover = item.amount
+      cover.toString().replace(/,/g , '')
+      cover = parseFloat(cover.replace(/,/g , ''))
+
+      
+      // console.log(this.payAmount)
+  
+      this.payAmount = this.payAmount - cover
     },
 
     removeItem(e) {
@@ -321,12 +332,12 @@ export default {
     },
 
     clear() {
-      ;(this.payments = [
+      this.payments = [
         {
           payment_method: null,
           amount: '',
         },
-      ]),
+      ]
       this.balance = 0
       this.payAmount = 0
         this.$emit('hide')

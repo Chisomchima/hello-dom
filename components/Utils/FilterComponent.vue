@@ -7,7 +7,7 @@
           filter-wrapper
           d-flex
           flex-wrap
-          align-items-center
+          align-items-end
           justify-content-between
         "
       >

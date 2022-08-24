@@ -18,6 +18,28 @@
       @view-by="getSome($event)"
       :dropdownFilter='true'
      disable-visualization>
+     <template #besidesViewBy>
+        <div class="d-flex">
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date from:</span>
+            <input
+              type="date"
+              class="form-control"
+              :max="maxDate"
+              v-model="filter.dateFrom"
+            />
+          </div>
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date to:</span>
+            <input
+              type="date"
+              class="form-control"
+              :min="minDate"
+              v-model="filter.dateTo"
+            />
+          </div>
+        </div>
+      </template>
       
       <template>
         <TableComponent
@@ -31,11 +53,6 @@
           :currentPage="currentPage"
           :totalRecords="totalRecords"
         >
-          <template #status="{ data }">
-            <span v-if="data.item.status === 'NS'" class="badge badge-info">{{
-              data.item.status
-            }}</span>
-          </template>
           <template #clear="{ data }">
             <label class="exercise-option-check blue-check">
               <input
@@ -58,6 +75,7 @@
           </template>
         </TableComponent>
         <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
+        <DashboardModalConfirmInvoicePrint />
       </template>
     </UtilsFilterComponent>
   </div>
@@ -94,9 +112,7 @@ export default {
         {
           key: 'transaction_date',
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
@@ -120,8 +136,19 @@ export default {
       filter: {
         size: 10,
         name: '',
-        status: ''
+        status: '',
+        dateFrom: '',
+        dateTo: ''
       },
+    }
+  },
+
+  watch: {
+    'filter.dateFrom'(){
+      this.pageChange(this.currentPage, this.filter)
+    },
+    'filter.dateTo'(){
+      this.pageChange(this.currentPage, this.filter)
     }
   },
   
@@ -142,6 +169,20 @@ export default {
       return total
     },
 
+    maxDate(){
+      let today = new Date
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
+    minDate(){
+      let today = new Date
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
     trigger() {
       if (this.items.length != 0) {
         return true
@@ -241,6 +282,7 @@ export default {
           text: 'Payment Successful',
         })
         this.$bvModal.hide('modal')
+        this.$bvModal.show('printInvoice?')
         this.pageChange(this.currentPage, this.filter)
         this.unClearedBill = []
       } catch (error) {

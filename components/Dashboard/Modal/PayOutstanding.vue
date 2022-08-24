@@ -1,21 +1,25 @@
 <template>
   <ModalWrapper
-    submit-title="Make deposit"
-    title="Make deposit"
-    id="depositModal"
+    submit-title="Make Payment"
+    title="Confirm Payment"
+    id="invoiceBalance"
     @ok="ok()"
     @hide="clear()"
-    size="md"
+    size="lg"
   >
-   <div class="p-2  text-14 d-flex justify-content-center">
+    <div class="p-2  text-14 d-flex justify-content-between">
       <p class="mb-0 text-info border p-2">
-        Total: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
+        Total: ₦ {{ total ? total.toLocaleString('en-US') : 0 }}
       </p>
+      <p class="mb-0 text-success border p-2">
+        Amount to pay: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
+      </p>
+      <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
     </div>
     <ValidationObserver ref="form">
-     <form>
+      <form>
         <div
-          v-for="(item, index) in deposit"
+          v-for="(item, index) in payments"
           :key="index"
           class="d-flex align-items-end"
         >
@@ -65,7 +69,7 @@
             </svg>
           </div>
         </div>
-        <div class="text-primary mt-4 ml-2">
+        <div class="text-primary mt-3 ml-2">
           <svg
             class="point"
             @click="addPaymentMethod"
@@ -100,7 +104,7 @@ export default {
       require: false,
       default: () => ({}),
     },
-    data: {
+    nameData: {
       type: Object,
       require: false,
       default: () => ({}),
@@ -110,32 +114,18 @@ export default {
       require: false,
       default: () => 0,
     },
-    goods: {
-      type: Array,
+    invoice: {
+      type: Object,
       require: false,
-      default: () => [],
+      default: () => {},
     },
-  },
-  watch:{
-    deposit:{
-    handler(newVal){
-      let arr = []
-      arr.push(newVal.amount)
-    },
-    payAmount(){
-      
-    },
-}
   },
   data() {
     return {
-      dataObject: {
-        amount: '',
-      },
       payAmount: 0,
       balance: 0,
       paymentMethod: [],
-      deposit: [
+      payments: [
         {
           payment_method: null,
           amount: '',
@@ -144,65 +134,88 @@ export default {
     }
   },
   computed: {
-    formattedQty() {
-      // Add the commas back to the string
-      const qty = this.dataObject.amount + ''
-      console.log(qty)
-      return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    
+  },
+  watch: {
+    payAmount(){
+      this.balance = this.invoice.balance - this.payAmount
     },
+    total(){
+      this.balance = this.invoice.balance - this.payAmount
+    }
   },
   async mounted() {
+    if(this.invoice){
+        this.balance = this.invoice.balance
+    }
+    else{
+        this.balance
+    }
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
     })
     this.paymentMethod = data.results
   },
+  
   methods: {
-    async ok() {
-      let arr = this.deposit
-         arr.map((el) => {
+    ok() {
+      let calc = 0
+      const arr = this.payments
+      console.log(arr)
+      arr.map((el) => {
+        calc += parseFloat(el.amount.replace(/,/g , ''))
+      })
+
+      if (calc > this.invoice.balance) {
+        this.$toast({
+          type: 'info',
+          text: `Payment can not be higher than total price`,
+        })
+      } else if(calc === this.invoice.balance) {
+        arr.map((el) => {
+          el.amount.toString().replace(/,/g , '')
           el.amount = el.amount.toString().replace(/,/g , '')
-          console.log(el.amount)
       })
-      await this.$api.patient.makeDeposit(this.$route.params.uuid, {
-        deposit: arr
-      })
-      this.$toast({
-        type: 'success',
-        text: 'Payment Successful'
-      })
-      this.$emit('refresh')
-      this.$bvModal.hide('depositModal')
-      this.$bvModal.show('printDepositSlip')
+
+          this.$emit('ok', arr)
+      }
+      else if(calc < this.invoice.balance){
+         this.$toast({
+          type: 'info',
+          text: `Payment is less total amount`,
+        })
+      }
     },
     numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    },
+},
+
     handleQtyInput(newValue, index) {
-      if(newValue != ''){
-        this.deposit[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
+      if(newValue !== ''){
+        this.payments[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
       }
       else{
-        this.deposit[index].amount = ''
+        this.payments[index].amount = ''
       }
 
       let calc = 0
-      for(let x = 0; x < this.deposit.length; x++){
-      let cover = this.deposit[x].amount
+      for(let x = 0; x < this.payments.length; x++){
+      let cover = this.payments[x].amount
       cover.toString().replace(/\D/g, '')
       cover = parseFloat(cover.replace(/,/g , ''))
       calc += cover
       this.payAmount = calc
       }
+      
     },
     addPaymentMethod() {
-      this.deposit.push({
+      this.payments.push({
         payment_method: null,
         amount: '',
       })
     },
     removePaymentMethod(e, item) {
-      this.deposit.splice(e, 1)
+      this.payments.splice(e, 1)
       console.log(item)
       let cover = item.amount
       cover.toString().replace(/,/g , '')
@@ -219,12 +232,12 @@ export default {
     },
 
     clear() {
-      ;(this.deposit = [
+      this.payments = [
         {
           payment_method: null,
           amount: '',
         },
-      ]),
+      ]
       this.balance = 0
       this.payAmount = 0
         this.$emit('hide')
