@@ -29,5 +29,8 @@ export default axios => ({
     },
     makeDeposit(id,body){
         return axios.$post(`patient/patients/${id}/deposit/`,body)
+    },
+    payOutstanding(id, body){
+        return axios.$put(`/finance/invoices/${id}/pay/`, body)
     }
 });

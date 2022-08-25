@@ -47,8 +47,8 @@
         </TableComponent>
       </UtilsFilterComponent>
     </div>
-    <DashboardModalInvoiceDetails stacking :nameData="data" :invoice='details'/>
-    <DashboardModalPayOutstanding :invoice='invoice'/>
+    <DashboardModalInvoiceDetails :nameData="data" :invoice="details"/>
+    <DashboardModalPayOutstanding :invoice="details"/>
   </div>
 </template>
 
@@ -85,8 +85,8 @@ export default {
           sortable: true,
         },
         {
-          key: 'scheme',
-          label: 'Scheme',
+          key: 'scheme_type',
+          label: 'Scheme type',
           sortable: true,
         },
         {

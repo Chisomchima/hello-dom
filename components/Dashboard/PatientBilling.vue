@@ -10,6 +10,9 @@
         >
       </div>
     </div>
+    <div>
+      <!-- <button @click="$bvModal.show('printInvoice?')" class="btn btn-outline-primary btn-sm">Print</button> -->
+    </div>
     <UtilsFilterComponent
       @uncleared="getUnclearedBill"
       @cleared="getClearedBill"
@@ -74,10 +77,10 @@
             }}</span>
           </template>
         </TableComponent>
-        <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
-        <DashboardModalConfirmInvoicePrint />
       </template>
     </UtilsFilterComponent>
+    <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
+    <DashboardModalConfirmInvoicePrint :reciept="template" />
   </div>
 </template>
 
@@ -102,6 +105,7 @@ export default {
       pages: 1,
       currentPage: 1,
       totalRecords: 0,
+      template: {},
       items: [
       ],
       fields: [
@@ -272,11 +276,12 @@ export default {
         if (unClearedList.length > 0) {
           billID = unClearedList.map((item) => item.id)
         }
-        await this.$api.finance.makePayment({
+        let response = await this.$api.finance.makePayment({
           bills: billID,
           patient: this.data.id,
           payments: info,
         })
+        this.template = response
         this.$toast({
           type: 'success',
           text: 'Payment Successful',

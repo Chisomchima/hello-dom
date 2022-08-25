@@ -1,6 +1,7 @@
 <template>
   <ModalWrapper
     submit-title="Make Payment"
+     :stacking="false"
     title="Confirm Payment"
     id="invoiceBalance"
     @ok="ok()"
@@ -19,7 +20,7 @@
     <ValidationObserver ref="form">
       <form>
         <div
-          v-for="(item, index) in payments"
+          v-for="(item, index) in invoices"
           :key="index"
           class="d-flex align-items-end"
         >
@@ -109,11 +110,11 @@ export default {
       require: false,
       default: () => ({}),
     },
-    total: {
-      type: Number,
-      require: false,
-      default: () => 0,
-    },
+    // total: {
+    //   type: Number,
+    //   require: false,
+    //   default: () => 0,
+    // },
     invoice: {
       type: Object,
       require: false,
@@ -124,8 +125,9 @@ export default {
     return {
       payAmount: 0,
       balance: 0,
+      total: null,
       paymentMethod: [],
-      payments: [
+      invoices: [
         {
           payment_method: null,
           amount: '',
@@ -138,18 +140,16 @@ export default {
   },
   watch: {
     payAmount(){
-      this.balance = this.invoice.balance - this.payAmount
+      this.balance = this.total - this.payAmount
     },
     total(){
-      this.balance = this.invoice.balance - this.payAmount
+      this.balance = this.total - this.payAmount
     }
   },
   async mounted() {
     if(this.invoice){
+      console.log(this.invoice)
         this.balance = this.invoice.balance
-    }
-    else{
-        this.balance
     }
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
@@ -158,28 +158,31 @@ export default {
   },
   
   methods: {
-    ok() {
+    async ok() {
       let calc = 0
-      const arr = this.payments
+      const arr = this.invoices
       console.log(arr)
       arr.map((el) => {
         calc += parseFloat(el.amount.replace(/,/g , ''))
       })
 
-      if (calc > this.invoice.balance) {
+      if (calc > this.invoices.balance) {
         this.$toast({
           type: 'info',
           text: `Payment can not be higher than total price`,
         })
-      } else if(calc === this.invoice.balance) {
+      } else if(calc === this.invoices.balance) {
         arr.map((el) => {
           el.amount.toString().replace(/,/g , '')
           el.amount = el.amount.toString().replace(/,/g , '')
       })
 
           this.$emit('ok', arr)
+          // let response = await this.$api.patient.payOutstanding(
+          //   this.invoice.id, 
+          // )
       }
-      else if(calc < this.invoice.balance){
+      else if(calc < this.invoices.balance){
          this.$toast({
           type: 'info',
           text: `Payment is less total amount`,
@@ -192,15 +195,15 @@ export default {
 
     handleQtyInput(newValue, index) {
       if(newValue !== ''){
-        this.payments[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
+        this.invoices[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
       }
       else{
-        this.payments[index].amount = ''
+        this.invoices[index].amount = ''
       }
 
       let calc = 0
-      for(let x = 0; x < this.payments.length; x++){
-      let cover = this.payments[x].amount
+      for(let x = 0; x < this.invoices.length; x++){
+      let cover = this.invoices[x].amount
       cover.toString().replace(/\D/g, '')
       cover = parseFloat(cover.replace(/,/g , ''))
       calc += cover
@@ -209,20 +212,17 @@ export default {
       
     },
     addPaymentMethod() {
-      this.payments.push({
+      this.invoices.push({
         payment_method: null,
         amount: '',
       })
     },
     removePaymentMethod(e, item) {
-      this.payments.splice(e, 1)
+      this.invoices.splice(e, 1)
       console.log(item)
       let cover = item.amount
       cover.toString().replace(/,/g , '')
       cover = parseFloat(cover.replace(/,/g , ''))
-
-      
-      // console.log(this.payAmount)
   
       this.payAmount = this.payAmount - cover
     },
@@ -232,7 +232,7 @@ export default {
     },
 
     clear() {
-      this.payments = [
+      this.invoices = [
         {
           payment_method: null,
           amount: '',
