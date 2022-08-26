@@ -3,7 +3,7 @@
     submit-title="Yes"
     cancelText="No"
     title="Print payment slip"
-    id="printInvoice?"
+    id="printInvoice"
     @ok="ok()"
     @hide="$bvModal.hide('printInvoice?')"
     size="md"

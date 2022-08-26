@@ -80,7 +80,7 @@
       </template>
     </UtilsFilterComponent>
     <DashboardModalProcessBillModal :goods="unClearedBill" :total="total" :nameData="data" @ok="payment($event)" @removedItem="deleteGoods($event)" />
-    <DashboardModalConfirmInvoicePrint :reciept="template" />
+    <DashboardModalConfirmInvoicePrint :data="data" :reciept="template" />
   </div>
 </template>
 

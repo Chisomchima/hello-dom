@@ -164,7 +164,7 @@ export default {
           el.amount = el.amount.toString().replace(/,/g , '')
           console.log(el.amount)
       })
-      await this.$api.patient.makeDeposit(this.$route.params.uuid, {
+      let response = await this.$api.patient.makeDeposit(this.$route.params.uuid, {
         deposit: arr
       })
       this.$toast({
@@ -172,8 +172,8 @@ export default {
         text: 'Payment Successful'
       })
       this.$emit('refresh')
+      this.$emit('payload', response)
       this.$bvModal.hide('depositModal')
-      this.$bvModal.show('printDepositSlip')
     },
     numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");

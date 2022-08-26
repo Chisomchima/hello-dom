@@ -72,8 +72,8 @@
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
-    <DashboardModalPatientDepositModal @refresh="refresh" :data="data" />
-    <DashboardModalConfirmDepositPrint />
+    <DashboardModalPatientDepositModal @payload="printDepositSlip($event)" @refresh="refresh" :data="data" />
+    <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
   </div>
 </template>
 
@@ -93,6 +93,7 @@ export default {
     return {
       tabs: true,
       data: null,
+      template: {}
     }
   },
   computed: {
@@ -111,6 +112,10 @@ export default {
           uuid: this.data.id,
         },
       })
+    },
+    printDepositSlip(e){
+      this.template = e
+      this.$bvModal.show('printDepositSlip')
     },
     refresh(){
       this.$nuxt.refresh()
