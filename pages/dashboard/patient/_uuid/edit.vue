@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BackwardNavigation />
     <div class="row">
       <div class="col-12 mb-3">
         <div class="d-flex justify-content-between">
