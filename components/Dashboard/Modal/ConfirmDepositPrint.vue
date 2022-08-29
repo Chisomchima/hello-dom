@@ -13,36 +13,8 @@
         <p class="text-info text-14 text-center p-2">Do you want to print the deposit slip for this transaction ?</p>
     </div>
 
-      <div class="d-none">
-           <div style="width: 50rem" id="text" class="ticket">
-            <h2 style="margin-bottom: 0rem; width: 20rem; text-align: center">Reciept</h2>
-            <p style="width: 20rem; margin-bottom: 0rem">
-                Transaction Date: {{transactionDate}}
-                <br>
-                Patient name: {{data.firstname + " " + data.middlename + " " + data.lastname}}
-                <br>
-                UHID: <span style="font-size: 13px">{{data.uhid}}</span>
-                </p>
-
-              <h3 style="font-size: 1.2rem; margin: 0.3rem; width: 20rem;">Payment lines</h3>
-            <table v-if="reciept" style="border: 1px solid black; border-collapse: collapse; width: 20rem; text-align: center">
-                <thead>
-                    <tr style="text-align: center;" >
-                        <th style="border: 1px solid black;">Method</th>
-                        <th style="border: 1px solid black;">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item, index) in reciept.payment_details" :key="index" style="text-align: center" >
-                        <td  style="border: 1px solid black;" >{{item.payment_method ? item.payment_method.name : ''}}</td>
-                        <td style="border: 1px solid black;">{{item.amount ? item.amount.toLocaleString('en-US') : ''}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div v-if="reciept">
-             <p style="text-align: end; width: 19rem;">Total: {{calculations.toLocaleString('en-US')}}</p>
-            </div>
-        </div>
+    <div class="d-none">
+        <DashboardPrintOutReciept :reciept="reciept" :data="data"/>
     </div>
   </ModalWrapper>
 </template>
@@ -100,6 +72,15 @@ export default {
       if(this.reciept.created_at){
         return DateTime.fromISO(this.reciept.created_at).toFormat('yyyy-LL-dd T')
       }
+    },
+    address(){
+      return process.env.ADDRESS
+    },
+    companyName(){
+      return process.env.COMPANY_NAME
+    },
+    printLayout(){
+      return false
     }
   },
   async mounted() {
