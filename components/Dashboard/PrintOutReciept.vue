@@ -50,6 +50,11 @@ export default {
       require: false,
       default: () => ({}),
     },
+    printLayout: {
+      type: Boolean,
+      require: false,
+      default: false
+    }
   },
   computed: {
     transactionDate(){
@@ -63,9 +68,6 @@ export default {
     companyName(){
       return process.env.COMPANY_NAME
     },
-    printLayout(){
-      return true
-    }
   },
   methods: {
     numberWithCommas(x) {

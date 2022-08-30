@@ -9,12 +9,26 @@
     size="md"
   >
     <div>
-        <h5 class="text-center">Please confirm this action</h5>
-        <p class="text-info text-14 text-center p-2">Do you want to print the deposit slip for this transaction ?</p>
+      <h5 class="text-center">Please confirm this action</h5>
+      <p class="text-info text-14 text-center p-2">
+        Do you want to print the deposit slip for this transaction ?
+      </p>
+      <div class="d-flex justify-content-center">
+        <div class="col-md-6 mb-5">
+        <ValidationProviderWrapper name="Print format" :rules="['']">
+        <VSelect
+          v-model="format"
+          label="name"
+          :options="['A4', 'P.O.S Slip']"
+        ></VSelect>
+      </ValidationProviderWrapper>
+      </div>
+      </div>
+      
     </div>
 
     <div class="d-none">
-        <DashboardPrintOutReciept :reciept="reciept" :data="data"/>
+      <DashboardPrintOutReciept :reciept="reciept" :data="data" :printLayout="format_prop" />
     </div>
   </ModalWrapper>
 </template>
@@ -49,6 +63,8 @@ export default {
       dataObject: {
         amount: '',
       },
+      format: 'A4',
+      format_prop: false,
       payAmount: 0,
       calculations: 0,
       balance: 0,
@@ -68,20 +84,19 @@ export default {
       console.log(qty)
       return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
-    transactionDate(){
-      if(this.reciept.created_at){
-        return DateTime.fromISO(this.reciept.created_at).toFormat('yyyy-LL-dd T')
+    transactionDate() {
+      if (this.reciept.created_at) {
+        return DateTime.fromISO(this.reciept.created_at).toFormat(
+          'yyyy-LL-dd T'
+        )
       }
     },
-    address(){
+    address() {
       return process.env.ADDRESS
     },
-    companyName(){
+    companyName() {
       return process.env.COMPANY_NAME
     },
-    printLayout(){
-      return false
-    }
   },
   async mounted() {
     const data = await this.$api.finance_settings.getPaymentMethods({
@@ -99,6 +114,14 @@ export default {
       })
       this.calculations = calc
     },
+    format(){
+      if(this.format === 'A4'){
+        this.format_prop = false
+      }
+      else if(this.format === 'P.O.S Slip'){
+        this.format_prop = true
+      }
+    }
   },
   methods: {
     async ok() {
@@ -116,7 +139,7 @@ export default {
       return true
     },
     numberWithCommas(x) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+      return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
     },
   },
 }
