@@ -11,67 +11,75 @@
           justify-content-between
         "
       >
-       <div class="d-flex">
-         <div v-if="dropdownFilter" class="pr-3">
-          <b-dropdown dropleft no-caret id="dropdown-1" class="rounded-0">
-          <template #button-content>
-            <div class="col-md-2 text-14">Filter</div>
-          </template>
-          <b-dropdown-item @click="uncleared">Uncleared</b-dropdown-item>
-          <b-dropdown-item @click="cleared" >Cleared</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item @click="all" >All</b-dropdown-item>
-        </b-dropdown>
-         </div>
-        <slot name="beforeActions"></slot>
-        <div
-          class="
-            d-flex
-            align-items-center
-            justify-content-between justify-content-md-start
-            flex-wrap
-            my-3 my-lg-0
-          "
-        >
-          <div class="mr-2 w-100">
-            <div v-if="!disableVisualization" class="display-toggle">
-              <div
-                class="icon-wrapper"
-                :class="[visualization === 'grid' ? 'active' : '']"
-                @click="toggleVisualization()"
+        <div class="d-flex">
+          <div v-if="dropdownFilter" class="pr-3">
+            <b-dropdown dropleft no-caret id="dropdown-1" class="rounded-0">
+              <template #button-content>
+                <div class="col-md-2 text-14">Filter</div>
+              </template>
+              <!-- <b-dropdown-item @click="uncleared">Uncleared</b-dropdown-item>
+              <b-dropdown-item @click="cleared">Cleared</b-dropdown-item> -->
+
+              <b-dropdown-item
+                v-for="(item, index) in dropDownOptions"
+                :key="index"
               >
-                <b-icon icon="grid"></b-icon>
+              
+                <div class="text-capitalize" @click="$emit('dropdown', item);">{{
+                  item
+                }}</div>
+              </b-dropdown-item>
+            </b-dropdown>
+          </div>
+          <slot name="beforeActions"></slot>
+          <div
+            class="
+              d-flex
+              align-items-center
+              justify-content-between justify-content-md-start
+              flex-wrap
+              my-3 my-lg-0
+            "
+          >
+            <div class="mr-2 w-100">
+              <div v-if="!disableVisualization" class="display-toggle">
+                <div
+                  class="icon-wrapper"
+                  :class="[visualization === 'grid' ? 'active' : '']"
+                  @click="toggleVisualization()"
+                >
+                  <b-icon icon="grid"></b-icon>
+                </div>
+                <div
+                  class="icon-wrapper"
+                  :class="[visualization === 'list' ? 'active' : '']"
+                  @click="toggleVisualization()"
+                >
+                  <b-icon icon="card-list"></b-icon>
+                </div>
+                <slot name="besidesFilterBy"></slot>
               </div>
-              <div
-                class="icon-wrapper"
-                :class="[visualization === 'list' ? 'active' : '']"
-                @click="toggleVisualization()"
+            </div>
+
+            <div v-if="!disablePagination" class="records-count">
+              <span>View by: </span>
+              <select
+                class="records-count"
+                @change="$emit('view-by', $event.target.value)"
               >
-                <b-icon icon="card-list"></b-icon>
-              </div>
-              <slot name="besidesFilterBy"></slot>
+                <option
+                  v-for="(option, optionIndex) in options"
+                  :key="optionIndex"
+                  :value="option"
+                >
+                  {{ option }} Records
+                </option>
+                <option value="9999">Infinite Records</option>
+                <option value="" disabled selected>Default Records</option>
+              </select>
             </div>
           </div>
-
-          <div v-if="!disablePagination" class="records-count">
-            <span>View by: </span>
-            <select
-              class="records-count"
-              @change="$emit('view-by', $event.target.value)"
-            >
-              <option
-                v-for="(option, optionIndex) in options"
-                :key="optionIndex"
-                :value="option"
-              >
-                {{ option }} Records
-              </option>
-              <option value="9999">Infinite Records</option>
-              <option value="" disabled selected>Default Records</option>
-            </select>
-          </div>
         </div>
-       </div>
         <slot name="besidesViewBy"></slot>
 
         <div
@@ -206,8 +214,12 @@ export default Vue.extend({
     },
     dropdownFilter: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    dropDownOptions: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     const visualization: visualize = this.visual
@@ -224,18 +236,18 @@ export default Vue.extend({
         this.visualization === 'grid' ? 'list' : ('grid' as visualize)
       this.$emit('visualization', this.visualization)
     },
-    uncleared(){
+    uncleared() {
       this.$emit('uncleared')
       console.log('yay')
     },
-    cleared(){
+    cleared() {
       this.$emit('cleared')
       console.log('yay')
     },
-    all(){
+    all() {
       this.$emit('all')
       console.log('yay')
-    }
+    },
   },
 })
 </script>

@@ -116,7 +116,7 @@
           ">
                     <div class="px-2">
                         <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
+                            <p @click="gotoPatientProfile" class="text-14 mb-0 text-grey point signal">
                                 <b>UHID:</b> {{ patientData.uhid }}
                             </p>
                         </div>
@@ -349,6 +349,15 @@ export default {
       this.getPatientRecord()
     },
 
+    gotoPatientProfile(){
+      this.$router.push({
+          name: 'dashboard-patient-uuid',
+          params: {
+            uuid: this.consultationData.patient.id,
+          },
+        })
+    },
+
     signAndCloseEnc() {
       this.$bvModal.show('sign')
     },
@@ -477,6 +486,9 @@ export default {
 li {
   cursor: pointer;
   border: 0.5px solid #fff;
+}
+.signal:hover{
+  color: $COLOR_THREE
 }
 </style>
 

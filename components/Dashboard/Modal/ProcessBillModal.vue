@@ -68,14 +68,20 @@
               /></svg
           ></span>
         </template>
+         <template #is_reserved="{ data }">
+          <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded">R</span>
+        </template>
       </TableComponent>
     </div>
     <div class="p-2  text-14 d-flex justify-content-between">
       <p class="mb-0 text-info border p-2">
         Total: ₦ {{ total ? total.toLocaleString('en-US') : 0 }}
       </p>
+      <p class="mb-0 text-warning border p-2">
+        Reserved: ₦ {{ reserved ? reserved.toLocaleString('en-US') : 0 }}
+      </p>
       <p class="mb-0 text-success border p-2">
-        Amount to pay: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
+        Amount paid: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
       </p>
       <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
     </div>
@@ -177,11 +183,21 @@ export default {
       require: false,
       default: () => 0,
     },
+    totalPaid: {
+      type: Number,
+      require: false,
+      default: () => 0,
+    },
     goods: {
       type: Array,
       require: false,
       default: () => [],
     },
+    reserved: {
+      type: Number,
+      require: false,
+      default: () => 0,
+    }
   },
   data() {
     return {
@@ -198,6 +214,11 @@ export default {
         },
       ],
       fields: [
+        {
+          key: 'is_reserved',
+          label: '',
+          sortable: false
+        },
         {
           key: 'bill_source',
           label: 'Bill Source',
@@ -236,10 +257,10 @@ export default {
   },
   watch: {
     payAmount(){
-      this.balance = this.total - this.payAmount
+      this.balance = this.total - (this.payAmount + this.reserved)
     },
     total(){
-      this.balance = this.total - this.payAmount
+      this.balance = this.total - (this.payAmount + this.reserved)
     }
   },
   async mounted() {
@@ -266,12 +287,15 @@ export default {
         calc += parseFloat(el.amount.replace(/,/g , ''))
       })
 
-      if (calc > this.total) {
+      console.log('Payments', calc)
+      console.log('due', this.totalPaid)
+
+      if (calc > this.totalPaid) {
         this.$toast({
           type: 'info',
           text: `Payment can not be higher than total price`,
         })
-      } else if(calc === this.total) {
+      } else if(calc === this.totalPaid) {
         arr.map((el) => {
           el.amount.toString().replace(/,/g , '')
           el.amount = el.amount.toString().replace(/,/g , '')
@@ -279,7 +303,7 @@ export default {
 
           this.$emit('ok', arr)
       }
-      else if(calc < this.total){
+      else if(calc < this.totalPaid){
          this.$toast({
           type: 'info',
           text: `Payment is less total amount`,

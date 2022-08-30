@@ -150,6 +150,9 @@
       <template #cell(reference_range)="item">
         <slot name="reference_range" :data="item"></slot>
       </template>
+      <template #cell(is_reserved)="item">
+        <slot name="is_reserved" :data="item"></slot>
+      </template>
 
       <template #cell(submissions)="data">
         <slot name="submissions" :data="data">{{ data.value }}</slot>

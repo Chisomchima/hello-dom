@@ -94,14 +94,20 @@ export default {
       details: null,
       fields: [
         {
-          key: 'created_at',
+          key: 'confirmed_at',
+          label: 'Date',
           formatter: (value) => {
             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
           key: 'inv_id',
-          label: 'Invoice ID',
+          label: 'Invoice No.',
+          sortable: true,
+        },
+        {
+          key: 'payer_scheme',
+          label: 'Scheme',
           sortable: true,
         },
         {
@@ -205,6 +211,7 @@ export default {
     },
     viewInvoice(e) {
       this.$bvModal.show('invoiceModal')
+      console.log(e)
       this.details = e
     },
     searchPayments(e) {

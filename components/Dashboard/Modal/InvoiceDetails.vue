@@ -24,6 +24,11 @@
           nameData.lastname
         }}
       </div>
+      <div class="col-md-3">
+        <div class="d-flex justify-content-end">
+          <span class="badge-warning rounded p-1 text-white">Paid</span>
+        </div>
+      </div>
     </div>
 
      <div class="col-md-3 text-14 px-0">
@@ -52,8 +57,11 @@
     </div>
     <hr />
 
-    <div class="d-flex justify-content-end align-items-center mb-2" v-if="invoice">
-    <svg class="text-success mx-2 point" xmlns="http://www.w3.org/2000/svg" width="25" height="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20"><path fill="currentColor" d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5ZM6 5h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5Zm-1 8v-1.5A1.5 1.5 0 0 1 6.5 10h7a1.5 1.5 0 0 1 1.5 1.5V13h1.5a.5.5 0 0 0 .5-.5v-5A1.5 1.5 0 0 0 15.5 6h-11A1.5 1.5 0 0 0 3 7.5v5a.5.5 0 0 0 .5.5H5Zm1.5-2a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7Z"/></svg>
+    <div class="d-flex justify-content-between align-items-center mb-2" v-if="invoice">
+      <p class="mb-0">Total: {{numberWithCommas(totalBills)}}</p>
+      <p class="mb-0">Balance: {{numberWithCommas(invoice.balance)}}</p>
+      <div>
+         <svg class="text-success mx-2 point" xmlns="http://www.w3.org/2000/svg" width="25" height="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20"><path fill="currentColor" d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5ZM6 5h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5Zm-1 8v-1.5A1.5 1.5 0 0 1 6.5 10h7a1.5 1.5 0 0 1 1.5 1.5V13h1.5a.5.5 0 0 0 .5-.5v-5A1.5 1.5 0 0 0 15.5 6h-11A1.5 1.5 0 0 0 3 7.5v5a.5.5 0 0 0 .5.5H5Zm1.5-2a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7Z"/></svg>
       <div
         v-if="invoice.status !== 'PAID'"
         
@@ -65,6 +73,7 @@
           Make Payment
         </button>
       </div>
+      </div>
     </div>
 
     <TabView class="tabview-custom">
@@ -74,6 +83,11 @@
         </template>
         <div v-if="invoice">
           <TableComponent :items="invoice.bill_lines" :fields="bill_fields" :paginate="false">
+            <template #is_reserved="{ data }">
+            <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded"
+              >R</span
+            >
+          </template>
           </TableComponent>
         </div>
       </TabPanel>
@@ -121,7 +135,12 @@ export default {
       ],
       bill_fields: [
         {
+          key: 'is_reserved',
+          label: '',
+        },
+        {
           key: 'transaction_date',
+          label: 'Date',
           formatter: (value) => {
             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
@@ -142,6 +161,7 @@ export default {
       ],
       payment_fields: [
         {
+          label: 'Date',
           key: 'created_at',
           formatter: (value) => {
             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
@@ -180,6 +200,13 @@ export default {
     total() {
       this.balance = this.total - this.payAmount
     },
+    'invoice.bill_lines'(){
+      let calc = 0
+      this.invoice.bill_lines.forEach((el) => {
+        calc += Number.parseFloat(el.selling_price)
+      })
+      this.totalBills = calc
+    }
   },
   //   async mounted() {
 
