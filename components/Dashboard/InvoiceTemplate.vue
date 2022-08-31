@@ -1,9 +1,9 @@
 <template>
   <div>
-     <div :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" id="text" class="ticket">
-        <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin: 0rem; text-align: center; padding-top: 1.4rem">{{companyName}}</h3>
-        <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin-bottom: 0rem">{{address}}</p>
-         <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin-bottom: 0rem; text-align: center">
+     <div style="font-size: 16px;" :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" id="text" class="ticket">
+        <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin: 0rem; text-align: center; padding-top: 1.4rem; font-size: 20px;">{{companyName}}</h3>
+        <b><p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin-bottom: 0rem; font-size: 16px;">{{address}}</p></b>
+         <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin-bottom: 0rem; text-align: center; font-size: 16px;">
           Invoice
         </h3>
         <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="margin-bottom: 1rem; font-size: 16px">
@@ -19,10 +19,11 @@
           style="
             border-collapse: collapse;
             text-align: center;
+            font-size: 16px;
           "
         >
           <thead>
-            <tr style="text-align: center; border-bottom: 1px solid black">
+            <tr style="text-align: center; border-bottom: 1px solid black; font-size: 16px;">
             <th >Description</th>
               <th>Qty</th>
               <th>Unit</th>
@@ -33,7 +34,7 @@
             <tr
               v-for="(item, index) in reciept.bill_lines"
               :key="index"
-              style="text-align: center; border-bottom: 1px solid black; height: 30px"
+              style="text-align: center; border-bottom: 1px solid black; height: 30px; font-size: 16px;"
             >
             <td :style="!printLayout ? 'border: 1px solid black' : ''">{{ item.description }}</td>
               <td :style="!printLayout ? 'border: 1px solid black' : ''">{{ item.quantity }}</td>
@@ -46,11 +47,11 @@
             </tr>
           </tbody>
         </table>
-        <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="text-align: end;">
+        <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="text-align: end; font-size: 16px;">
           Total: {{numberWithCommas(reciept.total_charge)}}
         </p>
 
-        <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="font-size: 1.2rem; margin: 0.3rem;">
+        <h3 :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="font-size: 1.2rem; margin: 0.3rem; font-size: 16px;">
           Payment(s)
         </h3>
         <table
@@ -58,10 +59,11 @@
           style="
             border-collapse: collapse;
             text-align: center;
+            font-size: 16px;
           "
         >
           <thead>
-            <tr style="text-align: center; border-bottom: 1px solid black;">
+            <tr style="text-align: center; border-bottom: 1px solid black; font-size: 16px;">
             <th>Date</th>
               <th >Method</th>
               <th >Type</th>
@@ -72,7 +74,7 @@
             <tr
               v-for="(item, index) in reciept.payment_lines"
               :key="index"
-              style="text-align: center; border-bottom: 1px solid black; height: 30px"
+              style="text-align: center; border-bottom: 1px solid black; height: 30px; font-size: 16px;"
             >
             <td :style="!printLayout ? 'border: 1px solid black' : ''">
                 {{
@@ -93,12 +95,12 @@
             </tr>
           </tbody>
         </table>
-        <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="text-align: end;">
+        <p :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="text-align: end; font-size: 16px;">
           Total: {{ numberWithCommas(reciept.total_charge) }}
         </p>
-        <div :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="display: flex; justify-content: space-between">
-            <p>Amount paid: {{numberWithCommas(reciept.paid_amount)}}</p>
-            <p>Balance: {{numberWithCommas(reciept.balance)}}</p>
+        <div :style="printLayout ? {'width': '20rem'} : {'width': '48rem'}" style="display: flex; justify-content: space-between; font-size: 16px;">
+            <p style="font-size: 16px;">Amount paid: {{numberWithCommas(reciept.paid_amount)}}</p>
+            <p style="font-size: 16px;">Balance: {{numberWithCommas(reciept.balance)}}</p>
         </div>
       </div>
   </div>
