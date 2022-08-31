@@ -1,5 +1,6 @@
 <template>
   <div>
+  <h3 class="page-heading">Reports</h3>
     <div class="row">
       <div
         v-for="(card, index) in cards"
@@ -44,39 +45,24 @@ export default {
     return {
       cards: [
         {
-          name: 'Patient Records',
-          icon: 'fas fa-notes-medical',
-          route: '/dashboard/patient',
+          name: 'Encounter',
+          icon: 'fa fa-file',
+          route: '/dashboard/reports/encounter',
         },
         {
-          name: 'OPD',
-          icon: 'fas fa-user-md',
-          route: '/dashboard/opd',
+          name: 'Patient',
+          icon: 'fa fa-file',
+          route: '/dashboard/reports/patient/',
         },
         {
           name: 'Laboratory',
-          icon: 'fas fa-vial',
-          route: '/dashboard/laboratory/',
+          icon: 'fa fa-file',
+          route: '/dashboard/reports/laboratory',
         },
         {
           name: 'Imaging',
-          icon: 'fas fa-x-ray',
-          route: '/dashboard/imaging/',
-        },
-        {
-          name: 'Reports',
-          icon: 'fas fa-file',
-          route: '/dashboard/reports/',
-        },
-        {
-          name: 'Customer Service Officer',
-          icon: 'fas fa-list-ol',
-          route: '/dashboard/cso/',
-        },
-        {
-          name: 'Settings',
-          icon: 'fas fa-cog',
-          route: '/dashboard/settings/',
+          icon: 'fa fa-file',
+          route: '/dashboard/reports/imaging',
         },
       ],
     }

@@ -86,7 +86,7 @@
       <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
     </div>
     <ValidationObserver ref="form">
-      <form>
+      <form v-if="balance != 0">
         <div
           v-for="(item, index) in payments"
           :key="index"
@@ -214,11 +214,7 @@ export default {
         },
       ],
       fields: [
-        {
-          key: 'is_reserved',
-          label: '',
-          sortable: false
-        },
+        
         {
           key: 'bill_source',
           label: 'Bill Source',
@@ -243,6 +239,11 @@ export default {
         {
           key: 'delete',
           label: '',
+        },
+        {
+          key: 'is_reserved',
+          label: '',
+          sortable: false
         },
       ],
     }

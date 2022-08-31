@@ -79,12 +79,12 @@
           <template #cleared_status="{ data }">
             <span
               v-if="data.item.cleared_status === 'CLEARED'"
-              class="badge-primary rounded p-1"
+              class="badge-primary rounded p-1 text-14"
               >{{ data.item.cleared_status }}</span
             >
             <span
               v-if="data.item.cleared_status === 'UNCLEARED'"
-              class="badge-warning rounded p-1"
+              class="badge-warning rounded p-1 text-14"
               >{{ data.item.cleared_status }}</span
             >
           </template>
@@ -126,10 +126,7 @@ export default {
       template: {},
       items: [],
       fields: [
-        {
-          key: 'is_reserved',
-          label: '',
-        },
+        
         {
           key: 'clear',
           label: '',
@@ -156,6 +153,10 @@ export default {
         {
           key: 'cleared_status',
         },
+        {
+          key: 'is_reserved',
+          label: '',
+        },
       ],
       unClearedBill: [],
       filter: {
@@ -164,7 +165,7 @@ export default {
         status: '',
         dateFrom: '',
         dateTo: '',
-        is_invoiced: false
+        is_invoiced: false,
       },
     }
   },
@@ -250,7 +251,7 @@ export default {
       this.filter.size = e
       this.pageChange(this.currentPage, this.filter)
     },
-    async pageChange(page = 1, e = { size: 10, name: '', status: '' }) {
+    async pageChange(page = 1, e = { size: 10, name: '', status: '', is_invoiced: false, }) {
       try {
         this.busy = true
         const data = await this.$api.finance.bills({
@@ -304,7 +305,7 @@ export default {
         )
         let billID = []
         const unClearedList = this.unClearedBill.filter(
-          (item) => item.cleared_status !== 'CLEARED'
+          (item) => item.cleared_status === 'CLEARED' || item.cleared_status === 'UNCLEARED' 
         )
         if (unClearedList.length > 0) {
           billID = unClearedList.map((item) => item.id)
