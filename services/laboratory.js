@@ -33,4 +33,11 @@ export default axios => ({
         return axios.$delete(`laboratory/lab_panel/${id}/`)
     },
 
+    // **********************************
+    getPanelsByUnit(params) {
+        return axios.$get('laboratory/lab_panel/unit_group/', {
+           params
+        })
+    },
+
 });

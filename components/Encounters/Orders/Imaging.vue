@@ -1,219 +1,127 @@
 <template>
-    <ValidationObserver ref="form">
-    
-      <form class="p-3 border rounded w-75 m-auto">
-        <h4 class="mb-1 text-center">Imaging</h4>
-        <div class="row">
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Service Center"
-              :rules="['required']"
-            >
-              <VSelect
-                v-model="dataObject.service_center"
-                :options="service_centers"
-                label="name"
+  <div>
+    <ModalWrapper size="lg" id="orderImaging" title="Imaging Order" :arrangement="false"
+      :cancelText="`Close`" @show="getData()">
+      <ValidationObserver ref="form">
+        <form>
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper
+                name="Services Center"
+                :rules="['required']"
               >
-              </VSelect>
-            </ValidationProviderWrapper>
-          </div>
-
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Scan"
-              :rules="['required']"
+                <VSelect :options="serviceCenter" label="name"></VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div
+              class="col-md-12"
+              v-for="(item, index) in labServiceOptions"
+              :key="index"
             >
-              <VSelect
-                v-model="dataObject.img_obv"
-                :multiple="true"
-                :options="observations"
-                :reduce="(opt) => opt.id"
-                label="name"
-              >
-              </VSelect>
-            </ValidationProviderWrapper>
-          </div>
+              <p class="m-3 text-16 text-center">{{ item.lab_unit }}</p>
+              <div class="row">
+                <div
+                  class="col-md-4 mb-2 d-flex align-items-center"
+                  v-for="(service, serviceIndex) in item.lab_panels"
+                  :key="serviceIndex"
+                >
+                  <input
+                    style="height: 20px; width: 20px"
+                    id=""
+                    type="checkbox"
+                    name=""
+                    v-model="service.selected"
+                    @change="
+                      $emit('toggle', { child: serviceIndex, parent: index, state: $event.target.checked})
+                    "
+                  />
+                  <p class="text-grey text-14 ml-2 mb-0 w-75">
+                    {{ service.name }}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div class="col-md-10 mb-2">
-            <ValidationProviderWrapper name="stat" :rules="[]">
-              <input id="" v-model="dataObject.stat" type="checkbox" name="" />
-            </ValidationProviderWrapper>
-          </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Stat" :rules="[]">
+                <input id="" v-model="stat" type="checkbox" name="" />
+              </ValidationProviderWrapper>
+            </div>
 
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Comments" :rules="['']">
-              <textarea
-                id=""
-                v-model="dataObject.comments"
-                class="form-control"
-                name=""
-                cols="30"
-                rows="10"
-              ></textarea>
-            </ValidationProviderWrapper>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Comment" :rules="[]">
+                <textarea
+                  v-model="comments"
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                ></textarea>
+              </ValidationProviderWrapper>
+            </div>
           </div>
-        </div>
-      </form>
-    </ValidationObserver>
+        </form>
+      </ValidationObserver>
+    </ModalWrapper>
+  </div>
 </template>
 
 <script>
-import { debounce } from 'lodash'
-
 export default {
   props: {
-    editData: {
-      type: Object,
-      require: false,
-      default: () => ({}),
+    labServiceOptions: {
+      type: Array,
+      required: false,
     },
   },
   data() {
     return {
-      uhid: '',
-      service_centers: [],
-      observations: [],
-      dataObject: {
-        img_obv: [],
-        ordering_physician: '',
-        referral_facility: '',
-        comments: '',
-        service_center: null,
-        patient: {},
-        stat: false,
-      },
+      services: [],
+      serviceCenter: [],
+      labOrders: [],
+      stat: false,
     }
   },
-  mounted(){
-    this.getData()
-  },
-  computed: {
-    name() {
-      if (Object.keys(this.dataObject.patient).length > 0) {
-        return (
-          this.dataObject.patient.salutation +
-          ' ' +
-          this.dataObject.patient.firstname +
-          ' ' +
-          this.dataObject.patient.lastname
-        )
-      }
-      return ''
-    },
-    gender() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.gender
-      }
-      return ''
-    },
 
-    dob() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.date_of_birth
-      }
-      return ''
-    },
-
-    email() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.email
-      }
-      return ''
-    },
-  },
   watch: {
-    editData: {
+    data: {
       handler(newVal) {
-        if (Object.keys(newVal).length > 0) {
-          this.dataObject = newVal
-        }
+        this.currentData = newVal
       },
-      immediate: true,
       deep: true,
     },
-
-    uhid: debounce(async function (newVal) {
-      const results = await this.getPatientByUHID(newVal)
-      if(results){
-          this.dataObject.patient = results;
-      }else{
-         this.dataObject.patient = {};
-      }
-
-    
-    }, 500),
   },
   methods: {
-    async ok() {
-      if (await this.$refs.form.validate()) {
-        if (this.dataObject.id) {
-          this.edit()
-        } else {
-          this.save()
-        }
+    async getData() {
+      if (this.labServiceOptions.length) return
+      try {
+        const services = await this.$api.laboratory.getPanelsByUnit({
+          size: 1000,
+        })
+        const formatted = services.map((el) => ({
+          lab_unit: el.lab_unit,
+          lab_panels: el.lab_panels.map((newEl) => ({
+            ...newEl,
+            selected: false,
+          })),
+        }))
+        this.$emit('fetch_Data', formatted)
+        this.services = services
+        const serviceCenter = await this.$api.laboratory.getServiceCenter({
+          size: 1000,
+        })
+        this.serviceCenter = serviceCenter.results
+      } catch (error) {
+        console.log(error)
       }
     },
     async save() {
-      try {
-        const data = await this.$api.imaging.saveOrder(this.dataObject)
-        this.$emit('refresh')
-        this.$bvModal.hide('modal')
-        console.log(data)
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async edit() {
-      try {
-        const data = await this.$api.imaging.editLabUnit(
-          this.dataObject.id,
-          this.dataObject
-        )
-        this.$emit('refresh')
-        this.$bvModal.hide('modal')
-        console.log(data)
-      } catch (error) {
-        console.log(error)
-      }
+      this.$emit('payload', this.labOrders)
     },
 
-    clear() {
-      this.dataObject = {
-        patient: {},
-        name: '',
-        order_no: '',
-      }
-      this.$emit('hide')
-    },
-    getData() {
-      this.getServiceCenter()
-      this.getObservation()
-    },
-    getServiceCenter() {
-      this.$api.imaging
-        .getServiceCenter({ size: 1000 })
-        .then((res) => {
-          this.service_centers = res.results
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-
-    getObservation() {
-      this.$api.imaging
-        .getObservation({ size: 1000 })
-        .then((res) => {
-          this.observations = res.results
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
+    clear() {},
   },
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 </style>
