@@ -24,19 +24,21 @@
               <div class="text-primary">
                 <div class="pr-3">
                   <b-dropdown
-                    dropleft
                     no-caret
+                    variant="#e7f0f8"
+                    style=""
                     id="dropdown-1"
                     class="rounded-0"
                   >
                     <template #button-content>
                       <div class="col-md-2 text-14">
                         <svg
+                          
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
                           fill="currentColor"
-                          class="bi bi-plus-square-fill"
+                          class="bi bi-plus-square-fill text-primary"
                           viewBox="0 0 16 16"
                         >
                           <path
@@ -61,9 +63,9 @@
                 </div>
               </div>
 
-              <b-tooltip target="button-20" placement="bottom">
+              <!-- <b-tooltip target="button-20" placement="bottom">
                 Create orders
-              </b-tooltip>
+              </b-tooltip> -->
             </div>
             <div v-if="!click" id="button-22">
               <div class="text-primary">
@@ -92,7 +94,7 @@
         </div>
 
         <br />
-        <div v-if="!click" class="mr-3 mb-3">
+        <!-- <div v-if="!click" class="mr-3 mb-3">
           <div class="row">
             <div class="col-lg-5 col-md-6 col-sm-6 ml-3">
               <small class="text-grey text-14">Options</small>
@@ -104,9 +106,9 @@
               ></v-select>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div v-if="click && emptyState" class="p-5 text-center">
+        <div v-if="click" class="p-5 text-center">
           <div class="text-16 text-grey">
             No Orders created yet, click the
             <span
