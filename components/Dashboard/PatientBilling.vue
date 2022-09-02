@@ -320,6 +320,7 @@ export default {
           type: 'success',
           text: 'Payment Successful',
         })
+        this.$nuxt.refresh()
         this.$bvModal.hide('modal')
         this.$bvModal.show('printInvoice?')
         this.pageChange(this.currentPage, this.filter)

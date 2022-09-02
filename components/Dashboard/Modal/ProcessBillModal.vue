@@ -86,7 +86,7 @@
       <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
     </div>
     <ValidationObserver ref="form">
-      <form v-if="balance != 0">
+      <form v-if="total != reserved">
         <div
           v-for="(item, index) in payments"
           :key="index"
@@ -284,9 +284,15 @@ export default {
       let calc = 0
       const arr = this.payments
       console.log(arr)
-      arr.map((el) => {
+      if(arr.length > 0 ){
+        arr.map((el) => {
         calc += parseFloat(el.amount.replace(/,/g , ''))
       })
+      }
+      else if(arr.length === 0 && this.balance === 0){
+        calc = 0
+      }
+      
 
       console.log('Payments', calc)
       console.log('due', this.totalPaid)

@@ -20,49 +20,7 @@
           <h4 class="text-grey text-18 mb-0"></h4>
 
           <div>
-            <div style="cursor: pointer" id="button-20">
-              <!-- <div class="text-primary">
-                <div class="pr-3">
-                  <b-dropdown
-                    no-caret
-                    variant="#e7f0f8"
-                    style=""
-                    id="dropdown-1"
-                    class="rounded-0"
-                  >
-                    <template #button-content>
-                      <div class="col-md-2 text-14">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          fill="currentColor"
-                          class="bi bi-plus-square-fill text-primary"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
-                          />
-                        </svg>
-                      </div>
-                    </template>
-
-                    <b-dropdown-item
-                      v-for="(item, index) in options"
-                      :key="index"
-                    >
-                      <div class="text-capitalize">
-                        {{ item }}
-                      </div>
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </div>
-              </div> -->
-
-              <!-- <b-tooltip target="button-20" placement="bottom">
-                Create orders
-              </b-tooltip> -->
-            </div>
+            <div style="cursor: pointer" id="button-20"></div>
             <div v-if="!click" id="button-22">
               <div class="text-primary">
                 <svg
@@ -90,19 +48,6 @@
         </div>
 
         <br />
-        <!-- <div v-if="!click" class="mr-3 mb-3">
-          <div class="row">
-            <div class="col-lg-5 col-md-6 col-sm-6 ml-3">
-              <small class="text-grey text-14">Options</small>
-              <v-select
-                class="text-14 text-capitalize"
-                style="height: 35px"
-                :options="options"
-                v-model="type"
-              ></v-select>
-            </div>
-          </div>
-        </div> -->
 
         <div class="text-center">
           <div
@@ -143,7 +88,6 @@
                     class="badge-warning p-2 text-12 rounded mx-1 text-white"
                   >
                     {{ child.name }}
-                    {{ child.selected }}
                     <span
                       @click="
                         removeLabOrder({
@@ -213,7 +157,6 @@
                     class="badge-warning p-2 text-12 rounded mx-1 text-white"
                   >
                     {{ child.name }}
-                    {{ child.selected }}
                     <span
                       @click="
                         removeLabOrder({
@@ -245,10 +188,6 @@
         </div>
 
         <div>
-          <EncountersOrdersImaging />
-        </div>
-
-        <div>
           <EncountersOrdersLaboratory
             :labServiceOptions="labServiceOptions"
             @fetch_Data="handleProps"
@@ -256,6 +195,10 @@
           />
         </div>
 
+        <div>
+          <EncountersOrdersImaging />
+        </div>
+        
         <!-- <div>
           <EncountersOrdersPrescription />
         </div> -->
@@ -265,7 +208,9 @@
           style="height: 38px"
           class="w-100 mt-3 mr-5 text-16 d-flex justify-content-end"
         >
-          <BaseButton @click="submitOrders" class="btn-primary mr-4">Save</BaseButton>
+          <BaseButton @click="submitOrders" class="btn-primary mr-4"
+            >Save</BaseButton
+          >
         </div>
       </div>
     </div>
@@ -276,14 +221,8 @@
 export default {
   data() {
     return {
-      tag: false,
-      imgFlag: false,
-      labFlag: false,
-      emptyState: false,
       click: true,
-      prescriptionFlag: false,
       options: ['Imaging orders', 'Lab orders', 'Prescription'],
-      type: null,
       arr: [],
       labServiceOptions: [],
     }
@@ -305,35 +244,16 @@ export default {
     orderLab() {
       this.$bvModal.show('orderLab')
     },
-    submitOrders(){
+    submitOrders() {
       this.labServiceOptions.forEach((el) => {
         el.lab_panels.filter((newEl) => {
-          if(newEl.selected === true){
+          if (newEl.selected === true) {
             this.arr.push(newEl.id)
           }
         })
       })
 
       console.log(this.arr)
-    }
-  },
-  watch: {
-    type() {
-      if (this.type !== null) {
-        if (this.type === 'Imaging orders') {
-          this.imgFlag = true
-          this.click = !this.click
-          this.type = null
-        } else if (this.type === 'Lab orders') {
-          this.labFlag = true
-          this.click = !this.click
-          this.type = null
-        } else if (this.type === 'Prescription') {
-          this.prescriptionFlag = true
-          this.click = !this.click
-          this.type = null
-        }
-      }
     },
   },
 }

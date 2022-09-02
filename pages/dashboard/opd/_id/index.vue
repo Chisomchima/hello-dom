@@ -137,7 +137,7 @@
                         </div>
                         <div class="px-2">
                             <p class="text-14 mb-0 text-grey">
-                                <b>Age(Y-M-D)</b> {{this.age.year}} - {{this.age.month}} - {{this.age.day}}
+                                <b>Age(Y-M-D):</b> {{this.age.year}} - {{this.age.month}} - {{this.age.day}}
                             </p>
                         </div>
                         <div class="px-2">

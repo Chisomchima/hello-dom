@@ -13,9 +13,21 @@
       <p class="text-info text-14 text-center p-2">
         Do you want to print the payment slip for this transaction ?
       </p>
+
+       <div class="d-flex justify-content-center">
+        <div class="col-md-6 mb-5">
+        <ValidationProviderWrapper name="Print format" :rules="['']">
+        <VSelect
+          v-model="format"
+          label="name"
+          :options="['A4', 'P.O.S Slip']"
+        ></VSelect>
+      </ValidationProviderWrapper>
+      </div>
+      </div>
     </div>
     <div class="d-none">
-      <DashboardInvoiceTemplate :data="data" :reciept="reciept"/>
+      <DashboardInvoiceTemplate :data="data" :reciept="reciept" :printLayout="format_prop"/>
     </div>
   </ModalWrapper>
 </template>
@@ -49,6 +61,8 @@ export default {
       dataObject: {
         amount: '',
       },
+      format: 'A4',
+      format_prop: false,
       calculations: 0,
       totalInvoice: 0,
       payAmount: 0,
@@ -96,6 +110,14 @@ export default {
       })
       this.calculations = calc
     },
+    format(){
+      if(this.format === 'A4'){
+        this.format_prop = false
+      }
+      else if(this.format === 'P.O.S Slip'){
+        this.format_prop = true
+      }
+    }
   },
   methods: {
     ok() {

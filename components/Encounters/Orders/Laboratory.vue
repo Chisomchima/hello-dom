@@ -1,7 +1,14 @@
 <template>
   <div>
-    <ModalWrapper size="lg" id="orderLab" title="Lab Order" :arrangement="false"
-      :cancelText="`Close`" @show="getData()">
+    <ModalWrapper
+      size="lg"
+      id="orderLab"
+      title="Lab Order"
+      :arrangement="false"
+      :cancelText="`Close`"
+      @show="getData()"
+      @hide="validateForm"
+    >
       <ValidationObserver ref="form">
         <form>
           <div class="row">
@@ -10,7 +17,7 @@
                 name="Services Center"
                 :rules="['required']"
               >
-                <VSelect :options="serviceCenter" label="name"></VSelect>
+                <VSelect ref="input" :options="serviceCenter" label="name"></VSelect>
               </ValidationProviderWrapper>
             </div>
             <div
@@ -32,7 +39,11 @@
                     name=""
                     v-model="service.selected"
                     @change="
-                      $emit('toggle', { child: serviceIndex, parent: index, state: $event.target.checked})
+                      $emit('toggle', {
+                        child: serviceIndex,
+                        parent: index,
+                        state: $event.target.checked,
+                      })
                     "
                   />
                   <p class="text-grey text-14 ml-2 mb-0 w-75">
@@ -50,12 +61,7 @@
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Comment" :rules="[]">
-                <textarea
-                  v-model="comments"
-                  cols="30"
-                  rows="10"
-                  class="form-control"
-                ></textarea>
+                <textarea cols="30" rows="10" class="form-control"></textarea>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -117,17 +123,8 @@ export default {
     async save() {
       this.$emit('payload', this.labOrders)
     },
-    // setOptions(e, s, i) {
-    //   console.log(e)
-    //   console.log(s)
-    //   console.log(i)
-
-    //   if (e === true) {
-    //     this.labOrders.push(s)
-    //   } else if (e === false) {
-    //     this.labOrders.splice(s, i)
-    //   }
-    // },
+    validateForm(){
+    },
 
     clear() {},
   },

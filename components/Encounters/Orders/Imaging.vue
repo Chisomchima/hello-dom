@@ -51,7 +51,6 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Comment" :rules="[]">
                 <textarea
-                  v-model="comments"
                   cols="30"
                   rows="10"
                   class="form-control"
@@ -79,6 +78,7 @@ export default {
       serviceCenter: [],
       labOrders: [],
       stat: false,
+      comments: ''
     }
   },
 

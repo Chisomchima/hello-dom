@@ -114,6 +114,7 @@ export default {
         dateFrom: '',
         dateTo: '',
         payment_method: '',
+        patient: this.data.id
       },
     }
   },
@@ -145,9 +146,11 @@ export default {
   },
   computed: {
     trigger() {
+      console.log(this.items)
       if (this.items.length != 0) {
         return true
       }
+      else return
     },
     maxDate() {
       let today = new Date()
@@ -184,14 +187,15 @@ export default {
     },
     async getPayments(
       page = 1,
-      e = { size: 10, amount: '', dateFrom: '', dateTo: '', payment_method: '' }
+      e = { patient: this.data.id, size: 10, amount: '', dateFrom: '', dateTo: '', payment_method: '' }
     ) {
       this.busy = true
       this.filter = e
-
+      
       this.currentPage = page
       try {
-        let response = await this.$api.patient.getPayments({
+        let response = await this.$api.patient.getPayments(
+          {
           ...e,
           page: page,
         })

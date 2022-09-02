@@ -13,17 +13,6 @@
       <p class="text-info text-14 text-center p-2">
         Do you want to print the deposit slip for this transaction ?
       </p>
-      <div class="d-flex justify-content-center">
-        <div class="col-md-6 mb-5">
-        <ValidationProviderWrapper name="Print format" :rules="['']">
-        <VSelect
-          v-model="format"
-          label="name"
-          :options="['A4', 'P.O.S Slip']"
-        ></VSelect>
-      </ValidationProviderWrapper>
-      </div>
-      </div>
       
     </div>
 

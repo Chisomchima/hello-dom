@@ -62,4 +62,15 @@ export default axios => ({
     patchObservationOrder(id,body) {
         return axios.$patch(`/imaging/imaging_observation_order/${id}/`, body);
     },
+
+
+    // ************************************
+
+    getImaging(params) {
+        return axios.$get('/imaging_observation/modality_group/', {
+            params
+        });
+    },
+
+    
 });
