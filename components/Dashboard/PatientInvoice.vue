@@ -108,6 +108,14 @@ export default {
         {
           key: 'payer_scheme',
           label: 'Scheme',
+           formatter: (value) => {
+            if(Object.keys(value).length > 0){
+              return value 
+            }
+            else{
+              return ''
+            }
+          },
           sortable: true,
         },
         {
