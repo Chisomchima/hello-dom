@@ -192,7 +192,7 @@
             :labServiceOptions="labServiceOptions"
             @fetch_Data="handleProps"
             @toggle="handleToggle"
-            @comments="addComments"
+            @labObj="addLabData"
           />
         </div>
 
@@ -201,6 +201,7 @@
             :imagingOption="imagingOption"
             @fetch_Imaging_data="handleImagingProps"
             @toggleImaging="handleImagingToggle"
+            @imgObj="addImgData"
           />
         </div>
 
@@ -234,13 +235,38 @@ export default {
         laboratory: {
           comments: '',
           lab_panels: [],
+          stat: true,
+          service_center: null,
+          payment_scheme: null,
         },
         imaging: {
-          img_observations: [],
           comments: '',
+          img_obv: [],
+          stat: true,
+          service_center: null,
+          payment_scheme: null,
+        },
+        prescriptions: {
+          prescription_lines: [
+            {
+              dose: '-',
+              frequency: 0,
+              duration: 0,
+              quantity: 0,
+              drug_form: 0,
+            },
+          ],
+          status: 'string',
+          source: 'OPD',
         },
       },
     }
+  },
+  props: {
+    consultationData: {
+      type: Object,
+      required: false,
+    },
   },
   methods: {
     handleProps(list) {
@@ -272,9 +298,15 @@ export default {
       }
     },
 
-    addComments(e) {
-      console.log(e)
-      this.requestBody.laboratory.comments = e
+    addLabData(e) {
+      this.requestBody.laboratory.service_center = e.service_center
+      this.requestBody.laboratory.comments = e.comments
+      this.requestBody.laboratory.stat = e.stat
+    },
+    addImgData(e) {
+      this.requestBody.imaging.service_center = e.service_center
+      this.requestBody.imaging.comments = e.comments
+      this.requestBody.imaging.stat = e.stat
     },
 
     orderLab() {
@@ -283,17 +315,17 @@ export default {
     orderImaging() {
       this.$bvModal.show('orderImaging')
     },
-    submitOrders() {
+    async submitOrders() {
       let arr = []
       this.labServiceOptions.forEach((el) => {
         el.lab_panels.filter((newEl) => {
           if (newEl.selected === true) {
-            arr.push(newEl.id)         
+            arr.push(newEl.id)
           }
         })
       })
       this.requestBody.laboratory.lab_panels = arr
-      console.log(this.requestBody.laboratory.lab_panels)
+      console.log('laboratory', this.requestBody.laboratory)
       let imgArr = []
       this.imagingOption.forEach((el) => {
         el.img_observations.filter((newEl) => {
@@ -302,8 +334,12 @@ export default {
           }
         })
       })
-      this.requestBody.imaging.img_observations = arr
-      console.log(this.requestBody.imaging.img_observations )
+
+      this.requestBody.imaging.img_obv = imgArr
+      console.log('imaging', this.requestBody.imaging)
+
+      // let response = await this.$api.encounter.orderOnEncounter(this.requestBody, this.consultationData.id)
+      // console.log(response) 
     },
   },
 }
