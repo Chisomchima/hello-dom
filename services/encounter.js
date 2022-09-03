@@ -31,7 +31,13 @@ export default axios => ({
         return axios.$get('/encounters/encounter/', {
             params
         })
-    }
+    },
+    orderOnEncounter(body, id) {
+        return axios.$post(`encounters/encounter/${id}/orders/`, {
+            body
+        })
+    },
+    
 
 
 });

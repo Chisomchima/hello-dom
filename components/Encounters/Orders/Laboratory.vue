@@ -17,7 +17,12 @@
                 name="Services Center"
                 :rules="['required']"
               >
-                <VSelect ref="input" :options="serviceCenter" label="name"></VSelect>
+                <VSelect
+                  ref="input"
+                  :options="serviceCenter"
+                  label="name"
+                  v-model="obj.service_center"
+                ></VSelect>
               </ValidationProviderWrapper>
             </div>
             <div
@@ -55,13 +60,18 @@
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Stat" :rules="[]">
-                <input id="" v-model="stat" type="checkbox" name="" />
+                <input id="" v-model="obj.stat" type="checkbox" name="" />
               </ValidationProviderWrapper>
             </div>
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Comment" :rules="[]">
-                <textarea v-model="comments" cols="30" rows="10" class="form-control"></textarea>
+                <textarea
+                  v-model="obj.comments"
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                ></textarea>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -82,8 +92,11 @@ export default {
   data() {
     return {
       serviceCenter: [],
-      stat: false,
-      comments: ''
+      obj: {
+        stat: false,
+        comments: '',
+        service_center: null
+      },
     }
   },
   methods: {
@@ -111,10 +124,10 @@ export default {
       }
     },
     async save() {
-      this.$emit('comments', this.comments)
+      this.$emit('labObj', this.obj)
+     
     },
-    validateForm(){
-    },
+    validateForm() {},
   },
 }
 </script>
