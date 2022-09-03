@@ -66,8 +66,10 @@ export default axios => ({
 
     // ************************************
 
+    //order on encounter
+
     getImaging(params) {
-        return axios.$get('/imaging_observation/modality_group/', {
+        return axios.$get('/imaging/imaging_observation/modality_group/', {
             params
         });
     },

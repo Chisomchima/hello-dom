@@ -15,14 +15,14 @@
             </div>
             <div
               class="col-md-12"
-              v-for="(item, index) in labServiceOptions"
+              v-for="(item, index) in imagingOption"
               :key="index"
             >
-              <p class="m-3 text-16 text-center">{{ item.lab_unit }}</p>
+              <p class="m-3 text-16 text-center">{{ item.modality }}</p>
               <div class="row">
                 <div
                   class="col-md-4 mb-2 d-flex align-items-center"
-                  v-for="(service, serviceIndex) in item.lab_panels"
+                  v-for="(service, serviceIndex) in item.img_observations"
                   :key="serviceIndex"
                 >
                   <input
@@ -32,7 +32,7 @@
                     name=""
                     v-model="service.selected"
                     @change="
-                      $emit('toggle', { child: serviceIndex, parent: index, state: $event.target.checked})
+                      $emit('toggleImaging', { child: serviceIndex, parent: index, state: $event.target.checked})
                     "
                   />
                   <p class="text-grey text-14 ml-2 mb-0 w-75">
@@ -67,46 +67,34 @@
 <script>
 export default {
   props: {
-    labServiceOptions: {
+    imagingOption: {
       type: Array,
       required: false,
     },
   },
   data() {
     return {
-      services: [],
       serviceCenter: [],
-      labOrders: [],
       stat: false,
       comments: ''
     }
   },
-
-  watch: {
-    data: {
-      handler(newVal) {
-        this.currentData = newVal
-      },
-      deep: true,
-    },
-  },
   methods: {
     async getData() {
-      if (this.labServiceOptions.length) return
+      if (this.imagingOption.length) return
       try {
-        const services = await this.$api.laboratory.getPanelsByUnit({
+        const services = await this.$api.imaging.getImaging({
           size: 1000,
         })
         const formatted = services.map((el) => ({
-          lab_unit: el.lab_unit,
-          lab_panels: el.lab_panels.map((newEl) => ({
+          modality: el.modality,
+          img_observations: el.img_observations.map((newEl) => ({
             ...newEl,
             selected: false,
           })),
         }))
-        this.$emit('fetch_Data', formatted)
-        this.services = services
-        const serviceCenter = await this.$api.laboratory.getServiceCenter({
+        this.$emit('fetch_Imaging_data', formatted)
+        const serviceCenter = await this.$api.imaging.getServiceCenter({
           size: 1000,
         })
         this.serviceCenter = serviceCenter.results
@@ -115,7 +103,6 @@ export default {
       }
     },
     async save() {
-      this.$emit('payload', this.labOrders)
     },
 
     clear() {},

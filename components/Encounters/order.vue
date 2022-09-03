@@ -127,7 +127,7 @@
               <p class="mb-0">Imaging orders</p>
               <div class="text-16 text-grey">
                 <span
-                  @click="orderLab"
+                  @click="orderImaging"
                   style="position: relative"
                   class="text-primary mx-1 point"
                 >
@@ -147,9 +147,9 @@
             </div>
 
             <div class="d-flex flex-wrap">
-              <span v-for="(parent, index) in labServiceOptions" :key="index">
+              <span v-for="(parent, index) in imagingOption" :key="index">
                 <span
-                  v-for="(child, childIndex) in parent.lab_panels"
+                  v-for="(child, childIndex) in parent.img_observations"
                   :key="childIndex"
                 >
                   <span
@@ -159,7 +159,7 @@
                     {{ child.name }}
                     <span
                       @click="
-                        removeLabOrder({
+                        removeImagingOrder({
                           parent: index,
                           child: childIndex,
                           state: child.selected,
@@ -192,25 +192,29 @@
             :labServiceOptions="labServiceOptions"
             @fetch_Data="handleProps"
             @toggle="handleToggle"
+            @comments="addComments"
           />
         </div>
 
         <div>
-          <EncountersOrdersImaging />
+          <EncountersOrdersImaging
+            :imagingOption="imagingOption"
+            @fetch_Imaging_data="handleImagingProps"
+            @toggleImaging="handleImagingToggle"
+          />
         </div>
-        
+
         <!-- <div>
           <EncountersOrdersPrescription />
         </div> -->
 
         <div
-          v-if="labServiceOptions.length > 0"
           style="height: 38px"
           class="w-100 mt-3 mr-5 text-16 d-flex justify-content-end"
         >
-          <BaseButton @click="submitOrders" class="btn-primary mr-4"
-            >Save</BaseButton
-          >
+          <BaseButton @click="submitOrders" class="btn-primary mr-4">
+            Order
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -222,18 +226,36 @@ export default {
   data() {
     return {
       click: true,
-      options: ['Imaging orders', 'Lab orders', 'Prescription'],
       arr: [],
+      imgArr: [],
       labServiceOptions: [],
+      imagingOption: [],
+      requestBody: {
+        laboratory: {
+          comments: '',
+          lab_panels: [],
+        },
+        imaging: {
+          img_observations: [],
+          comments: '',
+        },
+      },
     }
   },
   methods: {
     handleProps(list) {
       this.labServiceOptions = list
     },
+    handleImagingProps(list) {
+      this.imagingOption = list
+    },
     handleToggle(obj) {
       const { child, parent, state } = obj
       this.labServiceOptions[parent].lab_panels[child].selected = state
+    },
+    handleImagingToggle(obj) {
+      const { child, parent, state } = obj
+      this.imagingOption[parent].img_observations[child].selected = state
     },
     removeLabOrder(obj) {
       const { parent, child, state } = obj
@@ -241,19 +263,47 @@ export default {
         this.labServiceOptions[parent].lab_panels[child].selected = false
       }
     },
+    removeImagingOrder(obj) {
+      const { parent, child, state } = obj
+      if (
+        (this.imagingOption[parent].img_observations[child].selected = true)
+      ) {
+        this.imagingOption[parent].img_observations[child].selected = false
+      }
+    },
+
+    addComments(e) {
+      console.log(e)
+      this.requestBody.laboratory.comments = e
+    },
+
     orderLab() {
       this.$bvModal.show('orderLab')
     },
+    orderImaging() {
+      this.$bvModal.show('orderImaging')
+    },
     submitOrders() {
+      let arr = []
       this.labServiceOptions.forEach((el) => {
         el.lab_panels.filter((newEl) => {
           if (newEl.selected === true) {
-            this.arr.push(newEl.id)
+            arr.push(newEl.id)         
           }
         })
       })
-
-      console.log(this.arr)
+      this.requestBody.laboratory.lab_panels = arr
+      console.log(this.requestBody.laboratory.lab_panels)
+      let imgArr = []
+      this.imagingOption.forEach((el) => {
+        el.img_observations.filter((newEl) => {
+          if (newEl.selected === true) {
+            imgArr.push(newEl.id)
+          }
+        })
+      })
+      this.requestBody.imaging.img_observations = arr
+      console.log(this.requestBody.imaging.img_observations )
     },
   },
 }

@@ -7,7 +7,7 @@
       :arrangement="false"
       :cancelText="`Close`"
       @show="getData()"
-      @hide="validateForm"
+      @hide="save"
     >
       <ValidationObserver ref="form">
         <form>
@@ -61,7 +61,7 @@
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Comment" :rules="[]">
-                <textarea cols="30" rows="10" class="form-control"></textarea>
+                <textarea v-model="comments" cols="30" rows="10" class="form-control"></textarea>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -81,20 +81,10 @@ export default {
   },
   data() {
     return {
-      services: [],
       serviceCenter: [],
-      labOrders: [],
       stat: false,
+      comments: ''
     }
-  },
-
-  watch: {
-    data: {
-      handler(newVal) {
-        this.currentData = newVal
-      },
-      deep: true,
-    },
   },
   methods: {
     async getData() {
@@ -121,12 +111,10 @@ export default {
       }
     },
     async save() {
-      this.$emit('payload', this.labOrders)
+      this.$emit('comments', this.comments)
     },
     validateForm(){
     },
-
-    clear() {},
   },
 }
 </script>
