@@ -22,28 +22,8 @@
       </div>
     </div>
     <div class="col-md-3 text-14 px-0">
-        <span class="text-grey">Gender:</span> {{ nameData.gender }}
-      </div>
-    <!-- <div class="d-flex align-items-center">
-      <div class="class-details-data_label">Scheme(s):</div>
-      <ul
-        v-if="nameData.payment_scheme.length > 0"
-        class="d-flex w-100 px-0 mb-0"
-      >
-        <li
-          style="list-style: none"
-          v-for="(item, index) in nameData.payment_scheme"
-          :key="index"
-          class="px-2 text-14"
-        >
-          <span class="class-details-data_value text-truncate">
-            | {{ item.payer_scheme.name }}
-          </span>
-          <span> ({{ item.payer_scheme.type }}) </span>
-        </li>
-      </ul>
-      <div class="text-14 ml-2" v-else>Nil</div>
-    </div> -->
+      <span class="text-grey">Gender:</span> {{ nameData.gender }}
+    </div>
     <hr />
     <div>
       <TableComponent :items="goods" :paginate="false" :fields="fields">
@@ -68,12 +48,14 @@
               /></svg
           ></span>
         </template>
-         <template #is_reserved="{ data }">
-          <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded">R</span>
+        <template #is_reserved="{ data }">
+          <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded"
+            >R</span
+          >
         </template>
       </TableComponent>
     </div>
-    <div class="p-2  text-14 d-flex justify-content-between">
+    <div class="p-2 text-14 d-flex justify-content-between">
       <p class="mb-0 text-info border p-2">
         Total: ₦ {{ total ? total.toLocaleString('en-US') : 0 }}
       </p>
@@ -83,10 +65,12 @@
       <p class="mb-0 text-success border p-2">
         Amount paid: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
       </p>
-      <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
+      <p class="mb-0 text-danger border p-2">
+        Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}
+      </p>
     </div>
     <ValidationObserver ref="form">
-      <form v-if="total != reserved">
+      <form v-if="payments.length > 0">
         <div
           v-for="(item, index) in payments"
           :key="index"
@@ -173,6 +157,10 @@ export default {
       require: false,
       default: () => ({}),
     },
+    showPayments: {
+      type: Boolean,
+      require: false,
+    },
     nameData: {
       type: Object,
       require: false,
@@ -197,7 +185,7 @@ export default {
       type: Number,
       require: false,
       default: () => 0,
-    }
+    },
   },
   data() {
     return {
@@ -207,14 +195,8 @@ export default {
       payAmount: 0,
       balance: 0,
       paymentMethod: [],
-      payments: [
-        {
-          payment_method: null,
-          amount: '',
-        },
-      ],
+      payments: [],
       fields: [
-        
         {
           key: 'bill_source',
           label: 'Bill Source',
@@ -243,7 +225,7 @@ export default {
         {
           key: 'is_reserved',
           label: '',
-          sortable: false
+          sortable: false,
         },
       ],
     }
@@ -257,87 +239,86 @@ export default {
     },
   },
   watch: {
-    payAmount(){
+    payAmount() {
       this.balance = this.total - (this.payAmount + this.reserved)
     },
-    total(){
+    total() {
       this.balance = this.total - (this.payAmount + this.reserved)
-    }
+    },
   },
   async mounted() {
+    if (this.showPayments == true) {
+      this.payments.push({
+        payment_method: null,
+        amount: '',
+      })
+    } else {
+      this.payments = []
+    }
     this.balance = this.total
-    console.log(
-      new Intl.NumberFormat('de-DE', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(12)
-    )
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
     })
     console.log('Im mounted', data.results)
     this.paymentMethod = data.results
   },
-  
+
   methods: {
     ok() {
       let calc = 0
       const arr = this.payments
       console.log(arr)
-      if(arr.length > 0 ){
+      if (arr.length > 0) {
         arr.map((el) => {
-        calc += parseFloat(el.amount.replace(/,/g , ''))
-      })
+          calc += parseFloat(el.amount.replace(/,/g, ''))
+        })
+      } else if (arr.length === 0) {
+        calc = this.totalPaid
       }
-      else if(arr.length === 0 && this.balance === 0){
-        calc = 0
-      }
-      
 
       console.log('Payments', calc)
       console.log('due', this.totalPaid)
 
-      if (calc > this.totalPaid) {
+      if (calc > this.total) {
         this.$toast({
           type: 'info',
           text: `Payment can not be higher than total price`,
         })
-      } else if(calc === this.totalPaid) {
+      } else if (calc === this.total) {
         arr.map((el) => {
-          el.amount.toString().replace(/,/g , '')
-          el.amount = el.amount.toString().replace(/,/g , '')
-      })
+          el.amount.toString().replace(/,/g, '')
+          el.amount = el.amount.toString().replace(/,/g, '')
+        })
 
-          this.$emit('ok', arr)
-      }
-      else if(calc < this.totalPaid){
-         this.$toast({
+        this.$emit('ok', arr)
+      } else if (calc < this.totalPaid) {
+        this.$toast({
           type: 'info',
           text: `Payment is less total amount`,
         })
       }
     },
     numberWithCommas(x) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-},
+      return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+    },
 
     handleQtyInput(newValue, index) {
-      if(newValue !== ''){
-        this.payments[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
-      }
-      else{
+      if (newValue !== '') {
+        this.payments[index].amount = this.numberWithCommas(
+          parseFloat(newValue.replace(/,/g, ''))
+        )
+      } else {
         this.payments[index].amount = ''
       }
 
       let calc = 0
-      for(let x = 0; x < this.payments.length; x++){
-      let cover = this.payments[x].amount
-      cover.toString().replace(/\D/g, '')
-      cover = parseFloat(cover.replace(/,/g , ''))
-      calc += cover
-      this.payAmount = calc
+      for (let x = 0; x < this.payments.length; x++) {
+        let cover = this.payments[x].amount
+        cover.toString().replace(/\D/g, '')
+        cover = parseFloat(cover.replace(/,/g, ''))
+        calc += cover
+        this.payAmount = calc
       }
-      
     },
     addPaymentMethod() {
       this.payments.push({
@@ -349,12 +330,11 @@ export default {
       this.payments.splice(e, 1)
       console.log(item)
       let cover = item.amount
-      cover.toString().replace(/,/g , '')
-      cover = parseFloat(cover.replace(/,/g , ''))
+      cover.toString().replace(/,/g, '')
+      cover = parseFloat(cover.replace(/,/g, ''))
 
-      
       // console.log(this.payAmount)
-  
+
       this.payAmount = this.payAmount - cover
     },
 
@@ -363,15 +343,11 @@ export default {
     },
 
     clear() {
-      this.payments = [
-        {
-          payment_method: null,
-          amount: '',
-        },
-      ]
+      this.payments = []
       this.balance = 0
       this.payAmount = 0
-        this.$emit('hide')
+      this.$emit('hide')
+      this.$emit('clear')
     },
   },
 }

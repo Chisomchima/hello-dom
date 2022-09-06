@@ -1,7 +1,0 @@
-prefix and Name, date of birth
-patient records title and add patient as a button
-refactoring patient registeration form
-postal code is a date field...lol
-city before country
-tab 2 as demographics: reliogion, nationality, state of origin, occupation
-Nationality, LGA(Uppercase)

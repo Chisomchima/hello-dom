@@ -1,0 +1,103 @@
+<template>
+  <div>
+    <div class="row">
+      <div class="col-12 mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="page-heading mb-0">Encounter Reports</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <ReportsEncounterFilter @filter="filter(1, $event)" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+          <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" 
+            @page-changed="filter($event, currentFilter)">
+          </TableComponent>
+        </UtilsFilterComponent>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import {DateTime} from 'luxon'
+import TableFunc from '~/mixins/TableCompFun'
+import FilterLogic from '~/mixins/routeFiltersMixin'
+export default {
+  mixins: [TableFunc,FilterLogic],
+  data() {
+    return {
+      fields: [
+        {
+          key: 'encounter_datetime',
+          label: 'Date',
+          sortable: true,
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
+          },
+        },
+        { key: 'encounter_id', label: 'Encounter ID', sortable: true },
+        {
+          key: 'clinic.Department.display_name',
+          label: 'Department',
+          sortable: true,
+        },
+        { key: 'clinic.name', label: 'Clinic', sortable: true },
+        { key: 'patient.uhid', label: 'UHID', sortable: true },
+        {
+          key: 'patient',
+          label: 'Patient',
+          sortable: true,
+          formatter: (val) => {
+            return val.salutation + ' ' + val.firstname + ' ' + val.lastname
+          },
+        },
+        {
+          key: 'provider',
+          label: 'Provider Name',
+          sortable: true,
+          formatter: (val) => {
+            if (val.first_name || val.last_name) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else {
+              return ''
+            }
+          },
+        },
+        { key: 'encounter_type', label: 'Encounter Type', sortable: true },
+       
+        { key: 'status', label: 'Status', sortable: true },
+        { key: 'dots', label:'', sortable: false },
+      ],
+    }
+  },
+  methods: {
+    async filter(page, e) {
+      this.currentFilter = e
+      try {
+        this.busy = true
+        const data = await this.$api.encounter.getEncounter({ ...e, page })
+        this.items = data.results
+        this.pages = data.total_pages
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.busy = false
+      }
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+</style>

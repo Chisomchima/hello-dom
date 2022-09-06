@@ -1,15 +1,5 @@
 <template>
   <div>
-    <div class="row align-items-center px-3 pb-1">
-      <h5 class="mb-0">Total: ₦ {{ numberWithCommas(total) }}</h5>
-      <div class="col-md-2">
-        <BaseButton
-          class="btn-outline-primary btn-lg btn-block"
-          @click="proceedToPayout"
-          >Pay</BaseButton
-        >
-      </div>
-    </div>
     <div>
       <!-- <button @click="$bvModal.show('printInvoice?')" class="btn btn-outline-primary btn-sm">Print</button> -->
     </div>
@@ -66,7 +56,6 @@
                 @change="addToClear($event.target.checked, data.item)"
               />
               <span class="checkmark"></span>
-              <!-- <span class="text">"dcdfv"</span> -->
             </label>
           </template>
 
@@ -74,6 +63,31 @@
             <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded"
               >R</span
             >
+          </template>
+          <template #triple_actions="{ data }">
+            <b-dropdown
+              variant="link"
+              toggle-class="text-decoration-none"
+              no-caret
+            >
+              <template #button-content>
+                <b-icon icon="three-dots-vertical"></b-icon>
+              </template>
+              <template>
+                <b-dropdown-item
+                  v-if="data.item.is_reserved === true"
+                  class="text-capitalize"
+                  >Unreserve</b-dropdown-item
+                >
+                <b-dropdown-item class="text-capitalize"
+                v-if="data.item.is_reserved === false"
+                  >Reserve</b-dropdown-item
+                >
+                <b-dropdown-item class="text-capitalize"
+                  >Transfer</b-dropdown-item
+                >
+              </template>
+            </b-dropdown>
           </template>
 
           <template #cleared_status="{ data }">
@@ -91,14 +105,41 @@
         </TableComponent>
       </template>
     </UtilsFilterComponent>
+
+    <div class="row align-items-end px-3 pb-1">
+      <div class="col-md-4">
+        <h5 class="mb-1">Total: ₦ {{ numberWithCommas(total) }}</h5>
+        <BaseButton
+          class="btn-outline-primary btn-lg btn-block"
+          @click="proceedToPayout"
+          >Pay</BaseButton
+        >
+      </div>
+      <div class="col-md-4">
+        <BaseButton
+          class="btn-outline-primary btn-lg btn-block"
+          @click="proceedToPayout"
+          >Authorize</BaseButton
+        >
+      </div>
+    </div>
     <DashboardModalProcessBillModal
       :goods="unClearedBill"
       :total="total"
       :reserved="reserved"
       :nameData="data"
       :totalPaid="totalPaid"
+      :showPayments="showPayments"
+      @clear="clear"
       @ok="payment($event)"
       @removedItem="deleteGoods($event)"
+    />
+    <DashboardModalAuthorizeBillModal
+      :nameData="data"
+      :total="total"
+      :goods="unClearedBill"
+      @authCode="setAuthCode"
+      @clear="clear"
     />
     <DashboardModalConfirmInvoicePrint :data="data" :reciept="template" />
   </div>
@@ -126,7 +167,6 @@ export default {
       template: {},
       items: [],
       fields: [
-        
         {
           key: 'clear',
           label: '',
@@ -139,6 +179,14 @@ export default {
         },
         {
           key: 'bill_source',
+        },
+        {
+          label: 'Bill to',
+          key: 'billed_to.name',
+        },
+        {
+          label: 'Bill type',
+          key: 'billed_to_type',
         },
         {
           key: 'description',
@@ -157,8 +205,17 @@ export default {
           key: 'is_reserved',
           label: '',
         },
+        {
+          key: 'triple_actions',
+          label: '',
+        },
       ],
       unClearedBill: [],
+      authData: {
+        bills: [],
+        auth_code: '',
+      },
+      showPayments: true,
       filter: {
         size: 10,
         name: '',
@@ -183,14 +240,14 @@ export default {
     total() {
       let total = 0
       this.unClearedBill.forEach((item) => {
-          total += Number.parseFloat(item.selling_price)
+        total += Number.parseFloat(item.selling_price)
       })
       return total
     },
-    totalPaid(){
+    totalPaid() {
       let total = 0
       this.unClearedBill.forEach((item) => {
-        if(!item.is_reserved){
+        if (!item.is_reserved) {
           total += Number.parseFloat(item.selling_price)
         }
       })
@@ -251,7 +308,10 @@ export default {
       this.filter.size = e
       this.pageChange(this.currentPage, this.filter)
     },
-    async pageChange(page = 1, e = { size: 10, name: '', status: '', is_invoiced: false, }) {
+    async pageChange(
+      page = 1,
+      e = { size: 10, name: '', status: '', is_invoiced: false }
+    ) {
       try {
         this.busy = true
         const data = await this.$api.finance.bills({
@@ -282,12 +342,52 @@ export default {
       }
     },
     proceedToPayout() {
-      if (this.total != 0) {
+      let insurance = 0
+      let self = 0
+      let lengthOfCart = 0
+
+      this.unClearedBill.forEach((el) => {
+        if (el.is_reserved && el.cleared_status === 'CLEARED') {
+          lengthOfCart++
+        }
+        if (el.billed_to_type === 'INSURANCE' && el.is_auth_req === true) {
+          insurance++
+        } else {
+          self++
+        }
+      })
+
+      console.log(lengthOfCart)
+      console.log('generic', this.unClearedBill.length)
+
+      if (insurance != 0 && self != 0) {
+        this.$toast({
+          type: 'info',
+          text: `Insurance bills can not be cleared with self paid bills`,
+        })
+      } else if (insurance != 0 && self == 0) {
+        this.authorizeBill()
+      } else if (insurance == 0 && self != 0) {
+        if(lengthOfCart === this.getClearedBill.length){
+          this.showPayments = false
+        } else{
+          this.showPayments = true
+        }
         this.$bvModal.show('modal')
       } else {
         this.$toast({
           type: 'info',
           text: `No item in cart`,
+        })
+      }
+    },
+    authorizeBill() {
+      if (this.unClearedBill.length > 0) {
+        this.$bvModal.show('authorize')
+      } else {
+        this.$toast({
+          type: 'info',
+          text: `No item to authorize`,
         })
       }
     },
@@ -298,6 +398,28 @@ export default {
 
       // this.unClearedBill.splice(e, 1)
     },
+    setAuthCode(e) {
+      this.authData.auth_code = e
+    },
+    async validateHMO() {
+      let billID = []
+      if (unClearedList.length > 0) {
+        billID = unClearedList.map((item) => item.id)
+      }
+      this.authData.bills = billID
+      try {
+        let response = await this.$api.finance.auhtorizeHMO(this.authData)
+        this.$nuxt.refresh()
+        this.$bvModal.hide('authorize')
+        this.$bvModal.show('printInvoice?')
+        this.pageChange(this.currentPage, this.filter)
+        this.unClearedBill = []
+        this.$toast({
+          type: 'success',
+          text: 'Validation successful',
+        })
+      } catch {}
+    },
     async payment(info) {
       try {
         const patient = await this.$api.patient.getPatient(
@@ -305,7 +427,9 @@ export default {
         )
         let billID = []
         const unClearedList = this.unClearedBill.filter(
-          (item) => item.cleared_status === 'CLEARED' || item.cleared_status === 'UNCLEARED' 
+          (item) =>
+            item.cleared_status === 'CLEARED' ||
+            item.cleared_status === 'UNCLEARED'
         )
         if (unClearedList.length > 0) {
           billID = unClearedList.map((item) => item.id)

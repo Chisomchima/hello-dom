@@ -338,8 +338,8 @@ export default {
       this.requestBody.imaging.img_obv = imgArr
       console.log('imaging', this.requestBody.imaging)
 
-      // let response = await this.$api.encounter.orderOnEncounter(this.requestBody, this.consultationData.id)
-      // console.log(response) 
+      let response = await this.$api.encounter.orderOnEncounter(this.requestBody, this.consultationData.id)
+      console.log(response) 
     },
   },
 }

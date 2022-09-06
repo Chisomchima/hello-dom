@@ -45,7 +45,7 @@ export default axios => ({
         return axios.$post(`/finance/price_lists/${id}/price_list_items/spreadsheet_upload/`, body)
     },
     bulkUploadBillableItems(body){
-        return axios.$post(`finance/billable_items/spreadsheet_upload/`, body)
+        return axios.$post(`/finance/billable_items/spreadsheet_upload/`, body)
     },
 
     // **********************************

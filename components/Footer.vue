@@ -60,7 +60,7 @@
       </div> -->
       <div class="footer-bottom">
         <div class="d-flex align-items-center flex-wrap justify-content-between">
-          <div class="mr-2 footer-link fs-14 mb-2">
+          <div class="mr-2 footer-link fs-14 mb-2 text-primary">
             © {{ new Date().getFullYear() }} All Rights Reserved
           </div>
           <div class="d-flex align-items-center flex-wrap mb-2">

@@ -12,5 +12,8 @@ export default axios => ({
 
     makePayment(body) {
         return axios.$post('/finance/bills/pay/', body);
+    },
+    auhtorizeHMO(body) {
+        return axios.$post('/ffinance/bills/authorize/', body);
     }
 });
