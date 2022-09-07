@@ -337,7 +337,14 @@ export default {
     addToClear(e, item) {
       console.log(e, item)
       if (e) {
-        this.unClearedBill.push(item)
+        if(item.cleared_status === 'CLEARED' && item.is_reserved == false){
+          this.$toast({
+          type: 'info',
+          text: 'Bill has already been cleared',
+        })
+        } else{
+          this.unClearedBill.push(item)
+        }
       } else {
         this.unClearedBill = remove(this.unClearedBill, (n) => {
           return n.id !== item.id
