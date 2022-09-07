@@ -3,7 +3,7 @@
     <div>
       <!-- <button @click="$bvModal.show('printInvoice?')" class="btn btn-outline-primary btn-sm">Print</button> -->
     </div>
-    
+
     <UtilsFilterComponent
       @uncleared="getUnclearedBill"
       @cleared="getClearedBill"
@@ -78,12 +78,11 @@
                 <b-dropdown-item
                   v-if="data.item.is_reserved === true"
                   class="text-capitalize"
-                  @click="unReserveBill(data.item)"
                   >Unreserve</b-dropdown-item
                 >
-                <b-dropdown-item class="text-capitalize"
-                v-if="data.item.is_reserved === false"
-                @click="reserveBill(data.item)"
+                <b-dropdown-item
+                  class="text-capitalize"
+                  v-if="data.item.is_reserved === false"
                   >Reserve</b-dropdown-item
                 >
                 <b-dropdown-item class="text-capitalize"
@@ -337,12 +336,12 @@ export default {
     addToClear(e, item) {
       console.log(e, item)
       if (e) {
-        if(item.cleared_status === 'CLEARED' && item.is_reserved == false){
+        if (item.cleared_status === 'CLEARED' && item.is_reserved == false) {
           this.$toast({
-          type: 'info',
-          text: 'Bill has already been cleared',
-        })
-        } else{
+            type: 'info',
+            text: 'Bill has already been cleared',
+          })
+        } else {
           this.unClearedBill.push(item)
         }
       } else {
@@ -351,33 +350,33 @@ export default {
         })
       }
     },
-    async unReserveBill(e){
+    async unReserveBill(e) {
       let tempID = e.id
       let temp = e
       delete temp.id
-      try{
+      try {
         let response = await this.$api.finance.unReserveBill(temp, tempID)
         this.pageChange(this.currentPage, this.filter)
         this.$toast({
           type: 'success',
           text: 'Bill unreserved',
         })
-      } catch (error){
+      } catch (error) {
         console.log(error)
       }
     },
-    async reserveBill(e){
+    async reserveBill(e) {
       let tempID = e.id
       let temp = e
       delete temp.id
-      try{
+      try {
         let response = await this.$api.finance.reserveBill(temp, tempID)
         this.pageChange(this.currentPage, this.filter)
         this.$toast({
           type: 'success',
           text: 'Bill unreserved',
         })
-      } catch (error){
+      } catch (error) {
         console.log(error)
       }
     },
@@ -403,15 +402,15 @@ export default {
       } else if (insurance == 0 && self != 0) {
         let reserveFlag = 0
         this.unClearedBill.forEach((el) => {
-        if (el.is_reserved && el.cleared_status === 'CLEARED') {
-          reserveFlag++
-        }
-      })
+          if (el.is_reserved && el.cleared_status === 'CLEARED') {
+            reserveFlag++
+          }
+        })
 
-      if(reserveFlag != this.unClearedBill.length){
-        this.showPayments = true
-      }
-        
+        if (reserveFlag != this.unClearedBill.length) {
+          this.showPayments = true
+        }
+
         this.$bvModal.show('modal')
       } else {
         this.$toast({
@@ -434,9 +433,8 @@ export default {
       this.unClearedBill = remove(this.unClearedBill, (n) => {
         return n.id !== e.id
       })
-
     },
-    setState(e){
+    setState(e) {
       this.showPayments = e
     },
     setAuthCode(e) {
