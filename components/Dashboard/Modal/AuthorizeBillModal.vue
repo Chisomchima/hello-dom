@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper
-    submit-title="Make Payment"
+    submit-title="Authorize"
     title="Payment"
     @ok="ok()"
     @hide="clear()"

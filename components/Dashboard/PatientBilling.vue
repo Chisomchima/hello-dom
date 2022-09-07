@@ -453,7 +453,6 @@ export default {
         let response = await this.$api.finance.auhtorizeHMO(this.authData)
         this.$nuxt.refresh()
         this.$bvModal.hide('authorize')
-        this.$bvModal.show('printInvoice?')
         this.pageChange(this.currentPage, this.filter)
         this.unClearedBill = []
         this.$toast({

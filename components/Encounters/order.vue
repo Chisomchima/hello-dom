@@ -85,7 +85,7 @@
                 >
                   <span
                     v-if="child.selected === true"
-                    class="badge-warning p-2 text-12 rounded mx-1 text-white"
+                    class="badge-light p-2 text-12 rounded mx-1 text-secondary"
                   >
                     {{ child.name }}
                     <span
@@ -154,7 +154,7 @@
                 >
                   <span
                     v-if="child.selected === true"
-                    class="badge-warning p-2 text-12 rounded mx-1 text-white"
+                    class="badge-light p-2 text-12 rounded mx-1 text-secondary"
                   >
                     {{ child.name }}
                     <span
@@ -235,29 +235,21 @@ export default {
         laboratory: {
           comments: '',
           lab_panels: [],
-          stat: true,
+          stat: false,
           service_center: null,
           payment_scheme: null,
         },
         imaging: {
           comments: '',
           img_obv: [],
-          stat: true,
+          stat: false,
           service_center: null,
           payment_scheme: null,
         },
         prescriptions: {
-          prescription_lines: [
-            {
-              dose: '-',
-              frequency: 0,
-              duration: 0,
-              quantity: 0,
-              drug_form: 0,
-            },
-          ],
-          status: 'string',
-          source: 'OPD',
+          prescription_lines: [],
+          status: '',
+          source: '',
         },
       },
     }

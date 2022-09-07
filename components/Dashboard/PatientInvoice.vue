@@ -97,7 +97,13 @@ export default {
           key: 'confirmed_at',
           label: 'Date',
           formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            if(value != null){
+               return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            }
+            else{
+              return ''
+            }
+           
           },
         },
         {
@@ -158,6 +164,7 @@ export default {
         name: '',
         dateFrom: '',
         dateTo: '',
+        patient: this.data.id
       },
     }
   },
@@ -233,7 +240,7 @@ export default {
     },
     async getInvoices(
       page = 1,
-      e = { size: 10, name: '', dateFrom: '', dateTo: '' }
+      e = { patient: this.data.id, size: 10, name: '', dateFrom: '', dateTo: '' }
     ) {
       this.busy = true
       this.filter = e

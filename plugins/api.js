@@ -10,6 +10,7 @@ import LabOrder from "@/services/laborder";
 import Finance from "@/services/finance";
 import Imaging from "@/services/imaging";
 import Finance_Settings from "@/services/finance_settings";
+import reports from "@/services/reports";
 
 export default (context, inject) => {
     // Initialize API factories
@@ -24,6 +25,7 @@ export default (context, inject) => {
         finance: Finance(context.$axios),
         imaging: Imaging(context.$axios),
         finance_settings: Finance_Settings(context.$axios),
+        reports: reports(context.$axios)
     };
 
     // Inject $api

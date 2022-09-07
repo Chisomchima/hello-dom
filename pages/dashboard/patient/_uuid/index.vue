@@ -115,7 +115,7 @@ export default {
     },
     printDepositSlip(e){
       this.template = e
-      this.$bvModal.show('printDepositSlip')
+      // this.$bvModal.show('printDepositSlip')
     },
     refresh(){
       this.$nuxt.refresh()

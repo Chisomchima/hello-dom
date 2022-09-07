@@ -164,8 +164,6 @@ export default {
       nurseSeen: 0,
 
       filters: {
-        by: '',
-        entry: '',
         department: [],
         clinic: [],
         provider: [],
@@ -173,7 +171,6 @@ export default {
         encounter_id: '',
         date_before: '',
         date_after: '',
-        worklist: true,
       },
     }
   },
@@ -204,24 +201,18 @@ export default {
       }, 500),
       deep: true,
     },
-
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //     if (newVal.by.length > 0) {
-    //       const newFilterObject = {
-    //         ...newVal,
-    //         [newVal.by]: newVal.entry,
-    //         worklist: true,
-    //       }
-    //       console.log(newFilterObject)
-    //       this.$emit('filter', newFilterObject)
-    //     } else {
-    //       this.$emit('filter', newVal)
-    //     }
-    //   }, 500),
-    //   deep: true,
-    //   immediate: true,
-    // },
+    'filters.date_before': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+    'filters.date_after': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
     genders: {},
   },
   async created() {
@@ -236,6 +227,7 @@ export default {
       this.providers = providers
       const { results: clinics } = await this.$api.core.clinics({ size: 1000 })
       this.clinics = clinics
+      console.log(providers)
       const { results: departments } = await this.$api.facility.departments({
         size: 1000,
       })
@@ -255,24 +247,21 @@ export default {
   methods: {
     clear() {
       this.filters = {
-        by: '',
-        entry: '',
         department: [],
         clinic: [],
         provider: [],
         status: '',
         encounter_id: '',
+        date_before: '',
+        date_after: '',
       }
-      this.applyFilters(this.filters)
+      this.applyFilter(this.filters)
     },
     applyFilter(newVal) {
-      if (newVal.by.length > 0) {
+      if (newVal) {
         const newFilterObject = {
           ...newVal,
-          [newVal.by]: newVal.entry,
-          worklist: true,
         }
-        // console.log(newFilterObject)
         this.filterFunc(newFilterObject)
       } else {
         this.filterFunc(newVal)
