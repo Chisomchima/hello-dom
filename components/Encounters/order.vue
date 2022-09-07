@@ -340,8 +340,6 @@ export default {
 <style lang="scss" scoped>
 .btn-secondary {
   color: $COLOR_TWO;
-  background-color: $COLOR_FOUR;
-  border-color: $COLOR_FOUR;
 }
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
