@@ -160,6 +160,7 @@ export default {
     showPayments: {
       type: Boolean,
       require: false,
+      default: () => false,
     },
     nameData: {
       type: Object,
@@ -245,16 +246,18 @@ export default {
     total() {
       this.balance = this.total - (this.payAmount + this.reserved)
     },
+    showPayments() {
+      if (this.showPayments == true) {
+        this.payments.push({
+          payment_method: null,
+          amount: '',
+        })
+      } else {
+        this.payments = []
+      }
+    },
   },
   async mounted() {
-    if (this.showPayments == true) {
-      this.payments.push({
-        payment_method: null,
-        amount: '',
-      })
-    } else {
-      this.payments = []
-    }
     this.balance = this.total
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
@@ -267,7 +270,6 @@ export default {
     ok() {
       let calc = 0
       const arr = this.payments
-      console.log(arr)
       if (arr.length > 0) {
         arr.map((el) => {
           calc += parseFloat(el.amount.replace(/,/g, ''))
@@ -284,7 +286,7 @@ export default {
           type: 'info',
           text: `Payment can not be higher than total price`,
         })
-      } else if (calc === this.total) {
+      } else if (calc === this.totalPaid) {
         arr.map((el) => {
           el.amount.toString().replace(/,/g, '')
           el.amount = el.amount.toString().replace(/,/g, '')
@@ -347,7 +349,7 @@ export default {
       this.balance = 0
       this.payAmount = 0
       this.$emit('hide')
-      this.$emit('clear')
+      this.$emit('clear', false)
     },
   },
 }

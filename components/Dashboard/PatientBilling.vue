@@ -3,6 +3,7 @@
     <div>
       <!-- <button @click="$bvModal.show('printInvoice?')" class="btn btn-outline-primary btn-sm">Print</button> -->
     </div>
+    
     <UtilsFilterComponent
       @uncleared="getUnclearedBill"
       @cleared="getClearedBill"
@@ -77,10 +78,12 @@
                 <b-dropdown-item
                   v-if="data.item.is_reserved === true"
                   class="text-capitalize"
+                  @click="unReserveBill(data.item)"
                   >Unreserve</b-dropdown-item
                 >
                 <b-dropdown-item class="text-capitalize"
                 v-if="data.item.is_reserved === false"
+                @click="reserveBill(data.item)"
                   >Reserve</b-dropdown-item
                 >
                 <b-dropdown-item class="text-capitalize"
@@ -130,7 +133,7 @@
       :nameData="data"
       :totalPaid="totalPaid"
       :showPayments="showPayments"
-      @clear="clear"
+      @clear="setState"
       @ok="payment($event)"
       @removedItem="deleteGoods($event)"
     />
@@ -139,7 +142,6 @@
       :total="total"
       :goods="unClearedBill"
       @authCode="setAuthCode"
-      @clear="clear"
     />
     <DashboardModalConfirmInvoicePrint :data="data" :reciept="template" />
   </div>
@@ -149,6 +151,7 @@
 import { DateTime } from 'luxon'
 import { remove } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
+import { error } from 'highcharts'
 
 export default {
   mixins: [TableFunc],
@@ -215,7 +218,7 @@ export default {
         bills: [],
         auth_code: '',
       },
-      showPayments: true,
+      showPayments: false,
       filter: {
         size: 10,
         name: '',
@@ -341,24 +344,47 @@ export default {
         })
       }
     },
+    async unReserveBill(e){
+      let tempID = e.id
+      let temp = e
+      delete temp.id
+      try{
+        let response = await this.$api.finance.unReserveBill(temp, tempID)
+        this.pageChange(this.currentPage, this.filter)
+        this.$toast({
+          type: 'success',
+          text: 'Bill unreserved',
+        })
+      } catch (error){
+        console.log(error)
+      }
+    },
+    async reserveBill(e){
+      let tempID = e.id
+      let temp = e
+      delete temp.id
+      try{
+        let response = await this.$api.finance.reserveBill(temp, tempID)
+        this.pageChange(this.currentPage, this.filter)
+        this.$toast({
+          type: 'success',
+          text: 'Bill unreserved',
+        })
+      } catch (error){
+        console.log(error)
+      }
+    },
     proceedToPayout() {
       let insurance = 0
       let self = 0
-      let lengthOfCart = 0
 
       this.unClearedBill.forEach((el) => {
-        if (el.is_reserved && el.cleared_status === 'CLEARED') {
-          lengthOfCart++
-        }
         if (el.billed_to_type === 'INSURANCE' && el.is_auth_req === true) {
           insurance++
         } else {
           self++
         }
       })
-
-      console.log(lengthOfCart)
-      console.log('generic', this.unClearedBill.length)
 
       if (insurance != 0 && self != 0) {
         this.$toast({
@@ -368,11 +394,17 @@ export default {
       } else if (insurance != 0 && self == 0) {
         this.authorizeBill()
       } else if (insurance == 0 && self != 0) {
-        if(lengthOfCart === this.getClearedBill.length){
-          this.showPayments = false
-        } else{
-          this.showPayments = true
+        let reserveFlag = 0
+        this.unClearedBill.forEach((el) => {
+        if (el.is_reserved && el.cleared_status === 'CLEARED') {
+          reserveFlag++
         }
+      })
+
+      if(reserveFlag != this.unClearedBill.length){
+        this.showPayments = true
+      }
+        
         this.$bvModal.show('modal')
       } else {
         this.$toast({
@@ -396,15 +428,18 @@ export default {
         return n.id !== e.id
       })
 
-      // this.unClearedBill.splice(e, 1)
+    },
+    setState(e){
+      this.showPayments = e
     },
     setAuthCode(e) {
       this.authData.auth_code = e
+      this.validateHMO()
     },
     async validateHMO() {
       let billID = []
-      if (unClearedList.length > 0) {
-        billID = unClearedList.map((item) => item.id)
+      if (this.unClearedBill.length > 0) {
+        billID = this.unClearedBill.map((item) => item.id)
       }
       this.authData.bills = billID
       try {

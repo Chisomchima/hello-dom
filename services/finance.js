@@ -14,6 +14,12 @@ export default axios => ({
         return axios.$post('/finance/bills/pay/', body);
     },
     auhtorizeHMO(body) {
-        return axios.$post('/ffinance/bills/authorize/', body);
+        return axios.$put('/finance/bills/authorize/', body);
+    },
+    unReserveBill(body, id) {
+        return axios.$patch(`finance/bills/${id}/unreserve/`, body);
+    },
+    reserveBill(body, id) {
+        return axios.$patch(`finance/bills/${id}/reserve/`, body);
     }
 });

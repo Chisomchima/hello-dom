@@ -130,14 +130,10 @@ export default {
   },
   data() {
     return {
-      dataObject: {
-        amount: '',
-      },
       authCode: '',
+      dateTest: '',
       payAmount: 0,
       balance: 0,
-      paymentMethod: [],
-      payments: [],
       fields: [
         {
           key: 'bill_source',
@@ -197,7 +193,6 @@ export default {
       this.balance = 0
       this.payAmount = 0
       this.$emit('hide')
-      this.$emit('clear')
     },
   },
 }

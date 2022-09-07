@@ -5,7 +5,7 @@
       <ValidationObserver ref="form">
         <form>
           <div class="row">
-            <div class="col-md-6 mb-2">
+            <div class="col-md-12 mb-2">
               <ValidationProviderWrapper
                 name="Services Center"
                 :rules="['required']"
