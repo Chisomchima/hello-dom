@@ -73,6 +73,34 @@ export default {
              },
            ],
         },
+
+          {
+          href: '/dashboard/reports',
+          title: 'Reports',
+          icon: 'fas fa-file',
+           child: [
+             {
+               href: '/dashboard/reports/encounter',
+               title: 'Encounter report',
+               icon: 'fas fa-list-ul',
+             },
+             {
+               href: '/dashboard/reports/laboratory',
+               title: 'Laboratory report',
+               icon: 'fas fa-list-ul',
+             },
+             {
+               href: '/dashboard/reports/imaging',
+               title: 'Imaging report',
+               icon: 'fas fa-list-ul',
+             },
+             {
+               href: '/dashboard/reports/patient',
+               title: 'Patient report',
+               icon: 'fas fa-list-ul',
+             },
+           ],
+        },
           {
           href: '/dashboard/cso',
           title: 'Customer Service Officer',

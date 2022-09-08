@@ -112,7 +112,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'payer_scheme',
+          key: 'payer_scheme.name',
           label: 'Scheme',
            formatter: (value) => {
             if(Object.keys(value).length > 0){

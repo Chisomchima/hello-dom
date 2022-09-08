@@ -246,7 +246,7 @@ export default {
           service_center: null,
           payment_scheme: null,
         },
-        prescriptions: {
+        prescription: {
           prescription_lines: [],
           status: '',
           source: '',
@@ -311,27 +311,45 @@ export default {
       let arr = []
       this.labServiceOptions.forEach((el) => {
         el.lab_panels.filter((newEl) => {
-          if (newEl.selected === true) {
+          if (newEl.selected == true) {
             arr.push(newEl.id)
           }
         })
       })
-      this.requestBody.laboratory.lab_panels = arr
-      console.log('laboratory', this.requestBody.laboratory)
+      if(arr.length > 0){
+        this.requestBody.laboratory.lab_panels = arr
+      }
+      else{
+        this.requestBody.laboratory = null
+      }
+
       let imgArr = []
       this.imagingOption.forEach((el) => {
         el.img_observations.filter((newEl) => {
-          if (newEl.selected === true) {
+          if (newEl.selected == true) {
             imgArr.push(newEl.id)
           }
         })
       })
 
-      this.requestBody.imaging.img_obv = imgArr
-      console.log('imaging', this.requestBody.imaging)
+      if(imgArr.length > 0){
+        this.requestBody.imaging.img_obv = imgArr
+      }
+      else{
+        this.requestBody.imaging = null
+      }
+      
+      this.requestBody.prescription = null
 
-      let response = await this.$api.encounter.orderOnEncounter(this.requestBody, this.consultationData.id)
-      console.log(response) 
+      let submitBody = this.requestBody
+
+      let response = await this.$api.encounter.orderOnEncounter(submitBody, this.consultationData.id)
+      if(response){
+        this.$toast({
+          type: 'success',
+          text: `Order created successfully`,
+        })
+      }
     },
   },
 }

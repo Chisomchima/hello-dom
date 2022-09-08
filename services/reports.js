@@ -4,4 +4,9 @@ export default axios => ({
             params
         })
     },
+    laboratoryReport(params = {}) {
+        return axios.$get('laboratory/reports', {
+            params
+        })
+    },
 })
