@@ -58,6 +58,21 @@
           ></div>
         </slot>
       </template>
+      <template #cell(total_amount)="data">
+        <slot name="total_amount" :data="data">
+          <div>
+            {{numberWithCommas(data.item.total_amount)}}
+        </div>
+        </slot>
+      </template>
+      <template #cell(selling_price)="data">
+        <slot name="selling_price" :data="data">
+          <div>
+            {{numberWithCommas(data.item.selling_price)}}
+        </div>
+        </slot>
+      </template>
+      
       <template #cell(week)="data">
         <slot name="week" :data="data">
           {{ data.value }}
@@ -227,6 +242,8 @@
       <template #cell(download)="data">
         <slot name="download" :data="data">{{ data.value }}</slot>
       </template>
+
+      
 
       <template #cell(actions)="row">
         <div class="text-right w-auto">
@@ -484,6 +501,11 @@ export default {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length
       // this.currentPage = 1
+    },
+
+    numberWithCommas(x) {
+      console.log(x)
+     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
     },
 
     disabledTableRowMethod(item, type) {

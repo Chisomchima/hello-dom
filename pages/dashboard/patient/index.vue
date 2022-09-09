@@ -97,6 +97,12 @@ export default {
           key: 'phone_number',
         },
         {
+          key: 'deposit',
+          formatter: (value) => {
+            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+          },
+        },
+        {
           label: '',
           key: 'dots',
         },

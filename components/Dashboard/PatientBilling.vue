@@ -506,7 +506,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .dropdown-menu {
   position: absolute;
   top: 100%;
