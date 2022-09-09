@@ -182,7 +182,7 @@ export default {
         {
           key: 'phone_number',
           name: 'Phone Number',
-          rules: ['required', 'digits:11'],
+          rules: ['required',],
           value: '',
           show: true,
         },

@@ -93,7 +93,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'price_list',
+          key: 'price_list.name',
           label: 'Pricelist',
           sortable: true,
         },

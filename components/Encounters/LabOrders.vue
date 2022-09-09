@@ -684,6 +684,7 @@ export default {
       if (this.$refs.runValidation) {
         this.$refs.runValidation.click()
       }
+
       this.patientData.email = this.provisionalEmail
       this.patientData.age = this.age
       this.labOrderData.patient = this.patientData
@@ -699,6 +700,7 @@ export default {
             text: 'Lab order created',
           })
           this.getLabOrders()
+          this.$nuxt.refresh()
           this.closeModal()
         } catch {
           this.$toast({
@@ -714,7 +716,7 @@ export default {
 
     async getLabOrders(page = 1) {
       try {
-        if(this.currentPage != 1){
+        if (this.currentPage != 1) {
           page = this.currentPage
         }
         this.busy = true

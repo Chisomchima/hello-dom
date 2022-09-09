@@ -180,6 +180,9 @@ export default {
           },
         },
         {
+          key: 'description',
+        },
+        {
           key: 'bill_source',
         },
         {
@@ -190,9 +193,7 @@ export default {
           label: 'Bill type',
           key: 'billed_to_type',
         },
-        {
-          key: 'description',
-        },
+        
         {
           key: 'quantity',
         },
@@ -334,15 +335,20 @@ export default {
       }
     },
     addToClear(e, item) {
-      console.log(e, item)
       if (e) {
         if (item.cleared_status === 'CLEARED' && item.is_reserved == false) {
           this.$toast({
             type: 'info',
             text: 'Bill has already been cleared',
           })
-        } else {
+        } else if(item.cleared_status === 'UNCLEARED' && item.is_reserved == false){
           this.unClearedBill.push(item)
+        }
+        else{
+          this.$toast({
+            type: 'info',
+            text: `Reserved bill can't be invoiced`,
+          })
         }
       } else {
         this.unClearedBill = remove(this.unClearedBill, (n) => {

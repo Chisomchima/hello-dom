@@ -42,9 +42,11 @@
                   type="number"
                 /> -->
                  <v-select
-                  :options="[]"
+                  :options="pricelists"
                   v-model="scheme.price_list"
                   class="style-chooser"
+                  label="name"
+                  :reduce="(opt) => opt.id"
                 ></v-select>
               </ValidationProviderWrapper>
             </div>
@@ -72,6 +74,7 @@ export default {
         payer: null,
         price_list: null
       },
+      pricelists: []
     }
   },
   watch: {
@@ -82,7 +85,6 @@ export default {
           this.scheme.name = data.name
           this.scheme.type = data.type
           this.scheme.price_list = data.price_list
-          this.scheme.id = data.id
           this.scheme.id = data.id
           this.scheme.payer = data.payer
         }
@@ -103,7 +105,11 @@ export default {
       default: () => 'Add Scheme',
     },
   },
-  mounted() {
+  async mounted() {
+    let response = await this.$api.finance_settings.getPriceList({
+      size: 10000
+    })
+    this.pricelists = response.results
   },
 
   methods: {
@@ -132,6 +138,8 @@ export default {
       }
     },
     async editScheme() {
+       this.scheme.payer = this.$route.params.id
+      this.scheme.payer = ~~this.scheme.payer
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.editPayer(

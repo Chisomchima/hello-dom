@@ -179,6 +179,7 @@ export default {
         })
         this.items = data.results
         this.pages = data.total_pages
+        this.$nuxt.refresh()
         this.busy = false
       } catch (error) {
         console.log(error)

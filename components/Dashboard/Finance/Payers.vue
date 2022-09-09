@@ -94,7 +94,7 @@ export default {
             this.newTitle = 'Add payer'
         },
         gotoPayer(e){
-            this.$router.push({
+        this.$router.push({
         name: 'dashboard-settings-finance-payer-id',
         params: {
           id: e.id,

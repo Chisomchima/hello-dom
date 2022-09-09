@@ -33,7 +33,7 @@
                   label="Spinning"
                 ></b-spinner>
               </div>
-              <button @click="downloadEncReport" class="btn btn-primary">
+              <button @click="downloadEncReport" class="btn btn-outline-primary">
                 Download
               </button>
             </div>
@@ -127,14 +127,14 @@ export default {
       this.downloading = true
       const response = await fetch(
         `${process.env.BASE_URL}encounters/reports/?department=${
-          this.currentFilter.department
-        }&clinic=${this.currentFilter.clinic}&provider=${
-          this.currentFilter.provider
+          this.currentFilter.department ? this.currentFilter.department : ''
+        }&clinic=${this.currentFilter.clinic ? this.currentFilter.clinic : ''}&provider=${
+          this.currentFilter.provider ? this.currentFilter.provider : ''
         }&status=${this.currentFilter.status}&encounter_id=${
-          this.currentFilter.encounter_id
+          this.currentFilter.encounter_id ? this.currentFilter.encounter_id : ''
         }&to_excel=${true}&date_before=${
-          this.currentFilter.date_before
-        }&date_after=${this.currentFilter.date_after}`,
+          this.currentFilter.date_before ? this.currentFilter.date_before : ''
+        }&date_after=${this.currentFilter.date_after ? this.currentFilter.date_after : ''}`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
@@ -148,7 +148,7 @@ export default {
         link.download = `Encounter Report`
         link.href = objectURL
         this.downloading = false
-        this.filter(1)
+        // this.filter(1)
         link.click()
       } else if (response.status === 403) {
         this.downloading = false

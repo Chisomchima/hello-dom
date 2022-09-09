@@ -86,6 +86,7 @@ export default {
   },
   methods: {
     async pageChange(page = 1) {
+    this.$nuxt.refresh()  
       try {
         this.busy = true
         const data = await this.$api.encounter.getPatient(

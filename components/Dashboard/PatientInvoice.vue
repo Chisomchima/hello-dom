@@ -11,7 +11,7 @@
             <div class="col-md-5">
               <span class="text-12 text-grey">Date from:</span>
               <input
-                type="datetime-local"
+                type="date"
                 class="form-control"
                 :max="maxDate"
                 v-model="filter.dateFrom"
@@ -20,7 +20,7 @@
             <div class="col-md-5">
               <span class="text-12 text-grey">Date to:</span>
               <input
-                type="datetime-local"
+                type="date"
                 class="form-control"
                 :min="minDate"
                 v-model="filter.dateTo"
@@ -115,11 +115,13 @@ export default {
           key: 'payer_scheme.name',
           label: 'Scheme',
            formatter: (value) => {
-            if(Object.keys(value).length > 0){
+            if(value != null){
+              if(Object.keys(value).length > 0){
               return value 
             }
             else{
               return ''
+            }
             }
           },
           sortable: true,
@@ -242,7 +244,7 @@ export default {
       page = 1,
       e = { patient: this.data.id, size: 10, name: '', dateFrom: '', dateTo: '' }
     ) {
-      this.busy = true
+      
       this.filter = e
 
       this.currentPage = page

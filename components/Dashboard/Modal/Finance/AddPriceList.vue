@@ -94,6 +94,11 @@ export default {
             this.pricelist
           )
           this.$emit('refresh')
+          this.$router.push({
+        name: 'dashboard-settings-finance-pricelist-id',
+        params: {
+          id: data.id,
+        }})
           this.$bvModal.hide('addPriceList')
           // console.log(data)
         } catch (error) {

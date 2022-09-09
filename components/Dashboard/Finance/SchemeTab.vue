@@ -84,10 +84,16 @@ export default {
           sortable: true,
         },
         {
+          key: 'payer.name',
+          label: 'Payer name',
+          sortable: true,
+        },
+        {
           key: 'type',
           label: 'Type',
           sortable: true,
         },
+        
         {
           key: 'price_list.name',
           label: 'Pricelist',

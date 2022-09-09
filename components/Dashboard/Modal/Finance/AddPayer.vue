@@ -49,12 +49,12 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper
                 name="Phone number"
-                :rules="['digits:11']"
+                :rules="['']"
               >
                 <input
                   class="form-control"
                  v-model="payer.mobile_number"
-                  type="text"
+                  type="number"
                 />
               </ValidationProviderWrapper>
             </div>
@@ -133,8 +133,13 @@ export default {
         try {
         const data = await this.$api.finance_settings.addPayer(this.payer)
         this.$emit('refresh')
+        
+        this.$router.push({
+        name: 'dashboard-settings-finance-payer-id',
+        params: {
+          id: data.id,
+        }})
         this.$bvModal.hide('addPayer')
-        // console.log(data)
       } catch (error) {
         console.log(error)
       }

@@ -33,7 +33,7 @@
                   label="Spinning"
                 ></b-spinner>
               </div>
-              <button @click="downloadEncReport" class="btn btn-primary">
+              <button @click="downloadEncLaboratory" class="btn btn-outline-primary">
                 Download
               </button>
             </div>
@@ -260,18 +260,16 @@ export default {
         this.busy = false
       }
     },
-    async downloadEncReport() {
+    async downloadEncLaboratory() {
       this.downloading = true
       const response = await fetch(
-        `${process.env.BASE_URL}encounters/reports/?department=${
-          this.currentFilter.department
-        }&clinic=${this.currentFilter.clinic}&provider=${
-          this.currentFilter.provider
-        }&status=${this.currentFilter.status}&encounter_id=${
-          this.currentFilter.encounter_id
-        }&to_excel=${true}&date_before=${
-          this.currentFilter.date_before
-        }&date_after=${this.currentFilter.date_after}`,
+        `${process.env.BASE_URL}laboratory/?service_center=${this.currentFilter.service_center ? this.currentFilter.service_center :''}&lab_unit=${
+          this.currentFilter.lab_unit ? this.currentFilter.lab_unit : ""
+        }&status=${this.currentFilter.status ? this.currentFilter.status : ''}&asn=${
+          this.currentFilter.asn ? this.currentFilter.asn : ""
+        }&to_excel=${true}&approved_date_before=${
+          this.currentFilter.approved_date_before ? this.currentFilter.approved_date_before : ''
+        }&approved_date_before=${this.currentFilter.approved_date_before ? this.currentFilter.approved_date_before : ""}`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
@@ -282,10 +280,10 @@ export default {
         const data = await response.blob()
         const objectURL = URL.createObjectURL(data)
         const link = document.createElement('a')
-        link.download = `Encounter Report`
+        link.download = `Laboratory Report`
         link.href = objectURL
         this.downloading = false
-        this.filter(1)
+        // this.filter(1)
         link.click()
       } else if (response.status === 403) {
         this.downloading = false
