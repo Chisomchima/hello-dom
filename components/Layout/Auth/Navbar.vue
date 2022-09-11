@@ -237,8 +237,8 @@
         </div>
       </div>
 
-      <div v-if="isMobile" class="d-lg-none d-block">
-        <!-- <nav
+      <!-- <div v-if="isMobile" class="d-lg-none d-block">
+        <nav
           id="nav-bar-items"
           class="mt-5 nav-items d-flex flex-column order-last order-lg-first"
         >
@@ -314,10 +314,10 @@
           <div class="nav-item py-3 mx-4">
             <a href="#" class="nav-item-link text-white dropdownsize">Shop</a>
           </div>
-        </nav> -->
-      </div>
+        </nav>
+      </div> -->
     </div>
-    <div v-show="fullScreenMenu" class="closemobile" @click="closemenu()"></div>
+    <!-- <div v-show="fullScreenMenu" class="closemobile" @click="closemenu()"></div> -->
   </div>
 </template>
 
