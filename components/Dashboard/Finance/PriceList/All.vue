@@ -52,15 +52,16 @@
                   width="24"
                   height="24"
                   preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 512 512"
                 >
-                  <g fill="none" fill-rule="evenodd">
-                    <path d="M0 0h24v24H0z" />
-                    <path
-                      fill="currentColor"
-                      d="M11.5 4C8.851 4 6.739 6.38 7.027 9a1.01 1.01 0 0 1-.758 1.09A3.002 3.002 0 0 0 7 16h1a1 1 0 1 1 0 2H7a5 5 0 0 1-2-9.584a6.5 6.5 0 0 1 12.586-2.204A6.002 6.002 0 0 1 16 18a1 1 0 1 1 0-2a4 4 0 0 0 .655-7.947a1.01 1.01 0 0 1-.81-.732A4.502 4.502 0 0 0 11.5 4Zm1.5 8.416l1.293 1.292a1 1 0 0 0 1.414-1.416l-2.824-2.819a1.25 1.25 0 0 0-1.766 0l-2.824 2.82a1 1 0 0 0 1.414 1.415L11 12.416V21a1 1 0 1 0 2 0v-8.584Z"
-                    />
-                  </g>
+                  <path
+                    fill="currentColor"
+                    d="m346.231 284.746l-90.192-90.192l-90.192 90.192l22.627 22.627l51.565-51.565V496h32V255.808l51.565 51.565l22.627-22.627z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M400 161.453V160c0-79.4-64.6-144-144-144S112 80.6 112 160v2.491A122.285 122.285 0 0 0 49.206 195.2A109.4 109.4 0 0 0 16 273.619c0 31.119 12.788 60.762 36.01 83.469C74.7 379.275 105.338 392 136.07 392H200v-32h-63.93C89.154 360 48 319.635 48 273.619c0-42.268 35.64-77.916 81.137-81.155L144 191.405V160a112 112 0 0 1 224 0v32.04l15.8.2c46.472.588 80.2 34.813 80.2 81.379C464 322.057 428.346 360 382.83 360H312v32h70.83a109.749 109.749 0 0 0 81.14-35.454c20.655-22.207 32.03-51.657 32.03-82.927c0-58.437-40.284-104.227-96-112.166Z"
+                  />
                 </svg>
               </div>
             </div>
@@ -73,6 +74,7 @@
           :pages="pages"
           :busy="busy"
           :fields="fields"
+          @edit="editPricelistItem"
           :showBaseCount="trigger"
           :currentPage="currentPage"
           :totalRecords="totalRecords"
@@ -80,35 +82,19 @@
           <template #type="{ data }">
             <span>{{ data.item.type }}</span>
           </template>
-          <template #edit="{ data }">
-            <button @click.prevent="edit(data.item)" class="text-start btn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                role="img"
-                width="18"
-                height="18"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583v4.43zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585l1.594-1.58zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006v-1.589z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z"
-                />
-              </svg>
-            </button>
-          </template>
         </TableComponent>
       </UtilsFilterComponent>
       <div>
         <DashboardModalFinanceAddBulkPriceList
           @refresh="refreshMe"
           :title="newTitle"
-          :editData="modalData"
+        />
+      </div>
+
+      <div>
+        <DashboardModalFinanceAddPriceListManually
+          :title="newTitle"
+          :editData="editData"
         />
       </div>
     </div>
@@ -123,30 +109,14 @@ export default {
   data() {
     return {
       items: [],
-      modalData: {
-        name: '',
-        address: '',
-      },
       downloading: false,
-      priceListItem: {
-        co_pay: {
-          type: '',
-          value: '',
-        },
-        bill_item_code: '',
-        selling_price: '',
-        is_auth_req: null,
-        is_capitated: null,
-        module: '',
-        is_exclusive: null,
-        post_auth_allowed: null,
-      },
       fetchBy: null,
+      editData: {},
       queryString: '',
       pages: 1,
       totalRecords: 0,
       currentPage: 1,
-      newTitle: '',
+      newTitle: 'Edit pricelist',
       fields: [
         {
           key: 'name',
@@ -189,7 +159,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'edit',
+          key: 'actions',
           label: '',
           sortable: false,
         },
@@ -233,6 +203,10 @@ export default {
           id: e.id,
         },
       })
+    },
+    editPricelistItem(e) {
+     this.editData = e
+      this.$bvModal.show('addPricelistManually')
     },
     searchPricelist(e) {
       console.log(e)
