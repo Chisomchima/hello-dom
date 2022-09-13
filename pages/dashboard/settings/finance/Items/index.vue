@@ -1,58 +1,58 @@
 <template>
   <div>
-  <h5>Finance Settings</h5>
+    <BackwardNavigation />
+    <h5>Finance Settings</h5>
     <UtilsBaseCardTab>
-         <UtilsCardTab title="Payers">
-              <keep-alive>
-                  <DashboardFinancePayers />
-              </keep-alive>
-          </UtilsCardTab>
-        <UtilsCardTab title="Schemes">
-              <keep-alive>
-                  <DashboardFinanceSchemeTab />
-              </keep-alive>
-        </UtilsCardTab>
-         <UtilsCardTab title="Pricelists">
-              <keep-alive>
-                  <DashboardFinancePriceList />
-              </keep-alive>
-          </UtilsCardTab>
-         <UtilsCardTab title="Billable Items">
-
-         <TabView class="tabview-custom">
+      <UtilsCardTab title="Payers">
+        <keep-alive>
+          <DashboardFinancePayers />
+        </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Schemes">
+        <keep-alive>
+          <DashboardFinanceSchemeTab />
+        </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Pricelists">
+        <keep-alive>
+          <DashboardFinancePriceList />
+        </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Billable Items">
+        <TabView class="tabview-custom">
           <TabPanel class="dark-panel">
             <template #header>
-            <span class="ml-2">All</span>
-          </template>
+              <span class="ml-2">All</span>
+            </template>
             <DashboardFinanceBillableItemsAll />
           </TabPanel>
-          <TabPanel class="dark-panel" >
-          <template #header>
-            <span class="ml-2">Encounters</span>
-          </template>
-           <DashboardFinanceBillableItemsEncounters />
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Encounters</span>
+            </template>
+            <DashboardFinanceBillableItemsEncounters />
           </TabPanel>
-          <TabPanel class="dark-panel" >
-          <template #header>
-            <span class="ml-2">Imaging</span>
-          </template>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Imaging</span>
+            </template>
             <DashboardFinanceBillableItemsImaging />
           </TabPanel>
-          <TabPanel class="dark-panel" >
-          <template #header>
-            <span class="ml-2">Laboratory</span>
-          </template>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Laboratory</span>
+            </template>
             <DashboardFinanceBillableItemsLaboratory />
           </TabPanel>
         </TabView>
-          </UtilsCardTab>
+      </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>
 
 <script>
 export default {
-    data() {
+  data() {
     return {
       data: null,
     }
@@ -62,37 +62,37 @@ export default {
 
 <style lang="scss">
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    background: #ffffff;
-    border-color: $COLOR_THREE !important;
-    color: $COLOR_THREE;
-    font-size: 14px;
+  background: #ffffff;
+  border-color: $COLOR_THREE !important;
+  color: $COLOR_THREE;
+  font-size: 14px;
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-    border: solid #dee2e6;
-    border-width: 0 0 2px 0;
-    border-color: transparent transparent #dee2e6 transparent;
-    background: #ffffff;
-    font-size: 14px;
-    color: #6c757d;
-    padding: 1rem;
-    font-weight: 600;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
-    transition: box-shadow 0.2s;
-    margin: 0 0 -2px 0;
+  border: solid #dee2e6;
+  border-width: 0 0 2px 0;
+  border-color: transparent transparent #dee2e6 transparent;
+  background: #ffffff;
+  font-size: 14px;
+  color: #6c757d;
+  padding: 1rem;
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  transition: box-shadow 0.2s;
+  margin: 0 0 -2px 0;
 }
 
 .p-tabview .p-tabview-nav {
-    background: #ffffff;
-    border: 1px solid #dee2e6;
-    /* border-width: 0 0 2px 0; */
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  /* border-width: 0 0 2px 0; */
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
-    outline: 0 none;
-    outline-offset: 0;
-    box-shadow: inset 0 0 0 0.1rem #fff;
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.1rem #fff;
 }
 
 li {

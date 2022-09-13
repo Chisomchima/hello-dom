@@ -85,7 +85,7 @@ export default {
         },
         {
           key: 'payer.name',
-          label: 'Payer name',
+          label: 'Payer',
           sortable: true,
         },
         {

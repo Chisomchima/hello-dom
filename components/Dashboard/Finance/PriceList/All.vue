@@ -95,6 +95,7 @@
         <DashboardModalFinanceAddPriceListManually
           :title="newTitle"
           :editData="editData"
+          @refresh="refreshMe"
         />
       </div>
     </div>

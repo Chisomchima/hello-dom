@@ -1,12 +1,13 @@
 <template>
   <div>
+    <BackwardNavigation />
     <div class="page-heading mb-4">Service Center</div>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Service Center">
         <DashboardImagingServiceCenterSettings />
       </UtilsCardTab>
       <UtilsCardTab title="Modality Unit">
-       <DashboardImagingServiceUnitSettings />
+        <DashboardImagingServiceUnitSettings />
       </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>

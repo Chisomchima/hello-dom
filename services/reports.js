@@ -9,4 +9,9 @@ export default axios => ({
             params
         })
     },
+    imagingReport(params = {}) {
+        return axios.$get('imaging/reports', {
+            params
+        })
+    },
 })

@@ -1,9 +1,10 @@
 <template>
   <div>
+    <BackwardNavigation />
     <div class="page-heading mb-4">Service Configuration</div>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Imaging Observation">
-       <DashboardImagingObservationSettings />
+        <DashboardImagingObservationSettings />
       </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>

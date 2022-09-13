@@ -4,7 +4,8 @@
       size="md"
       id="addPricelistManually"
       :title="title"
-     
+      @ok="ok()"
+      @hide="clear()"
     >
       <ValidationObserver ref="form">
         <form>
@@ -128,6 +129,7 @@ export default {
         if (Object.keys(newVal).length > 0) {
           let data = { ...newVal }
           console.log(data)
+          this.pricelist.id = data.id
           this.pricelist.co_pay.value = data.co_pay.value
           this.pricelist.co_pay.type = data.co_pay.type
           this.pricelist.price_list = data.price_list
@@ -154,13 +156,7 @@ export default {
       default: () => 'Add pricelist',
     },
   },
-  async mounted() {
-    // let payers = await this.$api.finance_settings.getPayers({size: 10000})
-    // this.payers = payers.results
-    // let pricelist = await this.$api.finance_settings.getPriceList({size: 10000})
-    // this.price_list = pricelist.results
-    // console.log(this.price_list)
-  },
+  async mounted() {},
 
   methods: {
     async ok() {
@@ -186,26 +182,15 @@ export default {
       }
     },
     async editpricelist() {
-      if (this.pricelist.payer.id) {
-        this.pricelist.payer = this.pricelist.payer.id
-      } else {
-        this.pricelist.payer
-      }
-
-      if (this.pricelist.price_list.id) {
-        this.pricelist.price_list = this.pricelist.price_list.id
-      } else {
-        this.pricelist.price_list
-      }
-
+      delete this.pricelist.id
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.editPricelistItem(
             this.pricelist,
-            this.pricelist.id
+            this.pricelist.price_list
           )
           this.$emit('refresh')
-          this.$bvModal.hide('addpricelistwithpayer')
+          this.$bvModal.hide('addPricelistManually')
         } catch (error) {}
       }
     },
