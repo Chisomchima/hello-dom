@@ -13,7 +13,7 @@
 
     <div class="card">
       <div class="card-body">
-        <DashboardLabWorklistFilter @filters="getLabOrders(1, $event)" />
+        <DashboardLabWorklistFilter @filter="filter(1, $event)" />
       </div>
     </div>
 
@@ -37,7 +37,7 @@
             :busy="busy"
             :dropdown-item="['cancel']"
             @cancel="cancelRequestModal($event)"
-            @page-changed="getLabOrders($event, currentFilter)"
+            @page-changed="filter($event, currentFilter)"
           >
             <template #status="{ data }">
               <div>
@@ -206,7 +206,7 @@
     </div>
 
     <div class="create_order">
-      <DashboardModalLabPanelOrder @refresh="getLabOrders()" />
+      <DashboardModalLabPanelOrder @refresh="filter()" />
     </div>
 
     <!-- ***********workflow********* -->
@@ -215,7 +215,7 @@
         :id="id"
         :status="status"
         :modal-title="modalTitle"
-        @refresh="getLabOrders()"
+        @refresh="filter()"
       />
     </div>
 
@@ -224,7 +224,7 @@
         :id="id"
         :lab-order-panel="labOrderPanel"
         :manage-input="manageInput"
-        @refresh="getLabOrders()"
+        @refresh="filter()"
       />
     </div>
 
@@ -233,14 +233,14 @@
         :id="id"
         :lab-order-panel="labOrderPanel"
         :status="status"
-        @refresh="getLabOrders()"
+        @refresh="filter()"
       />
     </div>
 
     <div>
       <DashboardModalLabStepsCancel
         :lab-order-panel="labOrderPanel"
-        @refresh="getLabOrders()"
+        @refresh="filter()"
       />
     </div>
 
@@ -251,9 +251,9 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
-import { ObjectValuesAreTruthful } from '@/utils/friendly-helpers'
+import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc],
+  mixins: [TableFunc,FilterLogic],
   data() {
     return {
       currentFilter: {},
@@ -308,21 +308,6 @@ export default {
       ],
     }
   },
-  watch: {
-    '$route.query.filter': {
-      handler(newVal) {
-        if (newVal) {
-          const filterObject = JSON.parse(newVal)
-          const hasValues = ObjectValuesAreTruthful(filterObject)
-          if (hasValues) {
-            this.getLabOrders(1, filterObject)
-          }
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
   methods: {
     save_file(e) {
       this.downloading = true
@@ -368,7 +353,7 @@ export default {
         this.downloading = false
       }
     },
-    async getLabOrders(page, e) {
+    async filter(page, e) {
       this.currentFilter = e
       try {
         this.busy = true

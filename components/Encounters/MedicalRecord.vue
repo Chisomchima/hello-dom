@@ -103,7 +103,7 @@ export default {
               ? iterator.provider.first_name + " " + iterator.provider.last_name
               : "",
             clinic: iterator.clinic ? iterator.clinic.name : " ",
-            date: b,
+            date: iterator.encounter_datetime,
             status: iterator.status,
             department: dept,
             id: iterator.id,

@@ -281,7 +281,7 @@ export default {
           let b = y + ", " + z;
 
           this.itemsToShow.push({
-            time: iterator.created_at ? b : "",
+            time: iterator.created_at,
             bmi: iterator.value.bmi ? iterator.value.bmi : "nil",
             height: iterator.value.height,
             weight: iterator.value.weight,

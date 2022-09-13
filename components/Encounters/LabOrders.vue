@@ -438,6 +438,7 @@
 <script>
 import Accordion from 'primevue/accordion'
 import AccordionTab from 'primevue/accordiontab'
+import { DateTime } from 'luxon'
 export default {
   components: { Accordion, AccordionTab },
   data() {
@@ -755,7 +756,6 @@ export default {
             ordered_datetime: iterator.ordered_datetime,
             ordered_by: iterator.ordered_by,
             comments: iterator.comments,
-            ordered_datetime: b,
             id: iterator.id,
           })
         }

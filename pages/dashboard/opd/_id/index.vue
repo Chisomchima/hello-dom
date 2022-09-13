@@ -16,37 +16,46 @@
     </div>
 
     <div class="bg-light text-12 border-radius mb-3" v-else>
-      <div class="d-flex justify-content-between align-items-center mb-2 bg-light">
-      <BackwardNavigation />
-       <div>
-         <div v-if="consultationData.status === 'DS'" class="ml-2">
-          <!-- <button disabled class="btn btn-outline-success ">
-                        Signed
-                    </button> -->
-          <div style="width: 5rem" class="badge-success rounded text-center">
-            Signed
-          </div>
+      <div
+        class="d-flex justify-content-between align-items-center mb-2 bg-light"
+      >
+        <BackwardNavigation />
+        <div>
+          
+          <BaseButton
+            v-if="
+              consultationData.status === 'DS' 
+            "
+            @click="signAndCloseEnc"
+            class="btn-success btn-sm"
+            :disabled="
+              consultationData
+                ? consultationData.bill.cleared_status === 'CLEARED'
+                  ? false
+                  : true
+                : ''
+            "
+          >
+            Sign
+          </BaseButton>
+          <BaseButton
+            v-if="
+              consultationData.status === 'NS' ||
+              consultationData.status === 'NEW' 
+            "
+            
+            class="btn-success btn-sm"
+            :disabled="
+              consultationData
+                ? consultationData.bill.cleared_status === 'CLEARED'
+                  ? false
+                  : true
+                : ''
+            "
+          >
+            Acknowledge
+          </BaseButton>
         </div>
-        <BaseButton
-          v-if="
-            consultationData.status === 'NS' ||
-            consultationData.status === 'NEW'
-          "
-          @click="signAndCloseEnc"
-          class="btn-success"
-          :disabled="
-            consultationData
-              ? consultationData.bill.cleared_status === 'CLEARED'
-                ? false
-                : true
-              : ''
-          "
-        >
-          Sign
-        </BaseButton>
-       </div>
-
-        
       </div>
       <DashboardModalDoctorSign @refresh="showSignature" />
       <div
@@ -64,8 +73,8 @@
         "
       >
         <div class="col-md-7 px-0 text-grey text-14 col-sm-7 col-lg-7">
-          <div class="d-flex px-0 col-md-6 col-sm-6 col-lg-6">
-            <div class="col-md-12 col-sm-12 col-lg-12">
+          <div class="row px-0 ">
+            <div class="col-md-6 col-sm-6 col-lg-6">
               <b>ENC-ID:</b>
               {{
                 consultationData.encounter_id
@@ -73,18 +82,22 @@
                   : 'nil'
               }}
             </div>
-            <div class="col-md-12 col-sm-12 col-lg-12">
+            <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Date:</b> {{ encounter_time }}
             </div>
           </div>
-          <div class="d-flex px-0 col-md-6 col-sm-6 col-lg-6">
-            <div class="col-md-12 col-sm-12 col-lg-12">
+          <div class="row px-0">
+            <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Department:</b>
               {{ department ? department : 'nil' }}
             </div>
-            <div class="col-md-12 col-sm-12 col-lg-12">
+            <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Clinic:</b>
               {{ clinic ? clinic : 'nil' }}
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6">
+              <b>Provider:</b>
+              {{ consultationData.provider.name ? consultationData.provider.name : '' }}
             </div>
           </div>
           <div
@@ -94,7 +107,7 @@
               text-overflow: ellipsis;
               word-break: break-all;
             "
-            class="text-truncate col-md-12 pt-2 col-sm-12 col-lg-11"
+            class="text-truncate col-md-12 px-0 pt-3 col-sm-12 col-lg-11"
           >
             <b>Chief Complaint:</b> {{ consultationData.chief_complaint }}
           </div>
@@ -113,46 +126,51 @@
             justify-content-between
             col-md-5 col-sm-5 col-lg-5
             align-items-center
-          ">
-                    <div class="px-2">
-                        <div class="px-2">
-                            <p @click="gotoPatientProfile" class="text-14 mb-0 text-grey point signal">
-                                <b>UHID:</b> {{ patientData.uhid }}
-                            </p>
-                        </div>
-                        <div class="px-2">
-                            <p class="text-14 mb-0 text-grey text-capitalize">
-                                <b>Name:</b>
-                                {{
-                                patientData.firstname
-                                ? patientData.firstname + " " + patientData.lastname
-                                : "nil"
-                                }}
-                            </p>
-                        </div>
-                        <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
-                                <b>D.O.B:</b> {{ patientData.date_of_birth }}
-                            </p>
-                        </div>
-                        <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
-                                <b>Age(Y-M-D):</b> {{this.age.year}} - {{this.age.month}} - {{this.age.day}}
-                            </p>
-                        </div>
-                        <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
-                                <b>Gender:</b>
-                                {{ patientData.gender ? patientData.gender : "nil" }}
-                            </p>
-                        </div>
-                        <div class="px-2">
-                            <p class="text-14 mb-0 text-grey">
-                                <b>Payer:</b>
-                                {{ patientData.payer ? patientData.payer : " nil " }}
-                            </p>
-                        </div>
-                    </div>
+          "
+        >
+          <div class="px-2">
+            <div class="px-2">
+              <p
+                @click="gotoPatientProfile"
+                class="text-14 mb-0 text-grey point signal"
+              >
+                <b>UHID:</b> {{ patientData.uhid }}
+              </p>
+            </div>
+            <div class="px-2">
+              <p class="text-14 mb-0 text-grey text-capitalize">
+                <b>Name:</b>
+                {{
+                  patientData.firstname
+                    ? patientData.firstname + ' ' + patientData.lastname
+                    : 'nil'
+                }}
+              </p>
+            </div>
+            <div class="px-2">
+              <p class="text-14 mb-0 text-grey">
+                <b>D.O.B:</b> {{ patientData.date_of_birth }}
+              </p>
+            </div>
+            <div class="px-2">
+              <p class="text-14 mb-0 text-grey">
+                <b>Age(Y-M-D):</b> {{ this.age.year }} - {{ this.age.month }} -
+                {{ this.age.day }}
+              </p>
+            </div>
+            <div class="px-2">
+              <p class="text-14 mb-0 text-grey">
+                <b>Gender:</b>
+                {{ patientData.gender ? patientData.gender : 'nil' }}
+              </p>
+            </div>
+            <div class="px-2">
+              <p class="text-14 mb-0 text-grey">
+                <b>Payer:</b>
+                {{ patientData.payer ? patientData.payer : ' nil ' }}
+              </p>
+            </div>
+          </div>
 
           <div class="px-0">
             <div id="button-2" class="theme-color-text">
@@ -243,7 +261,6 @@
           <EncountersConsultation
             :consultationData="consultationData"
             @refreshMe="refreshMe"
-
           />
         </TabPanel>
 
@@ -345,17 +362,17 @@ export default {
       this.getPatientRecord()
     },
 
-    refreshMe(){
+    refreshMe() {
       this.getPatientRecord()
     },
 
-    gotoPatientProfile(){
+    gotoPatientProfile() {
       this.$router.push({
-          name: 'dashboard-patient-uuid',
-          params: {
-            uuid: this.consultationData.patient.id,
-          },
-        })
+        name: 'dashboard-patient-uuid',
+        params: {
+          uuid: this.consultationData.patient.id,
+        },
+      })
     },
 
     signAndCloseEnc() {
@@ -463,32 +480,31 @@ export default {
 
 <style lang="scss" >
 .tabview-custom {
-
-    .headings {
-        color: $COLOR_THREE;
-    }
-    .tabview-custom svg, .tabview-custom i {
-        color: $COLOR_THREE;
-    }
-    .p-tabview p {
+  .headings {
+    color: $COLOR_THREE;
+  }
+  .tabview-custom svg,
+  .tabview-custom i {
+    color: $COLOR_THREE;
+  }
+  .p-tabview p {
     line-height: 1.5;
     margin: 0;
+  }
 }
-}
-
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    background: #ffffff;
-    border-color: $COLOR_THREE !important;
-    color: $COLOR_THREE;
+  background: #ffffff;
+  border-color: $COLOR_THREE !important;
+  color: $COLOR_THREE;
 }
 
 li {
   cursor: pointer;
   border: 0.5px solid #fff;
 }
-.signal:hover{
-  color: $COLOR_THREE
+.signal:hover {
+  color: $COLOR_THREE;
 }
 </style>
 

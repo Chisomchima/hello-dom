@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {DateTime} from 'luxon'
+// import {DateTime} from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
@@ -49,9 +49,7 @@ export default {
           key: 'encounter_datetime',
           label: 'Date',
           sortable: true,
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
-          },
+          
         },
         { key: 'encounter_id', label: 'Encounter ID', sortable: true },
         {

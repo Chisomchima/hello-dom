@@ -33,9 +33,12 @@ export default axios => ({
         })
     },
     orderOnEncounter(body, id) {
-        return axios.$post(`encounters/encounter/${id}/orders/`, body)
+        return axios.$post(`/encounters/encounter/${id}/orders/`, body)
     },
-    
-
+    getOrders(params, id) {
+        return axios.$get(`/encounters/${id}/charts/plan/`, {
+            params
+        })
+    },
 
 });

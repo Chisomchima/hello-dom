@@ -11,7 +11,16 @@
     >
       <ValidationObserver ref="form">
         <form>
-          <div class="row">
+          <div v-if="labServiceOptions.length < 1" class="w-25 m-auto">
+            <div class="ml-5 py-5 my-5">
+              <b-spinner
+              variant="success"
+              style="width: 6rem; height: 6rem"
+              label="Spinning"
+            ></b-spinner>
+            </div>
+          </div>
+          <div v-else class="row">
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper
                 name="Services Center"
@@ -95,7 +104,7 @@ export default {
       obj: {
         stat: false,
         comments: '',
-        service_center: null
+        service_center: null,
       },
     }
   },
@@ -125,7 +134,6 @@ export default {
     },
     async save() {
       this.$emit('labObj', this.obj)
-     
     },
     validateForm() {},
   },

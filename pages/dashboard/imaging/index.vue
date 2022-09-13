@@ -108,13 +108,8 @@ export default {
       currentFilter: {},
       fields: [
         {
-          key: 'img_order.ordered_datetime',
+          key: 'created_at',
           label: 'Date',
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
-          },
           sortable: true,
         },
         {

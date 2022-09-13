@@ -15,34 +15,25 @@
           </b-col>
         </b-row>
       </div>
-      <div v-else>
+      <div>
         <div class="d-flex align-items-center justify-content-between">
-          <h4 class="text-grey text-18 mb-0"></h4>
+          <h4 class="text-grey text-18 mb-0">Orders</h4>
 
-          <div>
-            <div style="cursor: pointer" id="button-20"></div>
-            <div v-if="!click" id="button-22">
-              <div class="text-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  class="bi bi-dash-square"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
-                  />
-                  <path
-                    d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"
-                  />
-                </svg>
-              </div>
-
-              <b-tooltip target="button-22" placement="bottom"
-                >Close
-              </b-tooltip>
+          <div class="col-md-8 d-flex justify-content-end">
+            <div class="mx-2">
+              <button @click="labSwitch" class="btn btn-sm btn-outline-primary">
+                Laboratory
+              </button>
+            </div>
+            <div class="mx-2">
+              <button @click="imgSwitch" class="btn btn-sm btn-outline-primary">
+                Imaging
+              </button>
+            </div>
+            <div class="mx-2">
+              <button class="btn btn-sm btn-outline-primary">
+                Prescription
+              </button>
             </div>
           </div>
         </div>
@@ -51,6 +42,7 @@
 
         <div class="text-center">
           <div
+            v-if="labConsole"
             class="rounded p-2 mb-3"
             style="min-height: 7rem; border: 1px solid #212529"
           >
@@ -120,6 +112,7 @@
           <!-- ********************************** -->
 
           <div
+            v-if="imgConsole"
             class="rounded p-2"
             style="min-height: 7rem; border: 1px solid #212529"
           >
@@ -210,13 +203,27 @@
         </div> -->
 
         <div
+          v-if="labConsole || imgConsole"
           style="height: 38px"
           class="w-100 mt-3 mr-5 text-16 d-flex justify-content-end"
         >
-          <BaseButton @click="submitOrders" class="btn-primary mr-4">
+          <BaseButton @click="submitOrders" class="btn-primary mr-3">
             Order
           </BaseButton>
         </div>
+      </div>
+
+      <!-- ************************************************************ -->
+      <div class="p-2">
+        <TableComponent
+          :perPage="filter.size"
+          :pages="pages"
+          :items="items"
+          :busy="busy"
+          :currentPage="currentPage"
+          @page-changed="filter($event, currentFilter)"
+        >
+        </TableComponent>
       </div>
     </div>
   </div>
@@ -227,6 +234,11 @@ export default {
   data() {
     return {
       click: true,
+      labConsole: false,
+      imgConsole: false,
+      items: [],
+      pages: 1,
+      currentPage: 1,
       arr: [],
       imgArr: [],
       labServiceOptions: [],
@@ -252,6 +264,9 @@ export default {
           source: '',
         },
       },
+      filter: {
+        size: 10,
+      },
     }
   },
   props: {
@@ -260,7 +275,24 @@ export default {
       required: false,
     },
   },
+  mounted() {
+    this.getOrders()
+  },
   methods: {
+    async getOrders(page = 1, e = { size: 10 }) {
+      this.filter = e
+      this.currentPage = page 
+      try {
+        let response = await this.$api.encounter.getOrders(
+          {size: 1000},
+          this.consultationData.id
+        )
+        this.items = response.result
+        // this.pages = response.total_pages
+        // this.totalRecords = response.total_count
+        // this.currentPage = response.current_page
+      } catch {}
+    },
     handleProps(list) {
       this.labServiceOptions = list
     },
@@ -289,6 +321,14 @@ export default {
         this.imagingOption[parent].img_observations[child].selected = false
       }
     },
+    labSwitch() {
+      this.labConsole = !this.labConsole
+      this.labServiceOptions = []
+    },
+    imgSwitch() {
+      this.imgConsole = !this.imgConsole
+      this.imagingOption = []
+    },
 
     addLabData(e) {
       this.requestBody.laboratory.service_center = e.service_center
@@ -316,10 +356,9 @@ export default {
           }
         })
       })
-      if(arr.length > 0){
+      if (arr.length > 0) {
         this.requestBody.laboratory.lab_panels = arr
-      }
-      else{
+      } else {
         this.requestBody.laboratory = null
       }
 
@@ -332,19 +371,21 @@ export default {
         })
       })
 
-      if(imgArr.length > 0){
+      if (imgArr.length > 0) {
         this.requestBody.imaging.img_obv = imgArr
-      }
-      else{
+      } else {
         this.requestBody.imaging = null
       }
-      
+
       this.requestBody.prescription = null
 
       let submitBody = this.requestBody
 
-      let response = await this.$api.encounter.orderOnEncounter(submitBody, this.consultationData.id)
-      if(response){
+      let response = await this.$api.encounter.orderOnEncounter(
+        submitBody,
+        this.consultationData.id
+      )
+      if (response) {
         this.$toast({
           type: 'success',
           text: `Order created successfully`,

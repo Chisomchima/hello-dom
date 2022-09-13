@@ -125,13 +125,13 @@
             </template>
           </VSelect>
         </div>
-      </div> 
+      </div>
     </div>
 
-    <hr class="m-2">
+    <hr class="m-2" />
 
     <div class="row justify-content-between">
-        <div class="mb-0 col-md-4">
+      <div class="mb-0 col-md-4">
         <label class="form-control-label">UHID/NAME</label>
         <div class="row">
           <div class="col-md-6">
@@ -155,34 +155,15 @@
         </div>
       </div>
 
-     
-
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
-        
-          <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+        <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
           Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
           Clear
         </BaseButton>
-
       </div>
     </div>
-
-    <!-- <div class="mb-2">
-      <div class="row">
-         <div class="col-2 offset-md-8">
-          <BaseButton class="w-100" @click="applyFilter(filters)">
-            Filter
-          </BaseButton>
-        </div>
-        <div class="col-2 align-self-end">
-          <BaseButton class="w-100 btn-danger" @click="clear()">
-            Clear
-          </BaseButton>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -219,21 +200,20 @@ export default {
     }
   },
   watch: {
-
     'filters.department': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
       }, 500),
       deep: true,
     },
-    
+
     'filters.provider': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
       }, 500),
       deep: true,
     },
-     'filters.clinic': {
+    'filters.clinic': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
       }, 500),
@@ -246,29 +226,38 @@ export default {
       }, 500),
       deep: true,
     },
-
-
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //     if (newVal.by.length > 0) {
-    //       const newFilterObject = {
-    //         ...newVal,
-    //         [newVal.by]: newVal.entry,
-    //         worklist: true,
-    //       }
-    //       console.log(newFilterObject)
-    //       this.$emit('filter', newFilterObject)
-    //     } else {
-    //       this.$emit('filter', newVal)
-    //     }
-    //   }, 500),
-    //   deep: true,
-    //   immediate: true,
-    // },
+    'filters.date_before': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+    'filters.date_after': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+    filters: {
+      handler: debounce(function (newVal) {
+        if (newVal.by.length > 0) {
+          const newFilterObject = {
+            ...newVal,
+            [newVal.by]: newVal.entry,
+            worklist: true,
+          }
+          this.$emit('filter', newFilterObject)
+        } else {
+          this.$emit('filter', newVal)
+        }
+      }, 500),
+      deep: true,
+      immediate: true,
+    },
     genders: {},
   },
   async created() {
-     if (this.$route.query.filter) {
+    if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
     this.applyFilter(this.filters)
@@ -294,6 +283,14 @@ export default {
     this.$api.encounter.nurseSeenCount().then((res) => {
       this.nurseSeen = res.count
     })
+    let day = new Date().toISOString().split('T')[0]
+    this.filters.date_after = day
+    function getPreviousDay(date = new Date()) {
+      const previous = new Date(date.getTime())
+      previous.setDate(date.getDate() - 1)
+      return previous.toISOString().split('T')[0]
+    }
+    this.filters.date_before = getPreviousDay()
   },
   methods: {
     clear() {
@@ -306,7 +303,7 @@ export default {
         status: '',
         encounter_id: '',
       }
-      this.applyFilters(this.filters);
+      this.applyFilter(this.filters)
     },
     applyFilter(newVal) {
       if (newVal.by.length > 0) {
@@ -329,7 +326,7 @@ export default {
           filter: JSON.stringify(newVal),
         },
       })
-    }
+    },
   },
 }
 </script>

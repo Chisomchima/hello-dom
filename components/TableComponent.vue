@@ -72,6 +72,34 @@
         </div>
         </slot>
       </template>
+      <template #cell(encounter_datetime)="data">
+        <slot name="encounter_datetime" :data="data">
+          <div>
+            {{formatDate(data.item.encounter_datetime)}}
+        </div>
+        </slot>
+      </template>
+      <template #cell(created_at)="data">
+        <slot name="created_at" :data="data">
+          <div>
+            {{formatDate(data.item.created_at)}}
+        </div>
+        </slot>
+      </template>
+      <template #cell(ordered_datetime)="data">
+        <slot name="ordered_datetime" :data="data">
+          <div>
+            {{formatDate(data.item.ordered_datetime)}}
+        </div>
+        </slot>
+      </template>
+      <template #cell(date)="data">
+        <slot name="date" :data="data">
+          <div>
+            {{formatDate(data.item.date)}}
+        </div>
+        </slot>
+      </template>
       
       <template #cell(week)="data">
         <slot name="week" :data="data">
@@ -192,8 +220,14 @@
           </span>
 
           <span
-            v-else
+            v-else-if="data.item.status === 'DRAFT'"
             class="text-14 badge-danger rounded text-center p-1 text-white"
+          >
+            {{ data.item.status }}
+          </span>
+          <span
+            v-else-if="data.item.status === 'PAID'"
+            class="text-14 badge-success rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
           </span>
@@ -343,6 +377,7 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
 export default {
   props: {
     isClientPagination: {
@@ -505,6 +540,11 @@ export default {
 
     numberWithCommas(x) {
      return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+    },
+
+    formatDate(x){
+      console.log(x)
+      return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
     },
 
     disabledTableRowMethod(item, type) {

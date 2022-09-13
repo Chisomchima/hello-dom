@@ -4,7 +4,16 @@
       :cancelText="`Close`" @hide="save" @show="getData()">
       <ValidationObserver ref="form">
         <form>
-          <div class="row">
+          <div v-if="imagingOption.length < 1" class="w-25 m-auto">
+            <div class="ml-5 py-5 my-5">
+              <b-spinner
+              variant="success"
+              style="width: 6rem; height: 6rem"
+              label="Spinning"
+            ></b-spinner>
+            </div>
+          </div>
+          <div v-else class="row">
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper
                 name="Services Center"

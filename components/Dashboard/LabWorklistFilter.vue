@@ -41,56 +41,46 @@
             { name: 'recieve specimen', display: 'Recieve specimen' },
             { name: 'fill result', display: 'Fill result' },
             { name: 'awaiting approval', display: 'Awaiting approval' },
-            
           ]"
           :reduce="(option) => option.name"
           label="display"
         ></v-select>
       </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col-lg-4 col-md-6 col-sm-12">
-        <small class="text-grey text-12">Patient UHID</small>
-        <input
-          v-model="filters.uhid"
-          type="text"
-          placeholder="Patient"
-          class="form-control ng-untouched ng-pristine ng-valid"
-        />
-      </div>
-      <div class="col-lg-4 col-md-6 col-sm-12">
-        <small class="text-grey text-12">ASN</small>
-        <input
-          v-model="filters.asn"
-          type="text"
-          placeholder="ASN"
-          class="form-control ng-untouched ng-pristine ng-valid"
-        />
+    <hr class="mb-0" />
+    <div class="row justify-content-between">
+      <div class="mb-0 col-md-4">
+        <label class="form-control-label">UHID/NAME</label>
+        <div class="row">
+          <div class="col-md-6">
+            <VSelect
+              v-model="filters.by"
+              style="font-size: 15px"
+              label="label"
+              placeholder="By"
+              :reduce="(option) => option.name"
+              :options="[
+                { name: 'patient_name', label: 'Name' },
+                { name: 'patient_uhid', label: 'UHID' },
+                { name: 'asn', label: 'ASN No.' },
+              ]"
+            >
+            </VSelect>
+          </div>
+          <div class="col-md-6">
+            <input v-model="filters.entry" type="text" class="form-control" />
+          </div>
+        </div>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
-        
-          <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+        <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
           Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
           Clear
         </BaseButton>
-
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col-2 offset-md-8">
-        <BaseButton class="w-100" @click="applyFilters(filters)">
-          Filter
-        </BaseButton>
-      </div>
-      <div class="col-2 align-self-end">
-        <BaseButton class="w-100 btn-danger" @click="clear()">
-          Clear
-        </BaseButton>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -100,6 +90,8 @@ export default {
   data() {
     return {
       filters: {
+        by: '',
+        entry: '',
         service_center: [],
         lab_unit: [],
         status: '',
@@ -112,43 +104,46 @@ export default {
     }
   },
   watch: {
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //     const toggle = true
-    //     const newFilterObject = {
-    //       ...newVal,
-    //       'status': newVal.status,
-    //       'worklist': true,
-    //     }
-    //     this.$emit('filters', newFilterObject)
-    //   }, 1000),
-    //   deep: true,
-    //   immediate: true,
-    // },
     'filters.service_center': {
       handler: debounce(function () {
-        this.filterFunc(this.filters);
+        this.filterFunc(this.filters)
       }, 500),
       deep: true,
     },
     'filters.lab_unit': {
       handler: debounce(function () {
-       this.filterFunc(this.filters);
+        this.filterFunc(this.filters)
       }, 500),
       deep: true,
     },
     'filters.status': {
       handler: debounce(function () {
-        this.filterFunc(this.filters);
+        this.filterFunc(this.filters)
       }, 500),
       deep: true,
+    },
+    filters: {
+      handler: debounce(function (newVal) {
+        if (newVal) {
+          const newFilterObject = {
+            ...newVal,
+            [newVal.by]: newVal.entry,
+            worklist: true,
+          }
+          this.$emit('filter', newFilterObject)
+        } else {
+          this.$emit('filter', newVal)
+        }
+      }, 500),
+      deep: true,
+      immediate: true,
     },
   },
   async created() {
     if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
-    this.filterFunc(this.filters);
+    this.applyFilters(this.filters)
     try {
       const { results: service_centers } = await this.$api.core.serviceCenter({
         size: 1000,
@@ -166,25 +161,31 @@ export default {
   methods: {
     clear() {
       this.filters = {
+        by: '',
+        entry: '',
         service_center: [],
         lab_unit: [],
         status: '',
         asn: '',
         uhid: '',
       }
-      // this.applyFilters(this.filters);
-       this.filterFunc(this.filters)
+      this.applyFilters(this.filters)
     },
 
-    // applyFilters(newVal) {
-    //   const newFilterObject = {
-    //     ...newVal,
-    //     'status': newVal.status,
-        
-    //     'patient_uhid': newVal.uhid
-    //   }
-    //   this.$emit('filters', newFilterObject)
-    // },
+    applyFilters(newVal) {
+      if (newVal.by.length > 0) {
+        const newFilterObject = {
+          ...newVal,
+          status: newVal.status,
+          [newVal.by]: newVal.entry,
+          worklist: true,
+        }
+        // this.$emit('filters', newFilterObject)
+        this.filterFunc(newFilterObject)
+      } else {
+        this.filterFunc(newVal)
+      }
+    },
     filterFunc(newVal) {
       this.$router.push({
         name: this.$router.name,

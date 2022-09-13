@@ -112,9 +112,7 @@ export default {
           key: 'img_order.ordered_datetime',
           label: 'Date',
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
           sortable: true,
         },
