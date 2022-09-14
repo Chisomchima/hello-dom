@@ -78,7 +78,7 @@
             </div>
 
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Lap Panel" :rules="['required']">
+              <ValidationProviderWrapper name="Lab Panel" :rules="['required']">
                 <VSelect
                   v-model="lapPanel"
                   :reduce="(op) => op.id"

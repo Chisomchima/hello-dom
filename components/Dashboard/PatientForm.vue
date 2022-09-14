@@ -122,7 +122,7 @@ export default {
         {
           key: 'salutation',
           name: 'Salutation',
-          rules: ['required'],
+          rules: [''],
           type: 'select',
           select_label: 'salutations',
           options: [],

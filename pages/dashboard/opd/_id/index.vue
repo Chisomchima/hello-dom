@@ -24,7 +24,7 @@
           
           <BaseButton
             v-if="
-              consultationData.status === 'DS' 
+              consultationData.acknowledged_at != null 
             "
             @click="signAndCloseEnc"
             class="btn-success btn-sm"
@@ -39,9 +39,10 @@
             Sign
           </BaseButton>
           <BaseButton
+          @click="acknowledgeEnc"
             v-if="
-              consultationData.status === 'NS' ||
-              consultationData.status === 'NEW' 
+              (consultationData.status === 'NS' ||
+              consultationData.status === 'New') &&  consultationData.acknowledged_at === null
             "
             
             class="btn-success btn-sm"
@@ -328,9 +329,10 @@
 <script>
 import { DateTime } from 'luxon'
 import calcAge from '~/mixins/calcAge'
+import modalMsgBox from '~/mixins/modalMsgBox'
 export default {
   layout: 'dashboard',
-  mixins: [calcAge],
+  mixins: [calcAge, modalMsgBox],
   data() {
     return {
       items: [],
@@ -373,6 +375,25 @@ export default {
           uuid: this.consultationData.patient.id,
         },
       })
+    },
+    async acknowledgeEnc(){
+      const result = await this.showConfirmMessageBox(
+        'Do you want to acknowledge this encounter ?'
+      )
+      try{
+        if(result){
+          let response = await this.$api.encounter.acknowledgeEncounter(this.consultationData.id)
+        if(response){
+          this.getPatientRecord()
+        }
+         this.$toast({
+            type: 'success',
+            text: `Acknowleged`,
+          })
+        }
+      }catch (error){
+        console.log(error)
+      }
     },
 
     signAndCloseEnc() {
@@ -418,6 +439,8 @@ export default {
       let presentDate = new Date().getFullYear()
 
       let yearOfBirth = e.substring(0, 4)
+      let monthOfBirth = parseInt(e.substring(5, 7))
+      let month = new Date().getMonth()
 
       let diff = presentDate - yearOfBirth
       let x = parseInt(diff)
@@ -430,7 +453,11 @@ export default {
 
       if (monthOfBirth < month) {
         this.age.year
-      } else {
+      } 
+      else if(monthOfBirth > month){
+        this.age.year++
+      }
+      else {
         if (this.age.year === 0) {
           this.age.year
         } else {
@@ -440,8 +467,6 @@ export default {
 
       // **************calc month***********
       let tempMonth
-      let month = new Date().getMonth()
-      let monthOfBirth = parseInt(e.substring(5, 7))
       // tempMonth = monthOfBirth - month
       if (presentDate === yearOfBirth) {
         this.patient.age.month = 0

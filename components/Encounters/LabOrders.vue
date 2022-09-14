@@ -806,7 +806,7 @@ export default {
 
     async getLabPanels() {
       try {
-        let uri = `/laboratory/lab_panel/?size=100`
+        let uri = `/laboratory/lab_panel/?size=2000`
 
         const response = await this.$axios.$get(uri)
 
@@ -839,6 +839,8 @@ export default {
       // **********calc year***********
       let presentDate = new Date().getFullYear()
       let yearOfBirth = e.substring(0, 4)
+      let month = new Date().getMonth()
+      let monthOfBirth = parseInt(e.substring(5, 7))
 
       let diff = presentDate - yearOfBirth
       let x = parseInt(diff)
@@ -861,8 +863,7 @@ export default {
 
       // **************calc month***********
       let tempMonth
-      let month = new Date().getMonth()
-      let monthOfBirth = parseInt(e.substring(5, 7))
+
       // tempMonth = monthOfBirth - month
       if (presentDate === yearOfBirth) {
         this.patient.age.month = 0

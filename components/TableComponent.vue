@@ -189,6 +189,12 @@
       <template #cell(value)="item">
         <slot name="value" :data="item"></slot>
       </template>
+      <template #cell(value.laboratory)="item">
+        <slot name="value.laboratory" :data="item"></slot>
+      </template>
+      <template #cell(value.imaging)="item">
+        <slot name="value.imaging" :data="item"></slot>
+      </template>
 
       <template #cell(reference_range)="item">
         <slot name="reference_range" :data="item"></slot>
