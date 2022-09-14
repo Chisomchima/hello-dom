@@ -36,9 +36,12 @@ export default axios => ({
         return axios.$post(`/encounters/encounter/${id}/orders/`, body)
     },
     getOrders(params, id) {
-        return axios.$get(`/encounters/${id}/charts/plan/`, {
+        return axios.$get(`/encounters/${id}/charts/orders/`, {
             params
         })
+    },
+    acknowledgeEncounter(id) {
+        return axios.$patch(`encounters/encounter/${id}/acknowledge/`)
     },
 
 });
