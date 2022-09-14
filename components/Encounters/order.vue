@@ -220,9 +220,40 @@
           :pages="pages"
           :items="items"
           :busy="busy"
+          :fields="fields"
           :currentPage="currentPage"
           @page-changed="filter($event, currentFilter)"
         >
+          <template #value.laboratory="{ data }">
+            <pre class="d-none">
+              {{ data.item }}
+            </pre>
+            <div v-if="data.item.value.laboratory.lab_panel_orders">
+              <div
+                class=""
+                v-for="(order, index) in data.item.value.laboratory
+                  .lab_panel_orders"
+                :key="index"
+              >
+                {{ order.panel.name }}
+              </div>
+            </div>
+          </template>
+          <template #value.imaging="{ data }">
+            <pre class="d-none">
+              {{ data.item }}
+            </pre>
+            <div v-if="data.item.value.laboratory.img_obv">
+              <div
+                class=""
+                v-for="(order, index) in data.item.value.laboratory
+                  .lab_panel_orders"
+                :key="index"
+              >
+                {{ order.img_obv.name }}
+              </div>
+            </div>
+          </template>
         </TableComponent>
       </div>
     </div>
@@ -230,7 +261,9 @@
 </template>
 
 <script>
+import TableCompFun from '~/mixins/TableCompFun'
 export default {
+  mixins: [TableCompFun],
   data() {
     return {
       click: true,
@@ -243,6 +276,38 @@ export default {
       imgArr: [],
       labServiceOptions: [],
       imagingOption: [],
+      fields: [
+        {
+          key: 'created_at',
+          label: 'Order date',
+          sortable: true,
+        },
+        {
+          key: 'value.laboratory',
+          label: 'Lab orders',
+          sortable: true,
+        },
+        {
+          key: 'value.imaging',
+          label: 'Imaging orders',
+          sortable: true,
+          formatter: (value) => {
+            if (value) {
+              return value
+            } else {
+              return ''
+            }
+          },
+        },
+        {
+          key: 'created_by',
+          label: 'Ordered by',
+          sortable: true,
+          formatter: (value) => {
+            return value.first_name + ' ' + value.last_name
+          },
+        },
+      ],
       requestBody: {
         laboratory: {
           comments: '',
@@ -281,17 +346,21 @@ export default {
   methods: {
     async getOrders(page = 1, e = { size: 10 }) {
       this.filter = e
-      this.currentPage = page 
+      this.currentPage = page
       try {
         let response = await this.$api.encounter.getOrders(
-          {size: 1000},
+          { size: 1000 },
           this.consultationData.id
         )
         this.items = response.result
+        this.busy = false
         // this.pages = response.total_pages
         // this.totalRecords = response.total_count
         // this.currentPage = response.current_page
-      } catch {}
+      } catch {
+      } finally {
+        this.busy = false
+      }
     },
     handleProps(list) {
       this.labServiceOptions = list
@@ -391,6 +460,9 @@ export default {
           text: `Order created successfully`,
         })
       }
+      this.imgConsole = false
+      this.labConsole = false
+      this.getOrders()
     },
   },
 }
