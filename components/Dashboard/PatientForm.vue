@@ -14,6 +14,7 @@
               v-model="form.value"
               :options="form.options"
               :label="form.select_label"
+              :reduce="(opt) => opt"
               @input="onInput({ key: form.key, value: form.value })"
             ></VSelect>
 
@@ -84,6 +85,8 @@ export default {
           'email',
           'phone_number',
           'marital_status',
+          'arms_of_service',
+          'arms_no',
           'id_type',
           'id_number',
           'id_validity',
@@ -93,7 +96,7 @@ export default {
           'address_city',
           'address_country',
           'address_postal_code',
-          'occupations',
+          'occupation',
           'religion',
           'nationality',
           'state_of_origin',
@@ -160,6 +163,7 @@ export default {
           rules: ['required'],
           type: 'date',
           value: '',
+          col: 'col-md-3',
           show: true,
         },
         {
@@ -168,8 +172,28 @@ export default {
           rules: ['required'],
           type: 'select',
           select_label: 'gender',
+          col: 'col-md-3',
           options: [],
           value: null,
+          show: true,
+        },
+        {
+          key: 'arms_of_service',
+          name: 'Arms of service',
+          rules: [''],
+          type: 'select',
+          select_label: 'Arms of service',
+          options: [],
+          col: 'col-md-3',
+          value: null,
+          show: true,
+        },
+        {
+          key: 'arms_no',
+          name: 'Arms No.',
+          rules: [''],
+          value: '',
+          col: 'col-md-3',
           show: true,
         },
         {
@@ -182,7 +206,7 @@ export default {
         {
           key: 'phone_number',
           name: 'Phone Number',
-          rules: ['required',],
+          rules: ['required'],
           value: '',
           show: true,
         },
@@ -255,7 +279,7 @@ export default {
         },
 
         {
-          key: 'occupations',
+          key: 'occupation',
           name: 'Occupation',
           rules: [''],
           value: '',
@@ -269,16 +293,16 @@ export default {
           rules: [''],
           type: 'select',
           select_label: 'religion',
-          options: [],
+          options: ['Christianity', 'Islam'],
           value: '',
         },
         {
           key: 'nationality',
           select_label: 'country',
           name: 'Nationality',
+          options: [],
           type: 'select',
           rules: [''],
-          options: ['Christianity', 'Islam'],
           value: '',
         },
         {
@@ -365,7 +389,7 @@ export default {
           name: 'Scheme',
           rules: [],
           value: '',
-           select_label: 'name',
+          select_label: 'name',
           type: 'select',
           col: 'col-md-3',
         },
@@ -383,10 +407,7 @@ export default {
           value: '',
           type: 'select',
           col: 'col-md-3',
-          options: [
-            'Principle',
-            'Dependent',
-          ],
+          options: ['Principle', 'Dependent'],
         },
         {
           key: 'expiration_date',
@@ -442,7 +463,10 @@ export default {
     })
 
     this.$api.core.occupation({ size: 1000 }).then((res) => {
-      this.setOptions('occupations', res.results)
+      this.setOptions('occupation', res.results)
+    })
+    this.$api.core.getCoatofArm({ size: 1000 }).then((res) => {
+      this.setOptions('arms_of_service', res.results)
     })
     this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
       this.setOptions('scheme', res.results)

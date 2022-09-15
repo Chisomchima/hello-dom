@@ -18,17 +18,18 @@
       :table-class="tableClass"
       :tbody-tr-class="disabledTableRowMethod"
       @row-clicked="checkForBillStatusOnRowClick($event)"
+      :no-local-sorting="false"
+      @sort-changed="sortEvent"
+      @row-hovered="sortEvent"
     >
-
-    <template #empty>
-      <div class="p-4">
-        <div class="d-flex justify-content-center">
-          <img src="~assets/img/empty-list.svg" alt=""/>
+      <template #empty>
+        <div class="p-4">
+          <div class="d-flex justify-content-center">
+            <img src="~assets/img/empty-list.svg" alt="" />
+          </div>
+          <p class="text-14 text-center text-primary">No records to show</p>
         </div>
-        <p class="text-14 text-center text-primary">No records to show</p>
-      </div>
-    </template>
-
+      </template>
 
       <template #table-busy>
         <div class="p-4">
@@ -38,6 +39,9 @@
             :table-props="{ bordered: true, striped: true }"
           ></b-skeleton-table>
         </div>
+      </template>
+      <template  #cell()="data">
+        <span v-b-tooltip.hover :title="data">{{ data }}</span>
       </template>
 
       <template #cell(current_academic_year)="data">
@@ -61,48 +65,53 @@
       <template #cell(total_amount)="data">
         <slot name="total_amount" :data="data">
           <div>
-            {{numberWithCommas(data.item.total_amount)}}
-        </div>
+            {{ numberWithCommas(data.item.total_amount) }}
+          </div>
         </slot>
       </template>
       <template #cell(selling_price)="data">
         <slot name="selling_price" :data="data">
           <div>
-            {{numberWithCommas(data.item.selling_price)}}
-        </div>
+            {{ numberWithCommas(data.item.selling_price) }}
+          </div>
         </slot>
       </template>
       <template #cell(encounter_datetime)="data">
         <slot name="encounter_datetime" :data="data">
           <div>
-            {{formatDate(data.item.encounter_datetime)}}
-        </div>
+            {{ formatDate(data.item.encounter_datetime) }}
+          </div>
         </slot>
       </template>
       <template #cell(created_at)="data">
         <slot name="created_at" :data="data">
           <div>
-            {{formatDate(data.item.created_at)}}
-        </div>
+            {{ formatDate(data.item.created_at) }}
+          </div>
         </slot>
       </template>
       <template #cell(ordered_datetime)="data">
         <slot name="ordered_datetime" :data="data">
           <div>
-            {{formatDate(data.item.ordered_datetime)}}
-        </div>
+            {{ formatDate(data.item.ordered_datetime) }}
+          </div>
         </slot>
       </template>
       <template #cell(date)="data">
         <slot name="date" :data="data">
           <div>
-            {{formatDate(data.item.date)}}
-        </div>
+            {{ formatDate(data.item.date) }}
+          </div>
         </slot>
       </template>
-      
+
       <template #cell(week)="data">
         <slot name="week" :data="data">
+          {{ data.value }}
+        </slot>
+      </template>
+      <template #cell(tooltip)="data">
+        <slot name="tooltip" :data="data">
           {{ data.value }}
         </slot>
       </template>
@@ -190,7 +199,8 @@
         <slot name="value" :data="item"></slot>
       </template>
       <template #cell(value.laboratory)="item">
-        <slot name="value.laboratory" :data="item"></slot>
+        <slot name="value.laboratory" :data="item"> </slot>
+        
       </template>
       <template #cell(value.imaging)="item">
         <slot name="value.imaging" :data="item"></slot>
@@ -208,6 +218,26 @@
       </template>
       <template #cell(edit)="item">
         <slot name="edit" :data="item"></slot>
+      </template>
+
+      <template #value>
+        <div
+          v-for="placement in placements"
+          :key="placement"
+          md="4"
+          class="text-center"
+        >
+          <b-button :id="`popover-1-${placement}`" variant="primary">{{
+            placement
+          }}</b-button>
+          <b-popover
+            :target="`popover-1-${placement}`"
+            :placement="placement"
+            title="Popover!"
+            triggers="hover focus"
+            :content="`Placement ${placement}`"
+          ></b-popover>
+        </div>
       </template>
 
       <template #cell(status)="data">
@@ -283,8 +313,6 @@
         <slot name="download" :data="data">{{ data.value }}</slot>
       </template>
 
-      
-
       <template #cell(actions)="row">
         <div class="text-right w-auto">
           <button
@@ -350,34 +378,48 @@
             :style="{ width: '50rem' }"
           />
           <col
+            v-else-if="field.key === 'value.laboratory'"
+            :key="field.key"
+            :style="{ width: '20rem' }"
+          />
+          <col
+            v-else-if="field.key === 'value.imaging'"
+            :key="field.key"
+            :style="{ width: '20rem' }"
+          />
+          <col
             v-else-if="field.key === 'order_no'"
             :key="field.key"
             :style="{ width: '20rem' }"
           />
+          <col
+            v-else-if="field.key === 'created_at'"
+            :key="field.key"
+            :style="{ width: '14rem' }"
+          />
         </template>
       </template>
-      
     </b-table>
 
     <div class="d-flex justify-content-end">
       <div v-if="showBaseCount" class="w-50">
         <div class="text-primary mt-1 text-center text-14">
-        {{ showFrom }} - {{ showTo }} of {{ totalRecord }}
+          {{ showFrom }} - {{ showTo }} of {{ totalRecord }}
         </div>
       </div>
 
-    <div class="w-25">
-      <b-pagination
-      v-if="paginate"
-      v-model="currentPage"
-      :total-rows="totalRows"
-      :per-page="perPage"
-      align="right"
-      size="sm"
-      class="my-0"
-      @change="$emit('page-changed', $event)"
-    ></b-pagination>
-    </div>
+      <div class="w-25">
+        <b-pagination
+          v-if="paginate"
+          v-model="currentPage"
+          :total-rows="totalRows"
+          :per-page="perPage"
+          align="right"
+          size="sm"
+          class="my-0"
+          @change="$emit('page-changed', $event)"
+        ></b-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -467,6 +509,21 @@ export default {
   data() {
     return {
       totalRows: 0,
+      show: false,
+      placements: [
+        'topright',
+        'top',
+        'topleft',
+        'bottomright',
+        'bottom',
+        'bottomleft',
+        'righttop',
+        'right',
+        'lefttop',
+        'rightbottom',
+        'left',
+        'leftbottom',
+      ],
       // currentPage: 1,
     }
   },
@@ -503,27 +560,27 @@ export default {
     },
 
     showFrom() {
-      return (this.currentPage - 1) * (this.perPage + 1) ? (this.currentPage - 1) * (this.perPage + 1) : (this.currentPage - 1) * (this.perPage + 1) + 1;
+      return (this.currentPage - 1) * (this.perPage + 1)
+        ? (this.currentPage - 1) * (this.perPage + 1)
+        : (this.currentPage - 1) * (this.perPage + 1) + 1
     },
 
     showTo() {
       if (parseInt(this.currentPage) === 1 && this.totalRecords > 10) {
-        return parseInt(this.perPage);
-      } else if(this.totalRecords === 1 || this.totalRecords < 10){
+        return parseInt(this.perPage)
+      } else if (this.totalRecords === 1 || this.totalRecords < 10) {
         return parseInt(this.totalRecords)
-      }
-      else if(this.totalRecords < 10){
+      } else if (this.totalRecords < 10) {
         return parseInt(this.totalRecords)
-      }
-      else {
-        return parseInt(this.showFrom) + parseInt(this.perPage);
+      } else {
+        return parseInt(this.showFrom) + parseInt(this.perPage)
       }
     },
     totalRecord() {
       if (this.totalRecords === 1 && this.totalRecords < 10) {
-        return parseInt(this.totalRecords);
+        return parseInt(this.totalRecords)
       } else {
-        return parseInt(this.totalRecords);
+        return parseInt(this.totalRecords)
       }
     },
   },
@@ -543,13 +600,14 @@ export default {
       this.totalRows = filteredItems.length
       // this.currentPage = 1
     },
-
+    sortEvent(e) {
+      this.$emit('sortData', e)
+    },
     numberWithCommas(x) {
-     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+      return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
     },
 
-    formatDate(x){
-      console.log(x)
+    formatDate(x) {
       return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
     },
 

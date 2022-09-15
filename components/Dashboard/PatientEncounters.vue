@@ -18,7 +18,7 @@
         </TableComponent>
       </template>
     </UtilsFilterComponent>
-    <DashboardModalAddEncounter :data="data" @refresh="pageChange()" />
+    <DashboardModalAddEncounter :age="age" :data="data" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -35,6 +35,11 @@ export default {
   },
   data() {
     return {
+      age: {
+        year: '',
+        month: '',
+        day: '',
+      },
       fields: [
         {
           key: 'encounter_datetime',
@@ -83,10 +88,12 @@ export default {
   },
   async mounted() {
     await this.pageChange(1)
+    
   },
   methods: {
     async pageChange(page = 1) {
     this.$nuxt.refresh()  
+    this.calcAge(this.data.date_of_birth)
       try {
         this.busy = true
         const data = await this.$api.encounter.getPatient(
@@ -110,6 +117,67 @@ export default {
           id: e.id,
         },
       })
+    },
+      calcAge(e) {
+        // **********calc year***********
+        let presentDate = new Date().getFullYear();
+        let yearOfBirth = e.substring(0, 4);
+        let month = new Date().getMonth();
+        let monthOfBirth = parseInt(e.substring(5, 7));
+
+        let diff = presentDate - yearOfBirth;
+        let x = parseInt(diff);
+        if (x === 0) {
+            this.age.year = 0;
+            this.age.month = 0;
+        } else {
+            this.age.year = x;
+        }
+
+        if (monthOfBirth < month) {
+            this.age.year;
+        } else {
+            if (this.age.year === 0) {
+                this.age.year;
+            } else {
+                this.age.year--;
+            }
+        }
+
+        // **************calc month***********
+        let tempMonth;
+       
+        // tempMonth = monthOfBirth - month
+        if (presentDate === yearOfBirth) {
+            this.age.month = 0;
+        } else {
+            tempMonth = 12 - monthOfBirth;
+        }
+
+        if (monthOfBirth <= month) {
+            this.age.month = month - monthOfBirth;
+            // this.patient.age.month + 1;
+        } else if (month + 1 === monthOfBirth) {
+            this.age.month = 0;
+        } else {
+            this.age.month = tempMonth + month;
+            // this.patient.age.month + 1;
+        }
+
+        // **************calc day**************
+        let day = new Date().getDate();
+        let dayOfBirth = e.substring(8, 10);
+        // this.patient.age.day = new Date().getDate();
+
+        if (day > dayOfBirth) {
+            this.age.day = day - dayOfBirth;
+        } else if (day === dayOfBirth) {
+            this.age.day = 0;
+        } else {
+            this.age.day = day;
+        }
+
+        // *********************************
     },
   },
 }

@@ -230,7 +230,6 @@ export default {
         clinic: {},
         status: '',
         time_log: {},
-
         provider: null,
         patient: {},
         is_active: true,
@@ -320,6 +319,7 @@ export default {
           ;(this.age.year = ''), (this.age.month = ''), (this.age.day = '')
           this.encounterData.patient = {}
         }
+        this.patientData.age = this.age
         this.encounterData.patient = this.patientData
         // this.calcAge(this.patientData.date_of_birth);
         this.searchingPatient = false
@@ -356,7 +356,7 @@ export default {
 
       // **************calc month***********
       let tempMonth
-      
+
       // tempMonth = monthOfBirth - month
       if (presentDate === yearOfBirth) {
         this.patient.age.month = 0

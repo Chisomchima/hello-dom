@@ -63,5 +63,10 @@ export default axios => ({
         return axios.$get("laboratory/lab_observation/", {
             params
         })
+    },
+    getCoatofArm( params = {}){
+        return axios.$get("/core/service_arms/", {
+            params
+        })
     }
 });

@@ -276,7 +276,7 @@ export default {
           text: 'Vitals added',
         })
         this.cancel()
-        if ((this.encounterData.status = 'NEW')) {
+        if ((this.encounterData.status == 'New')) {
           this.updateStatus()
         }
 

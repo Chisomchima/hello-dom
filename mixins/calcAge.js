@@ -1,4 +1,5 @@
 export default {
+   methods: {
     calcAge(e) {
         // **********calc year***********
         let presentDate = new Date().getFullYear();
@@ -60,4 +61,5 @@ export default {
 
         // *********************************
     },
+   }
 }

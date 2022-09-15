@@ -48,7 +48,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.date_before"
+            v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
@@ -60,7 +60,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.date_after"
+            v-model="filters.date_before"
             type="date"
             name=""
             class="form-control"
@@ -284,13 +284,13 @@ export default {
       this.nurseSeen = res.count
     })
     let day = new Date().toISOString().split('T')[0]
-    this.filters.date_after = day
+    this.filters.date_before = day
     function getPreviousDay(date = new Date()) {
       const previous = new Date(date.getTime())
       previous.setDate(date.getDate() - 1)
       return previous.toISOString().split('T')[0]
     }
-    this.filters.date_before = getPreviousDay()
+    this.filters.date_after = getPreviousDay()
   },
   methods: {
     clear() {

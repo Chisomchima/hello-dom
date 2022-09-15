@@ -134,6 +134,7 @@ export default {
     },
     async save() {
       this.$emit('labObj', this.obj)
+      
     },
     validateForm() {},
   },

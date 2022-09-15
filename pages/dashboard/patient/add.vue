@@ -231,7 +231,7 @@ export default {
           ...dataObject,
           is_baby: dataObject.is_baby ? dataObject.is_baby : false,
           gender: dataObject.gender ? dataObject.gender.gender : null,
-          middlename: dataObject.middlename ? dataObject.middlename : '',
+          middlename: dataObject.middlename ? dataObject.middlename : "",
           nationality: dataObject.nationality
             ? dataObject.nationality.country
             : null,
@@ -275,7 +275,10 @@ export default {
               : null,
 
           },
-          salutation: dataObject.salutation.salutations,
+          
+          salutation: dataObject.salutation ? dataObject.salutation : null, 
+          arms_of_service: dataObject.arms_of_service ? dataObject.arms_of_service : null, 
+          arms_no: dataObject.arms_no ? dataObject.arms_no : null, 
           payment_scheme: dataObject.payment_scheme[0].payer_scheme === null ? [] : dataObject.payment_scheme
         }
 
@@ -299,8 +302,8 @@ export default {
         ...item,
         is_baby: item.is_baby ? item.is_baby : false,
         gender: item.gender ? item.gender.gender : null,
-        middlename: item.middlename ? item.middlename : '',
-        occupation: item.occupations ? item.occupations.occupation : null,
+        middlename: item.middlename ? item.middlename : "",
+        occupation: item.occupation ? item.occupation : null,
         nationality: item.nationality ? item.nationality.country : null,
         religion: item.religion ? item.religion.religion : null,
         marital_status: item.marital_status
@@ -333,7 +336,9 @@ export default {
 
           // payment_scheme: dataObject
         },
-        salutation: item.salutation.salutations,
+        salutation: item.salutation ? item.salutation : null,
+        arms_no: item.arms_no ? item.arms_no : null, 
+        arms_of_service: item.arms_of_service ? item.arms_of_service : null,
         payment_scheme: item.payment_scheme[0].payer_scheme === null ? [] : item.payment_scheme
       }
 

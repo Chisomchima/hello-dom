@@ -44,6 +44,38 @@
                 />
               </ValidationProviderWrapper>
             </div>
+            <div class="mb-2 col-lg-6 px-0 pl-0 col-md-6 col-sm-6">
+              <small class="text-grey text-12">Age (Y-M-D)</small>
+              <div class="d-flex">
+                <div class="px-1">
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="Year"
+                    v-model="age.year"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
+                </div>
+                <div class="px-1">
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="Month"
+                    v-model="age.month"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
+                </div>
+                <div class="px-1">
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="Day"
+                    v-model="age.day"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Phone Number" :rules="['']">
                 <input
@@ -103,9 +135,15 @@
 </template>
 
 <script>
+// import calcAge from '~/mixins/calcAge'
 export default {
+  // mixins: [calcAge],
   props: {
     data: {
+      type: Object,
+      required: true,
+    },
+    age: {
       type: Object,
       required: true,
     },
@@ -120,6 +158,7 @@ export default {
       encounterType: null,
     }
   },
+  watch: {},
   methods: {
     async getData() {
       try {
@@ -135,11 +174,13 @@ export default {
     async save() {
       try {
         if (await this.$refs.form.validate()) {
+          let obj = this.data
+          obj.age = this.age
           const data = await this.$api.encounter.saveEncounter({
             clinic: this.clinic,
             provider: this.provider ? this.provider : {},
             encounter_type: this.encounterType,
-            patient: this.data,
+            patient: obj,
           })
           this.$bvModal.hide('add_encounters')
           this.$toast({

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div v-if="false">
+      <div v-if="labitems.length < 1 || imgitems.length < 1">
         <b-row>
           <b-col cols="12" class="mt-4 ml-3">
             <b-skeleton animation="wave" width="70%"></b-skeleton>
@@ -13,20 +13,33 @@
             <b-skeleton animation="fade" width="65%"></b-skeleton>
             <b-skeleton animation="fade" width="60%"></b-skeleton>
           </b-col>
+          <b-col cols="12" class="mt-3 ml-3">
+            <b-skeleton animation="fade" width="30%"></b-skeleton>
+            <b-skeleton animation="fade" width="75%"></b-skeleton>
+            <b-skeleton animation="fade" width="40%"></b-skeleton>
+          </b-col>
+          <b-col cols="12" class="mt-3 ml-3">
+            <b-skeleton animation="fade" width="70%"></b-skeleton>
+            <b-skeleton animation="fade" width="65%"></b-skeleton>
+            <b-skeleton animation="fade" width="60%"></b-skeleton>
+          </b-col>
         </b-row>
       </div>
-      <div>
+      <div v-else>
         <div class="d-flex align-items-center justify-content-between">
           <h4 class="text-grey text-18 mb-0">Orders</h4>
 
           <div class="col-md-8 d-flex justify-content-end">
             <div class="mx-2">
-              <button @click="labSwitch" class="btn btn-sm btn-outline-primary">
+              <button @click="orderLab" class="btn btn-sm btn-outline-primary">
                 Laboratory
               </button>
             </div>
             <div class="mx-2">
-              <button @click="imgSwitch" class="btn btn-sm btn-outline-primary">
+              <button
+                @click="orderImaging"
+                class="btn btn-sm btn-outline-primary"
+              >
                 Imaging
               </button>
             </div>
@@ -42,9 +55,9 @@
 
         <div class="text-center">
           <div
-            v-if="labConsole"
+            v-if="labObvCount != 0"
             class="rounded p-2 mb-3"
-            style="min-height: 7rem; border: 1px solid #212529"
+            style="min-height: 6.5rem; border: 1px solid #212529"
           >
             <div class="d-flex justify-content-between align-items-center mb-1">
               <p class="mb-0">Lab orders</p>
@@ -107,12 +120,39 @@
                 </span>
               </span>
             </div>
+
+            <div class="d-flex justify-content-end align-items-center">
+              <div class="text-16 text-grey">
+                <span
+                  @click="closeLabOrder"
+                  style="position: relative"
+                  class="text-danger mx-1 point"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 16 16"
+                  >
+                    <g fill="currentColor">
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                      />
+                    </g></svg
+                ></span>
+              </div>
+            </div>
           </div>
 
           <!-- ********************************** -->
 
           <div
-            v-if="imgConsole"
+            v-if="imgObvCount"
             class="rounded p-2"
             style="min-height: 7rem; border: 1px solid #212529"
           >
@@ -177,6 +217,33 @@
                 </span>
               </span>
             </div>
+
+            <div class="d-flex justify-content-end align-items-center mb-1">
+              <div class="text-16 text-grey">
+                <span
+                  @click="closeImgOrder"
+                  style="position: relative"
+                  class="text-danger mx-1 point"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 16 16"
+                  >
+                    <g fill="currentColor">
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                      />
+                    </g></svg
+                ></span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -203,7 +270,7 @@
         </div> -->
 
         <div
-          v-if="labConsole || imgConsole"
+          v-if="labObvCount != 0 || imgObvCount != 0"
           style="height: 38px"
           class="w-100 mt-3 mr-5 text-16 d-flex justify-content-end"
         >
@@ -214,44 +281,79 @@
       </div>
 
       <!-- ************************************************************ -->
-      <div class="p-2">
+
+      <div>
+        <!-- <div class="p-5 text-center" v-if="emptyState">
+          <div class="text-16 text-grey">
+            No orders added yet, click the buttons at the top to place an order.
+          </div>
+          <div class="text-primary my-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="30"
+              height="30"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 16 16"
+            >
+              <g fill="currentColor">
+                <path
+                  d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                />
+                <path
+                  d="m8.93 6.588l-2.29.287l-.082.38l.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319c.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246c-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0a1 1 0 0 1 2 0z"
+                />
+              </g>
+            </svg>
+          </div>
+        </div> -->
+      </div>
+
+      <div v-if="labitems.length > 0" class="p-2">
+        <p class="text-16 text-grey">Laboratory orders</p>
         <TableComponent
           :perPage="filter.size"
           :pages="pages"
-          :items="items"
+          :items="labitems"
           :busy="busy"
-          :fields="fields"
+          :paginate="false"
+          :fields="labfields"
+          @row-hovered="showToolTip"
           :currentPage="currentPage"
+          @sortData="showToolTip"
           @page-changed="filter($event, currentFilter)"
         >
           <template #value.laboratory="{ data }">
-            <pre class="d-none">
-              {{ data.item }}
-            </pre>
-            <div v-if="data.item.value.laboratory.lab_panel_orders">
-              <div
-                class=""
-                v-for="(order, index) in data.item.value.laboratory
-                  .lab_panel_orders"
-                :key="index"
-              >
-                {{ order.panel.name }}
-              </div>
+            <div>
+              {{ labPanelNames(data.item.value.lab_panel_orders) }}
             </div>
           </template>
           <template #value.imaging="{ data }">
             <pre class="d-none">
               {{ data.item }}
             </pre>
-            <div v-if="data.item.value.laboratory.img_obv">
-              <div
-                class=""
-                v-for="(order, index) in data.item.value.laboratory
-                  .lab_panel_orders"
-                :key="index"
-              >
-                {{ order.img_obv.name }}
-              </div>
+          </template>
+        </TableComponent>
+      </div>
+
+      <div v-if="imgitems.length > 0" class="p-2">
+        <p class="text-16 text-grey">Imaging orders</p>
+        <TableComponent
+          :perPage="filter.size"
+          :pages="pages"
+          :items="imgitems"
+          :busy="busy"
+          :paginate="false"
+          :fields="imgfields"
+          @row-hovered="showToolTip"
+          :currentPage="currentPage"
+          @sortData="showToolTip"
+          @page-changed="filter($event, currentFilter)"
+        >
+          <template #value.imaging="{ data }">
+            <div>
+              {{ imgObvNames(data.item.value.img_obv_orders) }}
             </div>
           </template>
         </TableComponent>
@@ -262,21 +364,28 @@
 
 <script>
 import TableCompFun from '~/mixins/TableCompFun'
+import arrayBreakdown from '~/mixins/arrayBreakdown'
 export default {
-  mixins: [TableCompFun],
+  mixins: [TableCompFun, arrayBreakdown],
   data() {
     return {
       click: true,
       labConsole: false,
       imgConsole: false,
+      show: false,
+      emptyState: true,
       items: [],
+      labitems: [],
+      imgitems: [],
       pages: 1,
       currentPage: 1,
+      labObvCount: 0,
+      imgObvCount: 0,
       arr: [],
       imgArr: [],
       labServiceOptions: [],
       imagingOption: [],
-      fields: [
+      labfields: [
         {
           key: 'created_at',
           label: 'Order date',
@@ -284,7 +393,29 @@ export default {
         },
         {
           key: 'value.laboratory',
-          label: 'Lab orders',
+          label: 'Laboratory orders',
+          sortable: true,
+          formatter: (value) => {
+            if (value) {
+              return value
+            } else {
+              return ''
+            }
+          },
+        },
+        {
+          key: 'created_by',
+          label: 'Ordered by',
+          sortable: true,
+          formatter: (value) => {
+            return value.first_name + ' ' + value.last_name
+          },
+        },
+      ],
+      imgfields: [
+        {
+          key: 'created_at',
+          label: 'Order date',
           sortable: true,
         },
         {
@@ -343,6 +474,39 @@ export default {
   mounted() {
     this.getOrders()
   },
+  watch: {
+    labObvCount() {
+      if (this.labObvCount === 0) {
+        this.requestBody.laboratory.comments = ''
+        this.requestBody.laboratory.stat = false
+        this.requestBody.laboratory.service_center = null
+        this.requestBody.laboratory.payment_scheme = null
+      }
+    },
+    imgObvCount() {
+      if (this.imgObvCount === 0) {
+        this.requestBody.imaging.comments = ''
+        this.requestBody.imaging.stat = false
+        this.requestBody.imaging.service_center = null
+        this.requestBody.imaging.payment_scheme = null
+      }
+    },
+    labServiceOptions() {
+      if (this.imagingOption.length < 1 || this.items.length < 1) {
+        this.emptyState = false
+      }
+    },
+    imagingOption() {
+      if (this.items.length < 1 || this.labServiceOptions.length < 1) {
+        this.emptyState = false
+      }
+    },
+    items() {
+      if (this.imagingOption.length < 1 || this.labServiceOptions.length < 1) {
+        this.emptyState = false
+      }
+    },
+  },
   methods: {
     async getOrders(page = 1, e = { size: 10 }) {
       this.filter = e
@@ -352,7 +516,8 @@ export default {
           { size: 1000 },
           this.consultationData.id
         )
-        this.items = response.result
+        this.labitems = response.result.laboratory
+        this.imgitems = response.result.imaging
         this.busy = false
         // this.pages = response.total_pages
         // this.totalRecords = response.total_count
@@ -361,6 +526,25 @@ export default {
       } finally {
         this.busy = false
       }
+    },
+    labPanelNames(e) {
+      console.log(e)
+      let arr = e
+      let newArr = []
+      for (let x = 0; x < arr.length; x++) {
+        newArr.push(arr[x].panel.name)
+      }
+      let str = newArr.join(', ')
+      return str
+    },
+    imgObvNames(e) {
+      let arr = e
+      let newArr = []
+      for (let x = 0; x < arr.length; x++) {
+        newArr.push(arr[x].img_obv.name)
+      }
+      let str = newArr.join(', ')
+      return str
     },
     handleProps(list) {
       this.labServiceOptions = list
@@ -371,15 +555,22 @@ export default {
     handleToggle(obj) {
       const { child, parent, state } = obj
       this.labServiceOptions[parent].lab_panels[child].selected = state
+      if (state == true) {
+        this.labObvCount++
+      }
     },
     handleImagingToggle(obj) {
       const { child, parent, state } = obj
       this.imagingOption[parent].img_observations[child].selected = state
+      if (state == true) {
+        this.imgObvCount++
+      }
     },
     removeLabOrder(obj) {
       const { parent, child, state } = obj
       if ((this.labServiceOptions[parent].lab_panels[child].selected = true)) {
         this.labServiceOptions[parent].lab_panels[child].selected = false
+        this.labObvCount--
       }
     },
     removeImagingOrder(obj) {
@@ -388,11 +579,16 @@ export default {
         (this.imagingOption[parent].img_observations[child].selected = true)
       ) {
         this.imagingOption[parent].img_observations[child].selected = false
+        this.imgObvCount--
       }
     },
-    labSwitch() {
-      this.labConsole = !this.labConsole
+    closeLabOrder() {
+      this.labObvCount = 0
       this.labServiceOptions = []
+    },
+    closeImgOrder() {
+      this.imgObvCount = 0
+      this.imagingOption = []
     },
     imgSwitch() {
       this.imgConsole = !this.imgConsole
@@ -400,12 +596,32 @@ export default {
     },
 
     addLabData(e) {
-      this.requestBody.laboratory.service_center = e.service_center
+      if (e.service_center) {
+        this.requestBody.laboratory.service_center = e.service_center
+      } else {
+        this.$toast({
+          type: 'info',
+          text: `Please choose a service center`,
+        })
+      }
+
       this.requestBody.laboratory.comments = e.comments
       this.requestBody.laboratory.stat = e.stat
     },
+    showToolTip(e) {
+      // console.log(e)
+      this.show = !this.show
+    },
     addImgData(e) {
-      this.requestBody.imaging.service_center = e.service_center
+      if (e.service_center) {
+        this.requestBody.imaging.service_center = e.service_center
+      } else {
+        this.$toast({
+          type: 'info',
+          text: `Please choose a service center`,
+        })
+      }
+
       this.requestBody.imaging.comments = e.comments
       this.requestBody.imaging.stat = e.stat
     },
@@ -425,11 +641,6 @@ export default {
           }
         })
       })
-      if (arr.length > 0) {
-        this.requestBody.laboratory.lab_panels = arr
-      } else {
-        this.requestBody.laboratory = null
-      }
 
       let imgArr = []
       this.imagingOption.forEach((el) => {
@@ -439,30 +650,46 @@ export default {
           }
         })
       })
+      if (arr.length > 0 || imgArr.length > 0) {
+        if (arr.length > 0) {
+          this.requestBody.laboratory.lab_panels = arr
+        } else {
+          this.requestBody.laboratory = null
+        }
 
-      if (imgArr.length > 0) {
-        this.requestBody.imaging.img_obv = imgArr
+        if (imgArr.length > 0) {
+          this.requestBody.imaging.img_obv = imgArr
+        } else {
+          this.requestBody.imaging = null
+        }
+
+        this.requestBody.prescription = null
+
+        try {
+          let submitBody = this.requestBody
+          let response = await this.$api.encounter.orderOnEncounter(
+            submitBody,
+            this.consultationData.id
+          )
+
+          this.$toast({
+            type: 'success',
+            text: `Order created successfully`,
+          })
+          this.imgConsole = false
+          this.labConsole = false
+          this.getOrders()
+          this.closeLabOrder()
+          this.closeImgOrder()
+        } catch (error) {
+          console.log(error)
+        }
       } else {
-        this.requestBody.imaging = null
-      }
-
-      this.requestBody.prescription = null
-
-      let submitBody = this.requestBody
-
-      let response = await this.$api.encounter.orderOnEncounter(
-        submitBody,
-        this.consultationData.id
-      )
-      if (response) {
         this.$toast({
-          type: 'success',
-          text: `Order created successfully`,
+          type: 'warning',
+          text: `Please select an observation to place order`,
         })
       }
-      this.imgConsole = false
-      this.labConsole = false
-      this.getOrders()
     },
   },
 }
