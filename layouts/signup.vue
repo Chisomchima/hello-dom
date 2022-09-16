@@ -12,6 +12,8 @@
             srcset=""
           />
         </div>
+
+        <h1 class="text-center text-18 text-danger mt-4">{{appName}}</h1>
       </div>
       <div class="col-md-8">
         <div class="d-flex flex-column justify-content-around vh-100">
@@ -69,6 +71,11 @@ export default Vue.extend({
     }
   },
   methods: {},
+  computed:{
+    appName(){
+      return process.env.APP_NAME
+    }
+  }
 })
 </script>
 

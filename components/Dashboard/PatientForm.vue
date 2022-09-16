@@ -14,7 +14,6 @@
               v-model="form.value"
               :options="form.options"
               :label="form.select_label"
-              :reduce="(opt) => opt"
               @input="onInput({ key: form.key, value: form.value })"
             ></VSelect>
 
@@ -125,7 +124,7 @@ export default {
         {
           key: 'salutation',
           name: 'Salutation',
-          rules: [''],
+          rules: ['required'],
           type: 'select',
           select_label: 'salutations',
           options: [],
@@ -182,6 +181,7 @@ export default {
           name: 'Arms of service',
           rules: [''],
           type: 'select',
+          value: null,
           select_label: 'name',
           options: [],
           col: 'col-md-3',

@@ -39,7 +39,7 @@
           v-if="invoice.status ? true : false"
           class="d-flex justify-content-end"
         >
-          <div v-if="invoice.status === 'DRAFT'">
+          <div class="mx-2" v-if="invoice.status === 'DRAFT'">
             <BaseButton @click="authorizeBill" class="btn-primary btn-sm">Confirm</BaseButton>
           </div>
           <span

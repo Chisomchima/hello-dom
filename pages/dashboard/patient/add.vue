@@ -273,12 +273,12 @@ export default {
             phone_number: dataObject.relation_phone_num
               ? dataObject.relation_phone_num
               : null,
-
           },
           
-          salutation: dataObject.salutation ? dataObject.salutation : null, 
-          arms_of_service: dataObject.arms_of_service ? dataObject.arms_of_service : null, 
-          arms_no: dataObject.arms_no ? dataObject.arms_no : null, 
+          salutation: dataObject.salutation ? dataObject.salutation.salutations : null, 
+          occupation: dataObject.occupation ? dataObject.occupation.occupation : null, 
+          service_arm: dataObject.service_arm ? dataObject.service_arm.name : null, 
+          service_arm_no: dataObject.service_arm_no ? dataObject.service_arm_no : null, 
           payment_scheme: dataObject.payment_scheme[0].payer_scheme === null ? [] : dataObject.payment_scheme
         }
 
@@ -303,7 +303,7 @@ export default {
         is_baby: item.is_baby ? item.is_baby : false,
         gender: item.gender ? item.gender.gender : null,
         middlename: item.middlename ? item.middlename : "",
-        occupation: item.occupation ? item.occupation : null,
+        occupation: item.occupation ? item.occupation.occupation : null,
         nationality: item.nationality ? item.nationality.country : null,
         religion: item.religion ? item.religion.religion : null,
         marital_status: item.marital_status
@@ -336,9 +336,9 @@ export default {
 
           // payment_scheme: dataObject
         },
-        salutation: item.salutation ? item.salutation : null,
-        arms_no: item.arms_no ? item.arms_no : null, 
-        arms_of_service: item.arms_of_service ? item.arms_of_service : null,
+        salutation: item.salutation ? item.salutation.salutations : null,
+        service_arm_no: item.service_arm_no ? item.service_arm_no : null, 
+        service_arm: item.service_arm ? item.service_arm.name : null,
         payment_scheme: item.payment_scheme[0].payer_scheme === null ? [] : item.payment_scheme
       }
 

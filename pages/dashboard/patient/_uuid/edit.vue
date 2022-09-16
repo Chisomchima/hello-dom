@@ -14,7 +14,6 @@
       </div>
     </div>
 
-
     <DashboardStepWrapper
       ref="stepWrapper"
       :steps="[
@@ -28,7 +27,7 @@
     >
       <template #default="{ currentStep }">
         <DashboardPatientForm
-        v-show="currentStep != 3"
+          v-show="currentStep != 3"
           ref="patientForm"
           :edit-form-data="data"
           :current-position="currentStep"
@@ -37,24 +36,32 @@
 
         <div v-show="currentStep === 3">
           <div class="mt-4 w-100">
-            <div class="d-flex" v-for="(form, index) in data.payment_scheme" :key="index">
-              <div class="d-flex flex-wrap" style="width:98%">
+            <div
+              class="d-flex"
+              v-for="(form, index) in data.payment_scheme"
+              :key="index"
+            >
+              <div class="d-flex flex-wrap" style="width: 98%">
                 <div class="col-lg-3 col-md-3 mb-2">
                   <ValidationProviderWrapper name="Scheme" :rules="['']">
                     <VSelect
                       label="name"
-                       class="text-14"
+                      class="text-14"
                       v-model="form.payer_scheme"
                       :options="payerSchemes"
                     ></VSelect>
                   </ValidationProviderWrapper>
                 </div>
-<!-- :disabled="(form.payer_scheme_id ? form.payer_scheme_id.type === 'SELF' : form.payer_scheme_id.type === 'INSURANCE') ? true : false" -->
+                <!-- :disabled="(form.payer_scheme_id ? form.payer_scheme_id.type === 'SELF' : form.payer_scheme_id.type === 'INSURANCE') ? true : false" -->
                 <div class="col-lg-3 col-md-3 mb-2">
                   <ValidationProviderWrapper name="Enrollee ID" :rules="['']">
                     <input
                       class="form-control"
-                      :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      :disabled="
+                        form.payer_scheme
+                          ? form.payer_scheme.type === 'SELF'
+                          : false
+                      "
                       v-model="form.enrollee_id"
                       type="text"
                     />
@@ -65,7 +72,11 @@
                     <VSelect
                       label="name"
                       class="text-14"
-                      :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      :disabled="
+                        form.payer_scheme
+                          ? form.payer_scheme.type === 'SELF'
+                          : false
+                      "
                       :options="[
                         'PRINCIPAL',
                         'DEPENDANT',
@@ -80,7 +91,11 @@
                     :rules="['']"
                   >
                     <input
-                    :disabled="form.payer_scheme ? form.payer_scheme.type === 'SELF' : false"
+                      :disabled="
+                        form.payer_scheme
+                          ? form.payer_scheme.type === 'SELF'
+                          : false
+                      "
                       class="form-control"
                       v-model="form.exp_date"
                       :min="getDate"
@@ -118,29 +133,27 @@
             </div>
           </div>
           <span>
-            <span
-            class="text-primary ml-2 point d-flex align-items-center"
-          >
-            <svg
-            @click="double"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              role="img"
-              width="24"
-              height="30"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 16 16"
+            <span class="text-primary ml-2 point d-flex align-items-center">
+              <svg
+                @click="double"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="24"
+                height="30"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 16 16"
+              >
+                <g fill="currentColor">
+                  <path
+                    d="M8 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 8 5Z"
+                  />
+                  <path
+                    d="M2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8Zm6-5a5 5 0 1 0 0 10A5 5 0 0 0 8 3Z"
+                  />
+                </g></svg
+              ><span class="text-12">Add</span></span
             >
-              <g fill="currentColor">
-                <path
-                  d="M8 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 8 5Z"
-                />
-                <path
-                  d="M2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8Zm6-5a5 5 0 1 0 0 10A5 5 0 0 0 8 3Z"
-                />
-              </g></svg
-            ><span class="text-12">Add</span></span
-          >
           </span>
         </div>
       </template>
@@ -170,16 +183,18 @@ export default {
         relation_postal_code: data.next_of_kin.postal_code,
         relation_phone_num: data.next_of_kin.phone_number,
         salutation: data.salutation,
-        service_arm_no: data.service_arm_no, 
+        service_arm_no: data.service_arm_no,
         service_arm: data.service_arm,
-        payment_scheme: data.payment_scheme ? data.payment_scheme : [
-          {
-            payer_scheme: null,
-            enrollee_id: null,
-            relationship: null,
-            exp_date: null,
-          },
-        ]
+        payment_scheme: data.payment_scheme
+          ? data.payment_scheme
+          : [
+              {
+                payer_scheme: null,
+                enrollee_id: null,
+                relationship: null,
+                exp_date: null,
+              },
+            ],
       }
       return {
         data: obj,
@@ -188,7 +203,7 @@ export default {
       console.log(error)
     }
   },
-   mounted() {
+  mounted() {
     this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
       this.payerSchemes = res.results
     })
@@ -198,8 +213,7 @@ export default {
     return {
       data: '',
       getDate: '',
-      dataVal: {
-      },
+      dataVal: {},
     }
   },
   methods: {
@@ -240,12 +254,12 @@ export default {
         if (key === 'salutation') {
           item[key] = item.salutation
         }
-        if(key === 'occupation'){
+        if (key === 'occupation') {
           item[key] = item.occupation
-         }
-        if(key === 'service_arm'){
+        }
+        if (key === 'service_arm') {
           item[key] = item.name
-         }
+        }
         //  else{
         //   item[key] = item
         //  }
@@ -278,21 +292,33 @@ export default {
             ? item.relation_phone_num
             : this.data.next_of_kin.phone_number,
         },
-        salutation: item.salutation ? item.salutation.salutations : null,
-        service_arm_no: item.service_arm_no ? item.service_arm_no : null, 
-        service_arm: item.service_arm ? item.service_arm : null,
+        salutation: item.salutation
+          ? item.salutation.salutations
+          : this.data.salutation,
+        service_arm_no: item.service_arm_no
+          ? item.service_arm_no
+          : this.data.service_arm_no,
+        service_arm: item.service_arm
+          ? item.service_arm
+          : this.data.service_arm,
         identity: {
           ...this.data.identity,
           type: item.id_type ? item.id_type : this.data.identity.type,
           number: item.id_number ? item.id_number : this.data.identity.number,
-          validity: item.id_validity ? item.id_validity : this.data.identity.validity,
+          validity: item.id_validity
+            ? item.id_validity
+            : this.data.identity.validity,
         },
 
         home_address: {
           ...this.data.home_address,
           address: item.address ? item.address : this.data.home_address.address,
-          city: item.address_city ? item.address_city : this.data.home_address.city,
-          country: item.address_country ? item.address_country : this.data.home_address.country,
+          city: item.address_city
+            ? item.address_city
+            : this.data.home_address.city,
+          country: item.address_country
+            ? item.address_country
+            : this.data.home_address.country,
         },
       }
 
