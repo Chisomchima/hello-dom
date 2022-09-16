@@ -226,28 +226,25 @@ export default {
         if (key === 'gender') {
           item[key] = item.gender
         }
-        else if (key === 'nationality') {
+        if (key === 'nationality') {
           item[key] = item.nationality.country
         }
 
-        else if (key === 'religion') {
+        if (key === 'religion') {
           item[key] = item.religion
         }
 
-        else if (key === 'marital_status') {
+        if (key === 'marital_status') {
           item[key] = item.marital_status
         }
-        else if (key === 'salutation') {
+        if (key === 'salutation') {
           item[key] = item.salutation
         }
-         else if(key === 'occupation'){
+        if(key === 'occupation'){
           item[key] = item.occupation
          }
-         else if(key === 'service_arms_no'){
-          item[key] = item.service_arms_no
-         }
-         else if(key === 'service_arm'){
-          item[key] = item.service_arm
+        if(key === 'service_arm'){
+          item[key] = item.name
          }
         //  else{
         //   item[key] = item
