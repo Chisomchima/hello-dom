@@ -5,12 +5,12 @@
       id="text"
       class="ticket"
     >
-      <h2
+      <!-- <h2
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0; text-align: center; font-size: 16px"
       >
         {{ companyName }}
-      </h2>
+      </h2> -->
       <div
         :style="printLayout ? { width: '18rem' } : { width: '48rem' }"
         style="text-align: center; margin: 0.5rem 0"
@@ -136,7 +136,7 @@
           alt=""
         /> -->
 <!-- **************Mireva Medical************** -->
-        <!-- <svg
+      <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
           width="180px"
@@ -4538,7 +4538,7 @@ c-31 27 -51 31 -61 15z"
               d="M6338 1033 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"
             />
           </g>
-        </svg> -->
+        </svg>
       </div>
       <h3
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
