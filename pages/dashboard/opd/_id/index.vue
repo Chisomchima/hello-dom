@@ -153,10 +153,10 @@
                 <b>D.O.B:</b> {{ patientData.date_of_birth }}
               </p>
             </div>
-            <div class="px-2">
+            <div v-if="patientData.age" class="px-2">
               <p class="text-14 mb-0 text-grey">
-                <b>Age(Y-M-D):</b> {{ patientData.age.year }} - {{ patientData.age.month }} -
-                {{ patientData.age.day }}
+                <b>Age(Y-M-D):</b> {{ patientData.age.year ? patientData.age.year : ""}} - {{ patientData.age.month ? patientData.age.month : "" }} -
+                {{ patientData.age.day ? patientData.age.day : "" }}
               </p>
             </div>
             <div class="px-2">
@@ -416,11 +416,12 @@ export default {
 
         let z = new Date(time).toTimeString().substring(0, 5)
         this.encounter_time = y + ', ' + z
-        this.calcAge(this.patientData.date_of_birth)
+        // this.calcAge(this.patientData.date_of_birth)
+        this.isLoading = false
       } catch {
       } finally {
         this.isLoading = false
-        this.calcAge()
+        // this.calcAge()
       }
     },
     async updateStatus() {

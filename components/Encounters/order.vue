@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div v-if="labitems || imgitems">
+      <div v-if="busy">
         <b-row>
           <b-col cols="12" class="mt-4 ml-3">
             <b-skeleton animation="wave" width="70%"></b-skeleton>
