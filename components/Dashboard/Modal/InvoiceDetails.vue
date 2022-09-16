@@ -40,7 +40,7 @@
           class="d-flex justify-content-end"
         >
           <div class="mx-2" v-if="invoice.status === 'DRAFT'">
-            <BaseButton @click="authorizeBill" class="btn-primary btn-sm">Confirm</BaseButton>
+            <BaseButton @click="confirmInvoice" class="btn-primary btn-sm">Confirm</BaseButton>
           </div>
           <span
             v-if="invoice.status === 'DRAFT'"
@@ -183,6 +183,7 @@ export default {
       },
       payAmount: 0,
       balance: 0,
+      totalBills: 0,
       paymentMethod: [],
       payments: [
         {
@@ -304,6 +305,27 @@ export default {
     },
     authorizeBill(){
       this.$bvModal.show('authorize')
+    },
+
+    async confirmInvoice(){
+      const result = await this.showConfirmMessageBox(
+        'Confirm invoice ?'
+      )
+      try{
+        if(result){
+          let response = await this.$api.finance.confirmInvoice(this.invoice.id)
+        if(response){
+          this.$bvModal.hide('invoiceModal')
+        }
+         this.$toast({
+            type: 'success',
+            text: `Confirmed`,
+          })
+          this.$emit('refresh')
+        }
+      }catch (error){
+        console.log(error)
+      }
     },
 
     handleQtyInput(newValue, index) {

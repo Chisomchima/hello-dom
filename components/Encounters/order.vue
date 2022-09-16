@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div v-if="labitems.length < 1 || imgitems.length < 1">
+      <div v-if="labitems || imgitems">
         <b-row>
           <b-col cols="12" class="mt-4 ml-3">
             <b-skeleton animation="wave" width="70%"></b-skeleton>
@@ -278,6 +278,56 @@
             Order
           </BaseButton>
         </div>
+
+
+              <div v-if="labitems != null" class="p-2">
+        <p class="text-16 text-grey">Laboratory orders</p>
+        <TableComponent
+          :perPage="filter.size"
+          :pages="pages"
+          :items="labitems"
+          :busy="busy"
+          :paginate="false"
+          :fields="labfields"
+          @row-hovered="showToolTip"
+          :currentPage="currentPage"
+          @sortData="showToolTip"
+          @page-changed="filter($event, currentFilter)"
+        >
+          <template #value.laboratory="{ data }">
+            <div>
+              {{ labPanelNames(data.item.value.lab_panel_orders) }}
+            </div>
+          </template>
+          <template #value.imaging="{ data }">
+            <pre class="d-none">
+              {{ data.item }}
+            </pre>
+          </template>
+        </TableComponent>
+      </div>
+
+      <div v-if="imgitems != null" class="p-2">
+        <p class="text-16 text-grey">Imaging orders</p>
+        <TableComponent
+          :perPage="filter.size"
+          :pages="pages"
+          :items="imgitems"
+          :busy="busy"
+          :paginate="false"
+          :fields="imgfields"
+          @row-hovered="showToolTip"
+          :currentPage="currentPage"
+          @sortData="showToolTip"
+          @page-changed="filter($event, currentFilter)"
+        >
+          <template #value.imaging="{ data }">
+            <div>
+              {{ imgObvNames(data.item.value.img_obv_orders) }}
+            </div>
+          </template>
+        </TableComponent>
+      </div>
       </div>
 
       <!-- ************************************************************ -->
@@ -310,54 +360,7 @@
         </div> -->
       </div>
 
-      <div v-if="labitems.length > 0" class="p-2">
-        <p class="text-16 text-grey">Laboratory orders</p>
-        <TableComponent
-          :perPage="filter.size"
-          :pages="pages"
-          :items="labitems"
-          :busy="busy"
-          :paginate="false"
-          :fields="labfields"
-          @row-hovered="showToolTip"
-          :currentPage="currentPage"
-          @sortData="showToolTip"
-          @page-changed="filter($event, currentFilter)"
-        >
-          <template #value.laboratory="{ data }">
-            <div>
-              {{ labPanelNames(data.item.value.lab_panel_orders) }}
-            </div>
-          </template>
-          <template #value.imaging="{ data }">
-            <pre class="d-none">
-              {{ data.item }}
-            </pre>
-          </template>
-        </TableComponent>
-      </div>
 
-      <div v-if="imgitems.length > 0" class="p-2">
-        <p class="text-16 text-grey">Imaging orders</p>
-        <TableComponent
-          :perPage="filter.size"
-          :pages="pages"
-          :items="imgitems"
-          :busy="busy"
-          :paginate="false"
-          :fields="imgfields"
-          @row-hovered="showToolTip"
-          :currentPage="currentPage"
-          @sortData="showToolTip"
-          @page-changed="filter($event, currentFilter)"
-        >
-          <template #value.imaging="{ data }">
-            <div>
-              {{ imgObvNames(data.item.value.img_obv_orders) }}
-            </div>
-          </template>
-        </TableComponent>
-      </div>
     </div>
   </div>
 </template>

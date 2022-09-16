@@ -63,7 +63,7 @@
       </UtilsFilterComponent>
     </div>
     <div v-if="modalControl">
-      <DashboardModalInvoiceDetails :nameData="data" :invoice="details" />
+      <DashboardModalInvoiceDetails :nameData="data" :invoice="details" @refresh="getSome" />
     </div>
 
     <DashboardModalPayOutstanding :invoice="details" />

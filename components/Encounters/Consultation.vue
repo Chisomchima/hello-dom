@@ -8,12 +8,13 @@
         <li @click="complaint" :class="hide4 ? 'bg-primary color' : ''" class="p-2">
           Chief Complaint
         </li>
-        <li @click="hx" :class="hideX ? 'bg-primary color' : ''" class="p-2">
-          Social HX
-        </li>
         <li @click="medicalHistory" :class="hideY ? 'bg-primary color' : ''" class="p-2">
           Medical HX
         </li>
+        <li @click="hx" :class="hideX ? 'bg-primary color' : ''" class="p-2">
+          Social HX
+        </li>
+        
         <li @click="ros" :class="hide2 ? 'bg-primary color' : ''" class="p-2">
           Review of Systems
         </li>

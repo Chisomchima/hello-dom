@@ -21,5 +21,8 @@ export default axios => ({
     },
     reserveBill(body, id) {
         return axios.$patch(`finance/bills/${id}/reserve/`, body);
+    },
+    confirmInvoice(id){
+        return axios.$patch(`finance/invoices/${id}/confirm/`)
     }
 });
