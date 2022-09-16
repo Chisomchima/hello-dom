@@ -37,9 +37,9 @@
       <div class="col-md-3">
         <div
           v-if="invoice.status ? true : false"
-          class="d-flex justify-content-between"
+          class="d-flex justify-content-end"
         >
-          <div>
+          <div v-if="invoice.status === 'DRAFT'">
             <BaseButton @click="authorizeBill" class="btn-primary btn-sm">Confirm</BaseButton>
           </div>
           <span

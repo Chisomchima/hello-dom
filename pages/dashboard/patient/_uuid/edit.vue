@@ -170,8 +170,8 @@ export default {
         relation_postal_code: data.next_of_kin.postal_code,
         relation_phone_num: data.next_of_kin.phone_number,
         salutation: data.salutation,
-        arms_no: data.arms_no, 
-        arms_of_service: data.arms_of_service,
+        service_arm_no: data.service_arm_no, 
+        service_arm: data.service_arm,
         payment_scheme: data.payment_scheme ? data.payment_scheme : [
           {
             payer_scheme: null,
@@ -243,11 +243,11 @@ export default {
          else if(key === 'occupation'){
           item[key] = item.occupation
          }
-         else if(key === 'arms_no'){
-          item[key] = item.arms_no
+         else if(key === 'service_arms_no'){
+          item[key] = item.service_arms_no
          }
-         else if(key === 'arms_of_service'){
-          item[key] = item.arms_of_service
+         else if(key === 'service_arm'){
+          item[key] = item.service_arm
          }
         //  else{
         //   item[key] = item
@@ -282,8 +282,8 @@ export default {
             : this.data.next_of_kin.phone_number,
         },
         salutation: item.salutation ? item.salutation.salutations : null,
-        arms_no: item.arms_no ? item.arms_no : null, 
-        arms_of_service: item.arms_of_service ? item.arms_of_service : null,
+        service_arm_no: item.service_arm_no ? item.service_arm_no : null, 
+        service_arm: item.service_arm ? item.service_arm : null,
         identity: {
           ...this.data.identity,
           type: item.id_type ? item.id_type : this.data.identity.type,

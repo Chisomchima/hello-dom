@@ -4,13 +4,13 @@
     <div class="cus fixed">
       <div class="navbar px-3 px-md-5">
         <div
-          class="ml-4 ml-md-0 pl-2 pl-md-0"
+          class="ml-4 ml-md-0 pl-2 pl-md-0 d-flex"
           style="cursor: pointer"
           @click="$router.push(`/`)"
         >
           <nuxt-link to="/">
 
-           <b-avatar   class="rounded-circle" :alt="APP_NAME_LONG" src="@/assets/img/theme-image.jpeg"></b-avatar>
+           <b-avatar   class="rounded-circle"  src="@/assets/img/theme-image.jpeg"></b-avatar>
            <!-- <img
            width="50px"
             src="@/assets/img/theme-image.jpeg"
@@ -18,7 +18,7 @@
             :alt="APP_NAME_LONG"
             srcset=""
           /> -->
-            <!-- <h4 class="text-white">{{APP_NAME_LONG}}</h4> -->
+            <span class="text-success ml-2">{{appName}}</span>
           </nuxt-link>
         </div>
         <div class="d-flex align-items-center flex-md-wrap">
@@ -342,6 +342,9 @@ export default Vue.extend({
     user() {
       // debugger;
       return this.$store.state.auth.user
+    },
+    appName(){
+      return process.env.APP_LONG_NAME
     },
     parentArray(): [] {
       if (this.$store.state.parent.student) {

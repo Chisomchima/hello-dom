@@ -85,8 +85,8 @@ export default {
           'email',
           'phone_number',
           'marital_status',
-          'arms_of_service',
-          'arms_no',
+          'service_arm',
+          'service_arm_no',
           'id_type',
           'id_number',
           'id_validity',
@@ -178,18 +178,18 @@ export default {
           show: true,
         },
         {
-          key: 'arms_of_service',
+          key: 'service_arm',
           name: 'Arms of service',
           rules: [''],
           type: 'select',
-          select_label: 'Arms of service',
+          select_label: 'name',
           options: [],
           col: 'col-md-3',
           show: true,
         },
         {
-          key: 'arms_no',
-          name: 'Arms No.',
+          key: 'service_arm_no',
+          name: 'Service no.',
           rules: [''],
           value: '',
           col: 'col-md-3',
@@ -465,7 +465,7 @@ export default {
       this.setOptions('occupation', res.results)
     })
     this.$api.core.getCoatofArm({ size: 1000 }).then((res) => {
-      this.setOptions('arms_of_service', res.results)
+      this.setOptions('service_arm', res.results)
     })
     this.$api.finance_settings.getPayerSchemes({ size: 1000 }).then((res) => {
       this.setOptions('scheme', res.results)

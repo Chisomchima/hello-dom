@@ -14,6 +14,7 @@ export default function ({ $axios, $toast, store, redirect }) {
     if (store.state.auth.token) {
       console.log('token')
       config.headers.common.Authorization = `Token ${store.state.auth.token}`
+      config.headers.common['db-type'] = process.env.db_type
     }
     return config
   })
