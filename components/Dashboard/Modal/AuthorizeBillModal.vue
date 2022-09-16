@@ -104,8 +104,8 @@ export default {
     },
     nameData: {
       type: Object,
-      require: false,
-      default: () => ({}),
+      require: true,
+      // default: () => ({}),
     },
     total: {
       type: Number,

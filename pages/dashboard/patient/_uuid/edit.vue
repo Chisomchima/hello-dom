@@ -156,6 +156,7 @@ export default {
       const obj = {
         ...data,
         id_type: data.identity.type,
+        middlename: data.middlename,
         id_number: data.identity.number,
         id_validity: data.identity.validity,
         address: data.home_address.address,
@@ -168,7 +169,9 @@ export default {
         relation_country: data.next_of_kin.country,
         relation_postal_code: data.next_of_kin.postal_code,
         relation_phone_num: data.next_of_kin.phone_number,
-        state_of_origin: data.state_id,
+        salutation: data.salutation,
+        arms_no: data.arms_no, 
+        arms_of_service: data.arms_of_service,
         payment_scheme: data.payment_scheme ? data.payment_scheme : [
           {
             payer_scheme: null,
@@ -221,25 +224,34 @@ export default {
     formatData(item) {
       for (const key in item) {
         if (key === 'gender') {
-          item[key] = item.gender.gender
+          item[key] = item.gender
         }
-        if (key === 'nationality') {
+        else if (key === 'nationality') {
           item[key] = item.nationality.country
         }
 
-        if (key === 'religion') {
-          item[key] = item.religion.religion
+        else if (key === 'religion') {
+          item[key] = item.religion
         }
 
-        if (key === 'marital_status') {
-          item[key] = item.marital_status.marital_status
+        else if (key === 'marital_status') {
+          item[key] = item.marital_status
         }
-        if (key === 'salutation') {
-          item[key] = item.salutation.salutations
+        else if (key === 'salutation') {
+          item[key] = item.salutation
         }
-         if(key === 'occupation'){
-          item[key] = item.occupations.occupation
+         else if(key === 'occupation'){
+          item[key] = item.occupation
          }
+         else if(key === 'arms_no'){
+          item[key] = item.arms_no
+         }
+         else if(key === 'arms_of_service'){
+          item[key] = item.arms_of_service
+         }
+        //  else{
+        //   item[key] = item
+        //  }
       }
 
       const customObj = {
@@ -269,12 +281,16 @@ export default {
             ? item.relation_phone_num
             : this.data.next_of_kin.phone_number,
         },
+        salutation: item.salutation ? item.salutation.salutations : null,
+        arms_no: item.arms_no ? item.arms_no : null, 
+        arms_of_service: item.arms_of_service ? item.arms_of_service : null,
         identity: {
           ...this.data.identity,
           type: item.id_type ? item.id_type : this.data.identity.type,
           number: item.id_number ? item.id_number : this.data.identity.number,
           validity: item.id_validity ? item.id_validity : this.data.identity.validity,
         },
+
         home_address: {
           ...this.data.home_address,
           address: item.address ? item.address : this.data.home_address.address,

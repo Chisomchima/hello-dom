@@ -185,7 +185,6 @@ export default {
           select_label: 'Arms of service',
           options: [],
           col: 'col-md-3',
-          value: null,
           show: true,
         },
         {
@@ -431,7 +430,7 @@ export default {
     editFormData: {
       handler(newVal) {
         for (const key in newVal) {
-          // console.log(`${key}: ${newVal[key]}`)
+          console.log(`${key}: ${newVal[key]}`)
           const index = this.formConfig.findIndex((item) => item.key === key)
           if (index > -1) {
             this.formConfig[index].value = newVal[key]

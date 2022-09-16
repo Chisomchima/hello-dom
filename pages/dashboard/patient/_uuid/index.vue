@@ -2,7 +2,7 @@
   <div>
     <BackwardNavigation />
     <UtilsHeaderCardWithAvatar
-      :title="`${data.salutation} ${data.firstname} ${data.lastname}`"
+      :title="`${data.salutation ? data.salutation : ''} ${data.firstname ? data.firstname : ''} ${data.lastname ? data.lastname : ''}`"
       :data="data"
       :enable-action="true"
       :display-key="[
