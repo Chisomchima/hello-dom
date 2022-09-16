@@ -18,7 +18,7 @@
             :alt="APP_NAME_LONG"
             srcset=""
           /> -->
-            <span class="text-success ml-2">{{appName}}</span>
+            <span class="text-white ml-2">{{appName}}</span>
           </nuxt-link>
         </div>
         <div class="d-flex align-items-center flex-md-wrap">
