@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BackwardNavigation/>
+    <BackwardNavigation />
     <div class="row">
       <div class="col-12 mb-2">
         <div class="d-flex justify-content-between align-items-center">
@@ -34,7 +34,10 @@
                   label="Spinning"
                 ></b-spinner>
               </div>
-              <button @click="downloadEncReport" class="btn btn-sm btn-outline-primary">
+              <button
+                @click="downloadEncReport"
+                class="btn btn-sm btn-outline-primary"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -113,6 +116,34 @@ export default {
             }
           },
         },
+        {
+          key: 'acknowledged_by',
+          label: 'Acknowleged by',
+          sortable: true,
+          formatter: (val) => {
+            if (val.first_name || val.last_name) {
+              return val.first_name + ' ' + val.last_name
+            } else {
+              return ''
+            }
+          },
+        },
+        { key: 'acknowledged_at', label: 'Date acknowledged', sortable: true },
+        {
+          key: 'signed_date',
+          label: 'Signed date',
+          formatter: (value) => {
+            if(value != null){
+              return DateTime.fromISO(value).toLocaleString(
+              DateTime.DATETIME_SHORT
+            )
+            }
+            else{
+              return ''
+            }
+          },
+          sortable: true,
+        },
         { key: 'encounter_type', label: 'Encounter Type', sortable: true },
 
         { key: 'status', label: 'Status', sortable: true },
@@ -140,13 +171,17 @@ export default {
       const response = await fetch(
         `${process.env.BASE_URL}encounters/reports/?department=${
           this.currentFilter.department ? this.currentFilter.department : ''
-        }&clinic=${this.currentFilter.clinic ? this.currentFilter.clinic : ''}&provider=${
+        }&clinic=${
+          this.currentFilter.clinic ? this.currentFilter.clinic : ''
+        }&provider=${
           this.currentFilter.provider ? this.currentFilter.provider : ''
         }&status=${this.currentFilter.status}&encounter_id=${
           this.currentFilter.encounter_id ? this.currentFilter.encounter_id : ''
         }&to_excel=${true}&date_before=${
           this.currentFilter.date_before ? this.currentFilter.date_before : ''
-        }&date_after=${this.currentFilter.date_after ? this.currentFilter.date_after : ''}`,
+        }&date_after=${
+          this.currentFilter.date_after ? this.currentFilter.date_after : ''
+        }`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
