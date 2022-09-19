@@ -35,7 +35,6 @@
                 ></b-spinner>
               </div>
               <button
-                @click="downloadEncReport"
                 class="btn btn-sm btn-outline-primary"
               >
                 <svg
@@ -70,12 +69,18 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
-import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc, FilterLogic],
+  mixins: [TableFunc],
   data() {
     return {
-      currentFilter: {},
+      currentFilter: {
+        department: [],
+        clinic: [],
+        provider: [],
+        status: '',
+        date_before: '',
+        date_after: '',
+      },
       downloading: false,
       fields: [
         {
@@ -128,17 +133,20 @@ export default {
             }
           },
         },
-        { key: 'acknowledged_at', label: 'Date acknowledged', sortable: true },
+        {
+          key: 'acknowledged_at',
+          label: 'Date acknowledged',
+          sortable: true,
+        },
         {
           key: 'signed_date',
           label: 'Signed date',
           formatter: (value) => {
-            if(value != null){
+            if (value != null) {
               return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
-            }
-            else{
+                DateTime.DATETIME_SHORT
+              )
+            } else {
               return ''
             }
           },
@@ -167,7 +175,8 @@ export default {
       }
     },
     async downloadEncReport() {
-      this.downloading = true
+      if(this.items.length > 0){
+        this.downloading = true
       const response = await fetch(
         `${process.env.BASE_URL}encounters/reports/?department=${
           this.currentFilter.department ? this.currentFilter.department : ''
@@ -175,9 +184,7 @@ export default {
           this.currentFilter.clinic ? this.currentFilter.clinic : ''
         }&provider=${
           this.currentFilter.provider ? this.currentFilter.provider : ''
-        }&status=${this.currentFilter.status}&encounter_id=${
-          this.currentFilter.encounter_id ? this.currentFilter.encounter_id : ''
-        }&to_excel=${true}&date_before=${
+        }&status=${this.currentFilter.status}&to_excel=${true}&date_before=${
           this.currentFilter.date_before ? this.currentFilter.date_before : ''
         }&date_after=${
           this.currentFilter.date_after ? this.currentFilter.date_after : ''
@@ -208,6 +215,13 @@ export default {
         this.$toast({
           type: 'error',
           text: `An error occured`,
+        })
+      }
+      }
+      else{
+        this.$toast({
+          type: 'info',
+          text: `No items to download`,
         })
       }
     },

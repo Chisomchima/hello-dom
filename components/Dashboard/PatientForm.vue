@@ -177,29 +177,11 @@ export default {
           show: true,
         },
         {
-          key: 'service_arm',
-          name: 'Arms of service',
-          rules: [''],
-          type: 'select',
-          value: null,
-          select_label: 'name',
-          options: [],
-          col: 'col-md-3',
-          show: true,
-        },
-        {
-          key: 'service_arm_no',
-          name: 'Service no.',
-          rules: [''],
-          value: '',
-          col: 'col-md-3',
-          show: true,
-        },
-        {
           key: 'email',
           name: 'Email',
           rules: ['email'],
           value: '',
+          col: 'col-md-3',
           show: true,
         },
         {
@@ -207,6 +189,26 @@ export default {
           name: 'Phone Number',
           rules: ['required'],
           value: '',
+          col: 'col-md-3',
+          show: true,
+        },
+        {
+          key: 'service_arm',
+          name: 'Arms of service',
+          rules: [''],
+          type: 'select',
+          value: null,
+          select_label: 'name',
+          options: [],
+          
+          show: true,
+        },
+        {
+          key: 'service_arm_no',
+          name: 'Service no.',
+          rules: [''],
+          value: '',
+          
           show: true,
         },
         {

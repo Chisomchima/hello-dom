@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 export default {
   data() {
     return {
-      busy: true,
+      busy: false,
       items: [],
       fields: [],
       pages: 1,

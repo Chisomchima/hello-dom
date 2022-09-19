@@ -104,6 +104,20 @@
           </div>
         </slot>
       </template>
+      <template #cell(acknowledged_at)="data">
+        <slot name="acknowledged_at" :data="data">
+          <div>
+            {{ formatDate(data.item.acknowledged_at) }}
+          </div>
+        </slot>
+      </template>
+      <template #cell(signed_date)="data">
+        <slot name="signed_date" :data="data">
+          <div>
+            {{ formatDate(data.item.signed_date) }}
+          </div>
+        </slot>
+      </template>
 
       <template #cell(week)="data">
         <slot name="week" :data="data">
@@ -608,7 +622,12 @@ export default {
     },
 
     formatDate(x) {
-      return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
+      if(x != null){
+        return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
+      }
+      else {
+        return ""
+      }
     },
 
     disabledTableRowMethod(item, type) {

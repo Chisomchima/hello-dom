@@ -134,7 +134,7 @@
     <div class="row justify-content-end">
 
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
-        <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+        <BaseButton class="mr-1 w-50" @click="applyFilter(filters)">
           Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
+// import { debounce } from 'lodash'
 
 export default {
   data() {
@@ -168,58 +168,12 @@ export default {
         clinic: [],
         provider: [],
         status: '',
-        encounter_id: '',
         date_before: '',
         date_after: '',
       },
     }
   },
-  watch: {
-    'filters.department': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-
-    'filters.provider': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.clinic': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-
-    'filters.status': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.date_before': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.date_after': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    genders: {},
-  },
   async created() {
-    if (this.$route.query.filter) {
-      this.filters = JSON.parse(this.$route.query.filter)
-    }
-    this.applyFilter(this.filters)
     try {
       const providers = await this.$api.core.providers({
         size: 1000,
@@ -251,7 +205,6 @@ export default {
         clinic: [],
         provider: [],
         status: '',
-        encounter_id: '',
         date_before: '',
         date_after: '',
       }
@@ -262,19 +215,10 @@ export default {
         const newFilterObject = {
           ...newVal,
         }
-        this.filterFunc(newFilterObject)
+        this.$emit('filter')
       } else {
-        this.filterFunc(newVal)
+        this.$emit('filter')
       }
-    },
-    filterFunc(newVal) {
-      this.$router.push({
-        name: this.$router.name,
-        query: {
-          ...this.$router.query,
-          filter: JSON.stringify(newVal),
-        },
-      })
     },
   },
 }
