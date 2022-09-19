@@ -13,7 +13,7 @@
           />
         </div>
 
-        <h1 class="text-center text-18 text-danger mt-4">{{appName}}</h1>
+        <h1 class="text-center text-18 text-white mt-4">{{appName}}</h1>
       </div>
       <div class="col-md-8">
         <div class="d-flex flex-column justify-content-around vh-100">
