@@ -5,17 +5,17 @@
       id="text"
       class="ticket"
     >
-      <!-- <h2
+      <h2
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0; text-align: center; font-size: 16px"
       >
         {{ companyName }}
-      </h2> -->
+      </h2>
       <div
         :style="printLayout ? { width: '18rem' } : { width: '48rem' }"
         style="text-align: center; margin: 0.5rem 0"
       >
-        <svg
+        <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
           width="170px"
@@ -128,7 +128,7 @@
               d="M26630 2646 l0 -436 45 0 45 0 0 175 0 176 117 -3 117 -3 111 -172 110 -172 53 -1 c28 0 52 2 52 5 0 2 -52 83 -115 180 l-115 176 26 9 c14 6 29 10 33 10 20 0 92 75 112 118 19 38 24 63 23 128 0 107 -28 165 -99 209 l-48 30 -234 3 -233 3 0 -435z m444 334 c90 -46 109 -200 34 -277 -42 -43 -102 -55 -258 -51 l-125 3 -3 160 c-1 87 0 165 3 173 8 20 307 13 349 -8z"
             />
           </g>
-        </svg>
+        </svg> -->
         <!-- <img
           width="170px"
           height="50px"

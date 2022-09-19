@@ -8,7 +8,7 @@
             src="@/assets/img/theme-image.jpeg"
             class="rounded-circle"
             alt=""
-            style="margin-top: 130px; height: 400px; width: 400px"
+            style="margin-top: 150px;"
             srcset=""
           />
         </div>
