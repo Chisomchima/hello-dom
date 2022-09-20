@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.approved_date_before"
+            v-model="filters.approved_date_after"
             type="date"
             name=""
             class="form-control"
@@ -17,7 +17,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.approved_date_after"
+            v-model="filters.approved_date_before"
             type="date"
             name=""
             class="form-control"
@@ -72,7 +72,7 @@
       <div class="col-2">
         <div class="mt-3 pt-1">
           <BaseButton class="w-100" @click="applyFilters(filters)">
-            Filter
+            Search
           </BaseButton>
         </div>
       </div>
@@ -139,51 +139,15 @@ export default {
         service_center: [],
         lab_unit: [],
         status: '',
-        asn: '',
         approved_date_before: '',
-        approved_date_after: ''
+        approved_date_after: '',
       },
       service_centers: [],
       lab_units: [],
     }
   },
-  watch: {
-    'filters.service_center': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.lab_unit': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.status': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.approved_date_before': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    'filters.approved_date_after': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-  },
+
   async created() {
-    if (this.$route.query.filter) {
-      this.filters = JSON.parse(this.$route.query.filter)
-    }
-    this.filterFunc(this.filters)
     try {
       const { results: service_centers } = await this.$api.core.serviceCenter({
         size: 1000,
@@ -206,29 +170,22 @@ export default {
         status: '',
         asn: '',
         approved_date_before: '',
-        approved_date_after: ''
+        approved_date_after: '',
       }
-      this.applyFilters(this.filters);
     },
 
     applyFilters(newVal) {
-       if (newVal) {
-        const newFilterObject = {
-          ...newVal,
-        }
-        this.filterFunc(newFilterObject)
-      } else {
-        this.filterFunc(newVal)
+      const newFilterObject = {
+        ...newVal,
       }
-    },
-    filterFunc(newVal) {
-      this.$router.push({
-        name: this.$router.name,
-        query: {
-          ...this.$router.query,
-          filter: JSON.stringify(newVal),
-        },
-      })
+      if (newVal.approved_date_before && newVal.approved_date_after) {
+       this.$emit('filter', newFilterObject)
+      } else {
+         this.$toast({
+          type: 'info',
+          text: `Please select a date range`,
+        })
+      }
     },
   },
 }

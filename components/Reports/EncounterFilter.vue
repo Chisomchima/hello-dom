@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.date_before"
+            v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
@@ -17,7 +17,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.date_after"
+            v-model="filters.date_before"
             type="date"
             name=""
             class="form-control"
@@ -129,7 +129,7 @@
       </div>
     </div>
 
-    <hr class="m-2" />
+    <!-- <hr class="m-2" /> -->
 
     <div class="row justify-content-end">
 
@@ -201,23 +201,25 @@ export default {
   methods: {
     clear() {
       this.filters = {
-        department: [],
-        clinic: [],
-        provider: [],
+        department: '',
+        clinic: '',
+        provider: '',
         status: '',
         date_before: '',
         date_after: '',
       }
-      this.applyFilter(this.filters)
     },
     applyFilter(newVal) {
-      if (newVal) {
-        const newFilterObject = {
+      const newFilterObject = {
           ...newVal,
         }
-        this.$emit('filter')
+      if (newVal.date_before && newVal.date_after) {
+        this.$emit('filter', newFilterObject)
       } else {
-        this.$emit('filter')
+         this.$toast({
+          type: 'info',
+          text: `Please select a date range`,
+        })
       }
     },
   },

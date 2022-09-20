@@ -1,6 +1,29 @@
 <template>
   <div class="filter-wrapper">
     <div class="row">
+       <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Date from</label>
+          <input
+            v-model="filters.date_after"
+            type="date"
+            name=""
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Date to</label>
+          <input
+            v-model="filters.date_before"
+            type="date"
+            name=""
+            class="form-control"
+          />
+        </div>
+      </div>
       <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">Service Center</label>
@@ -32,25 +55,24 @@
         </div>
       </div>
 
-    </div>
-
-    <div class="row justify-content-end">
-
-      <div class="col-md-4">
-        <div class="row mt-4">
-          <div class="col-6">
-            <BaseButton class="w-100" @click="filterFunc(filters)">
-              Search
-            </BaseButton>
-          </div>
-          <div class="col-6">
-            <BaseButton class="w-100 btn-danger" @click="clear()">
-              Clear
-            </BaseButton>
-          </div>
+       <div class="col-2">
+        <div class="mt-3 pt-1">
+          <BaseButton class="w-100" @click="applyFilter(filters)">
+            Search
+          </BaseButton>
         </div>
       </div>
+      <div class="col-2">
+        <div class="mt-3 pt-1">
+          <BaseButton class="w-100 btn-danger" @click="clear()">
+            Clear
+          </BaseButton>
+        </div>
+      </div>
+
     </div>
+
+    
   </div>
 </template>
 
@@ -68,67 +90,37 @@ export default {
         service_center: [],
         modality: [],
         status: '',
-        // asn: '',
-        // patient_uhid: '',
-        // patient_name: '',
-        // patient_phone: '',
+        date_before: '',
+        date_after: '',
       },
     }
   },
-  watch: {
-    'filters.status': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-    
-    'filters.modality': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-     'filters.service_center': {
-      handler: debounce(function () {
-        this.filterFunc(this.filters)
-      }, 500),
-      deep: true,
-    },
-
-    genders: {},
-  },
   created() {
-    if (this.$route.query.filter) {
-      this.filters = JSON.parse(this.$route.query.filter)
-    }
-    this.filterFunc(this.filters)
-
     this.getServiceCenters()
     this.getModality()
   },
   methods: {
     clear() {
       this.filters = {
-        service_center: '',
-        modality: '',
+       service_center: [],
+        modality: [],
         status: '',
-        asn: '',
-        patient_uhid: '',
-        // patient_name: '',
-        // patient_phone: '',
+        date_before: '',
+        date_after: '',
       }
-      this.filterFunc(this.filters)
     },
-
-    filterFunc(newVal) {
-      this.$router.push({
-        name: this.$router.name,
-        query: {
-          ...this.$router.query,
-          filter: JSON.stringify(newVal),
-        },
-      })
+     applyFilter(newVal) {
+      const newFilterObject = {
+          ...newVal,
+        }
+      if (newVal.date_before && newVal.date_after) {
+        this.$emit('filter', newFilterObject)
+      } else {
+         this.$toast({
+          type: 'info',
+          text: `Please select a date range`,
+        })
+      }
     },
     async getServiceCenters() {
       try {

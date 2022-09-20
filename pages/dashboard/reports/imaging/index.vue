@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BackwardNavigation/>
+    <BackwardNavigation />
     <div class="row">
       <div class="col-12 mb-2">
         <div class="d-flex justify-content-between align-items-center">
@@ -34,7 +34,10 @@
                   label="Spinning"
                 ></b-spinner>
               </div>
-              <button @click="downloadImgReport" class="btn btn-sm btn-outline-primary">
+              <button
+                @click="downloadImgReport"
+                class="btn btn-sm btn-outline-primary"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -67,12 +70,17 @@
 <script>
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
-import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc, FilterLogic],
+  mixins: [TableFunc],
   data() {
     return {
-      currentFilter: {},
+      currentFilter: {
+        // service_center: [],
+        // modality: [],
+        // status: '',
+        // date_before: '',
+        // date_after: '',
+      },
       downloading: false,
       fields: [
         {
@@ -100,6 +108,55 @@ export default {
           //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
           // },
           sortable: true,
+        },
+        {
+          key: 'reported_on',
+          label: 'Reported',
+          sortable: true,
+          formatter: (value) => {
+            if (value != null) {
+              return DateTime.fromISO(value).toLocaleString(
+                DateTime.DATETIME_SHORT
+              )
+            }
+          },
+        },
+        {
+          key: 'reported_by',
+          label: 'Reported by',
+          sortable: true,
+          formatter: (val) => {
+            if (val != null && Object.values(val).length > 0) {
+              return val.first_name + ' ' + val.last_name
+            } else {
+              return ''
+            }
+          },
+        },
+
+        {
+          key: 'approved_on',
+          label: 'Approved on',
+          sortable: true,
+          formatter: (value) => {
+            if (value != null) {
+              return DateTime.fromISO(value).toLocaleString(
+                DateTime.DATETIME_SHORT
+              )
+            }
+          },
+        },
+        {
+          key: 'approved_by',
+          label: 'Approved by',
+          sortable: true,
+          formatter: (val) => {
+            if (val != null && Object.values(val).length > 0) {
+              return val.first_name + ' ' + val.last_name
+            } else {
+              return ''
+            }
+          },
         },
 
         {
@@ -148,43 +205,57 @@ export default {
       }
     },
     async downloadImgReport() {
-      this.downloading = true
-      const response = await fetch(
-        `${process.env.BASE_URL}encounters/reports/?department=${
-          this.currentFilter.department ? this.currentFilter.department : ''
-        }&clinic=${this.currentFilter.clinic ? this.currentFilter.clinic : ''}&provider=${
-          this.currentFilter.provider ? this.currentFilter.provider : ''
-        }&status=${this.currentFilter.status}&encounter_id=${
-          this.currentFilter.encounter_id ? this.currentFilter.encounter_id : ''
-        }&to_excel=${true}&date_before=${
-          this.currentFilter.date_before ? this.currentFilter.date_before : ''
-        }&date_after=${this.currentFilter.date_after ? this.currentFilter.date_after : ''}`,
-        {
-          headers: {
-            Authorization: `Token ${this.$store.state.auth.token}`,
-          },
+      if (this.items.length > 0) {
+        this.downloading = true
+        let filter = this.currentFilter
+        filter.to_excel = true
+
+        if(filter.status === ""){
+          delete filter.status
         }
-      )
-      if (response.status === 200) {
-        const data = await response.blob()
-        const objectURL = URL.createObjectURL(data)
-        const link = document.createElement('a')
-        link.download = `Encounter Report`
-        link.href = objectURL
-        this.downloading = false
-        // this.filter(1)
-        link.click()
-      } else if (response.status === 403) {
-        this.downloading = false
+
+        if(filter.service_center === ""){
+          delete filter.service_center
+        }
+
+        if(filter.modality === ""){
+          delete filter.modality
+        }
+        let download_string = new URLSearchParams(filter).toString()
+        const response = await fetch(
+          `${process.env.BASE_URL}imaging/reports/?&${download_string}`,
+          {
+            headers: {
+              Authorization: `Token ${this.$store.state.auth.token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          const data = await response.blob()
+          const objectURL = URL.createObjectURL(data)
+          const link = document.createElement('a')
+          link.download = `Encounter Report`
+          link.href = objectURL
+          this.downloading = false
+          // this.filter(1)
+          link.click()
+        } else if (response.status === 403) {
+          this.downloading = false
+          this.$toast({
+            type: 'info',
+            text: `You don't have the permission to perform this action`,
+          })
+        } else {
+          this.downloading = false
+          this.$toast({
+            type: 'error',
+            text: `An error occured`,
+          })
+        }
+      } else {
         this.$toast({
           type: 'info',
-          text: `You don't have the permission to perform this action`,
-        })
-      } else {
-        this.downloading = false
-        this.$toast({
-          type: 'error',
-          text: `An error occured`,
+          text: `No report to download`,
         })
       }
     },

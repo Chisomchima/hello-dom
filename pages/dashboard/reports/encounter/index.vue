@@ -35,6 +35,7 @@
                 ></b-spinner>
               </div>
               <button
+              @click="downloadEncReport"
                 class="btn btn-sm btn-outline-primary"
               >
                 <svg
@@ -74,12 +75,6 @@ export default {
   data() {
     return {
       currentFilter: {
-        department: [],
-        clinic: [],
-        provider: [],
-        status: '',
-        date_before: '',
-        date_after: '',
       },
       downloading: false,
       fields: [
@@ -177,18 +172,24 @@ export default {
     async downloadEncReport() {
       if(this.items.length > 0){
         this.downloading = true
+        let filter = this.currentFilter
+        filter.to_excel = true
+
+        console.log(filter)
+
+        if(filter.department.length < 1){
+          delete filter.department
+        }
+
+        if(filter.clinic.length < 1){
+          delete filter.clinic
+        }
+        if(filter.provider.length < 1){
+          delete filter.provider
+        }
+        let download_string = new URLSearchParams(filter).toString()
       const response = await fetch(
-        `${process.env.BASE_URL}encounters/reports/?department=${
-          this.currentFilter.department ? this.currentFilter.department : ''
-        }&clinic=${
-          this.currentFilter.clinic ? this.currentFilter.clinic : ''
-        }&provider=${
-          this.currentFilter.provider ? this.currentFilter.provider : ''
-        }&status=${this.currentFilter.status}&to_excel=${true}&date_before=${
-          this.currentFilter.date_before ? this.currentFilter.date_before : ''
-        }&date_after=${
-          this.currentFilter.date_after ? this.currentFilter.date_after : ''
-        }`,
+        `${process.env.BASE_URL}encounters/reports/?${download_string}}`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
@@ -221,7 +222,7 @@ export default {
       else{
         this.$toast({
           type: 'info',
-          text: `No items to download`,
+          text: `No report to download`,
         })
       }
     },
