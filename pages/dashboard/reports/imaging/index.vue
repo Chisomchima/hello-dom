@@ -87,47 +87,39 @@ export default {
           key: 'created_at',
           label: 'Date',
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+           return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
           sortable: true,
         },
         {
-          key: 'img_order.img_id',
-          label: 'ASN',
-          // formatter: (val, key, item) => {
-          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-          // },
+          key: 'img_obv',
+          label: 'Imaging obv',
+         
           sortable: true,
         },
         {
-          key: 'img_order.service_center.name',
-          label: 'Service Center',
-          // formatter: (val, key, item) => {
-          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-          // },
+          key: 'modality',
+          label: 'Modality',
+         
           sortable: true,
         },
         {
-          key: 'reported_on',
-          label: 'Reported',
+          key: 'captured at',
+          label: 'Capture date',
           sortable: true,
           formatter: (value) => {
             if (value != null) {
-              return DateTime.fromISO(value).toLocaleString(
-                DateTime.DATETIME_SHORT
-              )
+             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
             }
           },
         },
         {
-          key: 'reported_by',
-          label: 'Reported by',
+          key: 'captured by',
+          label: 'Captured by',
           sortable: true,
           formatter: (val) => {
-            if (val != null && Object.values(val).length > 0) {
-              return val.first_name + ' ' + val.last_name
+            if (val != null) {
+              return val
             } else {
               return ''
             }
@@ -135,14 +127,12 @@ export default {
         },
 
         {
-          key: 'approved_on',
-          label: 'Approved on',
+          key: 'approved at',
+          label: 'Approved date',
           sortable: true,
           formatter: (value) => {
             if (value != null) {
-              return DateTime.fromISO(value).toLocaleString(
-                DateTime.DATETIME_SHORT
-              )
+             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
             }
           },
         },
@@ -151,8 +141,33 @@ export default {
           label: 'Approved by',
           sortable: true,
           formatter: (val) => {
-            if (val != null && Object.values(val).length > 0) {
-              return val.first_name + ' ' + val.last_name
+            if (val != null) {
+              return val
+            } else {
+              return ''
+            }
+          },
+        },
+        {
+          key: 'cancelled at',
+          label: 'Cancelled date',
+          sortable: true,
+          formatter: (value) => {
+            if (value != null) {
+              return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            }
+            else{
+              return ''
+            }
+          },
+        },
+        {
+          key: 'cancelled by',
+          label: 'Cancelled by',
+          sortable: true,
+          formatter: (val) => {
+            if (val != null) {
+              return val
             } else {
               return ''
             }
@@ -160,7 +175,7 @@ export default {
         },
 
         {
-          key: 'patient.uhid',
+          key: 'patient_uhid',
           label: 'UHID',
           formatter: (val) => {
             return val
@@ -170,12 +185,9 @@ export default {
         {
           key: 'patient',
           label: 'Patient',
-          sortable: true,
-          formatter: (val) => {
-            return val.salutation + ' ' + val.firstname + ' ' + val.lastname
-          },
+          sortable: true
         },
-        { key: 'img_obv.name', label: 'Observation', sortable: true },
+       
         // {
         //   key: 'img_order',
         //   label: 'Order By',
@@ -214,11 +226,11 @@ export default {
           delete filter.status
         }
 
-        if(filter.service_center === ""){
+        if(filter.service_center.length < 1){
           delete filter.service_center
         }
 
-        if(filter.modality === ""){
+        if(filter.modality.length < 1){
           delete filter.modality
         }
         let download_string = new URLSearchParams(filter).toString()
@@ -234,7 +246,7 @@ export default {
           const data = await response.blob()
           const objectURL = URL.createObjectURL(data)
           const link = document.createElement('a')
-          link.download = `Encounter Report`
+          link.download = `Imaging Report`
           link.href = objectURL
           this.downloading = false
           // this.filter(1)

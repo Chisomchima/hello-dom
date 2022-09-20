@@ -95,9 +95,7 @@ export default {
           label: 'Order date',
           sortable: true,
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
@@ -105,9 +103,7 @@ export default {
           label: 'Specimen recieved',
           sortable: true,
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
@@ -120,9 +116,7 @@ export default {
           label: 'Result filled',
           sortable: true,
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
@@ -135,9 +129,7 @@ export default {
           label: 'Approved on',
           sortable: true,
           formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
         {
@@ -155,7 +147,7 @@ export default {
           },
         },
         { key: 'asn', label: 'ASN', sortable: true },
-        { key: 'patient.uhid', label: 'UHID', sortable: true },
+        { key: 'patient_uhid', label: 'UHID', sortable: true },
         {
           key: 'patient',
           label: 'Patient',
@@ -218,7 +210,7 @@ export default {
         }
         let download_string = new URLSearchParams(filter).toString()
       const response = await fetch(
-        `${process.env.BASE_URL}laboratory/?${download_string}`,
+        `${process.env.BASE_URL}laboratory/reports/?${download_string}`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,
