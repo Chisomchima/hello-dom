@@ -632,7 +632,7 @@ export default {
 
     disabledTableRowMethod(item, type) {
       if (!item || type !== 'row') return
-      if (item.bill.cleared_status) {
+      if (item.bill) {
         if (item.bill.cleared_status !== 'CLEARED') {
           // this.$refs.tooltip.$emit('enable')
           return 'disabledTableRow'
