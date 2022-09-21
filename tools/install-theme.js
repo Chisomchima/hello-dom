@@ -32,13 +32,20 @@ const copyFiles = async () => {
             console.log('theme color files does not exist')
         }
 
-        // const template = await fs.exists('./theme/InvoiceTemplate.vue')
-        // if(template){
-        //     await fs.copyFile('./theme/InvoiceTemplate.vue', './components/Dashboard/InvoiceTemplate.vue', (err) => {
-        //         if (err) throw err;
-        //         console.log('Invoice template copied successfully');
-        //     });
-        // }
+        const template = await fs.exists('./theme/InvoiceTemplate.vue')
+        if(template){
+            await fs.copyFile('./theme/InvoiceTemplate.vue', './components/Dashboard/InvoiceTemplate.vue', (err) => {
+                if (err) throw err;
+                console.log('Invoice template copied successfully');
+            });
+        }
+        const recieptTemplate = await fs.exists('./theme/PrintOutReciept.vue')
+        if(recieptTemplate){
+            await fs.copyFile('./theme/PrintOutReciept.vue', './components/Dashboard/PrintOutReciept.vue', (err) => {
+                if (err) throw err;
+                console.log('Reciept template copied successfully');
+            });
+        }
     } catch (error) {
         console.log(error)
     }
