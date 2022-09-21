@@ -98,7 +98,7 @@
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Provider:</b>
-              {{ consultationData.provider.name ? consultationData.provider.name : '' }}
+              {{ consultationData.provider ? (consultationData.provider.first_name + " " + consultationData.provider.last_name) : '' }}
             </div>
           </div>
           <div
