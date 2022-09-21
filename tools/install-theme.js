@@ -31,6 +31,14 @@ const copyFiles = async () => {
         else{
             console.log('theme color files does not exist')
         }
+
+        const template = await fs.exists('./theme/InvoiceTemplate.vue')
+        if(template){
+            await fs.copyFile('./theme/InvoiceTemplate.vue', './components/Dashboard/InvoiceTemplate.vue', (err) => {
+                if (err) throw err;
+                console.log('Invoice template copied successfully');
+            });
+        }
     } catch (error) {
         console.log(error)
     }

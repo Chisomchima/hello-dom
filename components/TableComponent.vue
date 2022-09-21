@@ -382,6 +382,11 @@
             :style="{ width: '10rem' }"
           />
           <col
+            v-else-if="field.key === 'patient'"
+            :key="field.key"
+            :style="{ width: '15rem' }"
+          />
+          <col
             v-else-if="field.key === 'value.option'"
             :key="field.key"
             :style="{ width: '18rem' }"
@@ -632,7 +637,7 @@ export default {
 
     disabledTableRowMethod(item, type) {
       if (!item || type !== 'row') return
-      if (item.bill) {
+      if (item.bill && typeof item.bill === "object") {
         if (item.bill.cleared_status !== 'CLEARED') {
           // this.$refs.tooltip.$emit('enable')
           return 'disabledTableRow'

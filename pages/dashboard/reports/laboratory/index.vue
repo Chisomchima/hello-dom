@@ -68,6 +68,9 @@
                 </div>
               </div>
             </template>
+            <template #lab_unit="{ data }">
+              <div class="text-capitalize">{{data.item.lab_unit}}</div>
+            </template>
             <template #status="{ data }">
               <div class="text-capitalize">{{data.item.status}}</div>
             </template>
@@ -98,32 +101,32 @@ export default {
             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
         },
-        {
-          key: 'specimen received at',
-          label: 'Specimen recieved',
-          sortable: true,
-          formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-          },
-        },
-        {
-          key: 'specimen received by',
-          label: 'Specimen recieved by',
-          sortable: true,
-        },
-        {
-          key: 'result filled at',
-          label: 'Result filled',
-          sortable: true,
-          formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-          },
-        },
-        {
-          key: 'result filled by',
-          label: 'Result filled by',
-          sortable: true,
-        },
+        // {
+        //   key: 'specimen received at',
+        //   label: 'Specimen recieved',
+        //   sortable: true,
+        //   formatter: (value) => {
+        //     return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+        //   },
+        // },
+        // {
+        //   key: 'specimen received by',
+        //   label: 'Specimen recieved by',
+        //   sortable: true,
+        // },
+        // {
+        //   key: 'result filled at',
+        //   label: 'Result filled',
+        //   sortable: true,
+        //   formatter: (value) => {
+        //     return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+        //   },
+        // },
+        // {
+        //   key: 'result filled by',
+        //   label: 'Result filled by',
+        //   sortable: true,
+        // },
         {
           key: 'approved_on',
           label: 'Approved on',
@@ -157,7 +160,7 @@ export default {
           // },
         },
         {
-          key: 'panel.lab_unit.name',
+          key: 'lab_unit',
           label: 'Lab Unit',
           sortable: true,
         },

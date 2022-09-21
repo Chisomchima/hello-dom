@@ -60,6 +60,9 @@
             :busy="busy"
             @page-changed="filter($event, currentFilter)"
           >
+            <template #status="{ data }">
+              <div class="text-capitalize">{{ data.item.status }}</div>
+            </template>
           </TableComponent>
         </UtilsFilterComponent>
       </div>
@@ -87,44 +90,44 @@ export default {
           key: 'created_at',
           label: 'Date',
           formatter: (value) => {
-           return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
           sortable: true,
         },
         {
           key: 'img_obv',
           label: 'Imaging obv',
-         
+
           sortable: true,
         },
         {
           key: 'modality',
           label: 'Modality',
-         
+
           sortable: true,
         },
-        {
-          key: 'captured at',
-          label: 'Capture date',
-          sortable: true,
-          formatter: (value) => {
-            if (value != null) {
-             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-            }
-          },
-        },
-        {
-          key: 'captured by',
-          label: 'Captured by',
-          sortable: true,
-          formatter: (val) => {
-            if (val != null) {
-              return val
-            } else {
-              return ''
-            }
-          },
-        },
+        // {
+        //   key: 'captured at',
+        //   label: 'Capture date',
+        //   sortable: true,
+        //   formatter: (value) => {
+        //     if (value != null) {
+        //      return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+        //     }
+        //   },
+        // },
+        // {
+        //   key: 'captured by',
+        //   label: 'Captured by',
+        //   sortable: true,
+        //   formatter: (val) => {
+        //     if (val != null) {
+        //       return val
+        //     } else {
+        //       return ''
+        //     }
+        //   },
+        // },
 
         {
           key: 'approved at',
@@ -132,7 +135,7 @@ export default {
           sortable: true,
           formatter: (value) => {
             if (value != null) {
-             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+              return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
             }
           },
         },
@@ -148,31 +151,31 @@ export default {
             }
           },
         },
-        {
-          key: 'cancelled at',
-          label: 'Cancelled date',
-          sortable: true,
-          formatter: (value) => {
-            if (value != null) {
-              return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-            }
-            else{
-              return ''
-            }
-          },
-        },
-        {
-          key: 'cancelled by',
-          label: 'Cancelled by',
-          sortable: true,
-          formatter: (val) => {
-            if (val != null) {
-              return val
-            } else {
-              return ''
-            }
-          },
-        },
+        // {
+        //   key: 'cancelled at',
+        //   label: 'Cancelled date',
+        //   sortable: true,
+        //   formatter: (value) => {
+        //     if (value != null) {
+        //       return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+        //     }
+        //     else{
+        //       return ''
+        //     }
+        //   },
+        // },
+        // {
+        //   key: 'cancelled by',
+        //   label: 'Cancelled by',
+        //   sortable: true,
+        //   formatter: (val) => {
+        //     if (val != null) {
+        //       return val
+        //     } else {
+        //       return ''
+        //     }
+        //   },
+        // },
 
         {
           key: 'patient_uhid',
@@ -185,9 +188,9 @@ export default {
         {
           key: 'patient',
           label: 'Patient',
-          sortable: true
+          sortable: true,
         },
-       
+
         // {
         //   key: 'img_order',
         //   label: 'Order By',
@@ -222,15 +225,15 @@ export default {
         let filter = this.currentFilter
         filter.to_excel = true
 
-        if(filter.status === ""){
+        if (filter.status === '') {
           delete filter.status
         }
 
-        if(filter.service_center.length < 1){
+        if (filter.service_center.length < 1) {
           delete filter.service_center
         }
 
-        if(filter.modality.length < 1){
+        if (filter.modality.length < 1) {
           delete filter.modality
         }
         let download_string = new URLSearchParams(filter).toString()

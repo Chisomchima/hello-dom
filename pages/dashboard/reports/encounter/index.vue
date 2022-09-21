@@ -89,44 +89,29 @@ export default {
           },
         },
         { key: 'encounter_id', label: 'Encounter ID', sortable: true },
-        { key: 'patient.uhid', label: 'UHID', sortable: true },
+        { key: 'patient_uhid', label: 'UHID', sortable: true },
+        
+       
+        { key: 'clinic', label: 'Clinic', sortable: true },
         {
           key: 'patient',
           label: 'Patient',
           sortable: true,
-          formatter: (val) => {
-            return val.salutation + ' ' + val.firstname + ' ' + val.lastname
-          },
         },
         {
-          key: 'clinic.Department.display_name',
-          label: 'Department',
+          key: 'patient_service_arm',
+          label: 'Arm of Service',
           sortable: true,
         },
-        { key: 'clinic.name', label: 'Clinic', sortable: true },
+        {
+          key: 'patient_service_arm_no',
+          label: 'Service no',
+          sortable: true,
+        },
         {
           key: 'provider',
           label: 'Provider Name',
           sortable: true,
-          formatter: (val) => {
-            if (val.first_name || val.last_name) {
-              return val.first_name + ' ' + val.last_name
-            } else {
-              return ''
-            }
-          },
-        },
-        {
-          key: 'acknowledged_by',
-          label: 'Acknowleged by',
-          sortable: true,
-          formatter: (val) => {
-            if (val.first_name || val.last_name) {
-              return val.first_name + ' ' + val.last_name
-            } else {
-              return ''
-            }
-          },
         },
         {
           key: 'acknowledged_at',
