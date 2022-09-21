@@ -14,4 +14,9 @@ export default axios => ({
             params
         })
     },
+    patientReport(params = {}) {
+        return axios.$get('patient/reports', {
+            params
+        })
+    },
 })

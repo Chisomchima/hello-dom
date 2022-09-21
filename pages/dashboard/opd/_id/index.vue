@@ -98,7 +98,7 @@
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Provider:</b>
-              {{ consultationData.provider ? (consultationData.provider.first_name + " " + consultationData.provider.last_name) : '' }}
+              <span v-if="Object.values(consultationData.provider).length > 0">{{ consultationData.provider ? (consultationData.provider.first_name + " " + consultationData.provider.last_name) : '' }}</span>
             </div>
           </div>
           <div

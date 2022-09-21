@@ -201,9 +201,9 @@ export default {
   methods: {
     clear() {
       this.filters = {
-        department: '',
-        clinic: '',
-        provider: '',
+        department: [],
+        clinic: [],
+        provider: [],
         status: '',
         date_before: '',
         date_after: '',

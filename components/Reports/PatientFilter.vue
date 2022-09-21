@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.approved_date_before"
+            v-model="filters.date_before"
             type="date"
             name=""
             class="form-control"
@@ -17,7 +17,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.approved_date_after"
+            v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
@@ -90,63 +90,45 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
+// import { debounce } from 'lodash'
 
 export default {
   data() {
     return {
       genders: ['Male', 'Female'],
       filters: {
-        uhid: '',
-        firstname: '',
-        lastname: '',
+        date_before: '',
+        date_after: '',
         dob: '',
         gender: '',
       },
     }
   },
-  watch: {
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //    // this.$emit('filter', newVal)
-    //    this.$router.replace({
-    //     name:this.$router.name,
-    //     query:{
-    //       ...this.$router.query,
-    //       filter:JSON.stringify(newVal)
-    //     }
-    //    });
-    //   }, 500),
-    //   deep: true,
-    // },
-    // "$route.query.filter"(newVal){
-    //   console.log(JSON.parse(newVal));
-    // },
-    genders: {},
-  },
   created() {
-    if (this.$route.query.filter) {
-      this.filters = JSON.parse(this.$route.query.filter)
-    }
+   
   },
   methods: {
     clear() {
       this.filters = {
-        first_name: '',
-        last_name: '',
+      date_before: '',
+        date_after: '',
         dob: '',
         gender: '',
       }
-      this.filterFunc(this.filters)
     },
 
-    filterFunc(newVal) {
-      this.$router.push({
-        query: {
-          ...this.$route.query,
-          filter: JSON.stringify(newVal),
-        },
-      })
+    applyFilter(newVal) {
+      const newFilterObject = {
+          ...newVal,
+        }
+      if (newVal.date_before && newVal.date_after) {
+        this.$emit('filter', newFilterObject)
+      } else {
+         this.$toast({
+          type: 'info',
+          text: `Please select a date range`,
+        })
+      }
     },
   },
 }

@@ -75,11 +75,6 @@ export default {
   data() {
     return {
       currentFilter: {
-        service_center: [],
-        modality: [],
-        status: '',
-        date_before: '',
-        date_after: '',
       },
       downloading: false,
       fields: [
@@ -140,7 +135,7 @@ export default {
       this.currentFilter = e
       try {
         this.busy = true
-        const data = await this.$api.reports.imagingReport({ ...e, page })
+        const data = await this.$api.reports.patientReport({ ...e, page })
         this.items = data.results
         this.pages = data.total_pages
 
@@ -154,17 +149,21 @@ export default {
     async downloadPatientReport() {
       if (this.items.length > 0) {
         this.downloading = true
+        let filter = this.currentFilter
+        filter.to_excel = true
+
+        if (filter.gender === '') {
+          delete filter.status
+        }
+        if (filter.dob === '') {
+          delete filter.status
+        }
+        let download_string = new URLSearchParams(filter).toString()
         const response = await fetch(
           `${process.env.BASE_URL}encounters/reports/?&service_center=${
             this.currentFilter.service_center
               ? this.currentFilter.service_center
               : ''
-          }&status=${this.currentFilter.status}&modality=${
-            this.currentFilter.modality ? this.currentFilter.modality : ''
-          }&to_excel=${true}&date_before=${
-            this.currentFilter.date_before ? this.currentFilter.date_before : ''
-          }&date_after=${
-            this.currentFilter.date_after ? this.currentFilter.date_after : ''
           }`,
           {
             headers: {
