@@ -82,7 +82,7 @@ export default {
           label: 'Name',
           formatter: (value, key, item) => {
             return (
-              item.salutation +
+              (item.salutation ? item.salutation : '') +
               ' ' +
               item.firstname +
               ' ' +

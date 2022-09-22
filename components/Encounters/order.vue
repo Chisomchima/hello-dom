@@ -514,6 +514,7 @@ export default {
     async getOrders(page = 1, e = { size: 10 }) {
       this.filter = e
       this.currentPage = page
+      this.busy = true
       try {
         let response = await this.$api.encounter.getOrders(
           { size: 1000 },

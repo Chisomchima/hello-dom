@@ -142,7 +142,7 @@ export default {
           label: 'Patient',
           sortable: true,
           formatter: (val) => {
-            return val.salutation + ' ' + val.firstname + ' ' + val.lastname
+            return (val.salutation ? val.salutation : '') + ' ' + val.firstname + ' ' + val.lastname
           },
         },
         { key: 'img_obv.name', label: 'Observation', sortable: true },

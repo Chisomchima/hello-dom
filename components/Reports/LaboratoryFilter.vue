@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.approved_date_after"
+            v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
@@ -17,7 +17,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.approved_date_before"
+            v-model="filters.date_before"
             type="date"
             name=""
             class="form-control"
@@ -139,8 +139,8 @@ export default {
         service_center: [],
         lab_unit: [],
         status: '',
-        approved_date_before: '',
-        approved_date_after: '',
+        date_before: '',
+        date_after: '',
       },
       service_centers: [],
       lab_units: [],
@@ -178,7 +178,7 @@ export default {
       const newFilterObject = {
         ...newVal,
       }
-      if (newVal.approved_date_before && newVal.approved_date_after) {
+      if (newVal.date_before && newVal.date_after) {
        this.$emit('filter', newFilterObject)
       } else {
          this.$toast({

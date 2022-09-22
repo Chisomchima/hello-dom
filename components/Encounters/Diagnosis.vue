@@ -73,13 +73,13 @@
         <TableComponent  :items="comments" :perPage="1000" :fields="fields" :paginate="false">
           <template #value="{ data }">
             <div>
-              <div class="p-2" v-if="data.item.value.option === 'working' || data.item.value.option === 'confirmed'">
+              <div class="" v-if="data.item.value.option === 'confirmed'">
                 <input type="text" :disabled="true" :value="data.item.value.comment" placeholder="Diagnosis"
                   class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
-              <div v-else-if="data.item.value.option === ''">
-                <input @blur="addOption" type="text"  placeholder="Diagnosis"
-                  class="form-control ng-untouched ng-pristine ng-valid" v-model="diagnosis.comment" />
+              <div v-else-if="data.item.value.option === 'working'">
+                <input @blur="addOption" type="text" :value="data.item.value.comment"  placeholder="Diagnosis"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
               <div v-else>
                 <input type="text"  placeholder="Diagnosis"
@@ -132,6 +132,10 @@
             Add
           </button>
         </div>
+
+        <div class="col-md-6 d-none">
+          <Dropdown width="500px" optionLabel="brand" placeholder="Select a Car" :filter="true" filterPlaceholder="Find Car"/>
+        </div>
       </div>
 
 
@@ -163,7 +167,9 @@
 </template>
 
 <script>
+import Dropdown from 'primevue/dropdown';
 export default {
+  components: { Dropdown },
   data() {
     return {
       tag: false,
@@ -174,9 +180,9 @@ export default {
       step: true,
       diagnosis: {
         comment: '',
-        option: ''
+        option: null
       },
-      diagnosisCopy: '',
+      diagnosisCopy: null,
       form: {},
       comments: [],
       options: [
@@ -244,6 +250,7 @@ export default {
           option: ''
         }
       })
+      console.log(this.comments)
     },
     deleteItem(e){
       console.log(e)
@@ -271,7 +278,6 @@ export default {
     },
     async confirmDiagnosis(e) {
       this.diagnosisCopy = e.comment
-      console.log(this.diagnosisCopy)
       try {
         let response = await this.$axios.$post(
           `encounters/${this.consultationData.id}/charts/`,
@@ -295,7 +301,8 @@ export default {
     },
     async addDiagnosis() {
       this.isLoading = true;
-      try {
+     if(this.diagnosis.comment != '' && this.diagnosis.option != null){
+       try {
         let response = await this.$axios.$post(
           `encounters/${this.consultationData.id}/charts/`,
           {
@@ -320,12 +327,19 @@ export default {
       } catch (error) {
         this.$toast({
           type: 'error',
-          text: '',
+          text: 'An error occured',
         })
       } finally {
         // this.getPatientRecord();
         this.isLoading = false;
       }
+     }
+     else{
+       this.$toast({
+          type: 'info',
+          text: 'Please fill in a diagnosis and option',
+        })
+     }
     },
     showComment() {
       this.tag = true;
@@ -336,7 +350,10 @@ export default {
       this.tag = false;
       this.kink = false;
       this.step = true;
-      this.diagnosis = "";
+      this.diagnosis = {
+        comment: '',
+        option: null
+      };
     },
   },
 };

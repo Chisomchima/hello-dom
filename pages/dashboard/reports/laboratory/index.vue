@@ -24,7 +24,7 @@
           :disable-visualization="true"
           search-placeholder="Search"
         >
-          <template #besideFilterButton>
+          <template v-if="items.length > 0" #besideFilterButton>
             <div class="d-flex align-items-center">
               <div class="mr-2 mt-1">
                 <b-spinner
@@ -36,18 +36,19 @@
               </div>
               <button
                 @click="downloadEncLaboratory"
-                class="btn btn-sm btn-outline-primary"
+                class="btn btn-sm btn-primary"
               >
+                <span class="mr-2">Download</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 1024 1024"
+                  viewBox="0 0 512 512"
                 >
                   <path
-                    fill="currentColor"
-                    d="M763.024 260C718.4 141.568 622.465 66.559 477.569 66.559c-184.384 0-313.392 136.912-324.479 315.536C64.178 410.527.002 501.215.002 603.935c0 125.744 98.848 231.968 215.823 231.968h28.448c17.664 0 32-14.32 32-32s-14.336-32-32-32h-28.448c-82.304 0-152.832-76.912-152.832-167.968c0-80.464 56.416-153.056 127.184-165.216l29.04-5.008l-2.592-29.344l-.24-.368c.016-155.872 102.607-273.44 261.184-273.44c127.104 0 198.513 62.624 231.553 169.44l6.832 22.032l23.072.497c118.864 2.496 223.088 98.944 223.088 218.784c0 109.056-72.272 230.592-181.713 230.592h-9.104c-17.664 0-32 14.32-32 32s14.336 32 32 32v-.096c160-4.224 252.24-157.088 252.24-294.496c-.032-147.728-115.792-265.743-260.512-281.312zM646.337 775.47c-8.944-9.344-23.407-9.345-32.335-.001l-70.384 77.648V530.973c0-17.664-14.336-32-32-32s-32 14.336-32 32v322.432l-68.112-75.935c-8.944-9.344-23.44-11.344-32.368-2l-8.065 4.416c-8.944 9.376-8.944 24.48 0 33.823l115.504 127.744c.16.16.193.368.336.528l8.096 8.464c4.496 4.689 10.368 7.01 16.288 6.977c5.872.032 11.776-2.288 16.225-6.977l8.095-8.464c.16-.16.24-.335.368-.528L654.417 811.71c8.945-9.344 8.945-20.447 0-29.823z"
+                    fill="white"
+                    d="M453.547 273.449H372.12v-40.714h81.427v40.714zm0 23.264H372.12v40.714h81.427v-40.714zm0-191.934H372.12v40.713h81.427V104.78zm0 63.978H372.12v40.713h81.427v-40.713zm0 191.934H372.12v40.714h81.427V360.69zm56.242 80.264c-2.326 12.098-16.867 12.388-26.58 12.796H302.326v52.345h-36.119L0 459.566V52.492L267.778 5.904h34.548v46.355h174.66c9.83.407 20.648-.291 29.197 5.583c5.991 8.608 5.41 19.543 5.817 29.43l-.233 302.791c-.29 16.925 1.57 34.2-1.978 50.892zm-296.51-91.256c-16.052-32.57-32.395-64.909-48.39-97.48c15.82-31.698 31.408-63.512 46.937-95.327c-13.203.64-26.406 1.454-39.55 2.385c-9.83 23.904-21.288 47.169-28.965 71.888c-7.154-23.323-16.634-45.774-25.3-68.515c-12.796.698-25.592 1.454-38.387 2.21c13.493 29.78 27.86 59.15 40.946 89.104c-15.413 29.081-29.837 58.57-44.785 87.825c12.737.523 25.475 1.047 38.212 1.221c9.074-23.148 20.357-45.424 28.267-69.038c7.096 25.359 19.135 48.798 29.023 73.051c14.017.99 27.976 1.862 41.993 2.676zM484.26 79.882H302.326v24.897h46.53v40.713h-46.53v23.265h46.53v40.713h-46.53v23.265h46.53v40.714h-46.53v23.264h46.53v40.714h-46.53v23.264h46.53v40.714h-46.53v26.897H484.26V79.882z"
                   />
                 </svg>
               </button>
@@ -62,17 +63,16 @@
           >
             <template #panel="{ data }">
               <div class="d-flex align-items-center">
-               
                 <div>
                   {{ data.item.panel }}
                 </div>
               </div>
             </template>
             <template #lab_unit="{ data }">
-              <div class="text-capitalize">{{data.item.lab_unit}}</div>
+              <div class="text-capitalize">{{ data.item.lab_unit }}</div>
             </template>
             <template #status="{ data }">
-              <div class="text-capitalize">{{data.item.status}}</div>
+              <div class="text-capitalize">{{ data.item.status }}</div>
             </template>
           </TableComponent>
         </UtilsFilterComponent>
@@ -88,9 +88,7 @@ export default {
   mixins: [TableFunc],
   data() {
     return {
-      currentFilter: {
-        
-      },
+      currentFilter: {},
       downloading: false,
       fields: [
         {
@@ -98,7 +96,9 @@ export default {
           label: 'Order date',
           sortable: true,
           formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            if (value != null) {
+              return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            }
           },
         },
         // {
@@ -127,28 +127,7 @@ export default {
         //   label: 'Result filled by',
         //   sortable: true,
         // },
-        {
-          key: 'approved_on',
-          label: 'Approved on',
-          sortable: true,
-          formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-          },
-        },
-        {
-          // && Object.values(val).length > 0
-          key: 'approved_by',
-          label: 'Approved by',
-          sortable: true,
-          formatter: (val) => {
-            if(val != null){
-              return val
-            }
-            else{
-              return ''
-            }
-          },
-        },
+
         { key: 'asn', label: 'ASN', sortable: true },
         { key: 'patient_uhid', label: 'UHID', sortable: true },
         {
@@ -172,6 +151,30 @@ export default {
         },
         // { key: 'panel', label: 'Specimen Type', sortable: true },
 
+        {
+          key: 'approved_at',
+          label: 'Approved on',
+          sortable: true,
+          formatter: (value) => {
+            if (value != null) {
+              return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            }
+          },
+        },
+        {
+          // && Object.values(val).length > 0
+          key: 'approved_by',
+          label: 'Approved by',
+          sortable: true,
+          formatter: (val) => {
+            if (val != null) {
+              return val
+            } else {
+              return ''
+            }
+          },
+        },
+
         { key: 'status', label: 'Status', sortable: true },
       ],
     }
@@ -193,58 +196,57 @@ export default {
       }
     },
     async downloadEncLaboratory() {
-      if(this.items.length > 0){
-      this.downloading = true
-      let filter = this.currentFilter
+      if (this.items.length > 0) {
+        this.downloading = true
+        let filter = this.currentFilter
         filter.to_excel = true
 
         console.log(filter)
 
-        if(filter.status === ""){
+        if (filter.status === '') {
           delete filter.status
         }
 
-        if(filter.lab_unit.length < 1){
+        if (filter.lab_unit.length < 1) {
           delete filter.lab_unit
         }
 
-        if(filter.service_center.length < 1){
+        if (filter.service_center.length < 1) {
           delete filter.service_center
         }
         let download_string = new URLSearchParams(filter).toString()
-      const response = await fetch(
-        `${process.env.BASE_URL}laboratory/reports/?${download_string}`,
-        {
-          headers: {
-            Authorization: `Token ${this.$store.state.auth.token}`,
-          },
+        const response = await fetch(
+          `${process.env.BASE_URL}laboratory/reports/?${download_string}`,
+          {
+            headers: {
+              Authorization: `Token ${this.$store.state.auth.token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          const data = await response.blob()
+          const objectURL = URL.createObjectURL(data)
+          const link = document.createElement('a')
+          link.download = `Laboratory Report`
+          link.href = objectURL
+          this.downloading = false
+          // this.filter(1)
+          link.click()
+        } else if (response.status === 403) {
+          this.downloading = false
+          this.$toast({
+            type: 'info',
+            text: `You don't have the permission to perform this action`,
+          })
+        } else {
+          this.downloading = false
+          this.$toast({
+            type: 'error',
+            text: `An error occured`,
+          })
         }
-      )
-      if (response.status === 200) {
-        const data = await response.blob()
-        const objectURL = URL.createObjectURL(data)
-        const link = document.createElement('a')
-        link.download = `Laboratory Report`
-        link.href = objectURL
-        this.downloading = false
-        // this.filter(1)
-        link.click()
-      } else if (response.status === 403) {
-        this.downloading = false
-        this.$toast({
-          type: 'info',
-          text: `You don't have the permission to perform this action`,
-        })
       } else {
-        this.downloading = false
         this.$toast({
-          type: 'error',
-          text: `An error occured`,
-        })
-      }
-      }
-      else{
-         this.$toast({
           type: 'info',
           text: `No report to download`,
         })

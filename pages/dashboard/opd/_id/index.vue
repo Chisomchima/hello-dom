@@ -24,7 +24,7 @@
           
           <BaseButton
             v-if="
-              consultationData.acknowledged_at != null 
+              consultationData.acknowledged_at != null && consultationData.status != 'DS'
             "
             @click="signAndCloseEnc"
             class="btn-success btn-sm"
@@ -155,8 +155,8 @@
             </div>
             <div v-if="patientData.age" class="px-2">
               <p class="text-14 mb-0 text-grey">
-                <b>Age(Y-M-D):</b> {{ patientData.age.year ? patientData.age.year : ""}} - {{ patientData.age.month ? patientData.age.month : "" }} -
-                {{ patientData.age.day ? patientData.age.day : "" }}
+                <b>Age(Y-M-D):</b> {{ patientData.age.year ? patientData.age.year : "0"}} - {{ patientData.age.month ? patientData.age.month : "0" }} -
+                {{ patientData.age.day ? patientData.age.day : "0" }}
               </p>
             </div>
             <div class="px-2">

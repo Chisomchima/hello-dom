@@ -238,7 +238,7 @@ export default {
     formatData(item) {
       for (const key in item) {
         if (key === 'gender') {
-          item[key] = item.gender
+          item[key] = item.gender.gender
         }
         if (key === 'nationality') {
           item[key] = item.nationality.country

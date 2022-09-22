@@ -649,7 +649,7 @@ export default {
     },
 
     checkForBillStatusOnRowClick(item) {
-      if (item.bill) {
+      if (item.bill && typeof item.bill === "object") {
         if (item.bill.cleared_status !== 'CLEARED') {
           this.$toast({
             type: 'info',
