@@ -53,19 +53,19 @@
             <template #header>
             <span class="ml-2">Billing</span>
           </template>
-            <DashboardPatientBilling :data="data"/> 
+            <DashboardPatientBilling @reload_tabs="sendSignal" :data="data"/> 
           </TabPanel>
           <TabPanel class="dark-panel" >
           <template #header>
             <span class="ml-2">Payments</span>
           </template>
-           <DashboardPatientPayment :data="data"/>
+           <DashboardPatientPayment :refresh="refresh" :data="data"/>
           </TabPanel>
           <TabPanel class="dark-panel" >
           <template #header>
             <span class="ml-2">Invoices</span>
           </template>
-           <DashboardPatientInvoice :data="data"/>
+           <DashboardPatientInvoice :refresh="refresh" :data="data"/>
           </TabPanel>
         </TabView>
       </UtilsCardTab>
@@ -93,6 +93,7 @@ export default {
     return {
       tabs: true,
       data: null,
+      refresh: false,
       template: {}
     }
   },
@@ -112,6 +113,9 @@ export default {
           uuid: this.data.id,
         },
       })
+    },
+    sendSignal(){
+      this.refresh = true
     },
     printDepositSlip(e){
       this.template = e

@@ -245,7 +245,7 @@ export default {
         }
 
         if (key === 'religion') {
-          item[key] = item.religion
+          item[key] = item.religion.religion
         }
 
         if (key === 'marital_status') {

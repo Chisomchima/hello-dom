@@ -150,7 +150,6 @@
 import { DateTime } from 'luxon'
 import { remove } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
-import { error } from 'highcharts'
 
 export default {
   mixins: [TableFunc],
@@ -456,6 +455,7 @@ export default {
       try {
         let response = await this.$api.finance.auhtorizeHMO(this.authData)
         this.$nuxt.refresh()
+        this.$emit('reload_tabs')
         this.$bvModal.hide('authorize')
         this.pageChange(this.currentPage, this.filter)
         this.unClearedBill = []
@@ -490,6 +490,7 @@ export default {
           text: 'Payment Successful',
         })
         this.$nuxt.refresh()
+        this.$emit('reload_tabs')
         this.$bvModal.hide('modal')
         this.$bvModal.show('printInvoice?')
         this.pageChange(this.currentPage, this.filter)

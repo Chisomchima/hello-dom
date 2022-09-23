@@ -83,6 +83,11 @@ export default {
       require: false,
       default: () => ({}),
     },
+    refresh: {
+      type: Boolean,
+      require: false,
+      default: () => false
+    }
   },
   data() {
     return {
@@ -196,6 +201,9 @@ export default {
     },
     'filter.dateTo'() {
       this.getInvoices(this.getInvoices, this.filter)
+    },
+    refresh(){
+       this.getInvoices(this.getInvoices, this.filter)
     },
     'reciept.bill_lines'() {
       let calc = 0

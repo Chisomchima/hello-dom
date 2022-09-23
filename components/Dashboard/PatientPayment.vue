@@ -135,6 +135,11 @@ export default {
       require: false,
       default: () => ({}),
     },
+    refresh: {
+      type: Boolean,
+      require: false,
+      default: () => false
+    }
   },
   watch: {
     'filter.dateFrom'() {
@@ -143,6 +148,9 @@ export default {
     'filter.dateTo'() {
       this.getPayments(this.currentPage, this.filter)
     },
+    refresh(){
+      this.getPayments(this.currentPage, this.filter)
+    }
   },
   computed: {
     trigger() {
