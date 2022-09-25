@@ -605,7 +605,7 @@ export default {
     async save_file(e) {
       this.downloading = true
       const response = await fetch(
-        `${process.env.BASE_URL}laboratory/lab_panel_order/${e.id}/reports/download/`,
+        `${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download/`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,

@@ -64,8 +64,13 @@ export default axios => ({
             params
         })
     },
-    getCoatofArm( params = {}){
+    getCoatofArm(params = {}){
         return axios.$get("/core/service_arms/", {
+            params
+        })
+    },
+    getICD(params = {}){
+        return axios.$get("/core/diagnosis/", {
             params
         })
     }
