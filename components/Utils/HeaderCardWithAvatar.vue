@@ -28,6 +28,9 @@
                 <a class="dropdown-item" href="#" @click.prevent="$emit('edit')"
                   >Edit</a
                 >
+                <a class="dropdown-item" href="#" @click.prevent="$emit('picture')"
+                  >Upload picture</a
+                >
                 <a
                   v-for="(action, index) in actions"
                   :key="index"
