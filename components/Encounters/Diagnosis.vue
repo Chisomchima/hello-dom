@@ -73,7 +73,7 @@
         <div
           v-for="(item, index) in diagnosis"
           :key="index"
-          class="row align-items-end p-1"
+          class="row align-items-end p-1 m-2"
         >
           <div class="col-lg-8 col-md-8 col-sm-8 w-100">
             <!-- <small class="text-grey text-14">Diagnosis</small> -->
@@ -98,7 +98,7 @@
             >
               <template #option="option">
                 <div class="">
-                 <span>{{option.code}}</span> - <span>{{option.case}}</span>
+                  <span>{{ option.code }}</span> <span>{{ option.case }}</span>
                 </div>
               </template>
               <template v-if="icdTernCollection.length > 0" #list-footer>
@@ -181,37 +181,45 @@
           :fields="fields"
           :paginate="false"
         >
+          <!-- <template #clear="{ data }">
+            <div>
+              {{diagnosisNames(data.item.value.comment)}}
+            </div>
+          </template> -->
           <template #value="{ data }">
             <div>
               <div class="" v-if="data.item.value.option === 'confirmed'">
-                <input
+                <!-- <input
                   type="text"
                   :disabled="true"
-                  :value="data.item.value.comment"
+                  :value="diagnosisNames(data.item.value.comment)"
                   placeholder="Diagnosis"
                   class="form-control ng-untouched ng-pristine ng-valid"
-                />
+                /> -->
+                {{ diagnosisNames(data.item.value.comment) }}
               </div>
               <div v-else-if="data.item.value.option === 'working'">
-                <input
+                <!-- <input
                   @blur="addOption"
                   type="text"
                   :value="data.item.value.comment"
                   placeholder="Diagnosis"
                   class="form-control ng-untouched ng-pristine ng-valid"
-                />
+                /> -->
+                {{ diagnosisNames(data.item.value.comment) }}
               </div>
               <div v-else>
-                <input
+                <!-- <input
                   type="text"
                   placeholder="Diagnosis"
                   class="form-control ng-untouched ng-pristine ng-valid"
-                />
+                /> -->
+                {{ diagnosisNames(data.item.value.comment) }}
               </div>
             </div>
           </template>
           <template #option="{ data }">
-            <div>
+            <div class="text-capitalize">
               <div
                 class="p-2"
                 v-if="
@@ -219,39 +227,42 @@
                   data.item.value.option === 'confirmed'
                 "
               >
-                <v-select
+                <!-- <v-select
                   class="text-capitalize text-14"
                   placeholder="Select option"
                   label="name"
                   v-model="data.item.value.option"
                   :options="options"
                   :disabled="true"
-                ></v-select>
+                ></v-select> -->
+                {{ data.item.value.option }}
               </div>
               <div class="p-2" v-else-if="data.item.value.option === ''">
-                <v-select
+                <!-- <v-select
                   class="text-capitalize text-14"
                   placeholder="Select option"
                   label="name"
                   v-model="diagnosis.option"
                   :options="options"
-                ></v-select>
+                ></v-select> -->
+                {{ data.item.value.option }}
               </div>
               <div class="p-2" v-else>
-                <v-select
+                <!-- <v-select
                   class="text-capitalize text-14"
                   placeholder="Select option"
                   label="name"
                   :options="options"
-                ></v-select>
+                ></v-select> -->
+                {{ data.item.value.option }}
               </div>
             </div>
           </template>
           <template #action="{ data }">
-            <!-- <pre>{{data}}</pre> -->
+            <!-- <pre>{{data.item}}</pre> -->
             <span
-              @click="confirmDiagnosis(data.item.value)"
-              v-if="data.item.value.option === 'working'"
+              @click="confirmDiagnosis(data.item.value, data.item.id)"
+              v-if="data.item.value.option === 'working' && data.item.confirmed === false"
               class="text-14 badge-warning rounded text-center p-1 text-white"
             >
               C
@@ -304,11 +315,11 @@
             </div>
           </template>
         </TableComponent>
-        <div class="">
+        <!-- <div class="">
           <button @click="addItem" class="btn btn-sm btn-outline-primary">
             Add
           </button>
-        </div>
+        </div> -->
 
         <div class="col-md-6 d-none">
           <Dropdown
@@ -365,6 +376,7 @@
         <DashboardModalICD10Modal
           @page-changed="getICD10($event, searchParam)"
           @diagnosis="setDiagnosis"
+          @searchParam="searchByString"
           :pages="pages"
           :index="role"
           :options="icdTernCollection"
@@ -459,21 +471,46 @@ export default {
       // this.currentFilter = e
       try {
         let response = await this.$api.core.getICD({ page, ...e })
-        this.icdTernCollection = response.results
+        let array = response.results
+        const formatted = array.map((el) => ({
+          ...el,
+          selected: false,
+        }))
+        this.icdTernCollection = formatted
         this.pages = response.total_pages
         console.log(response)
       } catch {}
     },
+    searchByString: debounce(function (e) {
+      this.searchParam.case = e
+      this.getICD10(1, this.searchParam)
+    }, 1000),
     searchOptions: debounce(function (e) {
       this.searchParam.case = e
       this.getICD10(1, this.searchParam)
-    }, 1200),
+    }, 1000),
+    diagnosisNames(e) {
+      console.log(e)
+      if (typeof e === 'string') {
+        return e
+      } else {
+        let arr = e
+        let newArr = []
+        for (let x = 0; x < arr.length; x++) {
+          newArr.push(arr[x])
+        }
+        let str = newArr.join(', ')
+        return str
+      }
+    },
     openModal(e) {
       this.$bvModal.show('icd10modal')
       this.role = e
     },
-    setDiagnosis(e) {
-      this.diagnosis.comment.push(e.case)
+    setDiagnosis(e, i) {
+      if (!this.diagnosis[i].comment.includes(e.case)) {
+        this.diagnosis[i].comment.push(e.case)
+      }
     },
     addNewRecord() {
       this.diagnosis.push({
@@ -512,17 +549,40 @@ export default {
         let response = await this.$axios.$get(
           `encounters/${this.$route.params.id}/charts/diag/`
         )
-        console.log(response)
-
-        this.form = response
-        this.comments = response.result
+        
+        let newProp = response.result
+        const formatted = newProp.map((el) => ({
+          ...el,
+          confirmed: el.value.confirmed ? true : false
+        }))
+        this.comments = formatted
         this.busy = false
       } catch {
       } finally {
         this.busy = false
       }
     },
-    async confirmDiagnosis(e) {
+    async updateRecord(e, id) {
+      try {
+        let response = await this.$axios.$put(
+          `encounters/${this.consultationData.id}/charts/diag/${id}/`,
+          {
+            value: {
+              comment: e.comment,
+              option: 'working',
+              confirmed: true,
+            },
+          }
+        )
+        this.getDiagnosis()
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          text: '',
+        })
+      }
+    },
+    async confirmDiagnosis(e, id) {
       this.diagnosisCopy = e.comment
       try {
         let response = await this.$axios.$post(
@@ -536,7 +596,8 @@ export default {
             },
           }
         )
-        this.getDiagnosis()
+        this.updateRecord(e, id)
+        // this.getDiagnosis()
       } catch (error) {
         this.$toast({
           type: 'error',
@@ -547,7 +608,10 @@ export default {
     },
     async addDiagnosis() {
       this.isLoading = true
-      if (this.diagnosis.comment != '' && this.diagnosis.option != null) {
+      if (
+        this.diagnosis[0].comment.length > 0 &&
+        this.diagnosis[0].option != null
+      ) {
         try {
           let response = await this.$axios.$post(
             `encounters/${this.consultationData.id}/charts/`,
@@ -566,10 +630,12 @@ export default {
             type: 'success',
             text: 'Diagnosis added',
           })
-          this.diagnosis = {
-            comment: '',
-            option: '',
-          }
+          this.diagnosis = [
+            {
+              comment: [],
+              option: null,
+            },
+          ]
         } catch (error) {
           this.$toast({
             type: 'error',
@@ -596,7 +662,7 @@ export default {
       this.kink = false
       this.step = true
       this.diagnosis = {
-        comment: '',
+        comment: [],
         option: null,
       }
     },

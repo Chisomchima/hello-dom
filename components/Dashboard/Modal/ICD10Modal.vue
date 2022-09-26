@@ -8,29 +8,30 @@
       :cancelText="`Close`"
       >
       <div>
-        <div>
+        <!-- <div class="text-center">
           {{index}}
-        </div>
+        </div> -->
         <div class="p-3">
             <input
               type="text"
               placeholder=" Type to search..."
               class="form-control ng-untouched ng-pristine ng-valid"
+              v-model="searchParam"
             />
         </div>
          <TableComponent
-          :items="options"
+          :items="dataOBJS"
           :fields="fields"
           :pages="pages"
           :busy="busy"
-          @page-changed="$emit('page-changed', $event)"
+          @page-changed="goToNextPage"
         >
          <template #clear="{ data }">
             <label class="exercise-option-check blue-check">
               <input
                 type="checkbox"
                 name="customRadio"
-                @change="pick($event.target.checked, data.item)"
+                @change="pick($event.target.checked, data.item, index)"
               />
               <span class="checkmark"></span>
             </label>
@@ -49,29 +50,45 @@ export default Vue.extend({
     props: {
         options: {
             type: Array,
-            default:() => ([]) 
+            required: true
         },
         pages: {
             type: Number,
-            default:() => (1) 
+            required: true
         },
         index: {
             type: Number,
-            default:() => (0),
             required: true
-        }
+        },
+        
+    },
+    watch: {
+      options(){
+        this.busy = false
+        this.dataOBJS = this.options
+      },
+      searchParam(){
+        this.busy = true
+        this.$emit('searchParam', this.searchParam)
+      }
     },
     methods: {
-        pick(event, item){
-            console.log(item)
-            this.$emit('diagnosis', item)
+        pick(event, item, index){
+          this.$emit('diagnosis', item, index)
+        },
+        goToNextPage(n){
+          this.busy = true
+          this.$emit('page-changed', n)
         }
     },
     mounted(){
-        console.log('myindex',this.index)
+      this.dataOBJS = this.options
     },
     data(){
         return{
+        dataOBJS: [],
+        selected: [],
+        searchParam: '',
         fields: [
         {
           key: 'clear',

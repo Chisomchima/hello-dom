@@ -17,6 +17,7 @@
       @edit="editRoute()"
       @make_deposit="$bvModal.show('depositModal')"
       @payers="checkPayersDetails"
+      @picture="uploadAvatar"
     >
     </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
@@ -74,6 +75,7 @@
     <DashboardModalPayerDetails :data="data.payment_scheme" />
     <DashboardModalPatientDepositModal @payload="printDepositSlip($event)" @refresh="refresh" :data="data" />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
+    <DashboardModalUploadPicture />
   </div>
 </template>
 
@@ -113,6 +115,10 @@ export default {
           uuid: this.data.id,
         },
       })
+    },
+    uploadAvatar(){
+      console.log('avatar')
+      this.$bvModal.show('uploadpicture')
     },
     sendSignal(){
       this.refresh = true

@@ -584,7 +584,7 @@ export default {
       try {
         this.downloading = true
         const response = await this.$axios.$get(
-          `laboratory/lab_panel_order/${e.id}/reports/mail/`
+          `laboratory/lab_order/${e.id}/reports/mail/`
         )
         console.log(response)
 
