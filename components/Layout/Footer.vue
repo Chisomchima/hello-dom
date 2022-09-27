@@ -25,7 +25,7 @@
               </span>
             </div>
             <div class="auth-footer">
-              © {{ new Date().getFullYear() }}, Powered by V3C Technology, All
+              © {{ new Date().getFullYear() }}, Powered by V3C Technologies, All
               Rights Reserved
             </div>
           </div>
