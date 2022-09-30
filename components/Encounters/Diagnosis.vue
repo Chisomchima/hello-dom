@@ -188,32 +188,7 @@
           </template> -->
           <template #value="{ data }">
             <div>
-              <div class="" v-if="data.item.value.option === 'confirmed'">
-                <!-- <input
-                  type="text"
-                  :disabled="true"
-                  :value="diagnosisNames(data.item.value.comment)"
-                  placeholder="Diagnosis"
-                  class="form-control ng-untouched ng-pristine ng-valid"
-                /> -->
-                {{ diagnosisNames(data.item.value.comment) }}
-              </div>
-              <div v-else-if="data.item.value.option === 'working'">
-                <!-- <input
-                  @blur="addOption"
-                  type="text"
-                  :value="data.item.value.comment"
-                  placeholder="Diagnosis"
-                  class="form-control ng-untouched ng-pristine ng-valid"
-                /> -->
-                {{ diagnosisNames(data.item.value.comment) }}
-              </div>
-              <div v-else>
-                <!-- <input
-                  type="text"
-                  placeholder="Diagnosis"
-                  class="form-control ng-untouched ng-pristine ng-valid"
-                /> -->
+              <div>
                 {{ diagnosisNames(data.item.value.comment) }}
               </div>
             </div>
@@ -262,7 +237,10 @@
             <!-- <pre>{{data.item}}</pre> -->
             <span
               @click="confirmDiagnosis(data.item.value, data.item.id)"
-              v-if="data.item.value.option === 'working' && data.item.confirmed === false"
+              v-if="
+                data.item.value.option === 'working' &&
+                data.item.confirmed === false
+              "
               class="text-14 badge-warning rounded text-center p-1 text-white"
             >
               C
@@ -380,6 +358,8 @@
           :pages="pages"
           :index="role"
           :options="icdTernCollection"
+          @refresh="getICD10(1, searchParam)"
+          :consultationData="consultationData"
         />
       </div>
     </div>
@@ -410,8 +390,8 @@ export default {
       ],
       searchParam: {
         size: 10,
-        type: 'icd10',
-        case: '',
+        search: '',
+        type: 'icd10'
       },
       diagnosisCopy: null,
       form: {},
@@ -475,6 +455,7 @@ export default {
         const formatted = array.map((el) => ({
           ...el,
           selected: false,
+          confirmed: false,
         }))
         this.icdTernCollection = formatted
         this.pages = response.total_pages
@@ -482,18 +463,18 @@ export default {
       } catch {}
     },
     searchByString: debounce(function (e) {
-      this.searchParam.case = e
+      this.searchParam.search = e
       this.getICD10(1, this.searchParam)
     }, 1000),
     searchOptions: debounce(function (e) {
-      this.searchParam.case = e
+      this.searchParam.search = e
       this.getICD10(1, this.searchParam)
     }, 1000),
     diagnosisNames(e) {
-      console.log(e)
       if (typeof e === 'string') {
         return e
-      } else {
+      }  
+      if(Array.isArray(e)){
         let arr = e
         let newArr = []
         for (let x = 0; x < arr.length; x++) {
@@ -501,6 +482,9 @@ export default {
         }
         let str = newArr.join(', ')
         return str
+      }
+      if(typeof e === 'object'){
+        return e.case
       }
     },
     openModal(e) {
@@ -549,11 +533,11 @@ export default {
         let response = await this.$axios.$get(
           `encounters/${this.$route.params.id}/charts/diag/`
         )
-        
+
         let newProp = response.result
         const formatted = newProp.map((el) => ({
           ...el,
-          confirmed: el.value.confirmed ? true : false
+          confirmed: el.value.confirmed ? true : false,
         }))
         this.comments = formatted
         this.busy = false
@@ -653,19 +637,23 @@ export default {
       }
     },
     showComment() {
-      this.tag = true
-      this.kink = true
-      this.step = false
+      // this.tag = true
+      // this.kink = true
+      // this.step = false
+      this.openModal()
     },
     closeForm() {
       this.tag = false
       this.kink = false
       this.step = true
-      this.diagnosis = {
-        comment: [],
-        option: null,
-      }
-    },
+      this.diagnosis = [
+        {
+          comment: [],
+          option: null,
+        },
+      ]
+    }
+  
   },
 }
 </script>

@@ -24,5 +24,8 @@ export default axios => ({
     },
     confirmInvoice(id){
         return axios.$patch(`finance/invoices/${id}/confirm/`)
+    },
+    editBillLine(body, id){
+        return axios.$put(`finance/invoices/${id}/bills/`, body)
     }
 });

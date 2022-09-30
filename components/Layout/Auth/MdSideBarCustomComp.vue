@@ -48,70 +48,74 @@ export default {
           ],
         },
 
-         {
+        {
           href: '/dashboard/laboratory',
           title: 'Laboratory',
-           icon: 'fas fa-vial',
-           child: [
-             {
-               href: '/dashboard/laboratory/',
-               title: 'Laboratory Work List',
-               icon: 'fas fa-list-ul',
-             },
-           ],
+          icon: 'fas fa-vial',
+          child: [
+            {
+              href: '/dashboard/laboratory/',
+              title: 'Laboratory Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
 
-          {
+        {
           href: '/dashboard/imaging',
           title: 'Imaging',
           icon: 'fas fa-x-ray',
-           child: [
-             {
-               href: '/dashboard/imaging/',
-               title: 'Imaging Work List',
-               icon: 'fas fa-list-ul',
-             },
-           ],
+          child: [
+            {
+              href: '/dashboard/imaging/',
+              title: 'Imaging Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
-
-          {
-          href: '/dashboard/reports',
-          title: 'Reports',
-          icon: 'fas fa-file',
-           child: [
-             {
-               href: '/dashboard/reports/encounter',
-               title: 'Encounter report',
-               icon: 'fas fa-list-ul',
-             },
-             {
-               href: '/dashboard/reports/laboratory',
-               title: 'Laboratory report',
-               icon: 'fas fa-list-ul',
-             },
-             {
-               href: '/dashboard/reports/imaging',
-               title: 'Imaging report',
-               icon: 'fas fa-list-ul',
-             },
-             {
-               href: '/dashboard/reports/patient',
-               title: 'Patient report',
-               icon: 'fas fa-list-ul',
-             },
-           ],
-        },
-          {
+        {
           href: '/dashboard/cso',
           title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
+        },
+        {
+          href: '/dashboard/finance',
+          title: 'Finance',
+          icon: 'fas fa-money-check-alt',
+        },
+        {
+          href: '/dashboard/reports',
+          title: 'Reports',
+          icon: 'fas fa-file',
+          child: [
+            {
+              href: '/dashboard/reports/encounter',
+              title: 'Encounter report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/laboratory',
+              title: 'Laboratory report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/imaging',
+              title: 'Imaging report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/patient',
+              title: 'Patient report',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
         {
           title: 'Settings',
           href: '/dashboard/settings',
           icon: 'fas fa-cog',
           child: [
-             {
+            {
               title: 'Finance Settings',
               child: [
                 {
@@ -122,7 +126,6 @@ export default {
                   href: '/dashboard/settings/finance/payment-method/',
                   title: 'Payment methods',
                 },
-                
               ],
             },
             {

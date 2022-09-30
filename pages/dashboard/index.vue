@@ -63,15 +63,21 @@ export default {
           icon: 'fas fa-x-ray',
           route: '/dashboard/imaging/',
         },
-        {
-          name: 'Reports',
-          icon: 'fas fa-file',
-          route: '/dashboard/reports/',
-        },
+        
         {
           name: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
           route: '/dashboard/cso/',
+        },
+        {
+          name: 'Finance',
+          icon: 'fas fa-money-check-alt',
+          route: '/dashboard/finance/',
+        },
+        {
+          name: 'Reports',
+          icon: 'fas fa-file',
+          route: '/dashboard/reports/',
         },
         {
           name: 'Settings',

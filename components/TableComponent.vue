@@ -76,6 +76,13 @@
           </div>
         </slot>
       </template>
+      <template #cell(paid_amount)="data">
+        <slot name="paid_amount" :data="data">
+          <div>
+            {{ numberWithCommas(data.item.paid_amount) }}
+          </div>
+        </slot>
+      </template>
       <template #cell(encounter_datetime)="data">
         <slot name="encounter_datetime" :data="data">
           <div>
@@ -226,6 +233,16 @@
       <template #cell(is_reserved)="item">
         <slot name="is_reserved" :data="item"></slot>
       </template>
+      <template #cell(bill_source)="item">
+        <slot name="bill_source" :data="item"></slot>
+      </template>
+      <template #cell(description)="item">
+        <slot name="description" :data="item"></slot>
+      </template>
+      <template #cell(dial)="item">
+        <slot name="dial" :data="item"></slot>
+      </template>
+     
 
       <template #cell(submissions)="data">
         <slot name="submissions" :data="data">{{ data.value }}</slot>
@@ -379,13 +396,13 @@
           <col
             v-else-if="field.key === 'date'"
             :key="field.key"
-            :style="{ width: '10rem' }"
+            :style="{ width: '8.5rem' }"
           />
-          <col
+          <!-- <col
             v-else-if="field.key === 'patient'"
             :key="field.key"
-            :style="{ width: '15rem' }"
-          />
+            :style="{ width: 'rem' }"
+          /> -->
           <col
             v-else-if="field.key === 'value.option'"
             :key="field.key"
@@ -414,7 +431,12 @@
           <col
             v-else-if="field.key === 'created_at'"
             :key="field.key"
-            :style="{ width: '14rem' }"
+            :style="{ width: '8.5rem' }"
+          />
+          <col
+            v-else-if="field.key === 'asn'"
+            :key="field.key"
+            :style="{ width: '8.5rem' }"
           />
         </template>
       </template>

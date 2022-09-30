@@ -1,43 +1,93 @@
 <template>
   <div>
     <ModalWrapper
-      size="lg"
+      size="xl"
       id="icd10modal"
+      @ok="addDiagnosis()"
+      @hide="closeModal"
       :title="`Diagnosis lists`"
-      :arrangement="false"
-      :cancelText="`Close`"
-      >
+    >
       <div>
-        <!-- <div class="text-center">
-          {{index}}
-        </div> -->
-        <div class="p-3">
-            <input
-              type="text"
-              placeholder=" Type to search..."
-              class="form-control ng-untouched ng-pristine ng-valid"
-              v-model="searchParam"
-            />
+        <div class="d-flex flex-wrap text-white">
+          <div
+            v-for="(item, index) in tray"
+            :key="index"
+            :class="item.confirmed ? 'bg-success' : 'bg-info'"
+            class="
+              d-flex
+              justify-content-between
+              col-md-2
+              px-1
+              py-1
+              mb-2
+              rounded-sm
+              text-14
+              mx-2
+            "
+          >
+            <div class="text-truncate">{{ item.case }}</div>
+            <span @click="removeDiag(index, item)" class="point">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59z"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
-         <TableComponent
+        <div class="p-3">
+          <input
+            type="text"
+            placeholder=" Type to search..."
+            class="form-control ng-untouched ng-pristine ng-valid"
+            v-model="searchParam"
+          />
+        </div>
+        <TableComponent
           :items="dataOBJS"
           :fields="fields"
           :pages="pages"
           :busy="busy"
           @page-changed="goToNextPage"
         >
-         <template #clear="{ data }">
+          <template #clear="{ data }">
             <label class="exercise-option-check blue-check">
               <input
                 type="checkbox"
                 name="customRadio"
-                @change="pick($event.target.checked, data.item, index)"
+                @change="pick($event.target.checked, data.item, data.index)"
               />
               <span class="checkmark"></span>
             </label>
           </template>
+          <template #dial="{ data }">
+            <div class="d-flex align-items-center">
+              <b-form-checkbox
+                size="lg"
+                switch
+                @change="setToConfirmed(data.item, $event)"
+              >
+              </b-form-checkbox>
+              <div
+                v-if="data.item.confirmed == true"
+                class="mt-2 text-success text-12"
+              >
+                Confirmed
+              </div>
+              <div class="mt-2 text-12" v-else>Working</div>
+            </div>
+          </template>
         </TableComponent>
       </div>
+      <!-- :checked="checkIfExist(data.item)"
+                :disabled="enabled" -->
     </ModalWrapper>
   </div>
 </template>
@@ -46,50 +96,118 @@
 import TableFunc from '~/mixins/TableCompFun'
 import Vue from 'vue'
 export default Vue.extend({
-     mixins: [TableFunc],
-    props: {
-        options: {
-            type: Array,
-            required: true
-        },
-        pages: {
-            type: Number,
-            required: true
-        },
-        index: {
-            type: Number,
-            required: true
-        },
-        
+  mixins: [TableFunc],
+  props: {
+    options: {
+      type: Array,
+      required: true,
     },
-    watch: {
-      options(){
-        this.busy = false
-        this.dataOBJS = this.options
-      },
-      searchParam(){
-        this.busy = true
-        this.$emit('searchParam', this.searchParam)
-      }
+    pages: {
+      type: Number,
+      required: true,
     },
-    methods: {
-        pick(event, item, index){
-          this.$emit('diagnosis', item, index)
-        },
-        goToNextPage(n){
-          this.busy = true
-          this.$emit('page-changed', n)
-        }
+    index: {
+      type: Number,
+      required: true,
     },
-    mounted(){
+    consultationData: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    options() {
+      this.busy = false
       this.dataOBJS = this.options
     },
-    data(){
-        return{
-        dataOBJS: [],
-        selected: [],
-        searchParam: '',
-        fields: [
+    searchParam() {
+      this.busy = true
+      this.$emit('searchParam', this.searchParam)
+    },
+  },
+  methods: {
+    pick(event, item, index) {
+      if (event === true) {
+        this.tray.push(item)
+      } else {
+        for (let x = 0; x < this.tray.length; x++) {
+          if (item.code === this.tray[x].code) {
+            this.tray.splice(x, 1)
+          }
+        }
+      }
+      // this.$emit('diagnosis', item, index)
+    },
+    removeDiag(index, item) {
+      this.tray.splice(index, 1)
+    },
+    setToConfirmed(e, a) {
+      for (let x = 0; x < this.tray.length; x++) {
+        let item = this.tray[x]
+        if (item.case === e.case) {
+          this.tray[x].confirmed = a
+        }
+      }
+      console.log(e, a)
+    },
+    goToNextPage(n) {
+      this.busy = true
+      this.$emit('page-changed', n)
+    },
+    closeModal() {
+      this.tray = []
+      this.$emit('refresh')
+    },
+
+    async addDiagnosis() {
+      let arr = this.tray
+      let requestBody = []
+      for(let x = 0; x < arr.length; x++){
+        let tempObj = {
+          comment: arr[x],
+          option: 'working'
+        }
+        if(arr[x].confirmed === true){
+          tempObj.option = 'confirmed'
+        }
+        delete tempObj.comment.selected
+        delete tempObj.comment.confirmed
+        requestBody.push(tempObj)
+      }
+        try {
+          let response = await this.$axios.$post(
+            `encounters/${this.consultationData.id}/charts/`,
+            {
+              chart: {
+                diag: requestBody,
+              },
+            }
+          )
+          this.$toast({
+            type: 'success',
+            text: 'Diagnosis added',
+          })
+          this.tray = []
+          this.$bvModal.hide('icd10modal')
+        } catch (error) {
+          this.$toast({
+            type: 'error',
+            text: 'An error occured',
+          })
+        } finally {
+        }
+    },
+  },
+  mounted() {
+    this.dataOBJS = this.options
+  },
+  data() {
+    return {
+      dataOBJS: [],
+      selected: [],
+      tray: [],
+      searchParam: '',
+      fields: [
         {
           key: 'clear',
           label: '',
@@ -105,9 +223,14 @@ export default Vue.extend({
           label: 'Case',
           sortable: true,
         },
+        {
+          key: 'dial',
+          label: 'Option',
+          sortable: true,
+        },
       ],
-        }
-    },
+    }
+  },
 })
 </script>
 
