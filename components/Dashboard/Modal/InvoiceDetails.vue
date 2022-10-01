@@ -6,7 +6,7 @@
     id="invoiceModal"
     @ok="ok()"
     :arrangement="false"
-    @hide="$bvModal.hide('invoiceModal')"
+    @hide="closeModal"
     size="lg"
   >
     <!-- <template #modal-header="{ close }">
@@ -34,24 +34,28 @@
           nameData.lastname
         }}
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 d-flex align-items-center justify-content-end">
         <div
           v-if="invoice.status ? true : false"
-          class="d-flex justify-content-end"
+          class="d-flex justify-content-end align-items-center"
         >
           <div class="mx-2" v-if="invoice.status === 'DRAFT'">
-            <BaseButton @click="confirmInvoice" class="btn-primary btn-sm">Confirm</BaseButton>
+            <BaseButton @click="confirmInvoice" class="btn-primary btn-sm"
+              >Confirm</BaseButton
+            >
           </div>
-          <span
-            v-if="invoice.status === 'DRAFT'"
-            class="badge-danger rounded p-1 text-white point"
-            >{{ invoice.status }}</span
-          >
-          <span
-            v-if="invoice.status === 'PAID'"
-            class="badge-success rounded p-1 text-white"
-            >{{ invoice.status }}</span
-          >
+          <div v-if="invoice.status">
+            <span
+              v-if="invoice.status === 'DRAFT'"
+              class="badge-danger text-12 text-center rounded p-1 text-white"
+              >{{ invoice.status }}</span
+            >
+            <span
+              v-if="invoice.status === 'PAID'"
+              class="badge-success text-12 text-center rounded p-1 text-white"
+              >{{ invoice.status }}</span
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +65,7 @@
     </div>
 
     <div class="d-flex align-items-center">
-      <div class="class-details-data_label">Scheme(s):</div>
+      <div class="class-details-data_label">Scheme:</div>
       <ul
         v-if="nameData.payment_scheme.length > 0"
         class="d-flex w-100 px-0 mb-0"
@@ -86,7 +90,7 @@
       class="d-flex justify-content-between align-items-center mb-2"
       v-if="invoice"
     >
-      <p class="mb-0">Total: {{ numberWithCommas(totalBills) }}</p>
+      <p class="mb-0">Total: {{ numberWithCommas(total) }}</p>
       <p class="mb-0">
         Paid amount: {{ numberWithCommas(invoice.paid_amount) }}
       </p>
@@ -118,6 +122,15 @@
       </div>
     </div>
 
+    <div class="p-2 d-flex justify-content-end">
+      <button v-if="!editMode" @click="editBill" class="btn btn-primary btn-sm">
+        Edit
+      </button>
+      <button v-if="editMode" @click="editBill" class="btn btn-danger btn-sm">
+        Cancel
+      </button>
+    </div>
+
     <TabView class="tabview-custom">
       <TabPanel class="dark-panel">
         <template #header>
@@ -125,7 +138,7 @@
         </template>
         <div v-if="invoice">
           <TableComponent
-            :items="invoice.bill_lines"
+            :items="bills"
             :fields="bill_fields"
             :paginate="false"
           >
@@ -136,7 +149,105 @@
                 >R</span
               >
             </template>
+            <template #description="{ data }">
+              <div v-if="editMode && !data.item.id">
+                <input
+                  v-model="data.item.description"
+                  type="text"
+                  name=""
+                  class="form-control"
+                />
+              </div>
+              <div v-if="!editMode && data.item._id">
+                {{ data.item.description }}
+              </div>
+              <div v-if="editMode && data.item.id">
+                {{ data.item.description }}
+              </div>
+            </template>
+            <template #selling_price="{ data }">
+              <div class="d-flex align-items-center" v-if="editMode">
+                <input
+                  v-model="data.item.selling_price"
+                  type="text"
+                  name=""
+                  class="form-control"
+                />
+                <span
+                  v-if="editMode && !data.item.id"
+                  @click="removeBill(data.index)"
+                  class="text-danger ml-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <!-- <div v-if="editMode && data.item._id">
+                {{ data.item.selling_price }}
+              </div> -->
+              <div v-else>
+                {{ numberWithCommas(data.item.selling_price) }}
+              </div>
+            </template>
+            <template #bill_source="{ data }">
+              <div v-if="editMode && !data.item.id">
+                <v-select
+                  style="width: 10rem"
+                  class="text-capitalize text-14"
+                  placeholder="Bill lines"
+                  label="label"
+                  v-model="data.item.bill_source"
+                  :reduce="(opt) => opt.value"
+                  :options="[
+                    { label: 'Imaging', value: 'IMAGING' },
+                    { label: 'Laboratory', value: 'LABORATORY' },
+                    { label: 'Encounters', value: 'ENCOUNTERS' },
+                  ]"
+                ></v-select>
+              </div>
+              <div v-if="editMode && data.item.id">
+                {{ data.item.bill_source }}
+              </div>
+              <div v-if="!editMode && data.item._id">
+                {{ data.item.bill_source }}
+              </div>
+            </template>
           </TableComponent>
+        </div>
+           <div>
+          <span
+            v-if="editMode"
+            class="text-primary point text-14"
+            @click="addNewBill"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1Zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Add Bill</span
+          >
         </div>
       </TabPanel>
       <TabPanel class="dark-panel">
@@ -174,17 +285,19 @@ export default {
       type: Object,
       require: false,
       default: () => ({}),
-    }
+    },
   },
   data() {
     return {
       dataObject: {
         amount: '',
       },
+       bills: [],
       payAmount: 0,
       balance: 0,
       totalBills: 0,
       paymentMethod: [],
+      editMode: false,
       payments: [
         {
           payment_method: null,
@@ -258,12 +371,14 @@ export default {
     total() {
       this.balance = this.total - this.payAmount
     },
-    'invoice.bill_lines'() {
+   invoice() {
       let calc = 0
       this.invoice.bill_lines.forEach((el) => {
         calc += Number.parseFloat(el.selling_price)
       })
-      this.totalBills = calc
+      this.total = calc
+      let bills = this.invoice.bill_lines
+      this.bills = bills
     },
   },
   //   async mounted() {
@@ -298,32 +413,60 @@ export default {
         })
       }
     },
+    editBill() {
+      this.editMode = !this.editMode
+      if (!this.editMode) {
+        for (let x = 0; x < this.bills.length; x++) {
+          if (!this.bills[x].hasOwnProperty('_id')) {
+            this.bills.splice(x)
+          }
+        }
+      }
+    },
+    addNewBill() {
+      let time = new Date().toISOString()
+      this.bills.push({
+        quantity: 1,
+        bill_source: null,
+        description: '',
+        selling_price: '0.00',
+        billed_to_type: 'SELF',
+        transaction_date: time,
+      })
+    },
+    closeModal() {
+      this.$bvModal.hide('invoiceModal')
+      for (let x = 0; x < this.bills.length; x++) {
+        if (!this.bills[x].hasOwnProperty('_id')) {
+          this.bills.splice(x)
+        }
+      }
+      this.editMode = false
+    },
     numberWithCommas(x) {
       if (x) {
         return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
       }
     },
-    authorizeBill(){
+    authorizeBill() {
       this.$bvModal.show('authorize')
     },
 
-    async confirmInvoice(){
-      const result = await this.showConfirmMessageBox(
-        'Confirm invoice ?'
-      )
-      try{
-        if(result){
+    async confirmInvoice() {
+      const result = await this.showConfirmMessageBox('Confirm invoice ?')
+      try {
+        if (result) {
           let response = await this.$api.finance.confirmInvoice(this.invoice.id)
-        if(response){
-          this.$bvModal.hide('invoiceModal')
-        }
-         this.$toast({
+          if (response) {
+            this.$bvModal.hide('invoiceModal')
+          }
+          this.$toast({
             type: 'success',
             text: `Confirmed`,
           })
           this.$emit('refresh')
         }
-      }catch (error){
+      } catch (error) {
         console.log(error)
       }
     },
