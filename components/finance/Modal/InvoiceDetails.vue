@@ -6,7 +6,7 @@
     @hide="closeModal"
     size="xl"
   >
-    <template #modal-header="{ close }">
+    <!-- <template #modal-header="{ close }">
       <div>
         <span class="d-none">{{close}}</span>
         <span
@@ -15,7 +15,7 @@
           >{{ invoice.status }}</span
         >
       </div>
-    </template>
+    </template> -->
 
     <div v-if="invoice">
       <div class="row text-14">

@@ -91,8 +91,8 @@ export default {
         by: '',
         entry: '',
         scheme: [],
-        scheme_type: '',
-        payer: '',
+        scheme_type: null,
+        payer: null,
       },
     }
   },
@@ -165,8 +165,8 @@ export default {
         by: '',
         entry: '',
         scheme: [],
-        payer: '',
-        scheme_type: '',
+        payer: null,
+        scheme_type: null,
       }
       this.applyFilter(this.filters)
     },

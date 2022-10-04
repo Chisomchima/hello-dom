@@ -47,9 +47,9 @@ export default {
       filter: {
         size: 50,
         name: '',
-        scheme_type: '',
+        scheme_type: null,
         scheme: [],
-        payer: '',
+        payer: null,
         status: 'DRAFT',
       },
       fields: [
@@ -143,9 +143,9 @@ export default {
       e = {
         size: 50,
         name: '',
-        scheme_type: '',
+        scheme_type: null,
         scheme: [],
-        payer: '',
+        payer: null,
         status: 'DRAFT',
       }
     ) {
