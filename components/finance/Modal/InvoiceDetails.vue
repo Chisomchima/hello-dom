@@ -287,7 +287,7 @@
             size="sm"
             variant="light"
             class="px-5 text-secondary mr-2"
-            @click="editMode = !editMode"
+            @click="editMode = false"
           >
             Cancel
           </b-button>
