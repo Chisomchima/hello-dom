@@ -391,7 +391,7 @@ export default {
       searchParam: {
         size: 10,
         search: '',
-        type: 'icd10'
+        type: 'icd10',
       },
       diagnosisCopy: null,
       form: {},
@@ -473,8 +473,8 @@ export default {
     diagnosisNames(e) {
       if (typeof e === 'string') {
         return e
-      }  
-      if(Array.isArray(e)){
+      }
+      if (Array.isArray(e)) {
         let arr = e
         let newArr = []
         for (let x = 0; x < arr.length; x++) {
@@ -483,7 +483,7 @@ export default {
         let str = newArr.join(', ')
         return str
       }
-      if(typeof e === 'object'){
+      if (typeof e === 'object') {
         return e.case
       }
     },
@@ -652,8 +652,7 @@ export default {
           option: null,
         },
       ]
-    }
-  
+    },
   },
 }
 </script>

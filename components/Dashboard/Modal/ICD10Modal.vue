@@ -112,8 +112,8 @@ export default Vue.extend({
     },
     consultationData: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
     options() {
@@ -121,8 +121,14 @@ export default Vue.extend({
       this.dataOBJS = this.options
     },
     searchParam() {
-      this.busy = true
-      this.$emit('searchParam', this.searchParam)
+      if (this.searchParam.length > 2) {
+        this.busy = true
+        this.$emit('searchParam', this.searchParam)
+      }
+      else if(this.searchParam.length === 0){
+        this.busy = true
+        this.$emit('searchParam', this.searchParam)
+      }
     },
   },
   methods: {
@@ -162,40 +168,40 @@ export default Vue.extend({
     async addDiagnosis() {
       let arr = this.tray
       let requestBody = []
-      for(let x = 0; x < arr.length; x++){
+      for (let x = 0; x < arr.length; x++) {
         let tempObj = {
           comment: arr[x],
-          option: 'working'
+          option: 'working',
         }
-        if(arr[x].confirmed === true){
+        if (arr[x].confirmed === true) {
           tempObj.option = 'confirmed'
         }
         delete tempObj.comment.selected
         delete tempObj.comment.confirmed
         requestBody.push(tempObj)
       }
-        try {
-          let response = await this.$axios.$post(
-            `encounters/${this.consultationData.id}/charts/`,
-            {
-              chart: {
-                diag: requestBody,
-              },
-            }
-          )
-          this.$toast({
-            type: 'success',
-            text: 'Diagnosis added',
-          })
-          this.tray = []
-          this.$bvModal.hide('icd10modal')
-        } catch (error) {
-          this.$toast({
-            type: 'error',
-            text: 'An error occured',
-          })
-        } finally {
-        }
+      try {
+        let response = await this.$axios.$post(
+          `encounters/${this.consultationData.id}/charts/`,
+          {
+            chart: {
+              diag: requestBody,
+            },
+          }
+        )
+        this.$toast({
+          type: 'success',
+          text: 'Diagnosis added',
+        })
+        this.tray = []
+        this.$bvModal.hide('icd10modal')
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          text: 'An error occured',
+        })
+      } finally {
+      }
     },
   },
   mounted() {
