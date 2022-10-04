@@ -73,5 +73,15 @@ export default axios => ({
         return axios.$get("/core/diagnosis/", {
             params
         })
+    },
+    getClinincs(params = {}){
+        return axios.$get("/encounters/clinic/", {
+            params
+        })
+    },
+    getDepartments(params = {}){
+        return axios.$get("/facilities/departments/", {
+            params
+        })
     }
 });

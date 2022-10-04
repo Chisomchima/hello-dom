@@ -13,7 +13,7 @@
       >
         <div class="d-flex">
           <div v-if="dropdownFilter" class="pr-3">
-            <b-dropdown dropleft no-caret id="dropdown-1" class="rounded-0">
+            <b-dropdown no-caret id="dropdown-1" class="rounded-0">
               <template #button-content>
                 <div class="col-md-2 text-14">Filter</div>
               </template>

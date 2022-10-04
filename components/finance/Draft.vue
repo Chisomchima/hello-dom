@@ -47,8 +47,9 @@ export default {
       filter: {
         size: 50,
         name: '',
-        dateFrom: '',
-        dateTo: '',
+        scheme_type: '',
+        scheme: [],
+        payer: '',
         status: 'DRAFT',
       },
       fields: [
@@ -140,10 +141,11 @@ export default {
     async getInvoices(
       page = 1,
       e = {
-        size: 10,
+        size: 50,
         name: '',
-        dateFrom: '',
-        dateTo: '',
+        scheme_type: '',
+        scheme: [],
+        payer: '',
         status: 'DRAFT',
       }
     ) {

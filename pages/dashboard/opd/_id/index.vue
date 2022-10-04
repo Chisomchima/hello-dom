@@ -21,10 +21,10 @@
       >
         <BackwardNavigation />
         <div>
-          
           <BaseButton
             v-if="
-              consultationData.acknowledged_at != null && consultationData.status != 'DS'
+              consultationData.acknowledged_at != null &&
+              consultationData.status != 'DS'
             "
             @click="signAndCloseEnc"
             class="btn-success btn-sm"
@@ -39,12 +39,12 @@
             Sign
           </BaseButton>
           <BaseButton
-          @click="acknowledgeEnc"
+            @click="acknowledgeEnc"
             v-if="
               (consultationData.status === 'NS' ||
-              consultationData.status === 'New') &&  consultationData.acknowledged_at === null
+                consultationData.status === 'New') &&
+              consultationData.acknowledged_at === null
             "
-            
             class="btn-success btn-sm"
             :disabled="
               consultationData
@@ -74,7 +74,7 @@
         "
       >
         <div class="col-md-7 px-0 text-grey text-14 col-sm-7 col-lg-7">
-          <div class="row px-0 ">
+          <div class="row px-0">
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>ENC-ID:</b>
               {{
@@ -83,22 +83,32 @@
                   : 'nil'
               }}
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6">
-              <b>Date:</b> {{ encounter_time }}
-            </div>
-          </div>
-          <div class="row px-0">
+
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Department:</b>
               {{ department ? department : 'nil' }}
             </div>
+          </div>
+          <div class="row px-0">
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Clinic:</b>
               {{ clinic ? clinic : 'nil' }}
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6">
+              <b>Date:</b> {{ encounter_time }}
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Provider:</b>
-              <span v-if="Object.values(consultationData.provider).length > 0">{{ consultationData.provider ? (consultationData.provider.first_name + " " + consultationData.provider.last_name) : '' }}</span>
+              <span
+                v-if="Object.values(consultationData.provider).length > 0"
+                >{{
+                  consultationData.provider
+                    ? consultationData.provider.first_name +
+                      ' ' +
+                      consultationData.provider.last_name
+                    : ''
+                }}</span
+              >
             </div>
           </div>
           <div
@@ -155,8 +165,10 @@
             </div>
             <div v-if="patientData.age" class="px-2">
               <p class="text-14 mb-0 text-grey">
-                <b>Age(Y-M-D):</b> {{ patientData.age.year ? patientData.age.year : "0"}} - {{ patientData.age.month ? patientData.age.month : "0" }} -
-                {{ patientData.age.day ? patientData.age.day : "0" }}
+                <b>Age(Y-M-D):</b>
+                {{ patientData.age.year ? patientData.age.year : '0' }} -
+                {{ patientData.age.month ? patientData.age.month : '0' }} -
+                {{ patientData.age.day ? patientData.age.day : '0' }}
               </p>
             </div>
             <div class="px-2">
@@ -376,22 +388,24 @@ export default {
         },
       })
     },
-    async acknowledgeEnc(){
+    async acknowledgeEnc() {
       const result = await this.showConfirmMessageBox(
         'Do you want to acknowledge this encounter ?'
       )
-      try{
-        if(result){
-          let response = await this.$api.encounter.acknowledgeEncounter(this.consultationData.id)
-        if(response){
-          this.getPatientRecord()
-        }
-         this.$toast({
+      try {
+        if (result) {
+          let response = await this.$api.encounter.acknowledgeEncounter(
+            this.consultationData.id
+          )
+          if (response) {
+            this.getPatientRecord()
+          }
+          this.$toast({
             type: 'success',
             text: `Acknowleged`,
           })
         }
-      }catch (error){
+      } catch (error) {
         console.log(error)
       }
     },
@@ -454,11 +468,9 @@ export default {
 
       if (monthOfBirth < month) {
         this.age.year
-      } 
-      else if(monthOfBirth > month){
+      } else if (monthOfBirth > month) {
         this.age.year++
-      }
-      else {
+      } else {
         if (this.age.year === 0) {
           this.age.year
         } else {

@@ -3,35 +3,36 @@
      <div class="row mt-3">
       <div class="col-md-4">
         <div class="mb-2">
-          <label class="form-control-label">Date from</label>
-          <input
-            v-model="filters.dateTo"
-            type="date"
-            name=""
-            class="form-control"
-          />
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Date to</label>
-          <input
-            v-model="filters.dateFrom"
-            type="date"
-            name=""
-            class="form-control"
-          />
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-2">
           <label class="form-control-label">Scheme</label>
           <VSelect
             v-model="filters.scheme"
             :multiple="true"
             :reduce="(opt) => opt.id"
             :options="schemes"
+            label="name"
+          ></VSelect>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Scheme type</label>
+          <VSelect
+            v-model="filters.scheme_type"
+            :reduce="(opt) => opt.value"
+            :options="[{label: 'Self', value: 'SELF'}, {label: 'Insurance', value: 'INSURANCE'}]"
+            label="label"
+          ></VSelect>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="form-control-label">Payer</label>
+          <VSelect
+            v-model="filters.payer"
+            :multiple="true"
+            :reduce="(opt) => opt.id"
+            :options="payers"
             label="name"
           ></VSelect>
         </div>
@@ -82,6 +83,7 @@ export default {
       departments: [],
       clinics: [],
       schemes: [],
+      payers: [],
       newCount: 0,
       nurseSeen: 0,
 
@@ -89,8 +91,8 @@ export default {
         by: '',
         entry: '',
         scheme: [],
-        dateTo: '',
-        dateFrom: '',
+        scheme_type: '',
+        payer: '',
       },
     }
   },
@@ -101,13 +103,13 @@ export default {
       }, 500),
       deep: true,
     },
-    'filters.dateTo': {
+    'filters.scheme_type': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
       }, 500),
       deep: true,
     },
-    'filters.dateFrom': {
+    'filters.payer': {
       handler: debounce(function () {
         this.filterFunc(this.filters)  
       }, 500),
@@ -146,6 +148,10 @@ export default {
         size: 1000,
       })
       this.schemes = schemes.results
+      const payers = await this.$api.finance_settings.getPayers({
+        size: 1000,
+      })
+      this.payers = payers.results
     } catch (error) {
       console.log(error)
     }
@@ -159,8 +165,8 @@ export default {
         by: '',
         entry: '',
         scheme: [],
-        dateTo: '',
-        dateFrom: '',
+        payer: '',
+        scheme_type: '',
       }
       this.applyFilter(this.filters)
     },

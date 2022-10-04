@@ -3,6 +3,7 @@
     <div>
       <b-modal
         @hide="closeModal"
+        @show="getData"
         id="Add-specimen"
         title="Add Specimen Type"
         centered
@@ -105,6 +106,23 @@
                 </div>
 
                 <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                  <small class="text-grey text-12">Specimen *</small>
+                  <validation-provider rules="required" v-slot="{ errors }">
+                    <v-select
+                      v-model="specimen.specimen"
+                      class="text-14"
+                      placeholder="Type"
+                      label="name"
+                      :options="data"
+                      :reduce="(opt) => opt.id"
+                    ></v-select>
+                    <span class="text-12" style="color: red">{{
+                      errors[0]
+                    }}</span>
+                  </validation-provider>
+                </div>
+
+                <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                   <small class="text-grey text-12">Description</small>
                   <validation-provider rules="required" v-slot="{ errors }">
                     <input
@@ -185,6 +203,12 @@
               >
             </div>
           </template>
+          <template #description="{ data }">
+            <div class="">
+              <span>{{ data.item.description }}</span>
+            </div>
+          </template>
+          
           <template #color="{ data }">
             <div
               style="
@@ -317,6 +341,22 @@
                 />
               </div>
               <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                  <small class="text-grey text-12">Specimen *</small>
+                  <validation-provider rules="required" v-slot="{ errors }">
+                    <v-select
+                      v-model="editSpecimen.specimen"
+                      class="text-14"
+                      placeholder="Type"
+                      label="name"
+                      :options="data"
+                      :reduce="(opt) => opt.id"
+                    ></v-select>
+                    <span class="text-12" style="color: red">{{
+                      errors[0]
+                    }}</span>
+                  </validation-provider>
+                </div>
+              <div class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
                 <small class="text-grey text-12">Description</small>
                 <validation-provider rules="required" v-slot="{ errors }">
                   <input
@@ -357,8 +397,7 @@
       </div>
     </b-modal>
 
-    <DashboardModalDeleteSpecimen :editData="editObj"
-      @refresh="refreshMe"/>
+    <DashboardModalDeleteSpecimen :editData="editObj" @refresh="refreshMe" />
   </div>
 </template>
 
@@ -368,6 +407,7 @@ export default {
     return {
       isbusy: false,
       busy: false,
+      data: [],
       purple: '#800080',
       yellow: '#fbff12',
       grey: '#cfdbd5',
@@ -390,6 +430,7 @@ export default {
         { key: 'name', label: 'Specimen name', sortable: true },
         { key: 'color', label: 'Color', sortable: true },
         { key: 'description', label: 'Description', sortable: true },
+        { key: 'specimen', label: 'Specimen', sortable: true },
 
         { key: 'actions', label: '', sortable: false },
       ],
@@ -398,13 +439,15 @@ export default {
         name: '',
         color: '',
         description: '',
+        specimen: '',
       },
       editSpecimen: {
         name: '',
         color: '',
         description: '',
+        specimen: '',
       },
-      editObj: {}
+      editObj: {},
     }
   },
   mounted() {
@@ -418,7 +461,8 @@ export default {
       if (
         this.specimen.name &&
         this.specimen.color &&
-        this.specimen.description
+        this.specimen.description &&
+        this.specimen.specimen
       ) {
         try {
           this.isbusy = true
@@ -433,6 +477,7 @@ export default {
             name: '',
             color: '',
             description: '',
+            specimen: '',
           }
         } catch {
           this.$toast.error(`Unable to add specimen`)
@@ -445,10 +490,10 @@ export default {
     searchMe(e) {
       this.getSpecimens(1, e)
     },
-    refreshMe(){
+    refreshMe() {
       this.getSpecimens(1)
     },
-    async getSpecimens(page = 1,  e = "") {
+    async getSpecimens(page = 1, e = '') {
       try {
         this.busy = true
         let uri = `laboratory/lab_specimen_type/?page=${page}&name=${e}&size=${this.perPage}`
@@ -480,7 +525,17 @@ export default {
         this.busy = false
       }
     },
-    async deleteSpecimen(e){
+    async getData() {
+      try {
+        const { results } = await this.$api.laboratory.getSpecimens({
+          size: 1000,
+        })
+        this.data = results
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteSpecimen(e) {
       this.editObj = { ...e }
       this.$bvModal.show('deleteSpecimenModal')
     },
@@ -515,6 +570,7 @@ export default {
       this.editSpecimen.name = e.name
       this.editSpecimen.color = e.color
       this.editSpecimen.description = e.description
+      this.editSpecimen.specimen = e.specimen
       this.id = e.id
       if (this.editSpecimen.color === '#800080') {
         this.setPurpleEdit()

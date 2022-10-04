@@ -206,7 +206,10 @@
       </b-modal>
     </div>
     <UtilsFilterComponent
+      @dropdown="setOption"
       disable-pagination
+      :dropDownOptions="['Service center', 'Lab unit']"
+      :dropdownFilter="true"
       :disable-visualization="true"
       search-placeholder="Search"
     >
@@ -214,6 +217,45 @@
         <BaseButton class="btn-outline-primary" @click="newLabOrders"
           >New Lab Order</BaseButton
         >
+      </template>
+
+      <template #beforeActions>
+        <div>
+          <div>
+            <VSelect
+              style="font-size: 13px"
+              label="name"
+              class="width"
+              v-model="filter.entry"
+              :placeholder="placeholder"
+              :reduce="(option) => option.id"
+              :options="options"
+            >
+            </VSelect>
+          </div>
+        </div>
+      </template>
+      <template #besidesViewBy>
+        <div class="d-flex">
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date from:</span>
+            <input
+              type="date"
+              class="form-control"
+              :max="maxDate"
+              v-model="filter.dateFrom"
+            />
+          </div>
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date to:</span>
+            <input
+              type="date"
+              class="form-control"
+              :min="minDate"
+              v-model="filter.dateTo"
+            />
+          </div>
+        </div>
       </template>
       <b-overlay
         variant="light"
@@ -451,6 +493,15 @@ export default {
         status: '',
         lab_order: '',
       },
+      filter: {
+        size: 10,
+        by: '',
+        entry: '',
+        dateFrom: '',
+        dateTo: '',
+      },
+      options: [],
+      placeholder: '',
       pages: 1,
       modalTitle: 'Order lab panel',
       commitPanel: {
@@ -549,6 +600,20 @@ export default {
     rows() {
       return this.itemsToShow.length
     },
+     maxDate() {
+      let today = new Date()
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
+    minDate() {
+      let today = new Date()
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
   },
   props: {
     patientData: {
@@ -557,6 +622,20 @@ export default {
     },
   },
   watch: {
+    'filter.entry'() {
+      if (this.filter.by !== '' && this.filter.entry !== null) {
+        this.getLabOrders(1, this.filter)
+      }
+    },
+    'filter.by'() {
+      this.filter.entry = null
+    },
+    'filter.dateFrom'() {
+      this.getLabOrders(1, this.filter)
+    },
+    'filter.dateTo'() {
+      this.getLabOrders(1, this.filter)
+    },
     test() {
       let conv = 'hdjj'
       conv.toUpperCase()
@@ -578,6 +657,39 @@ export default {
   methods: {
     enableButton() {
       this.enabled = !this.enabled
+    },
+
+    setOption(e) {
+      this.placeholder = e
+      if (e === 'Service center') {
+        this.filter.by = 'service_center'
+        this.serviceCenterOptions()
+      }
+      if (e === 'Lab unit') {
+        this.filter.by = 'lab_unit'
+        this.labUnitOptions()
+      }
+    },
+
+    async serviceCenterOptions() {
+      try {
+        const { results } = await this.$api.core.serviceCenter({
+          size: 1000,
+        })
+        this.options = results
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async labUnitOptions() {
+      try {
+        const { results } = await this.$api.core.labUnits({
+          size: 1000,
+        })
+        this.options = results
+      } catch (error) {
+        console.log(error)
+      }
     },
 
     async mailReport(e) {
@@ -715,17 +827,31 @@ export default {
       }
     },
 
-    async getLabOrders(page = 1) {
+    async getLabOrders(
+      page = 1,
+      e = {
+        size: 10,
+        by: '',
+        entry: '',
+        dateFrom: '',
+        dateTo: '',
+      }
+    ) {
+      const newFilterObject = {
+        ...e,
+        [e.by]: e.entry,
+        page: page,
+        patient_uhid: this.patientData.uhid,
+      }
       try {
         if (this.currentPage != 1) {
           page = this.currentPage
         }
         this.busy = true
-        let uri = `laboratory/lab_order/?page=${page}&patient_uhid=${this.patientData.uhid}`
-
-        console.log(uri)
-
-        const response = await this.$axios.$get(uri)
+        
+        let response = await this.$api.laboratory.getLabOrder({
+          ...newFilterObject,
+        })
 
         this.pages = response.total_pages
         this.totalPages = response.total_pages
@@ -776,7 +902,7 @@ export default {
           let uri = `laboratory/service_center/?size=100`
 
           const response = await this.$axios.$get(uri)
-
+          this.options = response.results
           this.serviceCenters = response.results
           this.clue = false
         } catch (error) {
@@ -905,6 +1031,11 @@ export default {
   border: 1px solid #414850;
   cursor: pointer;
   border-radius: 3px;
+}
+
+.width {
+  width: 10rem;
+  height: 38px;
 }
 
 .border_grey:hover {

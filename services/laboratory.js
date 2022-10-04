@@ -24,6 +24,11 @@ export default axios => ({
     saveLabOrder(body) {
         return axios.$post('/laboratory/lab_order/', body)
     },
+    getLabOrder(params){
+        return axios.$get(`/laboratory/lab_order/`, {
+            params
+        })
+    },
 
     // ***********settings****************
     deleteSpecimen(id){
@@ -38,6 +43,17 @@ export default axios => ({
         return axios.$get('laboratory/lab_panel/unit_group/', {
            params
         })
+    },
+    getSpecimens(params) {
+        return axios.$get('laboratory/lab_specimen/', {
+           params
+        })
+    },
+    saveSpecimen(body) {
+        return axios.$post('laboratory/lab_specimen/', body)
+    },
+    editSpecimen(body, id) {
+        return axios.$patch(`laboratory/lab_specimen/${id}`, body)
     },
 
 });

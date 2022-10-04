@@ -13,9 +13,14 @@
           <SettingsLabObservations />
         </keep-alive>
       </UtilsCardTab>
-      <UtilsCardTab title="Lab Specimen">
+      <UtilsCardTab title="Specimen type">
         <keep-alive>
           <SettingsLabSpecimen />
+        </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Specimen">
+        <keep-alive>
+          <SettingsSpecimen />
         </keep-alive>
       </UtilsCardTab>
     </UtilsBaseCardTab>

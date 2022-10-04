@@ -1,6 +1,50 @@
 <template>
   <div>
-    <UtilsFilterComponent disable-visualization disable-pagination>
+    <UtilsFilterComponent
+      @dropdown="setOption"
+      disable-pagination
+      :dropDownOptions="['Service center', 'Modality']"
+      :dropdownFilter="true"
+      disable-visualization
+    >
+    <template #beforeActions>
+        <div>
+          <div>
+            <VSelect
+              style="font-size: 13px"
+              label="name"
+              class="width"
+              v-model="filter.entry"
+              :placeholder="placeholder"
+              :reduce="(option) => option.id"
+              :options="options"
+            >
+            </VSelect>
+          </div>
+        </div>
+      </template>
+      <template #besidesViewBy>
+        <div class="d-flex">
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date from:</span>
+            <input
+              type="date"
+              class="form-control"
+              :max="maxDate"
+              v-model="filter.dateFrom"
+            />
+          </div>
+          <div class="col-md-6">
+            <span class="text-12 text-grey">Date to:</span>
+            <input
+              type="date"
+              class="form-control"
+              :min="minDate"
+              v-model="filter.dateTo"
+            />
+          </div>
+        </div>
+      </template>
       <template #besideFilterButton>
         <BaseButton
           class="btn-outline-primary"
@@ -107,6 +151,15 @@ export default {
   },
   data() {
     return {
+      filter: {
+        size: 10,
+        by: '',
+        entry: '',
+        dateFrom: '',
+        dateTo: '',
+      },
+      options: [],
+      placeholder: '',
       fields: [
         {
           key: 'img_order.ordered_datetime',
@@ -158,7 +211,6 @@ export default {
           },
           sortable: true,
         },
-        { key: 'status', label: 'Status', sortable: true },
         { key: 'info', label: 'Show Detail', sortable: true },
         { key: 'dots', label: '', sortable: false },
       ],
@@ -167,13 +219,41 @@ export default {
   async mounted() {
     await this.pageChange(1)
   },
+  watch: {
+     'filter.entry'() {
+      if (this.filter.by !== '' && this.filter.entry !== null) {
+        this.pageChange(1, this.filter)
+      }
+    },
+    'filter.by'() {
+      this.filter.entry = null
+    },
+    'filter.dateFrom'() {
+      this.pageChange(1, this.filter)
+    },
+    'filter.dateTo'() {
+      this.pageChange(1, this.filter)
+    },
+  },
   methods: {
-    async pageChange(page = 1) {
+    async pageChange(page = 1,  e = {
+        size: 10,
+        by: '',
+        entry: '',
+        dateFrom: '',
+        dateTo: '',
+      }) {
+
+        const newFilterObject = {
+        ...e,
+        [e.by]: e.entry,
+        page: page,
+        patient_uhid: this.data.uhid,
+      }
       try {
         this.busy = true
         const data = await this.$api.imaging.getObservationOrder({
-          patient_uhid: this.data.uhid,
-          page,
+          ...newFilterObject
         })
         this.items = data.results
         this.pages = data.total_pages
@@ -185,15 +265,40 @@ export default {
         this.busy = false
       }
     },
-    // onRowClicked(e) {
-    //   this.$router.push({
-    //     name: 'dashboard-opd-id',
-    //     params: {
-    //       id: e.id,
-    //     },
-    //   })
-    // },
 
+    setOption(e) {
+      this.placeholder = e
+      if (e === 'Service center') {
+        this.filter.by = 'service_center'
+        this.getServiceCenter()
+      }
+      if (e === 'Modality') {
+        this.filter.by = 'modality'
+        this.getModality()
+      }
+    },
+
+     async getServiceCenter() {
+      try {
+        const { results } = await this.$api.imaging.getServiceCenter({
+          size: 1000,
+        })
+        this.options = results
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getModality() {
+      try {
+        const { results } = await this.$api.imaging.getLabUnit({
+          size: 1000,
+        })
+        this.options = results
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    
     async cancelImaging(e) {
       const result = await this.showDeleteMessageBox(
         'Do you want to cancel Imaging Order'
@@ -222,4 +327,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.width {
+  width: 10rem;
+  height: 38px;
+}
 </style>

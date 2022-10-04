@@ -4,17 +4,18 @@
     id="invoiceModal"
     @ok="ok()"
     @hide="closeModal"
-    size="lg"
+    size="xl"
   >
-    <!-- <template #modal-header="{ close }">
+    <template #modal-header="{ close }">
       <div>
+        <span class="d-none">{{close}}</span>
         <span
           v-if="invoice.status === 'PAID'"
           class="badge-success rounded p-1 text-white"
           >{{ invoice.status }}</span
         >
       </div>
-    </template> -->
+    </template>
 
     <div v-if="invoice">
       <div class="row text-14">
@@ -48,44 +49,60 @@
               >
             </div>
           </div>
-          <div v-if="invoice.status">
-            <span
-              v-if="invoice.status === 'DRAFT'"
-              class="badge-danger text-12 text-center rounded p-1 text-white"
-              >{{ invoice.status }}</span
+          <div class="p-2 d-flex justify-content-end">
+            <button
+              v-if="!editMode"
+              @click="editBill"
+              class="btn btn-primary btn-sm"
             >
-            <span
-              v-if="invoice.status === 'PAID'"
-              class="badge-success text-12 text-center rounded p-1 text-white"
-              >{{ invoice.status }}</span
+              Edit
+            </button>
+            <button
+              v-if="editMode"
+              @click="editBill"
+              class="btn btn-danger btn-sm"
             >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
 
-      <div v-if="invoice.patient" class="col-md-3 text-14 px-0">
-        <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
-      </div>
+      <div class="d-flex align-items-center">
+        <div v-if="invoice.patient" class="col-md-3 text-14 px-0">
+          <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
+        </div>
 
-      <div v-if="invoice.payer_scheme" class="d-flex align-items-center">
-        <div class="class-details-data_label">Scheme:</div>
-        <ul v-if="invoice.payer_scheme != null" class="d-flex w-100 px-0 mb-0">
-          <li style="list-style: none" class="px-2 text-14">
-            <span class="class-details-data_value text-truncate">
-              | {{ invoice.payer_scheme }}
-            </span>
-            <span> ({{ invoice.scheme_type }}) </span>
-          </li>
-        </ul>
-        <div class="text-14 ml-2" v-else>Nil</div>
+        <div class="d-flex align-items-center">
+          <div class="class-details-data_label">Scheme:</div>
+          <ul
+            v-if="invoice.payer_scheme != null"
+            class="d-flex w-100 px-0 mb-0"
+          >
+            <li style="list-style: none" class="px-2 text-14">
+              <span class="class-details-data_value text-truncate">
+                | {{ invoice.payer_scheme }}
+              </span>
+              <span> ({{ invoice.scheme_type }}) </span>
+            </li>
+          </ul>
+          <div class="text-14 ml-2" v-else>Nil</div>
+        </div>
       </div>
       <hr />
 
       <div
-        class="d-flex justify-content-between align-items-center mb-2"
+        class="d-flex justify-content-between align-items-center mb-2 text-14"
         v-if="invoice"
       >
-        <p class="mb-0">Total: {{ numberWithCommas(total) }}</p>
+        <p class="mb-0">
+          Total:
+          {{ numberWithCommas(total) ? numberWithCommas(total) : '0.00' }}
+        </p>
+        <p class="mb-0">
+          Reserved:
+          {{ numberWithCommas(invoice.reserved_amount) ? numberWithCommas(invoice.reserved_amount) : '0.00' }}
+        </p>
         <p class="mb-0">
           Paid amount: {{ numberWithCommas(invoice.paid_amount) }}
         </p>
@@ -117,13 +134,17 @@
         </div>
       </div>
     </div>
-    <div class="p-2 d-flex justify-content-end">
-      <button v-if="!editMode" @click="editBill" class="btn btn-primary btn-sm">
-        Edit
-      </button>
-      <button v-if="editMode" @click="editBill" class="btn btn-danger btn-sm">
-        Cancel
-      </button>
+    <div class="d-flex justify-content-end mb-2" v-if="invoice.status">
+      <span
+        v-if="invoice.status === 'DRAFT'"
+        class="badge-danger text-12 text-center rounded p-1 text-white"
+        >{{ invoice.status }}</span
+      >
+      <span
+        v-if="invoice.status === 'PAID'"
+        class="badge-success text-12 text-center rounded p-1 text-white"
+        >{{ invoice.status }}</span
+      >
     </div>
     <TabView class="tabview-custom">
       <TabPanel class="dark-panel">
@@ -258,6 +279,44 @@
         </div>
       </TabPanel>
     </TabView>
+    <template #footer="{ cancel }">
+      <div class="d-flex w-100 justify-content-between px-5">
+        <div class="w-50">
+          <span class="d-none">{{cancel}}</span>
+          <b-button
+            size="sm"
+            variant="light"
+            class="px-5 text-secondary mr-2"
+            @click="editMode = !editMode"
+          >
+            Cancel
+          </b-button>
+        </div>
+
+       <div :class="editMode ? 'justify-content-between' : 'justify-content-end'" class="w-75 d-flex ">
+         <div v-if="!editMode">
+          <button class="btn btn-secondary px-5" @click="editMode = !editMode">
+            Edit
+          </button>
+        </div>
+
+        <div v-if="editMode">
+          <BaseButton
+            extra-class="'px-5  btn-info'"
+            :class="'px-5  btn-info'"
+            @click="ok()"
+          >
+            Save
+          </BaseButton>
+        </div>
+        <div>
+          <BaseButton v-if="editMode" @click="saveAndConfirm" class="px-5">
+            Confirm
+          </BaseButton>
+        </div>
+       </div>
+      </div>
+    </template>
   </ModalWrapper>
 </template>
 
@@ -286,6 +345,7 @@ export default {
       dataObject: {
         amount: '',
       },
+      editable: false,
       default: [],
       bills: [],
       payAmount: 0,
@@ -323,6 +383,9 @@ export default {
 
         {
           key: 'selling_price',
+        },
+        {
+          key: 'total',
         },
       ],
       payment_fields: [
@@ -433,6 +496,19 @@ export default {
     },
     authorizeBill() {
       this.$bvModal.show('authorize')
+    },
+
+    async saveAndConfirm(){
+      this.ok()
+      let response = await this.$api.finance.confirmInvoice(this.invoice.id)
+          if (response) {
+            this.$bvModal.hide('invoiceModal')
+          }
+          this.$toast({
+            type: 'success',
+            text: `Confirmed`,
+          })
+          this.$emit('refresh')
     },
 
     async confirmInvoice() {
