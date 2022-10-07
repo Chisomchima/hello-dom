@@ -27,5 +27,8 @@ export default axios => ({
     },
     editBillLine(body, id){
         return axios.$put(`finance/invoices/${id}/bills/`, body)
+    },
+    payInvoice(body, id){
+        return axios.$put(`finance/invoices/${id}/pay/`, body)
     }
 });

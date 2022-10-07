@@ -1,27 +1,50 @@
 <template>
   <div class="filter-wrapper">
-     <div class="row mt-3">
+    <div class="row mt-3">
       <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.date_after"
             type="date"
-            name=""
             class="form-control"
+            :max="maxDate"
+            v-model="filters.dateFrom"
+          />
+        </div>
+       
+      </div>
+      <div class="col-md-4">
+       
+        <div class="mb-2 ml-2">
+          <label class="form-control-label">Date to</label>
+          <input
+            type="date"
+            class="form-control"
+            :min="minDate"
+            v-model="filters.dateTo"
           />
         </div>
       </div>
-
-      <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Date to</label>
-          <input
-            v-model="filters.date_before"
-            type="date"
-            name=""
-            class="form-control"
-          />
+       <div class="mb-0 col-md-4">
+        <label class="form-control-label">UHID/NAME</label>
+        <div class="row">
+          <div class="col-md-6">
+            <VSelect
+              v-model="filters.by"
+              style="font-size: 15px"
+              label="label"
+              placeholder="By"
+              :reduce="(option) => option.name"
+              :options="[
+                { name: 'patient_name', label: 'Name' },
+                { name: 'patient_uhid', label: 'UHID' },
+              ]"
+            >
+            </VSelect>
+          </div>
+          <div class="col-md-6">
+            <input v-model="filters.entry" type="text" class="form-control" />
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -36,125 +59,42 @@
           ></VSelect>
         </div>
       </div>
-      <!-- <div class="col-md-4">
+
+      <div class="col-md-4">
         <div class="mb-2">
-          <label class="form-control-label">Clinics</label>
+          <label class="form-control-label">Scheme type</label>
           <VSelect
-            v-model="filters.clinic"
-            label="name"
-            :options="clinics"
-            :reduce="(opt) => opt.id"
-            :multiple="true"
+            v-model="filters.scheme_type"
+            :reduce="(opt) => opt.value"
+            :options="[
+              { label: 'Self', value: 'SELF' },
+              { label: 'Insurance', value: 'INSURANCE' },
+            ]"
+            label="label"
           ></VSelect>
         </div>
       </div>
-      <div class="col-md-4">
+
+       <div class="col-md-4">
         <div class="mb-2">
-          <label class="form-control-label">Provider</label>
+          <label class="form-control-label">Payer</label>
           <VSelect
-            v-model="filters.provider"
-            label="first_name"
+            v-model="filters.payer"
             :multiple="true"
             :reduce="(opt) => opt.id"
-            :options="providers"
-          >
-            <template #option="{ first_name, last_name }">
-              <span>{{ first_name }} {{ last_name }}</span>
-            </template>
-            <template #selected-option="{ first_name, last_name }">
-              <span>{{ first_name }} {{ last_name }}</span>
-            </template>
-          </VSelect>
-        </div>
-      </div> -->
-
-      <!-- <div class="col-md-4">
-        <div class="mb-2">
-          <label class="form-control-label">Status </label>
-          <VSelect
-            v-model="filters.status"
-            label="label"
-            :reduce="(option) => option.value"
-            :options="statuses"
-          >
-            <template #option="{ label }">
-              <span
-                v-if="label === 'New'"
-                class="text-14 badge-warning rounded text-center p-1 text-white"
-                style="margin: 0"
-                >{{ label }} ({{ newCount }})</span
-              >
-              <span
-                v-else-if="label === 'Nurse Seen'"
-                class="text-14 badge-info rounded text-center p-1 text-white"
-              >
-                {{ label }} ({{ nurseSeen }})
-              </span>
-              <span
-                v-else-if="label === 'Doctor Seen'"
-                class="text-14 badge-danger rounded text-center p-1 text-white"
-              >
-                {{ label }}
-              </span>
-            </template>
-            <template #selected-option="{ label }">
-              <span
-                v-if="label === 'New'"
-                class="
-                  text-14
-                  badge-warning
-                  rounded
-                  text-center
-                  px-1
-                  text-white
-                "
-                style="margin: 0"
-                >{{ label }}</span
-              >
-              <span
-                v-else-if="label === 'Nurse Seen'"
-                class="text-14 badge-info rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-              <span
-                v-else-if="label === 'Doctor Seen'"
-                class="text-14 badge-danger rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-            </template>
-          </VSelect>
-        </div>
-      </div> -->
-    </div>
-    <div class="row justify-content-between mb-3">
-      <div class="mb-0 col-md-4">
-        <label class="form-control-label">UHID/NAME</label>
-        <div class="row">
-          <div class="col-md-6">
-            <VSelect
-              v-model="filters.by"
-              style="font-size: 15px"
-              label="label"
-              placeholder="By"
-              :reduce="(option) => option.name"
-              :options="[
-                { name: 'patient_name', label: 'Name' },
-                { name: 'patient_uhid', label: 'UHID' },
-                { name: 'encounter_id', label: 'Encounter ID' },
-              ]"
-            >
-            </VSelect>
-          </div>
-          <div class="col-md-6">
-            <input v-model="filters.entry" type="text" class="form-control" />
-          </div>
+            :options="payers"
+            label="name"
+          ></VSelect>
         </div>
       </div>
+    </div>
+    <div class="row justify-content-end mb-3">
+     
+
+     
 
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
-        <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+        <BaseButton class="mr-1 w-50" @click="applyFilter(filters)">
           Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
@@ -167,63 +107,77 @@
 
 <script>
 import { debounce } from 'lodash'
-
+import { DateTime } from 'luxon'
 export default {
   data() {
     return {
-      genders: ['Male', 'Female'],
-      statuses: [
-        { label: 'Nurse Seen', value: 'NS' },
-        { label: 'New', value: 'New' },
-        { label: 'Doctor Seen', value: 'DS' },
-      ],
       departments: [],
       clinics: [],
-      providers: [],
+      schemes: [],
+      payers: [],
       newCount: 0,
       nurseSeen: 0,
 
       filters: {
         by: '',
         entry: '',
+        dateFrom: '',
+        dateTo: '',
         scheme: [],
-        date_before: '',
-        date_after: '',
+        scheme_type: null,
+        payer: null,
       },
     }
+  },
+  computed: {
+    maxDate() {
+      let today = new Date()
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
+    minDate() {
+      let today = new Date()
+      today = today.toISOString()
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
   },
   watch: {
     'filters.scheme': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
-    'filters.date_before': {
+    'filters.scheme_type': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
-    'filters.date_after': {
+    'filters.payer': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
-    'filters.entry': {
+    'filters.dateTo': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        if(this.filters.dateFrom !== ''){
+          this.applyFilter(this.filters)
+        }
       }, 500),
       deep: true,
     },
     filters: {
       handler: debounce(function (newVal) {
         if (newVal.by.length > 0) {
-          const newFilterObject = {
+          newFilterObject = {
             ...newVal,
             [newVal.by]: newVal.entry,
-            worklist: true,
           }
           this.$emit('filter', newFilterObject)
         } else {
@@ -245,22 +199,23 @@ export default {
         size: 1000,
       })
       this.schemes = schemes.results
+      const payers = await this.$api.finance_settings.getPayers({
+        size: 1000,
+      })
+      this.payers = payers.results
     } catch (error) {
       console.log(error)
     }
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     clear() {
       this.filters = {
         by: '',
         entry: '',
-        department: [],
-        clinic: [],
-        provider: [],
-        status: '',
+        scheme: [],
+        payer: null,
+        scheme_type: null,
       }
       this.applyFilter(this.filters)
     },
@@ -272,9 +227,11 @@ export default {
           worklist: true,
         }
         // console.log(newFilterObject)
-        this.filterFunc(newFilterObject)
+        // this.filterFunc(newFilterObject)
+        this.$emit('filter', newFilterObject)
       } else {
-        this.filterFunc(newVal)
+        // this.filterFunc(newVal)
+        this.$emit('filter', newVal)
       }
     },
     filterFunc(newVal) {

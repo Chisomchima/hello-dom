@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <FinanceDraftFilters @filter="getSome($event)" />
+      <FinanceOpenFilters @filter="getSome($event)" />
     </div>
     <TableComponent
       :fields="fields"
@@ -20,10 +20,37 @@
           {{ data.item.status }}
         </div>
       </template>
+
+      <template #triple_actions="{ data }">
+        <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
+          <template #button-content>
+            <b-icon icon="three-dots-vertical"></b-icon>
+          </template>
+          <template>
+            <b-dropdown-item
+             v-if="data.item.balance !== '0.00'"
+              class="text-capitalize"
+              @click="openPaymentModal(data.item)"
+              >Make payment</b-dropdown-item
+            >
+            <b-dropdown-item
+              class="text-capitalize"
+              @click="printInvoice(data.item)"
+              >Print invoice</b-dropdown-item
+            >
+          </template>
+        </b-dropdown>
+      </template>
     </TableComponent>
 
     <div>
-      <FinanceModalInvoiceDetails :invoice="invoice" @refresh="getUpdates" />
+      <FinanceModalInvoiceDetails
+        :orientation="true"
+        :invoice="invoice"
+        @refresh="getUpdates"
+      />
+      <FinanceModalPayment @close="$bvModal.hide('invoiceModal')" :invoice="invoice" />
+      <DashboardModalPrintInvoice :data="patientData" :reciept="template" />
     </div>
   </div>
 </template>
@@ -41,6 +68,8 @@ export default {
       currentPage: 1,
       totalRecords: 0,
       invoice: {},
+      template: {},
+      patientData: {},
       filter: {
         size: 10,
         name: '',
@@ -137,7 +166,7 @@ export default {
         },
 
         {
-          key: 'print',
+          key: 'triple_actions',
           label: '',
         },
       ],
@@ -160,7 +189,6 @@ export default {
       this.getInvoices(1, this.filter)
     },
     openModal(e) {
-      console.log(e)
       this.invoice = e
       this.$bvModal.show('invoiceModal')
     },
@@ -194,6 +222,15 @@ export default {
         this.busy = false
       }
     },
+    openPaymentModal(e){
+      this.invoice = e
+      this.$bvModal.show('makePayment')
+    },
+    printInvoice(e){
+      this.patientData = e.patient
+      this.template = e
+      this.$bvModal.show('printInvoice')
+    }
   },
 }
 </script>

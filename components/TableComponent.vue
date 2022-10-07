@@ -83,6 +83,13 @@
           </div>
         </slot>
       </template>
+      <template #cell(balance)="data">
+        <slot name="balance" :data="data">
+          <div>
+            {{ numberWithCommas(data.item.balance) }}
+          </div>
+        </slot>
+      </template>
       <template #cell(encounter_datetime)="data">
         <slot name="encounter_datetime" :data="data">
           <div>
@@ -297,6 +304,18 @@
             class="text-14 badge-success rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
+          </span>
+          <span
+            v-else-if="data.item.status === 'PARTIAL_PAY'"
+            class="text-14 badge-success rounded text-center p-1 text-white"
+          >
+            PARTIAL PAY
+          </span>
+          <span
+            v-else-if="data.item.status === 'OPEN'"
+            class="text-14 badge-success rounded text-center p-1 text-white"
+          >
+            OPEN
           </span>
         </slot>
       </template>

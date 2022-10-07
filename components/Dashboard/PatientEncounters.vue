@@ -1,9 +1,7 @@
 <template>
   <div>
     <UtilsFilterComponent
-      @dropdown="setOption"
-      :dropDownOptions="['Departments', 'Clinics']"
-      :dropdownFilter="true"
+      :disableSearch="true"
       disable-visualization
       disable-pagination
     >
@@ -15,41 +13,101 @@
         >
       </template>
       <template #beforeActions>
-        <div>
-          <div>
-            <VSelect
-              style="font-size: 13px"
-              label="name"
-              class="width"
-              v-model="filter.entry"
-              :placeholder="placeholder"
-              :reduce="(option) => option.id"
-              :options="options"
-            >
-            </VSelect>
-          </div>
-        </div>
-      </template>
-      <template #besidesViewBy>
-        <div class="d-flex">
-          <div class="col-md-6">
-            <span class="text-12 text-grey">Date from:</span>
-            <input
-              type="date"
-              class="form-control"
-              :max="maxDate"
-              v-model="filter.dateFrom"
-            />
-          </div>
-          <div class="col-md-6">
-            <span class="text-12 text-grey">Date to:</span>
-            <input
-              type="date"
-              class="form-control"
-              :min="minDate"
-              v-model="filter.dateTo"
-            />
-          </div>
+           <div>
+          <button
+            v-b-toggle.sidebar-backdrop1
+            class="btn btn-sm btn-outline-secondary"
+          >
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="currentColor"
+                  d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z"
+                />
+              </svg>
+            </span>
+          </button>
+          <b-sidebar
+            id="sidebar-backdrop1"
+            title="Sidebar with backdrop"
+            :backdrop-variant="'dark'"
+            backdrop
+            shadow
+            right
+          >
+            <div class="p-4">
+              <div class="">
+                <!-- <p class="mb-0 text-20">Date range</p> -->
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Search</span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search by name"
+                    v-model="filter.name"
+                  />
+                </div>
+              </div>
+              <div class="">
+                <!-- <p class="mb-0 text-20">Date range</p> -->
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Date from:</span>
+                  <input
+                    type="date"
+                    class="form-control"
+                    :max="maxDate"
+                    v-model="filter.dateFrom"
+                  />
+                </div>
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Date to:</span>
+                  <input
+                    type="date"
+                    class="form-control"
+                    :min="minDate"
+                    v-model="filter.dateTo"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <span class="text-12 text-grey">Department</span>
+                <VSelect
+                  style="font-size: 13px"
+                  label="name"
+                  
+                  v-model="filter.department"
+                  :placeholder="'Department'"
+                  :reduce="(option) => option.id"
+                  multiple
+                  taggable
+                  :options="filterDept"
+                >
+                </VSelect>
+              </div>
+              <div class="col-md-12">
+                <span class="text-12 text-grey">Clinic</span>
+                <VSelect
+                  style="font-size: 13px"
+                  label="name"
+                  
+                  v-model="filter.clinic"
+                  :placeholder="'Clinic'"
+                  :reduce="(option) => option.id"
+                  multiple
+                  taggable
+                  :options="filterClinic"
+                >
+                </VSelect>
+              </div>
+            </div>
+          </b-sidebar>
         </div>
       </template>
       <template>
@@ -74,6 +132,7 @@
 
 <script>
 import { DateTime } from 'luxon'
+import { debounce } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 export default {
   mixins: [TableFunc],
@@ -92,11 +151,14 @@ export default {
       },
       filter: {
         size: 10,
-        by: '',
-        entry: '',
+        name: '',
+        department: [],
+        clinic: [],
         dateFrom: '',
         dateTo: '',
       },
+      filterDept: [],
+      filterClinic: [],
       options: [],
       placeholder: '',
       fields: [
@@ -112,26 +174,21 @@ export default {
         {
           key: 'encounter_id',
         },
-        {
-          key: 'encounter_type',
-        },
+       
         {
           key: 'clinic.Department.name',
           label: 'Department',
         },
+        
         {
           key: 'clinic.name',
           label: 'Clinic',
         },
-        {
-          key: 'encounter_datetime',
-          label: 'Date&Time',
-          formatter: (value) => {
-            return DateTime.fromISO(value).toLocaleString(
-              DateTime.DATETIME_SHORT
-            )
-          },
+
+         {
+          key: 'encounter_type',
         },
+       
         {
           key: 'provider',
           formatter: (val) => {
@@ -150,21 +207,33 @@ export default {
   },
   async mounted() {
     await this.pageChange(1, this.filter)
+    this.getDepartment()
+    this.getClinics()
   },
   watch: {
-    'filter.entry'() {
-      if(this.filter.by !== '' && this.filter.entry !== null){
+    'filter.clinic'() {
+      if (this.filter.clinic !== null) {
         this.pageChange(1, this.filter)
       }
     },
-     'filter.by'() {
-      this.filter.entry = null
+    'filter.department'() {
+      if (this.filter.department !== null) {
+        this.pageChange(1, this.filter)
+      }
     },
-     'filter.dateFrom'() {
-      this.pageChange(1, this.filter)
-    },
+   // 'filter.dateFrom'() {
+    //   this.getLabOrders(1, this.filter)
+    // },
     'filter.dateTo'() {
-      this.pageChange(1, this.filter)
+      if(this.filter.dateFrom !== ''){
+        this.pageChange(1, this.filter)
+      }
+    },
+     'filter.name': {
+      handler: debounce(function () {
+        this.pageChange(1, this.filter)
+      }, 1000),
+      deep: true,
     },
   },
   computed: {
@@ -190,14 +259,12 @@ export default {
         size: 10,
         dateFrom: '',
         dateTo: '',
-        page: 1
+        page: 1,
       }
     ) {
-
       const newFilterObject = {
         ...e,
-        [e.by]: e.entry,
-        page: page 
+        page: page,
       }
       this.calcAge(this.data.date_of_birth)
       try {
@@ -240,7 +307,7 @@ export default {
         const { results } = await this.$api.core.getDepartments({
           size: 1000,
         })
-        this.options = results
+        this.filterDept = results
       } catch (error) {
         console.log(error)
       }
@@ -250,7 +317,7 @@ export default {
         const { results } = await this.$api.core.getClinincs({
           size: 1000,
         })
-        this.options = results
+        this.filterClinic = results
       } catch (error) {
         console.log(error)
       }

@@ -92,6 +92,17 @@
             </b-dropdown>
           </template>
 
+          <template #description="{ data }">
+            <div class="">
+              <span>{{ data.item.description }}</span>
+            </div>
+          </template>
+          <template #bill_source="{ data }">
+            <div class="">
+              <span>{{ data.item.bill_source }}</span>
+            </div>
+          </template>
+
           <template #cleared_status="{ data }">
             <span
               v-if="data.item.cleared_status === 'CLEARED'"
@@ -192,7 +203,7 @@ export default {
           label: 'Bill type',
           key: 'billed_to_type',
         },
-        
+
         {
           key: 'quantity',
         },
@@ -340,10 +351,12 @@ export default {
             type: 'info',
             text: 'Bill has already been cleared',
           })
-        } else if(item.cleared_status === 'UNCLEARED' && item.is_reserved == false){
+        } else if (
+          item.cleared_status === 'UNCLEARED' &&
+          item.is_reserved == false
+        ) {
           this.unClearedBill.push(item)
-        }
-        else{
+        } else {
           this.$toast({
             type: 'info',
             text: `Reserved bill can't be invoiced`,

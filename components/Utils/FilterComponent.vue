@@ -31,6 +31,7 @@
               </b-dropdown-item>
             </b-dropdown>
           </div>
+         
           <slot name="beforeActions"></slot>
           <div
             class="
@@ -213,6 +214,10 @@ export default Vue.extend({
       default: 'list',
     },
     dropdownFilter: {
+      type: Boolean,
+      default: false,
+    },
+    filterComp: {
       type: Boolean,
       default: false,
     },

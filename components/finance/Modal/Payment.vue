@@ -1,86 +1,30 @@
 <template>
   <ModalWrapper
     submit-title="Make Payment"
-    title="Payment"
+    :stacking="false"
+    title="Confirm Payment"
+    id="makePayment"
     @ok="ok()"
     @hide="clear()"
     size="lg"
   >
-    <div class="row text-14">
-      <div class="col-md-3">
-        <span class="text-grey">UHID:</span> {{ nameData.uhid }}
-      </div>
-      <div class="col-md-6">
-        <span class="text-grey">Name:</span>
-        {{
-          nameData.salutation +
-          ' ' +
-          nameData.firstname +
-          ' ' +
-          nameData.lastname
-        }}
-      </div>
-    </div>
-    <div class="col-md-3 text-14 px-0">
-      <span class="text-grey">Gender:</span> {{ nameData.gender }}
-    </div>
-    <hr />
-    <div>
-      <TableComponent :items="goods" :paginate="false" :fields="fields">
-        <template #delete="{ data }">
-          <span class="text-danger" @click="removeItem(data.item)"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              role="img"
-              width="22"
-              height="22"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M6.758 17.243L12.001 12m5.243-5.243L12 12m0 0L6.758 6.757M12.001 12l5.243 5.243"
-              /></svg
-          ></span>
-        </template>
-        <template #is_reserved="{ data }">
-          <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded"
-            >R</span
-          >
-        </template>
-         <template #description="{ data }">
-            <div class="">
-              <span>{{ data.item.description }}</span>
-            </div>
-          </template>
-          <template #bill_source="{ data }">
-            <div class="">
-              <span>{{ data.item.bill_source }}</span>
-            </div>
-          </template>
-      </TableComponent>
-    </div>
     <div class="p-2 text-14 d-flex justify-content-between">
       <p class="mb-0 text-info border p-2">
-        Total: ₦ {{ total ? total.toLocaleString('en-US') : 0 }}
-      </p>
-      <p class="mb-0 text-warning border p-2">
-        Reserved: ₦ {{ reserved ? reserved.toLocaleString('en-US') : 0 }}
+        Total: ₦ {{ total ? numberWithCommas(total) : 0 }}
       </p>
       <p class="mb-0 text-success border p-2">
-        Amount paid: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
+        Reserved: ₦
+        {{ reserveAmount ? reserveAmount.toLocaleString('en-US') : 0 }}
+      </p>
+      <p class="mb-0 text-success border p-2">
+        Amount to pay: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
       </p>
       <p class="mb-0 text-danger border p-2">
         Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}
       </p>
     </div>
     <ValidationObserver ref="form">
-      <form v-if="payments.length > 0">
+      <form>
         <div
           v-for="(item, index) in payments"
           :key="index"
@@ -167,143 +111,95 @@ export default {
       require: false,
       default: () => ({}),
     },
-    showPayments: {
-      type: Boolean,
-      require: false,
-      default: () => false,
-    },
     nameData: {
       type: Object,
       require: false,
       default: () => ({}),
     },
-    total: {
-      type: Number,
+    invoice: {
+      type: Object,
       require: false,
-      default: () => 0,
-    },
-    totalPaid: {
-      type: Number,
-      require: false,
-      default: () => 0,
-    },
-    goods: {
-      type: Array,
-      require: false,
-      default: () => [],
-    },
-    reserved: {
-      type: Number,
-      require: false,
-      default: () => 0,
+      default: () => {},
     },
   },
   data() {
     return {
-      dataObject: {
-        amount: '',
-      },
       payAmount: 0,
       balance: 0,
+      total: 0,
       paymentMethod: [],
-      payments: [],
-      fields: [
+      payments: [
         {
-          key: 'bill_source',
-          label: 'Bill Source',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-        },
-
-        {
-          key: 'quantity',
-          label: 'Qty',
-        },
-        {
-          key: 'selling_price',
-          label: 'Unit',
-        },
-        // {
-        //   key: 'total',
-        //   label: 'Total',
-        // },
-        {
-          key: 'delete',
-          label: '',
-        },
-        {
-          key: 'is_reserved',
-          label: '',
-          sortable: false,
+          payment_method: null,
+          amount: '',
         },
       ],
     }
   },
   computed: {
-    formattedQty() {
-      // Add the commas back to the string
-      const qty = this.dataObject.amount + ''
-      console.log(qty)
-      return qty.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    reserveAmount() {
+      return this.invoice.reserved_amount
     },
   },
   watch: {
     payAmount() {
-      this.balance = this.total - (this.payAmount + this.reserved)
+      this.balance = this.total - this.payAmount
+      this.balance -= this.reserveAmount
     },
     total() {
-      this.balance = this.total - (this.payAmount + this.reserved)
+      this.balance = this.total - this.payAmount
+      this.balance -= this.reserveAmount
     },
-    showPayments() {
-      if (this.showPayments == true) {
-        this.payments.push({
-          payment_method: null,
-          amount: '',
-        })
-      } else {
-        this.payments = []
+    invoice() {
+      let charges = this.invoice.bill_lines
+      let sum = 0
+      for (let x = 0; x < charges.length; x++) {
+        let y = parseFloat(charges[x].selling_price)
+        sum += y
       }
+      this.total = sum
+      this.balance = this.invoice.balance
     },
   },
   async mounted() {
-    this.balance = this.total
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
     })
-    console.log('Im mounted', data.results)
     this.paymentMethod = data.results
   },
 
   methods: {
-    ok() {
+    async ok() {
       let calc = 0
       const arr = this.payments
-      if (arr.length > 0) {
-        arr.map((el) => {
-          calc += parseFloat(el.amount.replace(/,/g, ''))
-        })
-      } else if (arr.length === 0) {
-        calc = this.totalPaid
-      }
+      arr.map((el) => {
+        calc += parseFloat(el.amount.replace(/,/g, ''))
+      })
 
-      console.log('Payments', calc)
-      console.log('due', this.totalPaid)
+      let check = parseFloat(this.invoice.balance)
 
-      if (calc > this.total) {
+      if (calc > check) {
         this.$toast({
           type: 'info',
           text: `Payment can not be higher than total price`,
         })
-      } else if (calc === this.totalPaid) {
+      } else if (calc === check) {
+        console.log(this.invoice.balance)
         arr.map((el) => {
           el.amount.toString().replace(/,/g, '')
           el.amount = el.amount.toString().replace(/,/g, '')
         })
-
-        this.$emit('ok', arr)
-      } else if (calc < this.totalPaid) {
+        try {
+          let response = await this.$api.finance.payInvoice(
+            this.payments,
+            this.invoice.id,
+          )
+          if(response){
+            this.$bvModal.hide('makePayment')
+            this.$emit('close')
+          }
+        } catch {}
+      } else if (calc < check) {
         this.$toast({
           type: 'info',
           text: `Payment is less total amount`,
@@ -345,8 +241,6 @@ export default {
       cover.toString().replace(/,/g, '')
       cover = parseFloat(cover.replace(/,/g, ''))
 
-      // console.log(this.payAmount)
-
       this.payAmount = this.payAmount - cover
     },
 
@@ -355,11 +249,15 @@ export default {
     },
 
     clear() {
-      this.payments = []
+      this.payments = [
+        {
+          payment_method: null,
+          amount: '',
+        },
+      ]
       this.balance = 0
       this.payAmount = 0
       this.$emit('hide')
-      this.$emit('clear', false)
     },
   },
 }

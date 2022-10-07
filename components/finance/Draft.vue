@@ -15,6 +15,26 @@
       :totalRecords="totalRecords"
       @row-clicked="openModal($event)"
     >
+         <template #triple_actions="{ data }">
+        <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
+          <template #button-content>
+            <b-icon icon="three-dots-vertical"></b-icon>
+          </template>
+          <template>
+            <b-dropdown-item
+             v-if="data.item.balance !== '0.00'"
+              class="text-capitalize"
+              @click="openPaymentModal(data.item)"
+              >Make payment</b-dropdown-item
+            >
+            <b-dropdown-item
+              class="text-capitalize"
+              @click="printInvoice(data.item)"
+              >Print invoice</b-dropdown-item
+            >
+          </template>
+        </b-dropdown>
+      </template>
       <template #status="{ data }">
         <div class="text-capitalize">
           {{ data.item.status }}
@@ -27,12 +47,13 @@
         :invoice="invoice"
         @refresh="getUpdates"
       />
+      <FinanceModalPayment :invoice="invoice" />
+      <DashboardModalPrintInvoice :data="patientData" :reciept="template" />
     </div>
   </div>
 </template>
 
 <script>
-// import TableCompFun from '~/mixins/TableCompFun'
 import { DateTime } from 'luxon'
 export default {
   //   mixins: [TableCompFun],
@@ -44,6 +65,8 @@ export default {
       currentPage: 1,
       totalRecords: 0,
       invoice: {},
+      template: {},
+      patientData: {},
       filter: {
         size: 50,
         name: '',
@@ -109,7 +132,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'print',
+          key: 'triple_actions',
           label: '',
         },
       ],
@@ -136,6 +159,17 @@ export default {
     },
     getUpdates() {
       this.getInvoices(this.currentPage, this.filter)
+    },
+
+    printInvoice(e){
+      this.patientData = e.patient
+      this.template = e
+      this.$bvModal.show('printInvoice')
+    },
+
+     openPaymentModal(e){
+      this.invoice = e
+      this.$bvModal.show('makePayment')
     },
 
     async getInvoices(

@@ -89,6 +89,11 @@ export default {
           },
         },
         {
+          key: 'cashier.name',
+          label: 'Cashier',
+          sortable: true,
+        },
+        {
           key: 'payment_method.name',
           label: 'Payment method',
           sortable: true,

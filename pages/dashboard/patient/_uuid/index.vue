@@ -40,12 +40,17 @@
         <h5>Coming Soon</h5>
       </UtilsCardTab>
       <UtilsCardTab title="Finance">
-        <div class="d-flex justify-content-end pt-1">
-          <div class="text-14 text-grey text-right p-2">
+        <div class="d-flex justify-content-between align-items-center pt-1">
+          <div class="m-2">
+            <button @click="$bvModal.show('depositModal')" class="btn btn-outline-primary btn-sm">Make deposit</button>
+          </div>
+          <div class="d-flex">
+            <div class="text-14 text-grey text-right p-2">
             Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
           </div>
           <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
             | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
+          </div>
           </div>
         </div>
 

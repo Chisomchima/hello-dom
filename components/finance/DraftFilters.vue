@@ -63,7 +63,7 @@
       </div>
 
       <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end">
-        <BaseButton class="mr-1 w-50" @click="filterFunc(filters)">
+        <BaseButton class="mr-1 w-50" @click="applyFilter(filters)">
           Search
         </BaseButton>
         <BaseButton class="ml-1 w-50 btn-danger" @click="clear()">
@@ -99,19 +99,19 @@ export default {
   watch: {
     'filters.scheme': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
     'filters.scheme_type': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
     'filters.payer': {
       handler: debounce(function () {
-        this.filterFunc(this.filters)  
+        this.applyFilter(this.filters)  
       }, 500),
       deep: true,
     },
@@ -178,10 +178,10 @@ export default {
           worklist: true,
         }
         // console.log(newFilterObject)
-        this.filterFunc(newFilterObject)
+        // this.filterFunc(newFilterObject)
          this.$emit('filter', newFilterObject)
       } else {
-        this.filterFunc(newVal)
+        // this.filterFunc(newVal)
         this.$emit('filter', newVal)
       }
     },
