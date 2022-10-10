@@ -45,9 +45,10 @@
 
     <div>
       <FinanceModalInvoiceDetails
-        :orientation="true"
         :invoice="invoice"
+         :layout="true"
         @refresh="getUpdates"
+        @print="print"
       />
       <FinanceModalPayment @close="$bvModal.hide('invoiceModal')" :invoice="invoice" />
       <DashboardModalPrintInvoice :data="patientData" :reciept="template" />
@@ -230,7 +231,12 @@ export default {
       this.patientData = e.patient
       this.template = e
       this.$bvModal.show('printInvoice')
-    }
+    },
+    print(invoice){
+      this.patientData = invoice.patient
+      this.template = invoice
+      this.$bvModal.show('printInvoice')
+    },
   },
 }
 </script>

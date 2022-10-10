@@ -45,6 +45,11 @@ export default {
     return {
       cards: [
         {
+          name: 'User management',
+          icon: 'fa fa-cogs',
+          route: '/dashboard/settings/user',
+        },
+        {
           name: 'Finance',
           icon: 'fa fa-cogs',
           route: '/dashboard/settings/finance',

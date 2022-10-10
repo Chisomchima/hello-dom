@@ -5,29 +5,77 @@
         @search-input="searchPayments"
         @view-by="getSome($event)"
         :disableVisualization="true"
+        :disableSearch="true"
+        :dropdownFilter="false"
       >
-        <template #besidesViewBy>
-          <div class="d-flex justify-content-center">
-            <div class="col-md-5">
-              <span class="text-12 text-grey">Date from:</span>
-              <input
-                type="date"
-                class="form-control"
-                :max="maxDate"
-                v-model="filter.dateFrom"
-              />
-            </div>
-            <div class="col-md-5">
-              <span class="text-12 text-grey">Date to:</span>
-              <input
-                type="date"
-                class="form-control"
-                :min="minDate"
-                v-model="filter.dateTo"
-              />
-            </div>
+        <template #beforeActions>
+          <div class="mr-2">
+            <button
+              v-b-toggle.sidebar-backdrop4
+              class="btn btn-sm btn-outline-secondary"
+            >
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z"
+                  />
+                </svg>
+              </span>
+            </button>
+            <b-sidebar
+              id="sidebar-backdrop4"
+              title="Sidebar with backdrop"
+              :backdrop-variant="'dark'"
+              backdrop
+              shadow
+              right
+            >
+              <div class="p-4">
+                <div class="">
+                  <!-- <p class="mb-0 text-20">Date range</p> -->
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Search</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search by name"
+                      v-model="filter.name"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <!-- <p class="mb-0 text-20">Date range</p> -->
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Date from:</span>
+                    <input
+                      type="date"
+                      class="form-control"
+                      :max="maxDate"
+                      v-model="filter.dateFrom"
+                    />
+                  </div>
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Date to:</span>
+                    <input
+                      type="date"
+                      class="form-control"
+                      :min="minDate"
+                      v-model="filter.dateTo"
+                    />
+                  </div>
+                </div>
+              </div>
+            </b-sidebar>
           </div>
         </template>
+
         <TableComponent
           @page-changed="getInvoices($event, filter)"
           @row-clicked="viewInvoice($event)"
@@ -63,7 +111,13 @@
       </UtilsFilterComponent>
     </div>
     <div v-if="modalControl">
-      <DashboardModalInvoiceDetails :nameData="data" :invoice="details" @refresh="getSome" />
+      <DashboardModalInvoiceDetails
+        @print="print"
+        :layout="false"
+        :nameData="data"
+        :invoice="details"
+        @refresh="getSome"
+      />
     </div>
 
     <DashboardModalPayOutstanding :invoice="details" />
@@ -74,6 +128,7 @@
 
 <script>
 import TableCompFun from '~/mixins/TableCompFun'
+import { debounce } from 'lodash'
 import { DateTime } from 'luxon'
 export default {
   mixins: [TableCompFun],
@@ -86,8 +141,8 @@ export default {
     refresh: {
       type: Boolean,
       require: false,
-      default: () => false
-    }
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -196,14 +251,19 @@ export default {
     this.getInvoices()
   },
   watch: {
-    'filter.dateFrom'() {
-      this.getInvoices(this.getInvoices, this.filter)
+     'filter.dateTo'() {
+      if(this.filter.dateFrom !== ''){
+        this.getInvoices(1, this.filter)
+      }
     },
-    'filter.dateTo'() {
-      this.getInvoices(this.getInvoices, this.filter)
+    'filter.name': {
+      handler: debounce(function () {
+        this.getInvoices(1, this.filter)
+      }, 1000),
+      deep: true,
     },
-    refresh(){
-       this.getInvoices(this.getInvoices, this.filter)
+    refresh() {
+      this.getInvoices(this.getInvoices, this.filter)
     },
     'reciept.bill_lines'() {
       let calc = 0
@@ -230,17 +290,17 @@ export default {
         return true
       }
     },
-    maxDate() {
+   maxDate() {
       let today = new Date()
       today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd T')
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
       console.log(x)
       return x
     },
     minDate() {
       let today = new Date()
       today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd T')
+      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
       console.log(x)
       return x
     },
@@ -248,7 +308,7 @@ export default {
   methods: {
     printInvoice(e) {
       this.reciept = e
-      console.log(e)
+
       this.$bvModal.show('printInvoice')
     },
     viewInvoice(e) {
@@ -257,7 +317,6 @@ export default {
       this.$bvModal.show('invoiceModal')
     },
     searchPayments(e) {
-      console.log(e)
       this.filter.name = e
       this.getInvoices(this.currentPage, this.filter)
     },
@@ -275,6 +334,7 @@ export default {
         dateTo: '',
       }
     ) {
+      this.busy = true
       this.filter = e
 
       this.currentPage = page
@@ -295,6 +355,10 @@ export default {
     },
     refreshMe() {
       this.getInvoices(this.currentPage)
+    },
+    print(invoice) {
+      this.reciept = invoice
+      this.$bvModal.show('printInvoice')
     },
   },
 }

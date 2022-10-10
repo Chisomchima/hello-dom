@@ -19,8 +19,10 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Type" :rules="['required']">
                 <v-select
-                  :options="['SELF', 'INSURANCE']"
+                  :options="categories"
+                  label="category"
                   v-model="scheme.type"
+                   :reduce="(option) => option.category"
                   class="style-chooser"
                 ></v-select>
               </ValidationProviderWrapper>
@@ -61,6 +63,7 @@ export default {
     return {
         payers: [],
         price_list: [],
+        categories: [],
       scheme: {
         name: '',
         type: '',
@@ -103,7 +106,8 @@ export default {
     this.payers = payers.results
     let pricelist = await this.$api.finance_settings.getPriceList({size: 10000})
     this.price_list = pricelist.results
-    console.log(this.price_list)
+    let categories = await this.$api.finance_settings.getPayerSchemesbyCategory({size: 10000})
+    this.categories = categories
   },
 
   methods: {
@@ -117,6 +121,7 @@ export default {
       }
     },
     async addScheme() {
+      delete this.scheme.id
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.addScheme(this.scheme)

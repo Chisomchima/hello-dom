@@ -7,29 +7,109 @@
         @dropdown="getByPaymentOptions"
         :searchPlaceholder="'Search by amount'"
         :disableVisualization="true"
-        :dropdownFilter="true"
-        :dropDownOptions="paymentOptions"
+        :disableSearch="true"
       >
-        <template #besidesViewBy>
-          <div class="d-flex justify-content-center">
-            <div class="col-md-6">
-              <span class="text-12 text-grey">Date from:</span>
-              <input
-                type="date"
-                class="form-control"
-                :max="maxDate"
-                v-model="filter.dateFrom"
-              />
-            </div>
-            <div class="col-md-6">
-              <span class="text-12 text-grey">Date to:</span>
-              <input
-                type="date"
-                class="form-control"
-                :min="minDate"
-                v-model="filter.dateTo"
-              />
-            </div>
+        <template #beforeActions>
+          <div class="mr-2">
+            <button
+              v-b-toggle.sidebar-backdrop4
+              class="btn btn-sm btn-outline-secondary"
+            >
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z"
+                  />
+                </svg>
+              </span>
+            </button>
+            <b-sidebar
+              id="sidebar-backdrop4"
+              title="Sidebar with backdrop"
+              :backdrop-variant="'dark'"
+              backdrop
+              shadow
+              right
+            >
+              <div class="p-4">
+                <div class="col-md-12">
+                  <p class="text-14 mb-1 text-grey">Payment methods</p>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mb-2 text-14">
+                  <p
+                    :class="
+                      option.selected
+                        ? 'text-info border border-info'
+                        : 'text-secondary border'
+                    "
+                    @click="
+                      getByPaymentOptions(option.id, option.selected, index)
+                    "
+                    class="point mb-0 p-2 mr-2 rounded-sm"
+                    v-for="(option, index) in paymentOptions"
+                    :key="index"
+                  >
+                    {{ option.name }}
+                  </p>
+                </div>
+                <div class="">
+                  <!-- <p class="mb-0 text-20">Date range</p> -->
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Search</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search"
+                      v-model="filter.amount"
+                    />
+                  </div>
+                </div>
+                <div class="">
+                  <!-- <p class="mb-0 text-20">Date range</p> -->
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Date from:</span>
+                    <input
+                      type="date"
+                      class="form-control"
+                      :max="maxDate"
+                      v-model="filter.dateFrom"
+                    />
+                  </div>
+                  <div class="col-md-12">
+                    <span class="text-12 text-grey">Date to:</span>
+                    <input
+                      type="date"
+                      class="form-control"
+                      :min="minDate"
+                      v-model="filter.dateTo"
+                    />
+                  </div>
+                </div>
+
+                <!-- <div class="col-md-12">
+                  <span class="text-12 text-grey">Service centers</span>
+                  <VSelect
+                    style="font-size: 13px"
+                    label="name"
+                    class=""
+                    v-model="filter.service_center"
+                    :placeholder="'Service centers'"
+                    :reduce="(option) => option.id"
+                    multiple
+                    taggable
+                    :options="filterSerice"
+                  >
+                  </VSelect>
+                </div> -->
+              </div>
+            </b-sidebar>
           </div>
         </template>
         <TableComponent
@@ -69,6 +149,7 @@
 
 <script>
 import TableCompFun from '~/mixins/TableCompFun'
+import { debounce } from 'lodash'
 import { DateTime } from 'luxon'
 export default {
   mixins: [TableCompFun],
@@ -119,7 +200,7 @@ export default {
         dateFrom: '',
         dateTo: '',
         payment_method: '',
-        patient: this.data.id
+        patient: this.data.id,
       },
     }
   },
@@ -128,11 +209,13 @@ export default {
     let response = await this.$api.finance.paymentMethods({
       size: 1000,
     })
-    let arr = []
-    response.results.forEach((el) => {
-      arr.push(el.name)
-    })
-    this.paymentOptions = arr
+
+    let arr = response.results
+    const formatted = arr.map((el) => ({
+      ...el,
+      selected: false,
+    }))
+    this.paymentOptions = formatted
   },
   props: {
     data: {
@@ -143,27 +226,31 @@ export default {
     refresh: {
       type: Boolean,
       require: false,
-      default: () => false
-    }
+      default: () => false,
+    },
   },
   watch: {
-    'filter.dateFrom'() {
-      this.getPayments(this.currentPage, this.filter)
-    },
     'filter.dateTo'() {
+      if (this.filter.dateFrom !== '') {
+        this.getPayments(1, this.filter)
+      }
+    },
+    'filter.amount': {
+      handler: debounce(function () {
+        this.getPayments(1, this.filter)
+      }, 1000),
+      deep: true,
+    },
+    refresh() {
       this.getPayments(this.currentPage, this.filter)
     },
-    refresh(){
-      this.getPayments(this.currentPage, this.filter)
-    }
   },
   computed: {
     trigger() {
       console.log(this.items)
       if (this.items.length != 0) {
         return true
-      }
-      else return
+      } else return
     },
     maxDate() {
       let today = new Date()
@@ -186,7 +273,12 @@ export default {
       this.$bvModal.show('printPaymentSlip')
       this.paymentData = e
     },
-    getByPaymentOptions(e) {
+    getByPaymentOptions(e, selected, index) {
+      let arr = this.paymentOptions
+      for (let x = 0; x < arr.length; x++) {
+        this.paymentOptions[x].selected = false
+      }
+      this.paymentOptions[index].selected = true
       this.filter.payment_method = e
       this.getPayments(this.currentPage, this.filter)
     },
@@ -200,15 +292,21 @@ export default {
     },
     async getPayments(
       page = 1,
-      e = { patient: this.data.id, size: 10, amount: '', dateFrom: '', dateTo: '', payment_method: '' }
+      e = {
+        patient: this.data.id,
+        size: 10,
+        amount: '',
+        dateFrom: '',
+        dateTo: '',
+        payment_method: '',
+      }
     ) {
       this.busy = true
       this.filter = e
-      
+
       this.currentPage = page
       try {
-        let response = await this.$api.patient.getPayments(
-          {
+        let response = await this.$api.patient.getPayments({
           ...e,
           page: page,
         })

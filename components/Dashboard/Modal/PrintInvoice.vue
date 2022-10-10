@@ -2,6 +2,7 @@
   <ModalWrapper
     submit-title="Yes"
     cancelText="No"
+    :stacking="false"
     title="Print invoice"
     id="printInvoice"
     @ok="ok()"

@@ -24,7 +24,7 @@
         <span class="text-grey">UHID:</span> {{ nameData.uhid }}
       </div>
 
-      <div class="col-md-6">
+      <div class="col-md-3">
         <span class="text-grey">Name:</span>
         {{
           nameData.salutation +
@@ -34,7 +34,10 @@
           nameData.lastname
         }}
       </div>
-      <div class="col-md-3 d-flex align-items-center justify-content-end">
+       <div v-if="invoice.patient" class="col-md-2 text-14">
+          <span class="text-grey">Gender:</span> {{ nameData.gender }}
+        </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end">
         <div
           v-if="invoice.status ? true : false"
           class="d-flex justify-content-end align-items-center"
@@ -60,30 +63,34 @@
       </div>
     </div>
 
-    <div class="col-md-3 text-14 px-0">
-      <span class="text-grey">Gender:</span> {{ nameData.gender }}
-    </div>
+    <div class="row align-items-center">
+       
 
-    <div class="d-flex align-items-center">
-      <div class="class-details-data_label">Scheme:</div>
-      <ul
-        v-if="nameData.payment_scheme.length > 0"
-        class="d-flex w-100 px-0 mb-0"
-      >
-        <li
-          style="list-style: none"
-          v-for="(item, index) in nameData.payment_scheme"
-          :key="index"
-          class="px-2 text-14"
-        >
-          <span class="class-details-data_value text-truncate">
-            | {{ item.payer_scheme.name }}
-          </span>
-          <span> ({{ item.payer_scheme.type }}) </span>
-        </li>
-      </ul>
-      <div class="text-14 ml-2" v-else>Nil</div>
-    </div>
+        <div class="col-md-3 d-flex align-items-center text-14">
+          <span class="class-details-data_label mr-2">Scheme:</span>
+          <span class="text-14 text-truncate">{{
+            invoice.payer_scheme ? invoice.payer_scheme : 'nil'
+          }}</span>
+        </div>
+        <div class="col-md-3 align-items-center">
+          <span class="class-details-data_label mr-2">Scheme type:</span>
+          <span class="text-14 text-truncate">{{
+            invoice.scheme_type ? invoice.scheme_type : 'nil'
+          }}</span>
+        </div>
+        <div class="col-md-3 align-items-center">
+          <span class="class-details-data_label mr-2">Invoice ID:</span>
+          <span class="text-14">{{
+            invoice.inv_id ? invoice.inv_id : 'nil'
+          }}</span>
+        </div>
+        <div class="col-md-5 align-items-center">
+          <span class="class-details-data_label mr-2">Invoice Date:</span>
+          <span class="text-14 text-truncate">{{
+            invoice.confirmed_at ? dateFormatter(invoice.confirmed_at) : 'nil'
+          }}</span>
+        </div>
+      </div>
     <hr />
 
     <div
@@ -92,12 +99,21 @@
     >
       <p class="mb-0">Total: {{ numberWithCommas(total) }}</p>
       <p class="mb-0">
+          Reserved:
+          {{
+            numberWithCommas(invoice.reserved_amount)
+              ? numberWithCommas(invoice.reserved_amount)
+              : '0.00'
+          }}
+        </p>
+      <p class="mb-0">
         Paid amount: {{ numberWithCommas(invoice.paid_amount) }}
       </p>
       <p class="mb-0">Balance: {{ numberWithCommas(invoice.balance) }}</p>
       <div class="d-flex align-items-center">
         <div class="mr-0">
           <svg
+          @click="sendSignal"
             class="text-success mx-2 point"
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -122,7 +138,7 @@
       </div>
     </div>
 
-    <div class="p-2 d-flex justify-content-end">
+    <div  v-if="layout" class="p-2 d-flex justify-content-end">
       <button v-if="!editMode" @click="editBill" class="btn btn-primary btn-sm">
         Edit
       </button>
@@ -285,6 +301,11 @@ export default {
       type: Object,
       require: false,
       default: () => ({}),
+    },
+     layout: {
+      type: Boolean,
+      require: false,
+      default: () => false,
     },
   },
   data() {
@@ -469,6 +490,13 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+
+     dateFormatter(x) {
+      return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
+    },
+     sendSignal() {
+      this.$emit('print', this.invoice)
     },
 
     handleQtyInput(newValue, index) {

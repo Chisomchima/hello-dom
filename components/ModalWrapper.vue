@@ -9,6 +9,9 @@
     :no-stacking="stacking"
     :scrollable="!notScrollable"
     :hide-footer="noFooter"
+    :no-close-on-esc="persistent"
+    :no-close-on-backdrop="persistent"
+    :hide-header-close="persistent"
     ok-title="Save"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"
@@ -18,7 +21,12 @@
     <template #modal-footer="{ cancel }">
       <!-- Emulate built in modal footer ok and cancel button actions -->
       <slot name="footer" :cancel="cancel">
-        <div :class="arrangement ? `justify-content-between` : `justify-content-center`" class="d-flex w-100  px-5">
+        <div
+          :class="
+            arrangement ? `justify-content-between` : `justify-content-center`
+          "
+          class="d-flex w-100 px-5"
+        >
           <div>
             <b-button
               size="sm"
@@ -26,7 +34,7 @@
               class="px-5 text-secondary mr-2"
               @click="cancel()"
             >
-              {{cancelText}}
+              {{ cancelText }}
             </b-button>
           </div>
           <div v-if="arrangement">
@@ -60,6 +68,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    persistent: {
+      type: Boolean,
+      default: false,
+    },
     size: {
       type: String,
       default: 'md',
@@ -86,12 +98,12 @@ export default {
     },
     arrangement: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    cancelText:{
+    cancelText: {
       type: String,
-      default: 'Cancel'
-    }
+      default: 'Cancel',
+    },
   },
   methods: {
     cancel() {

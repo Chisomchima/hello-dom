@@ -5,7 +5,7 @@
     :stacking="false"
     @ok="ok()"
     @hide="closeModal"
-    size="lg"
+    size="xl"
   >
     <!-- <template #modal-header="{ close }">
       <div>
@@ -27,7 +27,7 @@
           }}</span>
         </div>
 
-        <div v-if="invoice.patient" class="col-md-4">
+        <div v-if="invoice.patient" class="col-md-3">
           <span class="text-grey">Name:</span>
           <span class="hov point" @click="goToProfile">{{
             invoice.patient.salutation
@@ -39,15 +39,19 @@
               : invoice.patient.firstname + ' ' + invoice.patient.lastname
           }}</span>
         </div>
+        <div v-if="invoice.patient" class="col-md-2 text-14">
+          <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
+        </div>
         <div
-          class="d-flex align-items-center justify-content-end col-md-5 pl-4"
+          class="d-flex align-items-center justify-content-end col-md-4 pl-4"
         >
           <div
             v-if="invoice.status ? true : false"
             class="d-flex justify-content-end"
           >
-            <div class="mx-2" v-if="invoice.status === 'DRAFT'">
+            <div class="mx-2">
               <b-dropdown
+                v-if="editMode && invoice.status === 'DRAFT'"
                 @click="saveAndConfirm"
                 size="sm"
                 :lazy="true"
@@ -60,9 +64,16 @@
                   <span class="text-primary">Save as draft</span>
                 </b-dropdown-item>
               </b-dropdown>
+              <button
+                v-if="!editMode && invoice.status === 'DRAFT'"
+                @click="confirmInvoice"
+                class="btn btn-primary btn-sm"
+              >
+                Confirm
+              </button>
             </div>
           </div>
-          <div class="p-2 d-flex justify-content-end">
+          <div v-if="layout" class="p-2 d-flex justify-content-end">
             <button
               v-if="!editMode && invoice.status === 'DRAFT'"
               @click="editBill"
@@ -82,10 +93,6 @@
       </div>
 
       <div class="row align-items-center">
-        <div v-if="invoice.patient" class="col-md-2 text-14">
-          <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
-        </div>
-
         <div class="col-md-3 d-flex align-items-center text-14">
           <span class="class-details-data_label mr-2">Scheme:</span>
           <span class="text-14 text-truncate">{{
@@ -105,7 +112,7 @@
           }}</span>
         </div>
         <div class="col-md-5 align-items-center">
-          <span class="class-details-data_label mr-2">Confirmed Date:</span>
+          <span class="class-details-data_label mr-2">Invoice Date:</span>
           <span class="text-14 text-truncate">{{
             invoice.confirmed_at ? dateFormatter(invoice.confirmed_at) : 'nil'
           }}</span>
@@ -134,8 +141,9 @@
         </p>
         <p class="mb-0">Balance: {{ numberWithCommas(invoice.balance) }}</p>
         <div class="d-flex align-items-center">
-          <div v-if="invoice.status === 'PAID' && !editMode" class="mr-0">
+          <div v-if="!editMode" class="mr-0">
             <svg
+              @click="sendSignal"
               class="text-success mx-2 point"
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -390,6 +398,11 @@ export default {
       require: false,
       default: () => false,
     },
+    layout: {
+      type: Boolean,
+      require: false,
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -513,6 +526,7 @@ export default {
           type: 'success',
           text: `Changes saved`,
         })
+        this.editMode = false
         this.$emit('refresh')
       } catch (error) {
         console.log(error)
@@ -562,10 +576,8 @@ export default {
         this.bills,
         this.invoice.id
       )
-      // if (response) {
-      //   this.$bvModal.hide('invoiceModal')
-      // }
-      if (response.balance === '0.00') {
+    
+      if (this.invoice.balance === '0.00') {
         let response = await this.$api.finance.confirmInvoice(this.invoice.id)
         if (response) {
           this.$bvModal.hide('invoiceModal')
@@ -575,30 +587,29 @@ export default {
           text: `Confirmed`,
         })
         this.$emit('refresh')
-      }
-      else{
+      } else {
         this.makePayment()
       }
     },
 
-    // async confirmInvoice() {
-    //   const result = await this.showConfirmMessageBox('Confirm invoice ?')
-    //   try {
-    //     if (result) {
-    //       let response = await this.$api.finance.confirmInvoice(this.invoice.id)
-    //       if (response) {
-    //         this.$bvModal.hide('invoiceModal')
-    //       }
-    //       this.$toast({
-    //         type: 'success',
-    //         text: `Confirmed`,
-    //       })
-    //       this.$emit('refresh')
-    //     }
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
+    async confirmInvoice() {
+      const result = await this.showConfirmMessageBox('Confirm invoice ?')
+      try {
+        if (result) {
+          let response = await this.$api.finance.confirmInvoice(this.invoice.id)
+          if (response) {
+            this.$bvModal.hide('invoiceModal')
+          }
+          this.$toast({
+            type: 'success',
+            text: `Confirmed`,
+          })
+          this.$emit('refresh')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
 
     handleQtyInput(newValue, index) {
       if (newValue !== '') {
@@ -629,6 +640,9 @@ export default {
     },
     close() {
       this.$bvModal.hide('invoiceModal')
+    },
+    sendSignal() {
+      this.$emit('print', this.invoice)
     },
     goToProfile() {
       if (this.invoice.patient) {

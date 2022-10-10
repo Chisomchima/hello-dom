@@ -116,6 +116,19 @@ export default {
           icon: 'fas fa-cog',
           child: [
             {
+              title: 'User Management',
+              child: [
+                {
+                  href: '/dashboard/settings/user/?tab=0',
+                  title: 'Users',
+                },
+                // {
+                //   href: '/dashboard/settings/user/?tab=1',
+                //   title: 'Clinic',
+                // },
+              ],
+            },
+            {
               title: 'Finance Settings',
               child: [
                 {
@@ -151,6 +164,19 @@ export default {
                 {
                   href: '/dashboard/settings/imaging/service-config',
                   title: 'Imaging Configuration',
+                },
+              ],
+            },
+            {
+              title: 'OPD Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/opd/?tab=0',
+                  title: 'Department',
+                },
+                {
+                  href: '/dashboard/settings/opd/?tab=1',
+                  title: 'Clinic',
                 },
               ],
             },

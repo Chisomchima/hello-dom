@@ -13,7 +13,7 @@
         >
       </template>
       <template #beforeActions>
-           <div>
+        <div>
           <button
             v-b-toggle.sidebar-backdrop1
             class="btn btn-sm btn-outline-secondary"
@@ -81,7 +81,6 @@
                 <VSelect
                   style="font-size: 13px"
                   label="name"
-                  
                   v-model="filter.department"
                   :placeholder="'Department'"
                   :reduce="(option) => option.id"
@@ -96,7 +95,6 @@
                 <VSelect
                   style="font-size: 13px"
                   label="name"
-                  
                   v-model="filter.clinic"
                   :placeholder="'Clinic'"
                   :reduce="(option) => option.id"
@@ -157,6 +155,10 @@ export default {
         dateFrom: '',
         dateTo: '',
       },
+      clinicFilter: {
+        size: 1000,
+        department: []
+      },
       filterDept: [],
       filterClinic: [],
       options: [],
@@ -174,21 +176,21 @@ export default {
         {
           key: 'encounter_id',
         },
-       
+
         {
           key: 'clinic.Department.name',
           label: 'Department',
         },
-        
+
         {
           key: 'clinic.name',
           label: 'Clinic',
         },
 
-         {
+        {
           key: 'encounter_type',
         },
-       
+
         {
           key: 'provider',
           formatter: (val) => {
@@ -219,17 +221,19 @@ export default {
     'filter.department'() {
       if (this.filter.department !== null) {
         this.pageChange(1, this.filter)
+        this.clinicFilter.department = this.filter.department
+         this.getClinics()
       }
     },
-   // 'filter.dateFrom'() {
+    // 'filter.dateFrom'() {
     //   this.getLabOrders(1, this.filter)
     // },
     'filter.dateTo'() {
-      if(this.filter.dateFrom !== ''){
+      if (this.filter.dateFrom !== '') {
         this.pageChange(1, this.filter)
       }
     },
-     'filter.name': {
+    'filter.name': {
       handler: debounce(function () {
         this.pageChange(1, this.filter)
       }, 1000),
@@ -314,9 +318,7 @@ export default {
     },
     async getClinics() {
       try {
-        const { results } = await this.$api.core.getClinincs({
-          size: 1000,
-        })
+        const { results } = await this.$api.core.getClinincs(this.clinicFilter)
         this.filterClinic = results
       } catch (error) {
         console.log(error)

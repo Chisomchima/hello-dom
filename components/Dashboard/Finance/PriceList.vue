@@ -22,8 +22,13 @@
           :fields="fields"
           :showBaseCount="trigger"
           :currentPage="currentPage"
-           :totalRecords="totalRecords"
+          :totalRecords="totalRecords"
         >
+          <template #description="{ data }">
+            <div class="text-capitalize">
+              {{ data.item.description }}
+            </div>
+          </template>
           <template #edit="{ data }">
             <button @click.prevent="edit(data.item)" class="text-start btn">
               <svg
@@ -152,7 +157,7 @@ export default {
 
         this.items = response.results
         this.pages = response.total_pages
-         this.totalRecords = response.total_count
+        this.totalRecords = response.total_count
         this.currentPage = response.current_page
         this.busy = false
       } catch {

@@ -8,19 +8,25 @@
     @hide="clear()"
     size="lg"
   >
-    <div class="p-2  text-14 d-flex justify-content-between">
+    <div class="p-2 text-14 d-flex justify-content-between">
       <p class="mb-0 text-info border p-2">
-        Total: ₦ {{ total ? total.toLocaleString('en-US') : 0 }}
+        Total: ₦ {{ total ? numberWithCommas(total) : 0 }}
+      </p>
+      <p class="mb-0 text-success border p-2">
+        Reserved: ₦
+        {{ reserveAmount ? reserveAmount.toLocaleString('en-US') : 0 }}
       </p>
       <p class="mb-0 text-success border p-2">
         Amount to pay: ₦ {{ payAmount ? payAmount.toLocaleString('en-US') : 0 }}
       </p>
-      <p class="mb-0 text-danger border p-2">Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}</p>
+      <p class="mb-0 text-danger border p-2">
+        Balance: ₦ {{ balance ? balance.toLocaleString('en-US') : 0 }}
+      </p>
     </div>
     <ValidationObserver ref="form">
       <form>
         <div
-          v-for="(item, index) in invoices"
+          v-for="(item, index) in payments"
           :key="index"
           class="d-flex align-items-end"
         >
@@ -125,9 +131,9 @@ export default {
     return {
       payAmount: 0,
       balance: 0,
-      total: null,
+      total: 0,
       paymentMethod: [],
-      invoices: [
+      payments: [
         {
           payment_method: null,
           amount: '',
@@ -136,21 +142,31 @@ export default {
     }
   },
   computed: {
-    
+     reserveAmount() {
+      return this.invoice.reserved_amount
+    },
   },
   watch: {
     payAmount(){
       this.balance = this.total - this.payAmount
+      this.balance -= this.reserveAmount
     },
     total(){
       this.balance = this.total - this.payAmount
-    }
+      this.balance -= this.reserveAmount
+    },
+    invoice() {
+      let charges = this.invoice.bill_lines
+      let sum = 0
+      for (let x = 0; x < charges.length; x++) {
+        let y = parseFloat(charges[x].selling_price)
+        sum += y
+      }
+      this.total = sum
+      this.balance = this.invoice.balance
+    },
   },
   async mounted() {
-    if(this.invoice){
-      console.log(this.invoice)
-        this.balance = this.invoice.balance
-    }
     const data = await this.$api.finance_settings.getPaymentMethods({
       size: 1000,
     })
@@ -160,29 +176,48 @@ export default {
   methods: {
     async ok() {
       let calc = 0
-      const arr = this.invoices
+      const arr = this.payments
       console.log(arr)
       arr.map((el) => {
         calc += parseFloat(el.amount.replace(/,/g , ''))
       })
 
-      if (calc > this.invoices.balance) {
-        this.$toast({
-          type: 'info',
-          text: `Payment can not be higher than total price`,
-        })
-      } else if(calc === this.invoices.balance) {
+      let check = parseFloat(this.invoice.balance)
+
+      if (calc > check) {
         arr.map((el) => {
           el.amount.toString().replace(/,/g , '')
           el.amount = el.amount.toString().replace(/,/g , '')
       })
 
-          this.$emit('ok', arr)
-          // let response = await this.$api.patient.payOutstanding(
-          //   this.invoice.id, 
-          // )
+          try {
+          let response = await this.$api.finance.payInvoice(
+            this.payments,
+            this.invoice.id,
+          )
+          if(response){
+            this.$bvModal.hide('makePayment')
+            this.$emit('close')
+          }
+        } catch {}
+      } else if(calc === check) {
+        arr.map((el) => {
+          el.amount.toString().replace(/,/g , '')
+          el.amount = el.amount.toString().replace(/,/g , '')
+      })
+
+          try {
+          let response = await this.$api.finance.payInvoice(
+            this.payments,
+            this.invoice.id,
+          )
+          if(response){
+            this.$bvModal.hide('makePayment')
+            this.$emit('close')
+          }
+        } catch {}
       }
-      else if(calc < this.invoices.balance){
+      else if(calc < check){
          this.$toast({
           type: 'info',
           text: `Payment is less total amount`,
@@ -195,15 +230,15 @@ export default {
 
     handleQtyInput(newValue, index) {
       if(newValue !== ''){
-        this.invoices[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
+        this.payments[index].amount = this.numberWithCommas(parseFloat(newValue.replace(/,/g , '')))
       }
       else{
-        this.invoices[index].amount = ''
+        this.payments[index].amount = ''
       }
 
       let calc = 0
-      for(let x = 0; x < this.invoices.length; x++){
-      let cover = this.invoices[x].amount
+      for(let x = 0; x < this.payments.length; x++){
+      let cover = this.payments[x].amount
       cover.toString().replace(/\D/g, '')
       cover = parseFloat(cover.replace(/,/g , ''))
       calc += cover
@@ -212,13 +247,13 @@ export default {
       
     },
     addPaymentMethod() {
-      this.invoices.push({
+      this.payments.push({
         payment_method: null,
         amount: '',
       })
     },
     removePaymentMethod(e, item) {
-      this.invoices.splice(e, 1)
+      this.payments.splice(e, 1)
       console.log(item)
       let cover = item.amount
       cover.toString().replace(/,/g , '')
@@ -232,7 +267,7 @@ export default {
     },
 
     clear() {
-      this.invoices = [
+      this.payments = [
         {
           payment_method: null,
           amount: '',

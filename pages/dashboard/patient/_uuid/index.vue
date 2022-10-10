@@ -2,7 +2,9 @@
   <div>
     <BackwardNavigation />
     <UtilsHeaderCardWithAvatar
-      :title="`${data.salutation ? data.salutation : ''} ${data.firstname ? data.firstname : ''} ${data.lastname ? data.lastname : ''}`"
+      :title="`${data.salutation ? data.salutation : ''} ${
+        data.firstname ? data.firstname : ''
+      } ${data.lastname ? data.lastname : ''}`"
       :data="data"
       :enable-action="true"
       :display-key="[
@@ -28,9 +30,7 @@
       </UtilsCardTab>
       <UtilsCardTab title="Lab Order">
         <keep-alive>
-          <div class="card-body">
-            <EncountersLabOrders :patientData="data" />
-          </div>
+          <EncountersLabOrders :patientData="data" />
         </keep-alive>
       </UtilsCardTab>
       <UtilsCardTab title="Imaging">
@@ -42,43 +42,52 @@
       <UtilsCardTab title="Finance">
         <div class="d-flex justify-content-between align-items-center pt-1">
           <div class="m-2">
-            <button @click="$bvModal.show('depositModal')" class="btn btn-outline-primary btn-sm">Make deposit</button>
+            <button
+              @click="$bvModal.show('depositModal')"
+              class="btn btn-outline-primary btn-sm"
+            >
+              Make deposit
+            </button>
           </div>
           <div class="d-flex">
             <div class="text-14 text-grey text-right p-2">
-            Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
-          </div>
-          <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
-            | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
-          </div>
+              Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
+            </div>
+            <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
+              | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
+            </div>
           </div>
         </div>
 
         <TabView class="tabview-custom">
           <TabPanel class="dark-panel">
             <template #header>
-            <span class="ml-2">Billing</span>
-          </template>
-            <DashboardPatientBilling @reload_tabs="sendSignal" :data="data"/> 
+              <span class="ml-2">Billing</span>
+            </template>
+            <DashboardPatientBilling @reload_tabs="sendSignal" :data="data" />
           </TabPanel>
-          <TabPanel class="dark-panel" >
-          <template #header>
-            <span class="ml-2">Payments</span>
-          </template>
-           <DashboardPatientPayment :refresh="refresh" :data="data"/>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Payments</span>
+            </template>
+            <DashboardPatientPayment :refresh="refresh" :data="data" />
           </TabPanel>
-          <TabPanel class="dark-panel" >
-          <template #header>
-            <span class="ml-2">Invoices</span>
-          </template>
-           <DashboardPatientInvoice :refresh="refresh" :data="data"/>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Invoices</span>
+            </template>
+            <DashboardPatientInvoice :refresh="refresh" :data="data" />
           </TabPanel>
         </TabView>
       </UtilsCardTab>
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
-    <DashboardModalPatientDepositModal @payload="printDepositSlip($event)" @refresh="refresh" :data="data" />
+    <DashboardModalPatientDepositModal
+      @payload="printDepositSlip($event)"
+      @refresh="refresh"
+      :data="data"
+    />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
     <DashboardModalUploadPicture />
   </div>
@@ -101,16 +110,20 @@ export default {
       tabs: true,
       data: null,
       refresh: false,
-      template: {}
+      template: {},
     }
   },
   computed: {
-    depositBalance(){
-      return this.data.deposit.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    depositBalance() {
+      return this.data.deposit
+        .toString()
+        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
     },
-    reserveBalance(){
-      return this.data.reserve.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    }
+    reserveBalance() {
+      return this.data.reserve
+        .toString()
+        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+    },
   },
   methods: {
     editRoute() {
@@ -121,18 +134,18 @@ export default {
         },
       })
     },
-    uploadAvatar(){
+    uploadAvatar() {
       console.log('avatar')
       this.$bvModal.show('uploadpicture')
     },
-    sendSignal(){
+    sendSignal() {
       this.refresh = true
     },
-    printDepositSlip(e){
+    printDepositSlip(e) {
       this.template = e
       // this.$bvModal.show('printDepositSlip')
     },
-    refresh(){
+    refresh() {
       this.$nuxt.refresh()
     },
     checkPayersDetails() {
@@ -144,38 +157,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  ul > li {
+ul > li {
   padding: 5px;
 }
 </style>
 
 <style lang="scss">
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    background: #ffffff;
-    border-color: $COLOR_THREE !important;
-    color: $COLOR_THREE;
-    font-size: 14px;
+  background: #ffffff;
+  border-color: $COLOR_THREE !important;
+  color: $COLOR_THREE;
+  font-size: 14px;
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-    border: solid #dee2e6;
-    border-width: 0 0 2px 0;
-    border-color: transparent transparent #dee2e6 transparent;
-    background: #ffffff;
-    font-size: 14px;
-    color: #6c757d;
-    padding: 1rem;
-    font-weight: 600;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
-    transition: box-shadow 0.2s;
-    margin: 0 0 -2px 0;
+  border: solid #dee2e6;
+  border-width: 0 0 2px 0;
+  border-color: transparent transparent #dee2e6 transparent;
+  background: #ffffff;
+  font-size: 14px;
+  color: #6c757d;
+  padding: 1rem;
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  transition: box-shadow 0.2s;
+  margin: 0 0 -2px 0;
 }
 
 .p-tabview .p-tabview-nav {
-    background: #ffffff;
-    border: 1px solid #dee2e6;
-    /* border-width: 0 0 2px 0; */
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  /* border-width: 0 0 2px 0; */
 }
 
 li {

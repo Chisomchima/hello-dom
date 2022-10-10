@@ -179,10 +179,21 @@ export default {
       let check = parseFloat(this.invoice.balance)
 
       if (calc > check) {
-        this.$toast({
-          type: 'info',
-          text: `Payment can not be higher than total price`,
-        })
+        arr.map((el) => {
+          el.amount.toString().replace(/,/g , '')
+          el.amount = el.amount.toString().replace(/,/g , '')
+      })
+
+          try {
+          let response = await this.$api.finance.payInvoice(
+            this.payments,
+            this.invoice.id,
+          )
+          if(response){
+            this.$bvModal.hide('makePayment')
+            this.$emit('close')
+          }
+        } catch {}
       } else if (calc === check) {
         console.log(this.invoice.balance)
         arr.map((el) => {
@@ -255,8 +266,6 @@ export default {
           amount: '',
         },
       ]
-      this.balance = 0
-      this.payAmount = 0
       this.$emit('hide')
     },
   },

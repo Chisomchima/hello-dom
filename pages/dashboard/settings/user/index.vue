@@ -1,14 +1,14 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">OPD Settings</div>
+    <div class="page-heading mb-4">User Management</div>
     <UtilsBaseCardTab>
-      <UtilsCardTab title="Department list">
-        <SettingsDepartmentList />
+      <UtilsCardTab title="Users">
+        <SettingsUserManagementList />
       </UtilsCardTab>
-       <UtilsCardTab title="Clinics list">
+       <!-- <UtilsCardTab title="Clinics list">
         <SettingsClinicList />
-      </UtilsCardTab>
+      </UtilsCardTab> -->
     </UtilsBaseCardTab>
   </div>
 </template>

@@ -10,30 +10,109 @@
       @all="getAllBills"
       @search-input="searchBills"
       @view-by="getSome($event)"
-      :dropdownFilter="true"
-      :dropDownOptions="['uncleared', 'cleared', 'all']"
+      :disableSearch="true"
       disable-visualization
     >
-      <template #besidesViewBy>
-        <div class="d-flex">
-          <div class="col-md-6">
-            <span class="text-12 text-grey">Date from:</span>
-            <input
-              type="date"
-              class="form-control"
-              :max="maxDate"
-              v-model="filter.dateFrom"
-            />
-          </div>
-          <div class="col-md-6">
-            <span class="text-12 text-grey">Date to:</span>
-            <input
-              type="date"
-              class="form-control"
-              :min="minDate"
-              v-model="filter.dateTo"
-            />
-          </div>
+      <!-- ['uncleared', 'cleared', 'all'] -->
+      <template #beforeActions>
+        <div class="mr-2">
+          <button
+            v-b-toggle.sidebar-backdrop4
+            class="btn btn-sm btn-outline-secondary"
+          >
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="currentColor"
+                  d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z"
+                />
+              </svg>
+            </span>
+          </button>
+          <b-sidebar
+            id="sidebar-backdrop4"
+            title="Sidebar with backdrop"
+            :backdrop-variant="'dark'"
+            backdrop
+            shadow
+            right
+          >
+            <div class="p-4">
+              <div class="col-md-12">
+                <p class="text-14 mb-1 text-grey">Status</p>
+              </div>
+              <div class="col-md-12 d-flex align-items-center mb-2 text-14">
+                <p
+                  :class="
+                    option.selected
+                      ? 'text-info border border-info'
+                      : 'text-secondary border'
+                  "
+                  @click="fetchBills(option.value, option.selected, index)"
+                  class="point mb-0 p-2 mr-2 rounded-sm text-capitalize"
+                  v-for="(option, index) in clearedStatus"
+                  :key="index"
+                >
+                  {{ option.label }}
+                </p>
+              </div>
+              <div class="">
+                <!-- <p class="mb-0 text-20">Date range</p> -->
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Search</span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search"
+                    v-model="filter.amount"
+                  />
+                </div>
+              </div>
+              <div class="">
+                <!-- <p class="mb-0 text-20">Date range</p> -->
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Date from:</span>
+                  <input
+                    type="date"
+                    class="form-control"
+                    :max="maxDate"
+                    v-model="filter.dateFrom"
+                  />
+                </div>
+                <div class="col-md-12">
+                  <span class="text-12 text-grey">Date to:</span>
+                  <input
+                    type="date"
+                    class="form-control"
+                    :min="minDate"
+                    v-model="filter.dateTo"
+                  />
+                </div>
+              </div>
+
+              <!-- <div class="col-md-12">
+                  <span class="text-12 text-grey">Service centers</span>
+                  <VSelect
+                    style="font-size: 13px"
+                    label="name"
+                    class=""
+                    v-model="filter.service_center"
+                    :placeholder="'Service centers'"
+                    :reduce="(option) => option.id"
+                    multiple
+                    taggable
+                    :options="filterSerice"
+                  >
+                  </VSelect>
+                </div> -->
+            </div>
+          </b-sidebar>
         </div>
       </template>
 
@@ -159,6 +238,7 @@
 
 <script>
 import { DateTime } from 'luxon'
+import { debounce } from 'lodash'
 import { remove } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 
@@ -237,15 +317,25 @@ export default {
         dateTo: '',
         is_invoiced: false,
       },
+      clearedStatus: [
+        { label: 'uncleared', value: 'UNCLEARED', selected: false },
+        { label: 'cleared', value: 'CLEARED', selected: false },
+        { label: 'all', value: '', selected: false },
+      ],
     }
   },
 
   watch: {
-    'filter.dateFrom'() {
-      this.pageChange(this.currentPage, this.filter)
-    },
     'filter.dateTo'() {
-      this.pageChange(this.currentPage, this.filter)
+      if (this.filter.dateFrom !== '') {
+        this.pageChange(1, this.filter)
+      }
+    },
+    'filter.amount': {
+      handler: debounce(function () {
+        this.pageChange(1, this.filter)
+      }, 1000),
+      deep: true,
     },
   },
 
@@ -311,6 +401,15 @@ export default {
     getAllBills() {
       this.filter.status = ''
       this.pageChange(1, this.filter)
+    },
+    fetchBills(e, selected, index) {
+      let arr = this.clearedStatus
+      for (let x = 0; x < arr.length; x++) {
+        this.clearedStatus[x].selected = false
+      }
+      this.clearedStatus[index].selected = true
+      this.filter.status = e
+      this.pageChange(this.currentPage, this.filter)
     },
     searchBills(e) {
       console.log(e)

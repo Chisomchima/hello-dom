@@ -295,25 +295,25 @@
 
           <span
             v-else-if="data.item.status === 'DRAFT'"
-            class="text-14 badge-danger rounded text-center p-1 text-white"
+            class="text-12 badge-danger rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
           </span>
           <span
             v-else-if="data.item.status === 'PAID'"
-            class="text-14 badge-success rounded text-center p-1 text-white"
+            class="text-12 badge-success rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
           </span>
           <span
             v-else-if="data.item.status === 'PARTIAL_PAY'"
-            class="text-14 badge-success rounded text-center p-1 text-white"
+            class="text-12 badge-warning rounded text-center p-1 text-white"
           >
-            PARTIAL PAY
+          PARTIALLY PAID
           </span>
           <span
             v-else-if="data.item.status === 'OPEN'"
-            class="text-14 badge-success rounded text-center p-1 text-white"
+            class="text-12 badge-info rounded text-center p-1 text-white"
           >
             OPEN
           </span>
