@@ -3,7 +3,7 @@
     <ValidationObserver ref="form">
       <form>
         <div class="row">
-            <div class="col-md-12 mb-2">
+          <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Groups" :rules="['required']">
               <VSelect
                 v-model="dataObject.groups"
@@ -11,7 +11,20 @@
                 label="name"
                 multiple
                 taggable
-                :reduce="opt => opt.id"
+                :reduce="(opt) => opt.id"
+              >
+              </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Menu access" :rules="['required']">
+              <VSelect
+                v-model="dataObject.menus"
+                :options="access"
+                label="name"
+                multiple
+                taggable
+                :reduce="(opt) => opt"
               >
               </VSelect>
             </ValidationProviderWrapper>
@@ -51,20 +64,22 @@
               <input
                 v-model="dataObject.email"
                 type="text"
+                autocomplete="off"
                 class="form-control"
               />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Password" :rules="['required']">
+            <ValidationProviderWrapper name="Password" :rules="['required']" :label="'Password'">
               <input
                 v-model="dataObject.password"
                 type="password"
+                autocomplete="off"
                 class="form-control"
               />
             </ValidationProviderWrapper>
           </div>
-          
+
           <!-- <div class="col-md-12 mb-2 d-flex align-items-center">
             <ValidationProviderWrapper name="" :rules="['required']">
               <b-form-checkbox size="lg" switch v-model="dataObject.is_active">
@@ -100,11 +115,55 @@ export default {
         last_name: '',
         username: '',
         groups: [],
+        menus: [],
         password: '',
         email: '',
       },
       title: '',
       groups: [],
+      access: [
+        {
+          name: 'Patient Records',
+          icon: 'fas fa-notes-medical',
+          route: '/dashboard/patient',
+        },
+        {
+          name: 'OPD',
+          icon: 'fas fa-user-md',
+          route: '/dashboard/opd',
+        },
+        {
+          name: 'Laboratory',
+          icon: 'fas fa-vial',
+          route: '/dashboard/laboratory/',
+        },
+        {
+          name: 'Imaging',
+          icon: 'fas fa-x-ray',
+          route: '/dashboard/imaging/',
+        },
+
+        {
+          name: 'Customer Service Officer',
+          icon: 'fas fa-list-ol',
+          route: '/dashboard/cso/',
+        },
+        {
+          name: 'Finance',
+          icon: 'fas fa-money-check-alt',
+          route: '/dashboard/finance/',
+        },
+        {
+          name: 'Reports',
+          icon: 'fas fa-file',
+          route: '/dashboard/reports/',
+        },
+        {
+          name: 'Settings',
+          icon: 'fas fa-cog',
+          route: '/dashboard/settings/',
+        },
+      ],
     }
   },
   async created() {

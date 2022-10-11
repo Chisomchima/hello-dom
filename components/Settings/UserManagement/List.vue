@@ -18,12 +18,48 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @edit="edit($event)"
+          @delete="deleteUser"
           @row-clicked="details"
         >
           <template #description="{ data }">
             <div class="">
               <span>{{ data.item.description }}</span>
             </div>
+          </template>
+
+          <template #triple_actions="{ data }">
+            <b-dropdown
+              variant="link"
+              toggle-class="text-decoration-none"
+              no-caret
+            >
+              <span class="d-none">{{ data.item.is_active }}</span>
+              <template #button-content>
+                <b-icon icon="three-dots-vertical"></b-icon>
+              </template>
+              <template>
+                <b-dropdown-item
+                  @click="resetPasswordByAdmin(data.item)"
+                  class="text-capitalize"
+                >
+                  Reset password
+                </b-dropdown-item>
+                <b-dropdown-item
+                  v-if="data.item.is_active"
+                  @click="deactivate(data.item)"
+                  class="text-capitalize"
+                >
+                  Deactivate user
+                </b-dropdown-item>
+                <b-dropdown-item
+                  v-if="!data.item.is_active"
+                  class="text-capitalize"
+                  @click="activate(data.item)"
+                >
+                  Activate user
+                </b-dropdown-item>
+              </template>
+            </b-dropdown>
           </template>
         </TableComponent>
       </template>
@@ -37,6 +73,7 @@
       :modalTitle="modalTitle"
       :edit-data="editObj"
     />
+    <SettingsUserManagementModalCopyAuth :user="user" />
   </div>
 </template>
 
@@ -64,6 +101,7 @@ export default {
         size: 10,
       },
       modalTitle: 'Add User',
+      user: {},
       fields: [
         {
           key: 'first_name',
@@ -81,6 +119,10 @@ export default {
 
         {
           key: 'actions',
+          label: '',
+        },
+        {
+          key: 'triple_actions',
           label: '',
         },
       ],
@@ -107,6 +149,72 @@ export default {
         this.busy = false
       }
     },
+    async resetPasswordByAdmin(user) {
+      const result = await this.showConfirmMessageBox('Reset password ?')
+      try {
+        if (result) {
+          let response = await this.$api.users.resetPassword(user.id)
+          this.user = response
+          if (response) {
+            this.$bvModal.show('copyAuth')
+            this.$toast({
+              type: 'success',
+              text: `Success`,
+            })
+          }
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteUser(user) {
+      const result = await this.showConfirmMessageBox('Delete user ?')
+      try {
+        if (result) {
+          let response = await this.$api.users.deleteUser(user.id)
+          this.$toast({
+            type: 'success',
+            text: `User deleted`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deactivate(user) {
+      const result = await this.showConfirmMessageBox('Deactivate user ?')
+      try {
+        if (result) {
+          let response = await this.$api.users.deactivateUser(user.id)
+          this.$toast({
+            type: 'success',
+            text: `User deactivated`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async activate(user) {
+      const result = await this.showConfirmMessageBox('Activate user ?')
+      try {
+        if (result) {
+          let response = await this.$api.users.activateUser(user.id)
+          this.$toast({
+            type: 'success',
+            text: `User activated`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     openModal() {
       this.modalTitle = 'Add User'
       this.$bvModal.show('addUser')
@@ -116,9 +224,9 @@ export default {
       this.modalTitle = 'Edit User'
       this.$bvModal.show('editUser')
     },
-    details(e){
-        console.log(e)
-    }
+    details(e) {
+      console.log(e)
+    },
   },
 }
 </script>

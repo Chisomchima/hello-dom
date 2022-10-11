@@ -17,6 +17,19 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Menu access" :rules="['required']">
+              <VSelect
+                v-model="dataObject.menus"
+                :options="access"
+                label="name"
+                multiple
+                taggable
+                :reduce="(opt) => opt"
+              >
+              </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="First name" :rules="['required']">
               <input
                 v-model="dataObject.first_name"
@@ -47,16 +60,18 @@
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper
               name="Email"
-              :rules="['', 'email']"
+              :rules="['email']"
             >
               <input
                 v-model="dataObject.email"
                 type="text"
+                autocomplete="off"
+                disabled
                 class="form-control"
               />
             </ValidationProviderWrapper>
           </div>
-          <div class="col-md-12 mb-2">
+          <!-- <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Password" :rules="['']">
               <input
                 v-model="dataObject.password"
@@ -65,7 +80,7 @@
                 class="form-control"
               />
             </ValidationProviderWrapper>
-          </div>
+          </div> -->
          
           <!-- <div class="col-md-12 mb-2 d-flex align-items-center">
             <ValidationProviderWrapper name="" :rules="['required']">
@@ -102,11 +117,54 @@ export default {
         last_name: '',
         username: '',
         groups: [],
-        password: '',
+        menus: [],
         email: '',
       },
       title: '',
       groups: [],
+           access: [
+        {
+          name: 'Patient Records',
+          icon: 'fas fa-notes-medical',
+          route: '/dashboard/patient',
+        },
+        {
+          name: 'OPD',
+          icon: 'fas fa-user-md',
+          route: '/dashboard/opd',
+        },
+        {
+          name: 'Laboratory',
+          icon: 'fas fa-vial',
+          route: '/dashboard/laboratory/',
+        },
+        {
+          name: 'Imaging',
+          icon: 'fas fa-x-ray',
+          route: '/dashboard/imaging/',
+        },
+
+        {
+          name: 'Customer Service Officer',
+          icon: 'fas fa-list-ol',
+          route: '/dashboard/cso/',
+        },
+        {
+          name: 'Finance',
+          icon: 'fas fa-money-check-alt',
+          route: '/dashboard/finance/',
+        },
+        {
+          name: 'Reports',
+          icon: 'fas fa-file',
+          route: '/dashboard/reports/',
+        },
+        {
+          name: 'Settings',
+          icon: 'fas fa-cog',
+          route: '/dashboard/settings/',
+        },
+      ],
     }
   },
   watch: {

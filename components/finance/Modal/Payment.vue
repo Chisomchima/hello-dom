@@ -177,23 +177,15 @@ export default {
       })
 
       let check = parseFloat(this.invoice.balance)
-
+      const payments = {
+        payments: this.payments,
+        patient: this.invoice.patient.id,
+      }
       if (calc > check) {
-        arr.map((el) => {
-          el.amount.toString().replace(/,/g , '')
-          el.amount = el.amount.toString().replace(/,/g , '')
-      })
-
-          try {
-          let response = await this.$api.finance.payInvoice(
-            this.payments,
-            this.invoice.id,
-          )
-          if(response){
-            this.$bvModal.hide('makePayment')
-            this.$emit('close')
-          }
-        } catch {}
+        this.$toast({
+          type: 'info',
+          text: `Payment is higher than balance`,
+        })
       } else if (calc === check) {
         console.log(this.invoice.balance)
         arr.map((el) => {
@@ -202,19 +194,31 @@ export default {
         })
         try {
           let response = await this.$api.finance.payInvoice(
-            this.payments,
-            this.invoice.id,
+            payments,
+            this.invoice.id
           )
-          if(response){
+          if (response) {
             this.$bvModal.hide('makePayment')
             this.$emit('close')
+            this.$emit('newUpdate')
           }
         } catch {}
       } else if (calc < check) {
-        this.$toast({
-          type: 'info',
-          text: `Payment is less total amount`,
+        arr.map((el) => {
+          el.amount.toString().replace(/,/g, '')
+          el.amount = el.amount.toString().replace(/,/g, '')
         })
+        try {
+          let response = await this.$api.finance.payInvoice(
+            payments,
+            this.invoice.id
+          )
+          if (response) {
+            this.$bvModal.hide('makePayment')
+            this.$emit('close')
+             this.$emit('newUpdate')
+          }
+        } catch {}
       }
     },
     numberWithCommas(x) {

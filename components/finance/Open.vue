@@ -50,7 +50,7 @@
         @refresh="getUpdates"
         @print="print"
       />
-      <FinanceModalPayment @close="$bvModal.hide('invoiceModal')" :invoice="invoice" />
+      <FinanceModalPayment @newUpdate="getUpdates" @close="$bvModal.hide('invoiceModal')" :invoice="invoice" />
       <DashboardModalPrintInvoice :data="patientData" :reciept="template" />
     </div>
   </div>

@@ -86,16 +86,16 @@
 
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Department:</b>
-              {{ department ? department : 'nil' }}
+              {{ consultationData.department ? consultationData.department.name : 'nil' }}
             </div>
           </div>
           <div class="row px-0">
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Clinic:</b>
-              {{ clinic ? clinic : 'nil' }}
+              {{ consultationData.clinic ? consultationData.clinic.name : 'nil' }}
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6">
-              <b>Date:</b> {{ encounter_time }}
+              <b>Date:</b> {{ dateCreated }}
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6">
               <b>Provider:</b>
@@ -132,6 +132,7 @@
           </div>
         </div>
         <div
+        v-if="patientData"
           class="
             d-flex
             justify-content-between
@@ -145,42 +146,42 @@
                 @click="gotoPatientProfile"
                 class="text-14 mb-0 text-grey point signal"
               >
-                <b>UHID:</b> {{ patientData.uhid }}
+                <b>UHID:</b> {{ consultationData.patient.uhid }}
               </p>
             </div>
             <div class="px-2">
               <p class="text-14 mb-0 text-grey text-capitalize">
                 <b>Name:</b>
                 {{
-                  patientData.firstname
-                    ? patientData.firstname + ' ' + patientData.lastname
+                  consultationData.patient.firstname
+                    ? consultationData.patient.firstname + ' ' + consultationData.patient.lastname
                     : 'nil'
                 }}
               </p>
             </div>
             <div class="px-2">
               <p class="text-14 mb-0 text-grey">
-                <b>D.O.B:</b> {{ patientData.date_of_birth }}
+                <b>D.O.B:</b> {{ consultationData.patient.date_of_birth }}
               </p>
             </div>
             <div v-if="patientData.age" class="px-2">
               <p class="text-14 mb-0 text-grey">
                 <b>Age(Y-M-D):</b>
-                {{ patientData.age.year ? patientData.age.year : '0' }} -
-                {{ patientData.age.month ? patientData.age.month : '0' }} -
-                {{ patientData.age.day ? patientData.age.day : '0' }}
+                {{ consultationData.patient.age.year ? consultationData.patient.age.year : '0' }} -
+                {{ consultationData.patient.age.month ? consultationData.patient.age.month : '0' }} -
+                {{ consultationData.patient.age.day ? consultationData.patient.age.day : '0' }}
               </p>
             </div>
             <div class="px-2">
               <p class="text-14 mb-0 text-grey">
                 <b>Gender:</b>
-                {{ patientData.gender ? patientData.gender : 'nil' }}
+                {{ consultationData.patient.gender ? consultationData.patient.gender : 'nil' }}
               </p>
             </div>
             <div class="px-2">
               <p class="text-14 mb-0 text-grey">
                 <b>Payer:</b>
-                {{ patientData.payer ? patientData.payer : ' nil ' }}
+                {{ consultationData.patient.payer ? consultationData.patient.payer : ' nil ' }}
               </p>
             </div>
           </div>
@@ -205,43 +206,43 @@
                   <!-- Identity: {{ patientData.identity }}-{{
                     patientData.identity.no_
                   }} -->
-                  {{ patientData.salutation ? patientData.salutation : 'Mr.' }}
+                  {{ consultationData.patient.salutation ? consultationData.patient.salutation : 'Mr.' }}
 
                   {{
-                    patientData.firstname
-                      ? patientData.firstname +
+                    consultationData.patient.firstname
+                      ? consultationData.patient.firstname +
                         ' ' +
-                        patientData.middlename +
+                        consultationData.patient.middlename +
                         ' ' +
-                        patientData.lastname
+                        consultationData.patient.lastname
                       : 'Anonymous'
                   }}
                   <br />
-                  Gender: {{ patientData.gender ? patientData.gender : 'Male' }}
+                  Gender: {{ consultationData.patient.gender ? consultationData.patient.gender : 'Male' }}
                   <br />
                   Phone No:
                   {{
-                    patientData.phone_number ? patientData.phone_number : 'nil'
+                    consultationData.patient.phone_number ? consultationData.patient.phone_number : 'nil'
                   }}
                   <br />
                   Nationality:
                   {{
-                    patientData.nationality
-                      ? patientData.nationality
+                    consultationData.patient.nationality
+                      ? consultationData.patient.nationality
                       : 'Nigerian'
                   }}
                   <br />
                   Marital Status:
                   {{
-                    patientData.marital_status
-                      ? patientData.marital_status
+                    consultationData.patient.marital_status
+                      ? consultationData.patient.marital_status
                       : 'Single'
                   }}
                   <br />
                   Religion:
-                  {{ patientData.religion ? patientData.religion : 'nil' }}
+                  {{ consultationData.patient.religion ? consultationData.patient.religion : 'nil' }}
                   <br />
-                  L.G.A: {{ patientData.lga ? patientData.lga : 'nil' }}
+                  L.G.A: {{ consultationData.patient.lga ? consultationData.patient.lga : 'nil' }}
                 </div>
               </b-tooltip>
             </div>
@@ -370,6 +371,11 @@ export default {
         DateTime.DATETIME_SHORT
       )
     },
+    dateCreated() {
+      return DateTime.fromISO(this.consultationData.encounter_datetime).toLocaleString(
+        DateTime.DATETIME_SHORT
+      )
+    },
   },
   methods: {
     showSignature() {
@@ -424,7 +430,7 @@ export default {
         this.department = response.clinic.name
           ? response.clinic.Department.name
           : 'nil'
-        this.patientData = response.patient
+        this.patientData = this.consultationData.patient
         let time = this.consultationData.encounter_datetime
         let y = new Date(time).toLocaleDateString()
 
@@ -448,6 +454,9 @@ export default {
       } catch (error) {
       } finally {
       }
+    },
+    convDate(x){
+      return 
     },
     calcAge(e) {
       // **********calc year***********

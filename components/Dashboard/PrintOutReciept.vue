@@ -4575,8 +4575,8 @@ c-31 27 -51 31 -61 15z"
           line-height: 10px;
         "
       >
-        <p v-if="reciept.audit_log" style="margin: 0">
-          Printed by: {{ reciept.audit_log[0].user.first_name }}
+        <p v-if="reciept.user" style="margin: 0">
+          Printed by: {{ reciept.user.first_name }}
         </p>
         <p style="margin: 0">Date: {{ transactionDate }}</p>
       </div>

@@ -4,7 +4,8 @@ type UserDetails = {
     avatar?: string,
     first_name: string,
     last_name: string,
-    gender: "male" | "female"
+    gender: "male" | "female",
+    username?:string
 };
 
 
@@ -47,6 +48,9 @@ export const actions: ActionTree<RootState, RootState> = {
             if (response.token) {
                 commit('SET_USER', response);
                 commit('SET_TOKEN', response.token);
+            }
+            else{
+                this.$router.push("/auth/verify-password");
             }
             return Promise.resolve(response);
         } catch (e) {

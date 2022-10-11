@@ -12,6 +12,7 @@
     :no-close-on-esc="persistent"
     :no-close-on-backdrop="persistent"
     :hide-header-close="persistent"
+    :cancel-disabled="persistent"
     ok-title="Save"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"
@@ -32,6 +33,7 @@
               size="sm"
               variant="light"
               class="px-5 text-secondary mr-2"
+              :disabled="persistent"
               @click="cancel()"
             >
               {{ cancelText }}
