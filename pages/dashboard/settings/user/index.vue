@@ -6,9 +6,9 @@
       <UtilsCardTab title="Users">
         <SettingsUserManagementList />
       </UtilsCardTab>
-       <!-- <UtilsCardTab title="Clinics list">
-        <SettingsClinicList />
-      </UtilsCardTab> -->
+       <UtilsCardTab title="Groups">
+       <SettingsUserManagementGroups />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>

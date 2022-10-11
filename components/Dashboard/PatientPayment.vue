@@ -189,10 +189,10 @@ export default {
           label: 'Payment type',
           sortable: true,
         },
-        {
-          key: 'print',
-          label: '',
-        },
+        // {
+        //   key: 'print',
+        //   label: '',
+        // },
       ],
       filter: {
         size: 10,

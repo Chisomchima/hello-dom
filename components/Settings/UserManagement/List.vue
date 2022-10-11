@@ -29,9 +29,13 @@
       </template>
     </UtilsFilterComponent>
     <SettingsUserManagementModalAddUser
-      :edit-data="editObj"
       @refresh="pageChange(1)"
       :modalTitle="modalTitle"
+    />
+    <SettingsUserManagementModalEditUser
+      @refresh="pageChange(1)"
+      :modalTitle="modalTitle"
+      :edit-data="editObj"
     />
   </div>
 </template>
@@ -110,7 +114,7 @@ export default {
     edit(e) {
       this.editObj = e
       this.modalTitle = 'Edit User'
-      this.$bvModal.show('addUser')
+      this.$bvModal.show('editUser')
     },
     details(e){
         console.log(e)

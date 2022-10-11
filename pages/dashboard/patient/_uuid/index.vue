@@ -85,7 +85,7 @@
     <DashboardModalPayerDetails :data="data.payment_scheme" />
     <DashboardModalPatientDepositModal
       @payload="printDepositSlip($event)"
-      @refresh="refresh"
+      @refresh="getNewData"
       :data="data"
     />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
@@ -143,9 +143,9 @@ export default {
     },
     printDepositSlip(e) {
       this.template = e
-      // this.$bvModal.show('printDepositSlip')
+      this.$bvModal.show('printDepositSlip')
     },
-    refresh() {
+    getNewData() {
       this.$nuxt.refresh()
     },
     checkPayersDetails() {

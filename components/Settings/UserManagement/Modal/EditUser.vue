@@ -1,9 +1,9 @@
 <template>
-  <ModalWrapper id="addUser" :title="modalTitle" @ok="ok()" @hide="clear()">
+  <ModalWrapper id="editUser" :title="modalTitle" @ok="ok()" >
     <ValidationObserver ref="form">
       <form>
         <div class="row">
-            <div class="col-md-12 mb-2">
+             <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Groups" :rules="['required']">
               <VSelect
                 v-model="dataObject.groups"
@@ -35,18 +35,19 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Username" :rules="['required']">
+            <ValidationProviderWrapper name="Username" :rules="['']">
               <input
                 v-model="dataObject.username"
                 type="text"
                 class="form-control"
+                disabled
               />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper
               name="Email"
-              :rules="['required', 'email']"
+              :rules="['', 'email']"
             >
               <input
                 v-model="dataObject.email"
@@ -56,15 +57,16 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Password" :rules="['required']">
+            <ValidationProviderWrapper name="Password" :rules="['']">
               <input
                 v-model="dataObject.password"
                 type="password"
+                disabled
                 class="form-control"
               />
             </ValidationProviderWrapper>
           </div>
-          
+         
           <!-- <div class="col-md-12 mb-2 d-flex align-items-center">
             <ValidationProviderWrapper name="" :rules="['required']">
               <b-form-checkbox size="lg" switch v-model="dataObject.is_active">
@@ -107,10 +109,6 @@ export default {
       groups: [],
     }
   },
-  async created() {
-    let groups = await this.$api.users.getGroups({ size: 1000 })
-    this.groups = groups.results
-  },
   watch: {
     editData: {
       handler(newVal) {
@@ -125,31 +123,26 @@ export default {
       this.title = this.modalTitle
     },
   },
-
+    async created(){
+        let groups = await this.$api.users.getGroups({size: 1000})
+        this.groups = groups.results
+    },
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
-        this.save()
+          this.edit()
       }
     },
-    async save() {
+    async edit() {
       try {
-        const data = await this.$api.users.createUser(this.dataObject)
+        const data = await this.$api.users.updateUser(
+          this.dataObject.id,
+          this.dataObject
+        )
         this.$emit('refresh')
-        this.$bvModal.hide('addUser')
+        this.$bvModal.hide('editUser')
       } catch (error) {
         console.log(error)
-      }
-    },
-
-    clear() {
-      this.dataObject = {
-        first_name: '',
-        last_name: '',
-        username: '',
-        groups: [],
-        password: '',
-        email: '',
       }
     },
   },

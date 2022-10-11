@@ -16,6 +16,18 @@
       
     </div>
 
+      <div class="d-flex justify-content-center">
+        <div class="col-md-6 mb-5">
+        <ValidationProviderWrapper name="Print format" :rules="['']">
+        <VSelect
+          v-model="format"
+          label="name"
+          :options="['A4', 'P.O.S Slip']"
+        ></VSelect>
+      </ValidationProviderWrapper>
+      </div>
+      </div>
+
     <div class="d-none">
       <DashboardPrintOutReciept :reciept="reciept" :data="data" :printLayout="format_prop" />
     </div>

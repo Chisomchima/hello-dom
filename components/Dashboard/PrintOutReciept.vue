@@ -4575,7 +4575,7 @@ c-31 27 -51 31 -61 15z"
           line-height: 10px;
         "
       >
-        <p style="margin: 0">
+        <p v-if="reciept.audit_log" style="margin: 0">
           Printed by: {{ reciept.audit_log[0].user.first_name }}
         </p>
         <p style="margin: 0">Date: {{ transactionDate }}</p>
@@ -4584,8 +4584,6 @@ c-31 27 -51 31 -61 15z"
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0rem 0; font-size: 14px"
       >
-        Invoice No: {{ reciept.invoice }}
-        <br />
         Patient name:
         {{ data.firstname + ' ' + data.middlename + ' ' + data.lastname }}
         <br />
@@ -4615,9 +4613,9 @@ c-31 27 -51 31 -61 15z"
             <th>Amount</th>
           </tr>
         </thead>
-        <tbody v-if="reciept.payment_details">
+        <tbody v-if="reciept.payments">
           <tr
-            v-for="(item, index) in reciept.payment_details"
+            v-for="(item, index) in reciept.payments"
             :key="index"
             style="
               text-align: center;
@@ -4679,7 +4677,7 @@ c-31 27 -51 31 -61 15z"
           </tr>
         </tbody>
       </table>
-      <div v-if="reciept">
+      <div v-if="reciept.total_amount">
         <p
           :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
           style="text-align: end"

@@ -232,7 +232,7 @@
       :goods="unClearedBill"
       @authCode="setAuthCode"
     />
-    <DashboardModalConfirmInvoicePrint :data="data" :reciept="template" />
+   <DashboardModalPrintPaymentSlip :reciept="template" :data="data" />
   </div>
 </template>
 
@@ -257,6 +257,7 @@ export default {
       currentPage: 1,
       totalRecords: 0,
       template: {},
+      paymentData: {},
       items: [],
       fields: [
         {
@@ -604,7 +605,7 @@ export default {
         this.$nuxt.refresh()
         this.$emit('reload_tabs')
         this.$bvModal.hide('modal')
-        this.$bvModal.show('printInvoice?')
+        this.$bvModal.show('printPaymentSlip')
         this.pageChange(this.currentPage, this.filter)
         this.unClearedBill = []
       } catch (error) {
