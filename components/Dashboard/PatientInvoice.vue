@@ -113,7 +113,7 @@
     <div v-if="modalControl">
       <DashboardModalInvoiceDetails
         @print="print"
-        :layout="false"
+        :layout="true"
         :nameData="data"
         :invoice="details"
         @refresh="getSome"

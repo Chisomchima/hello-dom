@@ -38,5 +38,10 @@ export default axios => ({
     updateGroup(id, body) {
         return axios.$put(`/users/groups/${id}/`, body)
     },
-    
+    deleteGroup(id) {
+        return axios.$delete(`/users/groups/${id}/`)
+    },
+    verifyPassword(body) {
+        return axios.$post(`auth/users/password/reset/`, body)
+    },
 })

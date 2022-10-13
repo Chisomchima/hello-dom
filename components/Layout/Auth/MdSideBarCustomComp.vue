@@ -6,8 +6,16 @@
       :collapsed="true"
       :menu="menu"
     />
+    <!-- {
+  header: true,
+  title: 'Main Navigation',
+  hiddenOnCollapse: true,
+   } -->
   </div>
+  
 </template>
+
+ 
 
 <script>
 import { SidebarMenu } from 'vue-sidebar-menu'
@@ -18,11 +26,7 @@ export default {
   data() {
     return {
       menu: [
-        {
-          header: true,
-          title: 'Main Navigation',
-          hiddenOnCollapse: true,
-        },
+       
         {
           href: '/dashboard',
           title: 'Dashboard',
@@ -116,6 +120,7 @@ export default {
           icon: 'fas fa-cog',
           child: [
             {
+              href: '/dashboard/settings/user/?tab=0',
               title: 'User Management',
               child: [
                 {
@@ -129,6 +134,7 @@ export default {
               ],
             },
             {
+              href: '/dashboard/settings/finance/',
               title: 'Finance Settings',
               child: [
                 {
@@ -142,6 +148,7 @@ export default {
               ],
             },
             {
+              href: '/dashboard/settings/laboratory/',
               title: 'Laboratory Settings',
               child: [
                 {
@@ -155,6 +162,7 @@ export default {
               ],
             },
             {
+              href: '/dashboard/settings/imaging/',
               title: 'Imaging Settings',
               child: [
                 {
@@ -168,6 +176,7 @@ export default {
               ],
             },
             {
+              href: '/dashboard/settings/opd/',
               title: 'OPD Settings',
               child: [
                 {
@@ -180,90 +189,6 @@ export default {
                 },
               ],
             },
-          ],
-        },
-
-        // {
-        //   component: 'ATest',
-        //   props: { name: 'Dimeji' },
-        //   // hidden: false
-        //   // hiddenOnCollapse: true
-        // },
-      ],
-      routes: [
-        {
-          pathName: 'dashboard',
-          name: 'dashboard',
-          icon: 'camera',
-        },
-
-        {
-          pathName: 'dashboard-hr',
-          name: 'patient',
-          icon: 'archive',
-          isToggled: false,
-
-          dropdown: [
-            {
-              pathName: 'dashboard-patient',
-              name: 'search patient',
-              icon: 'people',
-            },
-            {
-              pathName: 'dashboard-patient-add',
-              name: 'register patient',
-              icon: 'people',
-            },
-          ],
-        },
-        {
-          pathName: 'dashboard-opd',
-          name: 'OPD',
-          icon: 'archive',
-          isToggled: false,
-
-          dropdown: [
-            {
-              pathName: 'dashboard-opd',
-              name: 'Encounter Worklist',
-            },
-            // {
-            //   pathName: 'dashboard-patient-add',
-            //   name: 'register patient',
-            // },
-            // {
-            //   pathName: 'sms-id-staff-pension-settings',
-            //   name: 'Pension Settings',
-            // },
-            // {
-            //   pathName: 'sms-id-staff-banks',
-            //   name: 'Banks',
-            // },
-          ],
-        },
-        {
-          pathName: 'dashboard-settings',
-          name: 'Settings',
-          icon: 'archive',
-          isToggled: false,
-
-          dropdown: [
-            {
-              pathName: 'dashboard-settings-laboratory',
-              name: 'Laboratory Settings',
-            },
-            // {
-            //   pathName: 'dashboard-patient-add',
-            //   name: 'register patient',
-            // },
-            // {
-            //   pathName: 'sms-id-staff-pension-settings',
-            //   name: 'Pension Settings',
-            // },
-            // {
-            //   pathName: 'sms-id-staff-banks',
-            //   name: 'Banks',
-            // },
           ],
         },
       ],

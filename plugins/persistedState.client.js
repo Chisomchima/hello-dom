@@ -6,7 +6,7 @@ const ls = new SecureLS();
 
 export default ({ store }) => {
   createPersistedState({
-    key: 'life',
+    key: 'V3C Medical app',
     // paths: [],
     storage: {
       getItem: (key) => ls.get(key),

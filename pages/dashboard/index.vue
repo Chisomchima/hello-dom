@@ -7,8 +7,16 @@
         class="col-md-4 col-12 col-sm-6"
       >
         <div
-          class="card card-stats mb-4 mb-xl-0 shadow-sm p-3 card-hover pointer my-3"
-          @click="goToRoute(card.route)"
+          class="
+            card card-stats
+            mb-4 mb-xl-0
+            shadow-sm
+            p-3
+            card-hover
+            pointer
+            my-3
+          "
+          @click="goToRoute(card.href)"
         >
           <div class="card-body">
             <div class="row">
@@ -16,7 +24,7 @@
                 <h3
                   class="h5 text-uppercase mb-0 font-weight-bold text-primary"
                 >
-                  {{ card.name }}
+                  {{ card.title }}
                 </h3>
               </div>
               <div class="col-auto">
@@ -44,45 +52,158 @@ export default {
     return {
       cards: [
         {
-          name: 'Patient Records',
-          icon: 'fas fa-notes-medical',
-          route: '/dashboard/patient',
+          href: '/dashboard/patient',
+          title: 'Patient Records',
+          icon: 'fas fa-hospital-user',
         },
+
         {
-          name: 'OPD',
+          href: '/dashboard/opd',
+          title: 'OPD',
           icon: 'fas fa-user-md',
-          route: '/dashboard/opd',
+          child: [
+            {
+              href: '/dashboard/opd/',
+              title: 'Encounter Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
+
         {
-          name: 'Laboratory',
+          href: '/dashboard/laboratory',
+          title: 'Laboratory',
           icon: 'fas fa-vial',
-          route: '/dashboard/laboratory/',
+          child: [
+            {
+              href: '/dashboard/laboratory/',
+              title: 'Laboratory Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
+
         {
-          name: 'Imaging',
+          href: '/dashboard/imaging',
+          title: 'Imaging',
           icon: 'fas fa-x-ray',
-          route: '/dashboard/imaging/',
+          child: [
+            {
+              href: '/dashboard/imaging/',
+              title: 'Imaging Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
-        
         {
-          name: 'Customer Service Officer',
+          href: '/dashboard/cso',
+          title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
-          route: '/dashboard/cso/',
         },
         {
-          name: 'Finance',
+          href: '/dashboard/finance',
+          title: 'Finance',
           icon: 'fas fa-money-check-alt',
-          route: '/dashboard/finance/',
         },
         {
-          name: 'Reports',
+          href: '/dashboard/reports',
+          title: 'Reports',
           icon: 'fas fa-file',
-          route: '/dashboard/reports/',
+          child: [
+            {
+              href: '/dashboard/reports/encounter',
+              title: 'Encounter report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/laboratory',
+              title: 'Laboratory report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/imaging',
+              title: 'Imaging report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/patient',
+              title: 'Patient report',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
         {
-          name: 'Settings',
+          title: 'Settings',
+          href: '/dashboard/settings',
           icon: 'fas fa-cog',
-          route: '/dashboard/settings/',
+          child: [
+            {
+              href: '/dashboard/settings/user/?tab=0',
+              title: 'User Management',
+              child: [
+                {
+                  href: '/dashboard/settings/user/?tab=0',
+                  title: 'Users',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/finance/',
+              title: 'Finance Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/finance/items/',
+                  title: 'Billable items',
+                },
+                {
+                  href: '/dashboard/settings/finance/payment-method/',
+                  title: 'Payment methods',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/laboratory/',
+              title: 'Laboratory Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/laboratory/service-center',
+                  title: 'Laboratory center',
+                },
+                {
+                  href: '/dashboard/settings/laboratory/service-config',
+                  title: 'Laboratory configuration',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/imaging/',
+              title: 'Imaging Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/imaging/service-center',
+                  title: 'Imaging Center',
+                },
+                {
+                  href: '/dashboard/settings/imaging/service-config',
+                  title: 'Imaging Configuration',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/opd/',
+              title: 'OPD Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/opd/?tab=0',
+                  title: 'Department',
+                },
+                {
+                  href: '/dashboard/settings/opd/?tab=1',
+                  title: 'Clinic',
+                },
+              ],
+            },
+          ],
         },
       ],
     }

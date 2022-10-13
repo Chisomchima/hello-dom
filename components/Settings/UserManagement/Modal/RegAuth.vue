@@ -1,7 +1,7 @@
 <template>
   <ModalWrapper
     :size="`md`"
-    id="copyAuth"
+    id="regAuth"
     :title="modalTitle"
     :cancelText="'Close'"
     :submitTitle="`Copy`"
@@ -12,7 +12,7 @@
       <form>
         <div class="row">
           <div class="col-md-12 mb-2 text-center">
-            <pre class="pt-2">Username: {{ person.username }}</pre>
+            <pre class="pt-3">Username: {{ person.username }}</pre>
             <!-- <pre>Email: {{ person.email }}</pre> -->
             <pre
               @click="copyText()"

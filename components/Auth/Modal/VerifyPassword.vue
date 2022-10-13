@@ -2,6 +2,7 @@
   <ModalWrapper
     id="verifyPassword"
     :title="modalTitle"
+    :submitTitle="`Update`"
     @ok="ok()"
     @close="clear()"
     @hide="clear()"
@@ -37,12 +38,7 @@
               name="New password"
               :rules="['required']"
             >
-              <input
-                v-model="dataObject.new_password"
-                type="password"
-                autocomplete="off"
-                class="form-control"
-              />
+              <BaseInput v-model="dataObject.new_password" type="password" />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
@@ -50,11 +46,9 @@
               name="Confirm password"
               :rules="['required']"
             >
-              <input
+              <BaseInput
                 v-model="dataObject.confirm_password"
                 type="password"
-                autocomplete="off"
-                class="form-control"
               />
             </ValidationProviderWrapper>
           </div>
@@ -91,20 +85,12 @@ export default {
   },
   computed: {
     username() {
-      if (this.$store.state.username) {
-        return this.$store.state.username
-      }
-    else{
-        return ''
-    }
+      console.log(this.$store.state.auth.user.username)
+      return this.$store.state.auth.user.username
     },
   },
   mounted() {
     this.dataObject.username = this.username
-  },
-  async created() {
-    let groups = await this.$api.users.getGroups({ size: 1000 })
-    this.groups = groups.results
   },
   watch: {
     editData: {
@@ -128,12 +114,20 @@ export default {
       }
     },
     async save() {
-      try {
-        const data = await this.$api.users.createUser(this.dataObject)
-        this.$emit('refresh')
-        this.$bvModal.hide('addUser')
-      } catch (error) {
-        console.log(error)
+      if (this.dataObject.new_password === this.dataObject.confirm_password) {
+        try {
+          const data = await this.$api.users.verifyPassword(this.dataObject)
+          if (data.token) {
+            await this.$store.dispatch('auth/verifyAndUpdate', data.token)
+            this.$bvModal.hide('verifyPassword')
+            this.$router.push('/dashboard')
+          }
+        } catch (error) {}
+      } else {
+        this.$toast({
+          type: 'info',
+          text: `Password do not match`,
+        })
       }
     },
 

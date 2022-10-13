@@ -56,13 +56,17 @@ export default {
   methods: {
     async submitForm() {
       try {
-        await this.$store.dispatch("auth/login", {
+        let response = await this.$store.dispatch("auth/login", {
           username: this.username,
           password: this.password,
         });
-
-        this.$router.push("/dashboard");
-      
+        if(response.token != null){
+          this.$router.push("/dashboard");
+        }
+        else{
+          this.$router.push("/auth/verify-password");
+        }
+        
       } catch (error) {
         console.log(error);
       }

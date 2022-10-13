@@ -68,6 +68,21 @@ export default {
         this.busy = false
       }
     },
+    async deleteGroup(user) {
+      const result = await this.showConfirmMessageBox('Delete group ?')
+      try {
+        if (result) {
+          let response = await this.$api.users.deleteGroup(user.id)
+          this.$toast({
+            type: 'success',
+            text: `Group deleted`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
     createGroup(){
         this.modalTitle = 'Add Group'
         this.$bvModal.show('addGroup')

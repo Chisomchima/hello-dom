@@ -93,7 +93,7 @@
       </div>
 
       <div class="row align-items-center">
-        <div class="col-md-3 d-flex align-items-center text-14">
+        <div class="col-md-6 d-flex align-items-center text-14">
           <span class="class-details-data_label mr-2">Scheme:</span>
           <span class="text-14 text-truncate">{{
             invoice.payer_scheme ? invoice.payer_scheme : 'nil'

@@ -3,10 +3,10 @@
     <BackwardNavigation />
     <div class="page-heading mb-4">OPD Settings</div>
     <UtilsBaseCardTab>
-      <UtilsCardTab title="Department list">
+      <UtilsCardTab title="Departments">
         <SettingsDepartmentList />
       </UtilsCardTab>
-       <UtilsCardTab title="Clinics list">
+       <UtilsCardTab title="Clinics">
         <SettingsClinicList />
       </UtilsCardTab>
     </UtilsBaseCardTab>

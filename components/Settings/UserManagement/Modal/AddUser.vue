@@ -1,75 +1,53 @@
 <template>
-  <ModalWrapper id="addUser" :title="modalTitle" @ok="ok()" @hide="clear()">
-    <ValidationObserver ref="form">
-      <form>
-        <div class="row">
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Groups" :rules="['required']">
-              <VSelect
-                v-model="dataObject.groups"
-                :options="groups"
-                label="name"
-                multiple
-                taggable
-                :reduce="(opt) => opt.id"
+  <div>
+    <ModalWrapper id="addUser" :title="modalTitle" @ok="ok()" @hide="clear()">
+      <ValidationObserver ref="form">
+        <form>
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="First name"
+                :rules="['required']"
               >
-              </VSelect>
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Menu access" :rules="['required']">
-              <VSelect
-                v-model="dataObject.menus"
-                :options="access"
-                label="name"
-                multiple
-                taggable
-                :reduce="(opt) => opt"
+                <input
+                  v-model="dataObject.first_name"
+                  type="text"
+                  class="form-control"
+                />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Last name" :rules="['required']">
+                <input
+                  v-model="dataObject.last_name"
+                  type="text"
+                  class="form-control"
+                />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Username" :rules="['required']">
+                <input
+                  v-model="dataObject.username"
+                  type="text"
+                  class="form-control"
+                />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="Email"
+                :rules="['required', 'email']"
               >
-              </VSelect>
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="First name" :rules="['required']">
-              <input
-                v-model="dataObject.first_name"
-                type="text"
-                class="form-control"
-              />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Last name" :rules="['required']">
-              <input
-                v-model="dataObject.last_name"
-                type="text"
-                class="form-control"
-              />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Username" :rules="['required']">
-              <input
-                v-model="dataObject.username"
-                type="text"
-                class="form-control"
-              />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper
-              name="Email"
-              :rules="['required', 'email']"
-            >
-              <input
-                v-model="dataObject.email"
-                type="text"
-                autocomplete="off"
-                class="form-control"
-              />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
+                <input
+                  v-model="dataObject.email"
+                  type="text"
+                  autocomplete="off"
+                  class="form-control"
+                />
+              </ValidationProviderWrapper>
+            </div>
+            <!-- <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Password" :rules="['required']" :label="'Password'">
               <input
                 v-model="dataObject.password"
@@ -78,20 +56,43 @@
                 class="form-control"
               />
             </ValidationProviderWrapper>
-          </div>
-
-          <!-- <div class="col-md-12 mb-2 d-flex align-items-center">
-            <ValidationProviderWrapper name="" :rules="['required']">
-              <b-form-checkbox size="lg" switch v-model="dataObject.is_active">
-              </b-form-checkbox>
-            </ValidationProviderWrapper>
-            <div class="text-14" v-if="dataObject.is_active">Active</div>
-            <div class="text-14" v-else>Disabled</div>
           </div> -->
-        </div>
-      </form>
-    </ValidationObserver>
-  </ModalWrapper>
+
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Groups" :rules="['required']">
+                <VSelect
+                  v-model="dataObject.groups"
+                  :options="groups"
+                  label="name"
+                  multiple
+                  taggable
+                  :reduce="(opt) => opt.id"
+                >
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="Menu access"
+                :rules="['required']"
+              >
+                <VSelect
+                  v-model="dataObject.menus"
+                  :options="access"
+                  label="name"
+                  multiple
+                  taggable
+                  :reduce="(opt) => opt"
+                >
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+          </div>
+        </form>
+      </ValidationObserver>
+    </ModalWrapper>
+    <SettingsUserManagementModalRegAuth :user="user" />
+  </div>
 </template>
 
 <script>
@@ -116,10 +117,10 @@ export default {
         username: '',
         groups: [],
         menus: [],
-        password: '',
         email: '',
       },
       title: '',
+      user: {},
       groups: [],
       access: [
         {
@@ -195,7 +196,9 @@ export default {
       try {
         const data = await this.$api.users.createUser(this.dataObject)
         this.$emit('refresh')
+        this.user = data
         this.$bvModal.hide('addUser')
+        this.$bvModal.show('regAuth')
       } catch (error) {
         console.log(error)
       }
@@ -207,7 +210,6 @@ export default {
         last_name: '',
         username: '',
         groups: [],
-        password: '',
         email: '',
       }
     },

@@ -26,6 +26,16 @@
               <span>{{ data.item.description }}</span>
             </div>
           </template>
+          <template #email="{ data }">
+            <div class="d-flex align-items-center">
+              <span class="mr-2">{{ data.item.email }}</span>
+              <span
+                v-if="data.item.password_recover_status"
+                class="text-info border border-info rounded text-8 px-1"
+                >Password reset</span
+              >
+            </div>
+          </template>
 
           <template #triple_actions="{ data }">
             <b-dropdown

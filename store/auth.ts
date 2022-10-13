@@ -42,15 +42,14 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
 
     async login({ commit }, { username, password }) {
+        commit('REMOVE_TOKEN');
         try {
-            const response = await this.$axios.$post('/users/api-token-auth/', { username, password });
-
-            if (response.token) {
+            const response = await this.$axios.$post('/auth/login/', { username, password });
+            if (response) {
                 commit('SET_USER', response);
-                commit('SET_TOKEN', response.token);
             }
-            else{
-                this.$router.push("/auth/verify-password");
+            if(response.token){
+                commit('SET_TOKEN', response.token);
             }
             return Promise.resolve(response);
         } catch (e) {
@@ -70,52 +69,65 @@ export const actions: ActionTree<RootState, RootState> = {
             return Promise.reject(e);
         }
     },
-    logout({ commit }) {
-        commit('REMOVE_TOKEN');
-        this.replaceState({
-            auth: {
-                token: null,
-                user: { avatar: null, first_name: null, last_name: null },
-                userSigningUp: '',
-                disablePage:false,
-            },
-            roles: {
-                roles: [] as [],
-                access: true,
-                currentSchoolCode: null,
-            },
-            school: {
-                schools: [],
-                currentAcademicYear: {}
-            },
-            parent: {
-                student: [],
-            },
-            student: {
-                schools: [],
-                classDetails: {},
-                currentAcademicYear: {}
-            },
-            administration: {
-                school: {},
-                student: {},
-
-            },
-            staff: {
-                discoveryData: [],
-            },
-            loader: {
-                routerLoadingEnable: true,
-            },
-
-            breadcrumbs: {
-                routes: [],
-                rootPage: [],
-                enable: true,
-                enableRootRoute: true,
-            },
-            requestInProgress: false,
-        } as unknown as RootState)
+    async verifyAndUpdate({ commit }, details){
+        commit('SET_TOKEN', details);
+    },
+    async logout({ commit }) {
+        try {
+            
+            const response = await this.$axios.$delete('/auth/logout/');
+            commit('REMOVE_TOKEN');
+            if (response) {
+               
+                // this.replaceState({
+                //     auth: {
+                //         token: null,
+                //         user: { avatar: null, first_name: null, last_name: null },
+                //         userSigningUp: '',
+                //         disablePage:false,
+                //     },
+                //     roles: {
+                //         roles: [] as [],
+                //         access: true,
+                //         currentSchoolCode: null,
+                //     },
+                //     school: {
+                //         schools: [],
+                //         currentAcademicYear: {}
+                //     },
+                //     parent: {
+                //         student: [],
+                //     },
+                //     student: {
+                //         schools: [],
+                //         classDetails: {},
+                //         currentAcademicYear: {}
+                //     },
+                //     administration: {
+                //         school: {},
+                //         student: {},
+        
+                //     },
+                //     staff: {
+                //         discoveryData: [],
+                //     },
+                //     loader: {
+                //         routerLoadingEnable: true,
+                //     },
+        
+                //     breadcrumbs: {
+                //         routes: [],
+                //         rootPage: [],
+                //         enable: true,
+                //         enableRootRoute: true,
+                //     },
+                //     requestInProgress: false,
+                // } as unknown as RootState)
+            }
+            return Promise.resolve(response);
+        } catch (e) {
+            return Promise.reject(e);
+        }
     },
 }
 
