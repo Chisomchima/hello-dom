@@ -6,6 +6,9 @@
       <UtilsCardTab title="Imaging Observation">
         <DashboardImagingObservationSettings />
       </UtilsCardTab>
+      <UtilsCardTab title="Imaging Template">
+        <SettingsImagingList />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>

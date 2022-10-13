@@ -13,6 +13,7 @@ import Finance_Settings from "@/services/finance_settings";
 import reports from "@/services/reports";
 import Opd from "@/services/opd_settings";
 import Users from "@/services/users";
+import Templates from "@/services/templates";
 
 export default (context, inject) => {
     // Initialize API factories
@@ -29,7 +30,8 @@ export default (context, inject) => {
         finance_settings: Finance_Settings(context.$axios),
         reports: reports(context.$axios),
         opd: Opd(context.$axios),
-        users: Users(context.$axios)
+        users: Users(context.$axios),
+        templates: Templates(context.$axios)
     };
 
     // Inject $api

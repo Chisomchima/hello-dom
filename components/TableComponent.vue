@@ -252,6 +252,9 @@
       <template #cell(email)="item">
         <slot name="email" :data="item"></slot>
       </template>
+      <template #cell(content)="item">
+        <slot name="content" :data="item"></slot>
+      </template>
      
 
       <template #cell(submissions)="data">
@@ -681,8 +684,14 @@ export default {
 
     disabledTableRowMethod(item, type) {
       if (!item || type !== 'row') return
+      if (item.is_active === "boolean") {
+        if (!item.is_active) {
+          // this.$refs.tooltip.$emit('enable')
+          return 'disabledTableRow'
+        }
+      }
       if (item.bill && typeof item.bill === "object") {
-        if (item.bill.cleared_status !== 'CLEARED' || !item.is_active) {
+        if (item.bill.cleared_status !== 'CLEARED') {
           // this.$refs.tooltip.$emit('enable')
           return 'disabledTableRow'
         }

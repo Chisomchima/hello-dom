@@ -7,22 +7,30 @@
     @ok="save()"
     @hide="clear()"
   >
-    <ValidationObserver ref="form">
-      <form>
-        <div class="row">
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Report" :rules="[]">
-              <!-- <textarea
-                v-model="dataObject.comment"
-                type="text"
-                class="form-control"
-              /> -->
-              <VueEditor v-model="dataObject.report" />
-            </ValidationProviderWrapper>
+    <div>
+      <div>
+        <v-select
+          class="style-chooser text-grey text-14"
+          placeholder="Source"
+          :reduce="(opt) => opt.content"
+          :options="templates"
+          v-model="style"
+          label="title"
+        >
+        </v-select>
+      </div>
+      <ValidationObserver ref="form">
+        <form>
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Report" :rules="[]">
+                <VueEditor v-model="dataObject.report" />
+              </ValidationProviderWrapper>
+            </div>
           </div>
-        </div>
-      </form>
-    </ValidationObserver>
+        </form>
+      </ValidationObserver>
+    </div>
   </ModalWrapper>
 </template>
 
@@ -42,7 +50,16 @@ export default {
       dataObject: {
         report: '',
       },
+      style: null,
+      templates: []
     }
+  },
+  async created(){
+    const { results: templates } = await this.$api.templates.getTemplates({
+      size: 1000,
+      source: 'IMAGING'
+    })
+    this.templates = templates
   },
   watch: {
     data: {
@@ -53,15 +70,18 @@ export default {
       },
       deep: true,
     },
+    style(){
+      this.dataObject.report = this.style
+    }
   },
   methods: {
     async save() {
       try {
-        const imagingId = this.data.id;
-        const data = await this.$api.imaging.patchObservationOrder(
-          imagingId,
-          { status: 'CAPTURED', report: this.dataObject.report }
-        )
+        const imagingId = this.data.id
+        const data = await this.$api.imaging.patchObservationOrder(imagingId, {
+          status: 'CAPTURED',
+          report: this.dataObject.report,
+        })
         const result = await this.showConfirmMessageBox(
           'Do you want to submit for approval'
         )
@@ -70,7 +90,7 @@ export default {
             status: 'AWAITING_APPROVAL',
           })
 
-         this.$bvModal.hide('imaging_order_report_id')
+          this.$bvModal.hide('imaging_order_report_id')
         }
         this.$emit('refresh')
         console.log(data)
@@ -83,6 +103,7 @@ export default {
       this.dataObject = {
         comment: '',
       }
+      this.style = null
       this.$emit('hide')
     },
   },
