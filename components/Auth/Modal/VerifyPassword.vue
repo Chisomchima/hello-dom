@@ -138,6 +138,8 @@ export default {
         recovery_password: '',
         confirm_password: '',
       }
+      // this.$store.dispatch('auth/logout')
+      this.$router.push('/')
     },
   },
 }

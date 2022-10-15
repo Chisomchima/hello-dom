@@ -17,23 +17,39 @@
           :items="items"
           :modalTitle="modalTitle"
           :busy="busy"
-          @edit="edit($event)"
+          @row-clicked="edit($event)"
           @delete="deleteUser"
-          @row-clicked="details"
         >
           <template #description="{ data }">
-            <div class="">
+            <div>
               <span>{{ data.item.description }}</span>
+            </div>
+          </template>
+          <template #username="{ data }">
+            <div>
+              <span>{{ toLowerCaseFunc(data.item.username) }}</span>
+            </div>
+          </template>
+          <template #last_login="{ data }">
+            <div>
+              <span>{{ dateFormatter(data.item.last_login) }}</span>
             </div>
           </template>
           <template #email="{ data }">
             <div class="d-flex align-items-center">
               <span class="mr-2">{{ data.item.email }}</span>
+            </div>
+          </template>
+          <template #password_recover_date="{ data }">
+            <div>
               <span
                 v-if="data.item.password_recover_status"
-                class="text-info border border-info rounded text-8 px-1"
+                class="text-info text-center border border-info rounded text-10 px-1"
                 >Password reset</span
               >
+              <span v-else>
+                {{ dateFormatter(data.item.password_recover_date) }}
+              </span>
             </div>
           </template>
 
@@ -68,6 +84,18 @@
                 >
                   Activate user
                 </b-dropdown-item>
+                <b-dropdown-item
+                  class="text-capitalize"
+                  @click="edit(data.item)"
+                >
+                  Edit user
+                </b-dropdown-item>
+                <b-dropdown-item
+                  class="text-capitalize"
+                  @click="deleteUser(data.item)"
+                >
+                  Delete user
+                </b-dropdown-item>
               </template>
             </b-dropdown>
           </template>
@@ -88,6 +116,7 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 export default {
   mixins: [TableFunc],
@@ -126,10 +155,12 @@ export default {
         {
           key: 'email',
         },
-
         {
-          key: 'actions',
-          label: '',
+          key: 'last_login',
+        },
+        {
+          key: 'password_recover_date',
+          label: 'Password recovery',
         },
         {
           key: 'triple_actions',
@@ -234,8 +265,15 @@ export default {
       this.modalTitle = 'Edit User'
       this.$bvModal.show('editUser')
     },
-    details(e) {
-      console.log(e)
+    toLowerCaseFunc(e) {
+      return e.toLowerCase()
+    },
+    dateFormatter(x) {
+      if (x) {
+        return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
+      } else {
+        return ''
+      }
     },
   },
 }

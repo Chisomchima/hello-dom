@@ -1,6 +1,5 @@
 <template>
   <div>
-  <h3 class="page-heading">Settings</h3>
     <div class="row">
       <div
         v-for="(card, index) in cards"
@@ -13,7 +12,7 @@
         >
           <div class="card-body">
             <div class="row">
-              <div class="col text-truncate">
+              <div class="col">
                 <h3
                   class="h5 text-uppercase mb-0 font-weight-bold text-primary"
                 >
@@ -45,29 +44,14 @@ export default {
     return {
       cards: [
         {
-          name: 'User management',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/user',
+          name: 'Billable items',
+          icon: 'fa fa-sliders',
+          route: '/dashboard/configurations/finance/items/',
         },
         {
-          name: 'Finance',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/finance',
-        },
-        {
-          name: 'Laboratory',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/laboratory/',
-        },
-        {
-          name: 'Imaging',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/imaging',
-        },
-        {
-          name: 'OPD',
-          icon: 'fa fa-cogs',
-          route: '/dashboard/settings/opd',
+          name: 'Payment method',
+          icon: 'fa fa-sliders',
+          route: '/dashboard/configurations/finance/payment-method/',
         },
       ],
     }

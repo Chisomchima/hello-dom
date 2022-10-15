@@ -133,72 +133,72 @@ export default {
           ],
         },
         {
-          title: 'Settings',
-          href: '/dashboard/settings',
+          title: 'Configurations',
+          href: '/dashboard/configurations',
           icon: 'fas fa-cog',
           child: [
             {
-              href: '/dashboard/settings/user/?tab=0',
+              href: '/dashboard/configurations/user/?tab=0',
               title: 'User Management',
               child: [
                 {
-                  href: '/dashboard/settings/user/?tab=0',
+                  href: '/dashboard/configurations/user/?tab=0',
                   title: 'Users',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/finance/',
-              title: 'Finance Settings',
+              href: '/dashboard/configurations/finance/',
+              title: 'Finance configurations',
               child: [
                 {
-                  href: '/dashboard/settings/finance/items/',
+                  href: '/dashboard/configurations/finance/items/',
                   title: 'Billable items',
                 },
                 {
-                  href: '/dashboard/settings/finance/payment-method/',
+                  href: '/dashboard/configurations/finance/payment-method/',
                   title: 'Payment methods',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/laboratory/',
-              title: 'Laboratory Settings',
+              href: '/dashboard/configurations/laboratory/',
+              title: 'Laboratory configurations',
               child: [
                 {
-                  href: '/dashboard/settings/laboratory/service-center',
+                  href: '/dashboard/configurations/laboratory/service-center',
                   title: 'Laboratory center',
                 },
                 {
-                  href: '/dashboard/settings/laboratory/service-config',
+                  href: '/dashboard/configurations/laboratory/service-config',
                   title: 'Laboratory configuration',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/imaging/',
-              title: 'Imaging Settings',
+              href: '/dashboard/configurations/imaging/',
+              title: 'Imaging configurations',
               child: [
                 {
-                  href: '/dashboard/settings/imaging/service-center',
+                  href: '/dashboard/configurations/imaging/service-center',
                   title: 'Imaging Center',
                 },
                 {
-                  href: '/dashboard/settings/imaging/service-config',
+                  href: '/dashboard/configurations/imaging/service-config',
                   title: 'Imaging Configuration',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/opd/',
-              title: 'OPD Settings',
+              href: '/dashboard/configurations/opd/',
+              title: 'OPD configurations',
               child: [
                 {
-                  href: '/dashboard/settings/opd/?tab=0',
+                  href: '/dashboard/configurations/opd/?tab=0',
                   title: 'Department',
                 },
                 {
-                  href: '/dashboard/settings/opd/?tab=1',
+                  href: '/dashboard/configurations/opd/?tab=1',
                   title: 'Clinic',
                 },
               ],

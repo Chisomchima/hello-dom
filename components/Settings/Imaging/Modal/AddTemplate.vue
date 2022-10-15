@@ -28,24 +28,8 @@
             </ValidationProviderWrapper>
           </div>
 
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Source" :rules="['required']">
-              <v-select
-                class="style-chooser text-grey text-14"
-                placeholder="Source"
-                :reduce="(opt) => opt.value"
-                :options="[
-                  { label: 'Imaging', value: 'IMAGING' },
-                 
-                ]"
-                v-model="dataObject.source"
-                label="label"
-              >
-               <!-- { label: 'Laboratory', value: 'LABORATORY' },
+ <!-- { label: 'Laboratory', value: 'LABORATORY' },
                   { label: 'Encounters', value: 'ENCOUNTERS' }, -->
-              </v-select>
-            </ValidationProviderWrapper>
-          </div>
            <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Report" :rules="[]">
               <VueEditor v-model="dataObject.content" />
@@ -78,7 +62,7 @@ export default {
         title: '',
         description: '',
         content: null,
-        source: null,
+        source: 'IMAGING',
       },
       title: '',
       departments: [],

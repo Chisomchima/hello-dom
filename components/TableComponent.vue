@@ -255,6 +255,18 @@
       <template #cell(content)="item">
         <slot name="content" :data="item"></slot>
       </template>
+      <template #cell(username)="item">
+        <slot name="username" :data="item"></slot>
+      </template>
+      <template #cell(last_login)="item">
+        <slot name="last_login" :data="item"></slot>
+      </template>
+      <template #cell(password_recover_status)="item">
+        <slot name="password_recover_status" :data="item"></slot>
+      </template>
+      <template #cell(password_recover_date)="item">
+        <slot name="password_recover_date" :data="item"></slot>
+      </template>
      
 
       <template #cell(submissions)="data">

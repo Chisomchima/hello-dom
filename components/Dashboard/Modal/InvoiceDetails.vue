@@ -1,33 +1,128 @@
 <template>
-  <ModalWrapper
-    title="Invoice details"
-    id="invoiceModal"
-    :stacking="false"
+  <b-modal
+    :id="`invoiceModal`"
+    ref="modal"
+    centered
+    :size="`xl`"
+    ok-only
+    :no-stacking="false"
+    :scrollable="!notScrollable"
+    ok-title="Save"
     @ok="ok()"
+    @show="$emit('show', $event)"
     @hide="closeModal"
-    size="xl"
   >
-    <!-- <template #modal-header="{ close }">
-      <div>
-        <span class="d-none">{{close}}</span>
-        <span
-          v-if="invoice.status === 'PAID'"
-          class="badge-success rounded p-1 text-white"
-          >{{ invoice.status }}</span
+    <template #modal-header="{ close }">
+      <slot name="header" :close="close">
+        <h5 class="mb-0 mt-2">{{ title }}</h5>
+        <div class="d-flex align-items-center">
+          <div v-if="false" class="d-flex align-items-center justify-content-end">
+            <div
+              v-if="invoice.status ? true : false"
+              class="d-flex justify-content-end"
+            >
+              <div class="mx-2">
+                <b-dropdown
+                  v-if="editMode && invoice.status === 'DRAFT'"
+                  @click="saveAndConfirm"
+                  size="sm"
+                  :lazy="true"
+                  variant="primary"
+                  split-variant="outline-primary"
+                  split
+                  text="Save and Confirm"
+                >
+                  <b-dropdown-item @click="ok()">
+                    <span class="text-primary">Save as draft</span>
+                  </b-dropdown-item>
+                </b-dropdown>
+                <button
+                  v-if="!editMode && invoice.status === 'DRAFT'"
+                  @click="confirmInvoice"
+                  class="btn btn-primary btn-sm"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+            <div v-if="layout" class="p-2 d-flex justify-content-end">
+              <button
+                v-if="!editMode && invoice.status === 'DRAFT'"
+                @click="editBill"
+                class="btn btn-primary btn-sm"
+              >
+                Edit
+              </button>
+              <button
+                v-if="editMode"
+                @click="editBill"
+                class="btn btn-danger btn-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          <span @click="close()" class="point">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+                d="M6 18L18 6m0 12L6 6"
+              />
+            </svg>
+          </span>
+        </div>
+      </slot>
+    </template>
+    <template #modal-footer="{ cancel }">
+      <div class="d-none">
+        <div
+          :class="
+            arrangement ? `justify-content-between` : `justify-content-center`
+          "
+          class="d-flex w-100 px-5"
         >
+          <div>
+            <b-button
+              size="sm"
+              variant="light"
+              class="px-5 text-secondary mr-2"
+              @click="cancel()"
+            >
+              {{ cancelText }}
+            </b-button>
+          </div>
+          <div v-if="arrangement">
+            <BaseButton
+              class="px-5"
+              :extra-class="buttonColor"
+              @click="$emit('ok', $event)"
+            >
+              {{ submitTitle }}
+            </BaseButton>
+          </div>
+        </div>
       </div>
-    </template> -->
+    </template>
 
     <div v-if="invoice">
       <div class="row align-items-center text-14">
-        <div v-if="invoice.patient" class="col-md-3">
+        <div v-if="invoice.patient" class="col-md-2">
           <span class="text-grey">UHID:</span>
           <span @click="goToProfile" class="hov point">{{
             invoice.patient.uhid
           }}</span>
         </div>
 
-        <div v-if="invoice.patient" class="col-md-3">
+        <div v-if="invoice.patient" class="col-md-2 px-0">
           <span class="text-grey">Name:</span>
           <span class="hov point" @click="goToProfile">{{
             invoice.patient.salutation
@@ -39,79 +134,32 @@
               : invoice.patient.firstname + ' ' + invoice.patient.lastname
           }}</span>
         </div>
-        <div v-if="invoice.patient" class="col-md-2 text-14">
+        <div v-if="invoice.patient" class="col-md-2 px-0 text-14">
           <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
         </div>
-        <div
-          class="d-flex align-items-center justify-content-end col-md-4 pl-4"
-        >
-          <div
-            v-if="invoice.status ? true : false"
-            class="d-flex justify-content-end"
-          >
-            <div class="mx-2">
-              <b-dropdown
-                v-if="editMode && invoice.status === 'DRAFT'"
-                @click="saveAndConfirm"
-                size="sm"
-                :lazy="true"
-                variant="primary"
-                split-variant="outline-primary"
-                split
-                text="Save and Confirm"
-              >
-                <b-dropdown-item @click="ok()">
-                  <span class="text-primary">Save as draft</span>
-                </b-dropdown-item>
-              </b-dropdown>
-              <button
-                v-if="!editMode && invoice.status === 'DRAFT'"
-                @click="confirmInvoice"
-                class="btn btn-primary btn-sm"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-          <div v-if="layout" class="p-2 d-flex justify-content-end">
-            <button
-              v-if="!editMode && invoice.status === 'DRAFT'"
-              @click="editBill"
-              class="btn btn-primary btn-sm"
-            >
-              Edit
-            </button>
-            <button
-              v-if="editMode"
-              @click="editBill"
-              class="btn btn-danger btn-sm"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="row align-items-center">
-        <div class="col-md-6 d-flex align-items-center text-14">
+        <div class="col-md-3 px-0 d-flex align-items-center text-14">
           <span class="class-details-data_label mr-2">Scheme:</span>
           <span class="text-14 text-truncate">{{
             invoice.payer_scheme ? invoice.payer_scheme : 'nil'
           }}</span>
         </div>
-        <div class="col-md-3 align-items-center">
+        <div class="col-md-3 px-0 align-items-center">
           <span class="class-details-data_label mr-2">Scheme type:</span>
           <span class="text-14 text-truncate">{{
             invoice.scheme_type ? invoice.scheme_type : 'nil'
           }}</span>
         </div>
-        <div class="col-md-3 align-items-center">
+      </div>
+
+      <div class="row align-items-center">
+        
+        <div class="col-md-2 align-items-center">
           <span class="class-details-data_label mr-2">Invoice ID:</span>
           <span class="text-14">{{
             invoice.inv_id ? invoice.inv_id : 'nil'
           }}</span>
         </div>
-        <div class="col-md-5 align-items-center">
+        <div class="col-md-4 px-0 align-items-center">
           <span class="class-details-data_label mr-2">Invoice Date:</span>
           <span class="text-14 text-truncate">{{
             invoice.confirmed_at ? dateFormatter(invoice.confirmed_at) : 'nil'
@@ -310,64 +358,7 @@
         </div>
       </TabPanel>
     </TabView>
-    <template #footer="{ cancel }">
-      <div v-if="true" class="d-flex justify-content-start">
-        <span class="d-none">{{ cancel }}</span>
-        <!-- <div>
-          <b-button
-            size="sm"
-            variant="light"
-            class="px-5 text-secondary mr-2"
-            @click="close"
-          >
-            Cancel
-          </b-button>
-        </div> -->
-      </div>
-      <div v-if="false" class="d-flex w-100 justify-content-between px-5">
-        <div class="w-50">
-          <span class="d-none">{{ cancel }}</span>
-          <b-button
-            size="sm"
-            variant="light"
-            class="px-5 text-secondary mr-2"
-            @click="editMode = false"
-          >
-            Cancel
-          </b-button>
-        </div>
-
-        <div
-          :class="editMode ? 'justify-content-between' : 'justify-content-end'"
-          class="w-75 d-flex"
-        >
-          <div v-if="!editMode">
-            <button
-              class="btn btn-secondary px-5"
-              @click="editMode = !editMode"
-            >
-              Edit
-            </button>
-          </div>
-
-          <div v-if="editMode">
-            <BaseButton
-              extra-class="'px-5  btn-info'"
-              :class="'px-5  btn-info'"
-              @click="ok()"
-            >
-              Save
-            </BaseButton>
-          </div>
-          <div>
-            <BaseButton v-if="editMode" @click="saveAndConfirm" class="px-5">
-              Confirm
-            </BaseButton>
-          </div>
-        </div>
-      </div>
-    </template>
-  </ModalWrapper>
+  </b-modal>
 </template>
 
 <script>
@@ -378,30 +369,53 @@ export default {
     SplitButton,
   },
   props: {
-    nameData: {
-      type: Object,
-      require: false,
-      default: () => ({}),
-    },
     invoice: {
       type: Object,
       require: false,
       default: () => ({}),
     },
-    data: {
-      type: Object,
-      require: false,
-      default: () => ({}),
+    buttonColor: {
+      type: String,
+      default: 'btn-primary',
     },
-    orientation: {
+
+    stacking: {
       type: Boolean,
-      require: false,
-      default: () => false,
+      default: true,
     },
-    layout: {
+
+    size: {
+      type: String,
+      default: 'md',
+    },
+    title: {
+      type: String,
+      default: 'Title',
+    },
+
+    submitTitle: {
+      type: String,
+      default: 'Save',
+    },
+    variant: {
+      type: String,
+      default: 'primary',
+    },
+    notScrollable: {
       type: Boolean,
-      require: false,
-      default: () => false,
+      default: false,
+    },
+    arrangement: {
+      type: Boolean,
+      default: true,
+    },
+    specialHeader: {
+      type: Boolean,
+      default: false,
+    },
+    cancelText: {
+      type: String,
+      default: 'Cancel',
     },
   },
   data() {
@@ -418,6 +432,7 @@ export default {
       totalBills: 0,
       paymentMethod: [],
       editMode: false,
+      layout: true,
       payments: [
         {
           payment_method: null,
@@ -569,14 +584,14 @@ export default {
       this.$bvModal.show('authorize')
     },
     makePayment() {
-      this.$bvModal.show('makePayment')
+      this.$bvModal.show('invoiceBalance')
     },
     async saveAndConfirm() {
       let response = await this.$api.finance.editBillLine(
         this.bills,
         this.invoice.id
       )
-    
+
       if (this.invoice.balance === '0.00') {
         let response = await this.$api.finance.confirmInvoice(this.invoice.id)
         if (response) {

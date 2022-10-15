@@ -3,7 +3,7 @@
     id="imaging_order_report_id"
     submit-title="Report"
     size="lg"
-    title="Capture Report"
+    title="Report"
     @ok="save()"
     @hide="clear()"
   >
@@ -11,7 +11,7 @@
       <div>
         <v-select
           class="style-chooser text-grey text-14"
-          placeholder="Source"
+          placeholder="Templates"
           :reduce="(opt) => opt.content"
           :options="templates"
           v-model="style"

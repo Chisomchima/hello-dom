@@ -1,6 +1,12 @@
 <template>
   <div>
-    <ModalWrapper id="addUser" :title="modalTitle" @ok="ok()" @hide="clear()">
+    <ModalWrapper
+      id="addUser"
+      :size="`lg`"
+      :title="modalTitle"
+      @ok="ok()"
+      @hide="clear()"
+    >
       <ValidationObserver ref="form">
         <form>
           <div class="row">
@@ -47,44 +53,56 @@
                 />
               </ValidationProviderWrapper>
             </div>
-            <!-- <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Password" :rules="['required']" :label="'Password'">
-              <input
-                v-model="dataObject.password"
-                type="password"
-                autocomplete="off"
-                class="form-control"
-              />
-            </ValidationProviderWrapper>
-          </div> -->
-
-            <div class="col-md-12 mb-2">
-              <ValidationProviderWrapper name="Groups" :rules="['required']">
-                <VSelect
-                  v-model="dataObject.groups"
-                  :options="groups"
-                  label="name"
-                  multiple
-                  taggable
-                  :reduce="(opt) => opt.id"
-                >
-                </VSelect>
-              </ValidationProviderWrapper>
-            </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper
                 name="Menu access"
                 :rules="['required']"
               >
-                <VSelect
+                <!-- <PickList
                   v-model="dataObject.menus"
+                  listStyle="height:200px"
+                  dataKey="id"
+                >
+                  <template #sourceheader> Availabless </template>
+                  <template #targetheader> Selected </template>
+                  <template #item="dataProps">
+                    <div class="product-list-action">
+                      <span class="mb-2 text-info text-10 p-1">{{
+                        dataProps.item
+                      }}</span>
+                    </div>
+                  </template>
+                </PickList> -->
+                <v-select
+                  class="style-chooser text-grey text-14"
+                  placeholder="Options"
                   :options="access"
-                  label="name"
                   multiple
                   taggable
-                  :reduce="(opt) => opt"
+                  v-model="dataObject.menus"
+                  label="name"
                 >
-                </VSelect>
+                </v-select>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Groups" :rules="['required']">
+                <PickList
+                  :metaKeySelection="control"
+                  v-model="dataObject.groups"
+                  listStyle="height:200px"
+                  dataKey="id"
+                >
+                  <template #sourceheader> Available </template>
+                  <template #targetheader> Selected </template>
+                  <template #item="data">
+                    <div class="product-list-action">
+                      <span class="mb-2 text-info text-10 p-1">{{
+                        data.item.name
+                      }}</span>
+                    </div>
+                  </template>
+                </PickList>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -96,7 +114,9 @@
 </template>
 
 <script>
+import PickList from 'primevue/picklist'
 export default {
+  components: { PickList },
   props: {
     editData: {
       type: Object,
@@ -115,61 +135,180 @@ export default {
         first_name: '',
         last_name: '',
         username: '',
-        groups: [],
+        groups: [[], []],
         menus: [],
         email: '',
       },
       title: '',
+      control: false,
       user: {},
       groups: [],
       access: [
         {
+          href: '/dashboard/patient',
           name: 'Patient Records',
-          icon: 'fas fa-notes-medical',
-          route: '/dashboard/patient',
-        },
-        {
-          name: 'OPD',
-          icon: 'fas fa-user-md',
-          route: '/dashboard/opd',
-        },
-        {
-          name: 'Laboratory',
-          icon: 'fas fa-vial',
-          route: '/dashboard/laboratory/',
-        },
-        {
-          name: 'Imaging',
-          icon: 'fas fa-x-ray',
-          route: '/dashboard/imaging/',
+          icon: 'fas fa-hospital-user',
         },
 
         {
+          href: '/dashboard/opd',
+          name: 'OPD',
+          icon: 'fas fa-user-md',
+          child: [
+            {
+              href: '/dashboard/opd/',
+              name: 'Encounter Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
+        },
+
+        {
+          href: '/dashboard/laboratory',
+          name: 'Laboratory',
+          icon: 'fas fa-vial',
+          child: [
+            {
+              href: '/dashboard/laboratory/',
+              name: 'Laboratory Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
+        },
+
+        {
+          href: '/dashboard/imaging',
+          name: 'Imaging',
+          icon: 'fas fa-x-ray',
+          child: [
+            {
+              href: '/dashboard/imaging/',
+              name: 'Imaging Work List',
+              icon: 'fas fa-list-ul',
+            },
+          ],
+        },
+        {
+          href: '/dashboard/cso',
           name: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
-          route: '/dashboard/cso/',
         },
         {
+          href: '/dashboard/finance',
           name: 'Finance',
           icon: 'fas fa-money-check-alt',
-          route: '/dashboard/finance/',
         },
         {
+          href: '/dashboard/reports',
           name: 'Reports',
           icon: 'fas fa-file',
-          route: '/dashboard/reports/',
+          child: [
+            {
+              href: '/dashboard/reports/encounter',
+              name: 'Encounter report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/laboratory',
+              name: 'Laboratory report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/imaging',
+              name: 'Imaging report',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/reports/patient',
+              name: 'Patient report',
+              icon: 'fas fa-list-ul',
+            },
+          ],
         },
         {
-          name: 'Settings',
+          name: 'Configurations',
+          href: '/dashboard/settings',
           icon: 'fas fa-cog',
-          route: '/dashboard/settings/',
+          child: [
+            {
+              href: '/dashboard/settings/user/?tab=0',
+              name: 'User Management',
+              child: [
+                {
+                  href: '/dashboard/settings/user/?tab=0',
+                  name: 'Users',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/finance/',
+              name: 'Finance Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/finance/items/',
+                  name: 'Billable items',
+                },
+                {
+                  href: '/dashboard/settings/finance/payment-method/',
+                  name: 'Payment methods',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/laboratory/',
+              name: 'Laboratory Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/laboratory/service-center',
+                  name: 'Laboratory center',
+                },
+                {
+                  href: '/dashboard/settings/laboratory/service-config',
+                  name: 'Laboratory configuration',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/imaging/',
+              name: 'Imaging Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/imaging/service-center',
+                  name: 'Imaging Center',
+                },
+                {
+                  href: '/dashboard/settings/imaging/service-config',
+                  name: 'Imaging Configuration',
+                },
+              ],
+            },
+            {
+              href: '/dashboard/settings/opd/',
+              name: 'OPD Settings',
+              child: [
+                {
+                  href: '/dashboard/settings/opd/?tab=0',
+                  name: 'Department',
+                },
+                {
+                  href: '/dashboard/settings/opd/?tab=1',
+                  name: 'Clinic',
+                },
+              ],
+            },
+          ],
         },
       ],
     }
   },
   async created() {
     let groups = await this.$api.users.getGroups({ size: 1000 })
-    this.groups = groups.results
+    this.dataObject.groups[0] = groups.results
+  },
+  mounted() {
+    // let permissions = this.$api.users.getPermissions({ size: 1000 })
+    // let access = this.access
+    // this.dataObject.menus = access
   },
   watch: {
     editData: {
@@ -194,7 +333,19 @@ export default {
     },
     async save() {
       try {
-        const data = await this.$api.users.createUser(this.dataObject)
+        let groups = this.dataObject.groups[1]
+        let groupsID = []
+        if (groups.length > 0) {
+          groupsID = groups.map((el) => el.id)
+        }
+        const data = await this.$api.users.createUser({
+          first_name: this.dataObject.first_name,
+          last_name: this.dataObject.last_name,
+          username: this.dataObject.username,
+          groups: groupsID,
+          menus: this.dataObject.menus,
+          email: this.dataObject.email,
+        })
         this.$emit('refresh')
         this.user = data
         this.$bvModal.hide('addUser')
@@ -209,7 +360,8 @@ export default {
         first_name: '',
         last_name: '',
         username: '',
-        groups: [],
+        groups: [[], []],
+        menus: [[], []],
         email: '',
       }
     },

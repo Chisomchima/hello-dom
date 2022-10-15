@@ -117,6 +117,7 @@
         :nameData="data"
         :invoice="details"
         @refresh="getSome"
+        :title="'Invoice details'"
       />
     </div>
 

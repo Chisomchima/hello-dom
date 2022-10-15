@@ -14,6 +14,11 @@
           :busy="busy"
           @edit="edit($event)"
         >
+        <template #description="{ data }">
+            <div>
+              <span>{{ data.item.description }}</span>
+            </div>
+          </template>
         </TableComponent>
       </template>
     </UtilsFilterComponent>
@@ -38,6 +43,9 @@ export default {
       fields: [
         {
           key: 'name',
+        },
+        {
+          key: 'description',
         },
         {
           key: 'actions',

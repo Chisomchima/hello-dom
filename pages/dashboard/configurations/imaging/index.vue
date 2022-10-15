@@ -46,12 +46,12 @@ export default {
         {
           name: 'Service centers',
           icon: 'fa fa-sliders',
-          route: '/dashboard/settings/laboratory/service-center/',
+          route: '/dashboard/configurations/imaging/service-center/',
         },
         {
           name: 'Service config',
           icon: 'fa fa-sliders',
-          route: '/dashboard/settings/laboratory/service-config/',
+          route: '/dashboard/configurations/imaging/service-config/',
         },
       ],
     }

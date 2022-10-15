@@ -44,11 +44,13 @@
     </TableComponent>
 
     <div>
-      <FinanceModalInvoiceDetails
+      <FinanceModalCustomInvoiceModal
         :invoice="invoice"
          :layout="true"
         @refresh="getUpdates"
+        :arrangement="false"
         @print="print"
+        :title="`Invoice details`"
       />
       <FinanceModalPayment @newUpdate="getUpdates" @close="$bvModal.hide('invoiceModal')" :invoice="invoice" />
       <DashboardModalPrintInvoice :data="patientData" :reciept="template" />

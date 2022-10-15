@@ -9,16 +9,39 @@
     :no-stacking="stacking"
     :scrollable="!notScrollable"
     :hide-footer="noFooter"
-    :no-close-on-esc="persistent"
     :no-close-on-backdrop="persistent"
-    :hide-header-close="persistent"
-    :cancel-disabled="persistent"
     ok-title="Save"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"
     @hide="$emit('hide', $event)"
   >
     <slot></slot>
+    <template #modal-header="{ close }">
+     <slot name="header" :close="close">
+
+     
+       <h5>{{ title }}</h5>
+     
+      <div class="point" @click="close()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          preserveAspectRatio="xMidYMid meet"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            d="M6 18L18 6m0 12L6 6"
+          />
+        </svg>
+      </div>
+
+     </slot>
+    </template>
     <template #modal-footer="{ cancel }">
       <!-- Emulate built in modal footer ok and cancel button actions -->
       <slot name="footer" :cancel="cancel">
@@ -33,7 +56,6 @@
               size="sm"
               variant="light"
               class="px-5 text-secondary mr-2"
-              :disabled="persistent"
               @click="cancel()"
             >
               {{ cancelText }}
@@ -101,6 +123,10 @@ export default {
     arrangement: {
       type: Boolean,
       default: true,
+    },
+    specialHeader: {
+      type: Boolean,
+      default: false,
     },
     cancelText: {
       type: String,

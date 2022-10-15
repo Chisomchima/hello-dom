@@ -44,14 +44,14 @@ export default {
     return {
       cards: [
         {
-          name: 'Billable items',
+          name: 'Service centers',
           icon: 'fa fa-sliders',
-          route: '/dashboard/settings/finance/items/',
+          route: '/dashboard/configurations/laboratory/service-center/',
         },
         {
-          name: 'Payment method',
+          name: 'Service config',
           icon: 'fa fa-sliders',
-          route: '/dashboard/settings/finance/payment-method/',
+          route: '/dashboard/configurations/laboratory/service-config/',
         },
       ],
     }

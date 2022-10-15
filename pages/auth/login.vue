@@ -26,7 +26,7 @@
           </div>
           <div class="col-12">
             <div class="form-group">
-              <BaseButton watch-request  class="w-100 btn-lg" @click.prevent="submitForm">Login</BaseButton>
+              <BaseCustomButton :isLoading="loading" class="w-100 btn-lg" @click.prevent="submitForm">Login</BaseCustomButton>
             </div>
           </div>
         </div>
@@ -49,13 +49,16 @@ export default {
       username: "",
       password: "",
       showPage: false,
+      loading: false,
     };
   },
   
 
   methods: {
     async submitForm() {
-      try {
+     if(this.username !== '' && this.password !== ''){
+      this.loading = true
+       try {
         let response = await this.$store.dispatch("auth/login", {
           username: this.username,
           password: this.password,
@@ -66,10 +69,14 @@ export default {
         else{
           this.$router.push("/auth/verify-password");
         }
-        
+        this.loading = false
       } catch (error) {
         console.log(error);
       }
+      finally{
+        this.loading = false
+      }
+     }
     },
 
     goBack() {

@@ -178,10 +178,10 @@ export default {
           worklist: true,
         }
         // console.log(newFilterObject)
-        // this.filterFunc(newFilterObject)
+        this.filterFunc(newFilterObject)
          this.$emit('filter', newFilterObject)
       } else {
-        // this.filterFunc(newVal)
+        this.filterFunc(newVal)
         this.$emit('filter', newVal)
       }
     },

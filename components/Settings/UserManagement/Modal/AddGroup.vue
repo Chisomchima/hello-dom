@@ -31,29 +31,30 @@
               />
             </ValidationProviderWrapper>
           </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Description" :rules="['']">
+              <input
+                v-model="dataObject.description"
+                type="text"
+                class="form-control"
+              />
+            </ValidationProviderWrapper>
+          </div>
 
           <div class="col-md-12 mb-2">
             <PickList
               :metaKeySelection="control"
               v-model="dataObject.permissions"
-              listStyle="height:3000px"
+              listStyle="height:400px"
               dataKey="id"
             >
               <template #sourceheader> Available </template>
               <template #targetheader> Selected </template>
               <template #item="data">
                 <div class="product-list-action">
-                  <span
-                    class="
-                      mb-2
-                      text-info
-                      border border-info
-                      rounded
-                      text-10
-                      p-1
-                    "
-                    >{{ data.item.name }}</span
-                  >
+                  <span class="mb-2 text-info text-10 p-1">{{
+                    data.item.name
+                  }}</span>
                 </div>
               </template>
             </PickList>
@@ -65,6 +66,7 @@
 </template>
 
 <script>
+import { differenceBy } from 'lodash'
 import PickList from 'primevue/picklist'
 export default {
   components: { PickList },
@@ -83,43 +85,18 @@ export default {
   data() {
     return {
       dataObject: {
-        id: '',
         name: '',
+        description: '',
         permissions: [[], []],
       },
       reqBody: {
         name: '',
+
         permissions: [[], []],
       },
       title: '',
       permissions: [],
       control: false,
-      list: [
-        {
-          rating: 5,
-        },
-        {
-          rating: 4,
-        },
-        {
-          rating: 3,
-        },
-        {
-          rating: 5,
-        },
-        {
-          rating: 4,
-        },
-        {
-          rating: 4,
-        },
-        {
-          rating: 3,
-        },
-        {
-          rating: 5,
-        },
-      ],
     }
   },
   watch: {
@@ -127,8 +104,12 @@ export default {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
           this.dataObject.permissions[1] = newVal.permissions
+          this.dataObject.description = newVal.description
           this.dataObject.name = newVal.name
           this.dataObject.id = newVal.id
+          let diff = this.checkDiffference(this.dataObject.permissions[0], newVal.permissions)
+          console.log(diff)
+          this.dataObject.permissions[0] = diff
         }
       },
       immediate: true,
@@ -151,6 +132,10 @@ export default {
         }
       }
     },
+    checkDiffference(yardstick,y){
+      let diff = differenceBy(yardstick, y, 'name')
+      return diff
+    },
     async callForData() {
       try {
         let permissions = await this.$api.users.getPermissions({ size: 1000 })
@@ -159,10 +144,15 @@ export default {
     },
     async save() {
       try {
-        console.log('save')
+        let permissions = this.dataObject.permissions[1]
+        let permissionsID = []
+        if (permissions.length > 0) {
+          permissionsID = permissions.map((el) => el.id)
+        }
         const data = await this.$api.users.createGroup({
           name: this.dataObject.name,
-          permissions: this.dataObject.permissions[1],
+          permissions: permissionsID,
+          description: this.dataObject.description,
         })
         this.$emit('refresh')
         this.$bvModal.hide('addGroup')
@@ -173,10 +163,15 @@ export default {
     },
     async edit() {
       try {
-        console.log('edit')
+        let permissions = this.dataObject.permissions[1]
+        let permissionsID = []
+        if (permissions.length > 0) {
+          permissionsID = permissions.map((el) => el.id)
+        }
         const data = await this.$api.users.updateGroup(this.dataObject.id, {
           name: this.dataObject.name,
-          permissions: this.dataObject.permissions[1],
+          permissions: permissionsID,
+          description: this.dataObject.description,
         })
         this.$emit('refresh')
         this.$bvModal.hide('addGroup')
@@ -189,7 +184,9 @@ export default {
     clear() {
       this.dataObject.id = ''
       this.dataObject.name = ''
+      this.dataObject.description = ''
       this.dataObject.permissions[1] = []
+      this.callForData()
     },
   },
 }

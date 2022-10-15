@@ -58,28 +58,24 @@ export default {
       user: {},
       fields: [
         {
-          key: 'created_at',
-        },
-        {
           key: 'title',
         },
         {
           key: 'description',
         },
-        // {
-        //   key: 'source',
-        // },
-        // {
-        //   key: 'content',
-        // },
+        {
+          key: 'created_at',
+        },
+        {
+          key: 'created_by',
+          formatter: (value) => {
+            return value.first_name + ' ' + value.last_name
+          },
+        },
         {
           key: 'actions',
           label: '',
         },
-        // {
-        //   key: 'triple_actions',
-        //   label: '',
-        // },
       ],
     }
   },
