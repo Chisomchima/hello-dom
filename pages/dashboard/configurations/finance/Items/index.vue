@@ -1,7 +1,7 @@
 <template>
   <div>
     <BackwardNavigation />
-    <h5>Finance Settings</h5>
+    <h5>Finance Configurations</h5>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Payers">
         <keep-alive>
