@@ -2,9 +2,9 @@
   <div>
     <div class="row">
       <div
-        v-for="(card, index) in cards"
+        v-for="(card, index) in tiles"
         :key="index"
-        class="col-md-4 col-12 col-sm-6"
+        :class="tiles[index].title === 'Dashboard' ? 'd-none' : 'col-md-4 col-12 col-sm-6'"
       >
         <div
           class="
@@ -206,6 +206,17 @@ export default {
           ],
         },
       ],
+    }
+  },
+  computed: {
+    tiles() {
+      let menus = this.$store.state.auth.user.menus
+      return menus
+    },
+  },
+  mounted() {
+    if (this.tiles[0].title !== 'Dashboard') {
+      this.$store.dispatch('auth/setupDashboard')
     }
   },
   methods: {

@@ -5,7 +5,8 @@ type UserDetails = {
     first_name: string,
     last_name: string,
     gender: "male" | "female",
-    username?:string
+    username?:string,
+    menus?: Array<object>,
 };
 
 
@@ -22,6 +23,13 @@ export type RootState = ReturnType<typeof state>
 export const mutations: MutationTree<RootState> = {
     SET_USER: (state, user: UserDetails) => {
         state.user = user;
+    },
+    SET_DASHBOARD: (state) => {
+        state.user.menus.unshift({
+            href: '/dashboard',
+            title: 'Dashboard',
+            icon: 'fa fa-tv',
+          })
     },
     SET_TOKEN: (state, token: string) => {
         state.token = token;
@@ -71,6 +79,9 @@ export const actions: ActionTree<RootState, RootState> = {
     },
     async verifyAndUpdate({ commit }, details){
         commit('SET_TOKEN', details);
+    },
+    async setupDashboard({ commit }, dashboard){
+        commit('SET_DASHBOARD', dashboard);
     },
     async logout({ commit }) {
         try {

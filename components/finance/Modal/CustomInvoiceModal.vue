@@ -17,7 +17,10 @@
       <slot name="header" :close="close">
         <h5 class="mb-0 mt-2">{{ title }}</h5>
         <div class="d-flex align-items-center">
-          <div v-if="arrangement" class="d-flex align-items-center justify-content-end">
+          <div
+            v-if="arrangement"
+            class="d-flex align-items-center justify-content-end"
+          >
             <div
               v-if="invoice.status ? true : false"
               class="d-flex justify-content-end"
@@ -115,56 +118,58 @@
     </template>
 
     <div v-if="invoice">
-      <div class="row align-items-center text-14">
-        <div v-if="invoice.patient" class="col-md-2">
-          <span class="text-grey">UHID:</span>
-          <span @click="goToProfile" class="hov point">{{
-            invoice.patient.uhid
-          }}</span>
+      <div class="d-flex justify-content-between">
+        <div class="text-14 col-md-4">
+          <div v-if="invoice.patient" class="col-md-12 px-0">
+            <span class="text-grey">Name:</span>
+            <span class="hov point" @click="goToProfile">{{
+              invoice.patient.salutation
+                ? invoice.patient.salutation +
+                  ' ' +
+                  invoice.patient.firstname +
+                  ' ' +
+                  invoice.patient.lastname
+                : invoice.patient.firstname + ' ' + invoice.patient.lastname
+            }}</span>
+          </div>
+          <div v-if="invoice.patient" class="col-md-12 px-0">
+            <span class="text-grey">UHID:</span>
+            <span @click="goToProfile" class="hov point">{{
+              invoice.patient.uhid
+            }}</span>
+          </div>
+          <div v-if="invoice.patient" class="col-md-12 px-0 text-14">
+            <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
+          </div>
+          <div class="col-md-12 px-0 d-flex align-items-center text-14">
+            <span class="class-details-data_label mr-2">Scheme:</span>
+            <span class="text-14 text-truncate">{{
+              invoice.payer_scheme ? invoice.payer_scheme : 'nil'
+            }}</span>
+          </div>
+          <div class="col-md-12 px-0 align-items-center">
+            <span class="class-details-data_label mr-2">Scheme type:</span>
+            <span class="text-14 text-truncate">{{
+              invoice.scheme_type ? invoice.scheme_type : 'nil'
+            }}</span>
+          </div>
         </div>
 
-        <div v-if="invoice.patient" class="col-md-2 px-0">
-          <span class="text-grey">Name:</span>
-          <span class="hov point" @click="goToProfile">{{
-            invoice.patient.salutation
-              ? invoice.patient.salutation +
-                ' ' +
-                invoice.patient.firstname +
-                ' ' +
-                invoice.patient.lastname
-              : invoice.patient.firstname + ' ' + invoice.patient.lastname
-          }}</span>
-        </div>
-        <div v-if="invoice.patient" class="col-md-2 px-0 text-14">
-          <span class="text-grey">Gender:</span> {{ invoice.patient.gender }}
-        </div>
-        <div class="col-md-3 px-0 d-flex align-items-center text-14">
-          <span class="class-details-data_label mr-2">Scheme:</span>
-          <span class="text-14 text-truncate">{{
-            invoice.payer_scheme ? invoice.payer_scheme : 'nil'
-          }}</span>
-        </div>
-        <div class="col-md-3 px-0 align-items-center">
-          <span class="class-details-data_label mr-2">Scheme type:</span>
-          <span class="text-14 text-truncate">{{
-            invoice.scheme_type ? invoice.scheme_type : 'nil'
-          }}</span>
-        </div>
-      </div>
-
-      <div class="row align-items-center">
-        
-        <div class="col-md-2 align-items-center">
-          <span class="class-details-data_label mr-2">Invoice ID:</span>
-          <span class="text-14">{{
-            invoice.inv_id ? invoice.inv_id : 'nil'
-          }}</span>
-        </div>
-        <div class="col-md-4 px-0 align-items-center">
-          <span class="class-details-data_label mr-2">Invoice Date:</span>
-          <span class="text-14 text-truncate">{{
-            invoice.confirmed_at ? dateFormatter(invoice.confirmed_at) : 'nil'
-          }}</span>
+        <div class="col-md-3">
+          <div class="col-md-12 align-items-center">
+            <span class="class-details-data_label ml-5 mr-2">Invoice ID:</span>
+            <span class="text-14">{{
+              invoice.inv_id ? invoice.inv_id : 'nil'
+            }}</span>
+          </div>
+          <div class="col-md-12 align-items-center">
+            <span class="class-details-data_label ml-5 mr-2"
+              >Invoice Date:</span
+            >
+            <span class="text-14 text-truncate">{{
+              invoice.confirmed_at ? dateFormatter(invoice.confirmed_at) : 'nil'
+            }}</span>
+          </div>
         </div>
       </div>
       <hr />
@@ -214,6 +219,7 @@
         </div>
       </div>
     </div>
+
     <div class="d-flex justify-content-end mb-2" v-if="invoice.status">
       <span
         v-if="invoice.status === 'DRAFT'"
@@ -555,7 +561,7 @@ export default {
         bill_source: null,
         description: '',
         selling_price: '0.00',
-        billed_to_type: 'SELF',
+        billed_to_type: 'SELF (POSTPAID)',
         transaction_date: time,
       })
     },

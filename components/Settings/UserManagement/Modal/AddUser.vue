@@ -80,7 +80,7 @@
                   multiple
                   taggable
                   v-model="dataObject.menus"
-                  label="name"
+                  label="title"
                 >
                 </v-select>
               </ValidationProviderWrapper>
@@ -146,18 +146,18 @@ export default {
       access: [
         {
           href: '/dashboard/patient',
-          name: 'Patient Records',
+          title: 'Patient Records',
           icon: 'fas fa-hospital-user',
         },
 
         {
           href: '/dashboard/opd',
-          name: 'OPD',
+          title: 'OPD',
           icon: 'fas fa-user-md',
           child: [
             {
               href: '/dashboard/opd/',
-              name: 'Encounter Work List',
+              title: 'Encounter Work List',
               icon: 'fas fa-list-ul',
             },
           ],
@@ -165,12 +165,12 @@ export default {
 
         {
           href: '/dashboard/laboratory',
-          name: 'Laboratory',
+          title: 'Laboratory',
           icon: 'fas fa-vial',
           child: [
             {
               href: '/dashboard/laboratory/',
-              name: 'Laboratory Work List',
+              title: 'Laboratory Work List',
               icon: 'fas fa-list-ul',
             },
           ],
@@ -178,121 +178,121 @@ export default {
 
         {
           href: '/dashboard/imaging',
-          name: 'Imaging',
+          title: 'Imaging',
           icon: 'fas fa-x-ray',
           child: [
             {
               href: '/dashboard/imaging/',
-              name: 'Imaging Work List',
+              title: 'Imaging Work List',
               icon: 'fas fa-list-ul',
             },
           ],
         },
         {
           href: '/dashboard/cso',
-          name: 'Customer Service Officer',
+          title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
         },
         {
           href: '/dashboard/finance',
-          name: 'Finance',
+          title: 'Finance',
           icon: 'fas fa-money-check-alt',
         },
         {
           href: '/dashboard/reports',
-          name: 'Reports',
+          title: 'Reports',
           icon: 'fas fa-file',
           child: [
             {
               href: '/dashboard/reports/encounter',
-              name: 'Encounter report',
+              title: 'Encounter report',
               icon: 'fas fa-list-ul',
             },
             {
               href: '/dashboard/reports/laboratory',
-              name: 'Laboratory report',
+              title: 'Laboratory report',
               icon: 'fas fa-list-ul',
             },
             {
               href: '/dashboard/reports/imaging',
-              name: 'Imaging report',
+              title: 'Imaging report',
               icon: 'fas fa-list-ul',
             },
             {
               href: '/dashboard/reports/patient',
-              name: 'Patient report',
+              title: 'Patient report',
               icon: 'fas fa-list-ul',
             },
           ],
         },
         {
-          name: 'Configurations',
-          href: '/dashboard/settings',
+          title: 'Configurations',
+          href: '/dashboard/configurations',
           icon: 'fas fa-cog',
           child: [
             {
-              href: '/dashboard/settings/user/?tab=0',
-              name: 'User Management',
+              href: '/dashboard/configurations/user/?tab=0',
+              title: 'User Management',
               child: [
                 {
-                  href: '/dashboard/settings/user/?tab=0',
-                  name: 'Users',
+                  href: '/dashboard/configurations/user/?tab=0',
+                  title: 'Users',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/finance/',
-              name: 'Finance Settings',
+              href: '/dashboard/configurations/finance/',
+              title: 'Finance Configurations',
               child: [
                 {
-                  href: '/dashboard/settings/finance/items/',
-                  name: 'Billable items',
+                  href: '/dashboard/configurations/finance/items/',
+                  title: 'Billable items',
                 },
                 {
-                  href: '/dashboard/settings/finance/payment-method/',
-                  name: 'Payment methods',
+                  href: '/dashboard/configurations/finance/payment-method/',
+                  title: 'Payment methods',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/laboratory/',
-              name: 'Laboratory Settings',
+              href: '/dashboard/configurations/laboratory/',
+              title: 'Laboratory Configurations',
               child: [
                 {
-                  href: '/dashboard/settings/laboratory/service-center',
-                  name: 'Laboratory center',
+                  href: '/dashboard/configurations/laboratory/service-center',
+                  title: 'Laboratory center',
                 },
                 {
-                  href: '/dashboard/settings/laboratory/service-config',
-                  name: 'Laboratory configuration',
+                  href: '/dashboard/configurations/laboratory/service-config',
+                  title: 'Laboratory configuration',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/imaging/',
-              name: 'Imaging Settings',
+              href: '/dashboard/configurations/imaging/',
+              title: 'Imaging Configurations',
               child: [
                 {
-                  href: '/dashboard/settings/imaging/service-center',
-                  name: 'Imaging Center',
+                  href: '/dashboard/configurations/imaging/service-center',
+                  title: 'Imaging Center',
                 },
                 {
-                  href: '/dashboard/settings/imaging/service-config',
-                  name: 'Imaging Configuration',
+                  href: '/dashboard/configurations/imaging/service-config',
+                  title: 'Imaging Configuration',
                 },
               ],
             },
             {
-              href: '/dashboard/settings/opd/',
-              name: 'OPD Settings',
+              href: '/dashboard/configurations/opd/',
+              title: 'OPD Configurations',
               child: [
                 {
-                  href: '/dashboard/settings/opd/?tab=0',
-                  name: 'Department',
+                  href: '/dashboard/configurations/opd/?tab=0',
+                  title: 'Department',
                 },
                 {
-                  href: '/dashboard/settings/opd/?tab=1',
-                  name: 'Clinic',
+                  href: '/dashboard/configurations/opd/?tab=1',
+                  title: 'Clinic',
                 },
               ],
             },

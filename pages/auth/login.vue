@@ -65,8 +65,10 @@ export default {
         });
         if(response.token != null){
           this.$router.push("/dashboard");
+          this.$store.dispatch('auth/setupDashboard')
         }
         else{
+          this.$store.dispatch('auth/setupDashboard')
           this.$router.push("/auth/verify-password");
         }
         this.loading = false

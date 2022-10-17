@@ -12,7 +12,6 @@
   hiddenOnCollapse: true,
    } -->
   </div>
-  
 </template>
 
  
@@ -23,175 +22,20 @@ export default {
   components: {
     SidebarMenu,
   },
+  computed: {
+    menu() {
+      let menus = this.$store.state.auth.user.menus
+      return menus
+    },
+  },
+  mounted() {
+    if (this.menu[0].title !== 'Dashboard') {
+      this.$store.dispatch('auth/setupDashboard')
+    }
+  },
   data() {
     return {
-      menu: [
-       
-        {
-          href: '/dashboard',
-          title: 'Dashboard',
-          icon: 'fa fa-tv',
-        },
-
-        {
-          href: '/dashboard/patient',
-          title: 'Patient Records',
-          icon: 'fas fa-hospital-user',
-        },
-
-        {
-          href: '/dashboard/opd',
-          title: 'OPD',
-          icon: 'fas fa-user-md',
-          child: [
-            {
-              href: '/dashboard/opd/',
-              title: 'Encounter Work List',
-              icon: 'fas fa-list-ul',
-            },
-          ],
-        },
-
-        {
-          href: '/dashboard/laboratory',
-          title: 'Laboratory',
-          icon: 'fas fa-vial',
-          child: [
-            {
-              href: '/dashboard/laboratory/',
-              title: 'Laboratory Work List',
-              icon: 'fas fa-list-ul',
-            },
-          ],
-        },
-
-        {
-          href: '/dashboard/imaging',
-          title: 'Imaging',
-          icon: 'fas fa-x-ray',
-          child: [
-            {
-              href: '/dashboard/imaging/',
-              title: 'Imaging Work List',
-              icon: 'fas fa-list-ul',
-            },
-          ],
-        },
-        {
-          href: '/dashboard/cso',
-          title: 'Customer Service Officer',
-          icon: 'fas fa-list-ol',
-        },
-        {
-          href: '/dashboard/finance',
-          title: 'Finance',
-          icon: 'fas fa-money-check-alt',
-        },
-        {
-          href: '/dashboard/reports',
-          title: 'Reports',
-          icon: 'fas fa-file',
-          child: [
-            {
-              href: '/dashboard/reports/encounter',
-              title: 'Encounter report',
-              icon: 'fas fa-list-ul',
-            },
-            {
-              href: '/dashboard/reports/laboratory',
-              title: 'Laboratory report',
-              icon: 'fas fa-list-ul',
-            },
-            {
-              href: '/dashboard/reports/imaging',
-              title: 'Imaging report',
-              icon: 'fas fa-list-ul',
-            },
-            {
-              href: '/dashboard/reports/patient',
-              title: 'Patient report',
-              icon: 'fas fa-list-ul',
-            },
-          ],
-        },
-        {
-          title: 'Configurations',
-          href: '/dashboard/configurations',
-          icon: 'fas fa-cog',
-          child: [
-            {
-              href: '/dashboard/configurations/user/?tab=0',
-              title: 'User Management',
-              child: [
-                {
-                  href: '/dashboard/configurations/user/?tab=0',
-                  title: 'Users',
-                },
-                // {
-                //   href: '/dashboard/configurations/user/?tab=1',
-                //   title: 'Clinic',
-                // },
-              ],
-            },
-            {
-              href: '/dashboard/configurations/finance/',
-              title: 'Finance configurations',
-              child: [
-                {
-                  href: '/dashboard/configurations/finance/items/',
-                  title: 'Billable items',
-                },
-                {
-                  href: '/dashboard/configurations/finance/payment-method/',
-                  title: 'Payment methods',
-                },
-              ],
-            },
-            {
-              href: '/dashboard/configurations/laboratory/',
-              title: 'Laboratory configurations',
-              child: [
-                {
-                  href: '/dashboard/configurations/laboratory/service-center',
-                  title: 'Laboratory center',
-                },
-                {
-                  href: '/dashboard/configurations/laboratory/service-config',
-                  title: 'Laboratory configuration',
-                },
-              ],
-            },
-            {
-              href: '/dashboard/configurations/imaging/',
-              title: 'Imaging configurations',
-              child: [
-                {
-                  href: '/dashboard/configurations/imaging/service-center',
-                  title: 'Imaging Center',
-                },
-                {
-                  href: '/dashboard/configurations/imaging/service-config',
-                  title: 'Imaging Configuration',
-                },
-              ],
-            },
-            {
-              href: '/dashboard/configurations/opd/',
-              title: 'OPD configurations',
-              child: [
-                {
-                  href: '/dashboard/configurations/opd/?tab=0',
-                  title: 'Department',
-                },
-                {
-                  href: '/dashboard/configurations/opd/?tab=1',
-                  title: 'Clinic',
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      menus: [],
       isMobile: false,
       isShowing: false,
     }
