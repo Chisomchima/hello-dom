@@ -1,7 +1,7 @@
 <template>
   <ModalWrapper
     id="imaging_order_report_id"
-    submit-title="Report"
+    submit-title="Save"
     size="lg"
     title="Report"
     @ok="save()"

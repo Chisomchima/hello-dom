@@ -146,6 +146,22 @@ body::-webkit-scrollbar-thumb {
   color: $COLOR_THREE;
   opacity: 0.8;
 }
+// Picklist styles
+.p-picklist .p-picklist-buttons .p-button {
+  margin-bottom: 0.5rem;
+  background: gray;
+  border: 1px solid grey;
+}
+
+.p-picklist .p-picklist-list .p-picklist-item {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  border: 0 none;
+  color: #495057;
+  font-size: 14px;
+  background: transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
 .page-back-navigation svg {
   height: 20px;

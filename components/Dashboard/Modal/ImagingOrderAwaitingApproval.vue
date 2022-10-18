@@ -9,6 +9,48 @@
   >
     <ValidationObserver ref="form">
       <form>
+        <div class="col-md-12">
+          <div class="d-flex justify-content-between">
+            <div class="col-md-7 text-14">
+              <div v-if="data.patient" class="col-md-12 px-0 text-16">
+                <span class="text-grey">Name:</span>
+                <span class="hov point">{{
+                  data.patient.salutation
+                    ? data.patient.salutation +
+                      ' ' +
+                      data.patient.firstname +
+                      ' ' +
+                      data.patient.lastname
+                    : data.patient.firstname + ' ' + data.patient.lastname
+                }}</span>
+              </div>
+              <div v-if="data.patient" class="col-md-12 px-0">
+                <span class="text-grey">UHID:</span>
+                <span class="hov point">{{ data.patient.uhid }}</span>
+              </div>
+              <div v-if="data.patient" class="col-md-12 px-0 text-14">
+                <span class="text-grey">Gender:</span> {{ data.patient.gender }}
+              </div>
+            </div>
+            <div class="col-md-5 text-14">
+              <div>
+                <div v-if="data.img_obv" class="col-md-12 px-0 ">
+                  <span class="text-grey">Modality:</span>
+                  <span class="hov point">{{
+                    data.img_obv ? data.img_obv.modality.name : 'nil'
+                  }}</span>
+                </div>
+                <div v-if="data.img_obv" class="col-md-12 px-0 ">
+                  <span class="text-grey">Observation:</span>
+                  <span class="hov point">{{
+                    data.img_obv ? data.img_obv.name : 'nil'
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
         <div class="row">
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Report" :rules="[]">

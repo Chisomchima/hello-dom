@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-12 mb-2">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="page-heading mb-0">Patient Reports</div>
+          <div class="page-heading mb-0">Registeration Reports</div>
         </div>
       </div>
     </div>

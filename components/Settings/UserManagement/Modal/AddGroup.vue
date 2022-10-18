@@ -33,11 +33,17 @@
           </div>
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Description" :rules="['']">
-              <input
+              <!-- <input
                 v-model="dataObject.description"
                 type="text"
                 class="form-control"
-              />
+              /> -->
+              <textarea
+                v-model="dataObject.description"
+                cols="20"
+                rows="5"
+                class="form-control"
+              ></textarea>
             </ValidationProviderWrapper>
           </div>
 
@@ -48,11 +54,11 @@
               listStyle="height:400px"
               dataKey="id"
             >
-              <template #sourceheader> Available </template>
-              <template #targetheader> Selected </template>
+              <template #sourceheader><span class="text-14">Available</span></template>
+                  <template #targetheader><span class="text-14">Selected</span></template>
               <template #item="data">
                 <div class="product-list-action">
-                  <span class="mb-2 text-info text-10 p-1">{{
+                  <span class="mb-2 text-gray text-10 p-1">{{
                     data.item.name
                   }}</span>
                 </div>
@@ -107,7 +113,10 @@ export default {
           this.dataObject.description = newVal.description
           this.dataObject.name = newVal.name
           this.dataObject.id = newVal.id
-          let diff = this.checkDiffference(this.dataObject.permissions[0], newVal.permissions)
+          let diff = this.checkDiffference(
+            this.dataObject.permissions[0],
+            newVal.permissions
+          )
           console.log(diff)
           this.dataObject.permissions[0] = diff
         }
@@ -132,7 +141,7 @@ export default {
         }
       }
     },
-    checkDiffference(yardstick,y){
+    checkDiffference(yardstick, y) {
       let diff = differenceBy(yardstick, y, 'name')
       return diff
     },

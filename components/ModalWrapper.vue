@@ -9,7 +9,7 @@
     :no-stacking="stacking"
     :scrollable="!notScrollable"
     :hide-footer="noFooter"
-    :no-close-on-backdrop="persistent"
+    :no-close-on-backdrop="true"
     ok-title="Save"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"

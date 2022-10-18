@@ -127,7 +127,7 @@ export default {
             },
             {
               href: '/dashboard/reports/patient',
-              title: 'Patient report',
+              title: 'Registeration report',
               icon: 'fas fa-list-ul',
             },
           ],

@@ -324,7 +324,7 @@
             {{ data.item.status }}
           </span>
           <span
-            v-else-if="data.item.status === 'PARTIAL_PAY'"
+            v-else-if="data.item.status === 'PARTIAL_PAY' || 'PARTIALLY_PAID'"
             class="text-12 badge-warning rounded text-center p-1 text-white"
           >
           PARTIALLY PAID

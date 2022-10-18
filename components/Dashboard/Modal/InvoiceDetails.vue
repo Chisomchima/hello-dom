@@ -116,7 +116,7 @@
     <div v-if="invoice">
      <div class="d-flex justify-content-between">
         <div class="text-14 col-md-4">
-          <div v-if="invoice.patient" class="col-md-12 px-0">
+          <div v-if="invoice.patient" class="col-md-12 px-0 text-16">
             <span class="text-grey">Name:</span>
             <span class="hov point" @click="goToProfile">{{
               invoice.patient.salutation

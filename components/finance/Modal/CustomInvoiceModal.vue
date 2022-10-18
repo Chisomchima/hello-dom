@@ -7,6 +7,7 @@
     :size="`xl`"
     ok-only
     :no-stacking="false"
+    :no-close-on-backdrop="true"
     :scrollable="!notScrollable"
     ok-title="Save"
     @ok="ok()"
@@ -120,7 +121,7 @@
     <div v-if="invoice">
       <div class="d-flex justify-content-between">
         <div class="text-14 col-md-4">
-          <div v-if="invoice.patient" class="col-md-12 px-0">
+          <div v-if="invoice.patient" class="col-md-12 px-0 text-16">
             <span class="text-grey">Name:</span>
             <span class="hov point" @click="goToProfile">{{
               invoice.patient.salutation

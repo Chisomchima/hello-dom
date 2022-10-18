@@ -93,11 +93,11 @@
                   listStyle="height:200px"
                   dataKey="id"
                 >
-                  <template #sourceheader> Available </template>
-                  <template #targetheader> Selected </template>
+                  <template #sourceheader><span class="text-14">Available</span></template>
+                  <template #targetheader><span class="text-14">Selected</span></template>
                   <template #item="data">
                     <div class="product-list-action">
-                      <span class="mb-2 text-info text-10 p-1">{{
+                      <span class="mb-2 text-gray text-10 p-1">{{
                         data.item.name
                       }}</span>
                     </div>
@@ -219,8 +219,8 @@ export default {
               icon: 'fas fa-list-ul',
             },
             {
-              href: '/dashboard/reports/patient',
-              title: 'Patient report',
+              href: '/dashboard/reports/registeration',
+              title: 'Registeration report',
               icon: 'fas fa-list-ul',
             },
           ],
@@ -233,12 +233,12 @@ export default {
             {
               href: '/dashboard/configurations/user/?tab=0',
               title: 'User Management',
-              child: [
-                {
-                  href: '/dashboard/configurations/user/?tab=0',
-                  title: 'Users',
-                },
-              ],
+              // child: [
+              //   {
+              //     href: '/dashboard/configurations/user/?tab=0',
+              //     title: 'Users',
+              //   },
+              // ],
             },
             {
               href: '/dashboard/configurations/finance/',
@@ -370,4 +370,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.p-picklist-buttons{
+  color: grey
+}
 </style>
