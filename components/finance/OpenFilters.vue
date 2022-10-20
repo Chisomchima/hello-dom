@@ -174,7 +174,8 @@ export default {
     },
     filters: {
       handler: debounce(function (newVal) {
-        if (newVal.by.length > 0) {
+        if( newVal.by){
+          if (newVal.by.length > 0) {
           newFilterObject = {
             ...newVal,
             [newVal.by]: newVal.entry,
@@ -182,6 +183,7 @@ export default {
           this.$emit('filter', newFilterObject)
         } else {
           this.$emit('filter', newVal)
+        }
         }
       }, 500),
       deep: true,
@@ -220,18 +222,20 @@ export default {
       this.applyFilter(this.filters)
     },
     applyFilter(newVal) {
-      if (newVal.by.length > 0) {
-        const newFilterObject = {
-          ...newVal,
-          [newVal.by]: newVal.entry,
-          worklist: true,
+     if (newVal) {
+        if (newVal.by.length > 0) {
+          const newFilterObject = {
+            ...newVal,
+            [newVal.by]: newVal.entry,
+            worklist: true,
+          }
+          // console.log(newFilterObject)
+          this.filterFunc(newFilterObject)
+          this.$emit('filter', newFilterObject)
+        } else {
+          this.filterFunc(newVal)
+          this.$emit('filter', newVal)
         }
-        // console.log(newFilterObject)
-        this.filterFunc(newFilterObject)
-        this.$emit('filter', newFilterObject)
-      } else {
-        this.filterFunc(newVal)
-        this.$emit('filter', newVal)
       }
     },
     filterFunc(newVal) {

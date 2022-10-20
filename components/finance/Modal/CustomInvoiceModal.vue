@@ -133,7 +133,7 @@
                 : invoice.patient.firstname + ' ' + invoice.patient.lastname
             }}</span>
           </div>
-          <div v-if="invoice.patient" class="col-md-12 px-0">
+          <div v-if="invoice.patient" class="col-md-12 px-0 text-14">
             <span class="text-grey">UHID:</span>
             <span @click="goToProfile" class="hov point">{{
               invoice.patient.uhid

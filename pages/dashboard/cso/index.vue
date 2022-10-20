@@ -35,10 +35,10 @@ export default {
     }, 
     computed:{
     count(){
-      return `<span><span class="px-2 py-1 clip badge-success ml-2">${this.labCount}</span></span>`
+      return `<span><span class="clip badge-success ml-2">${this.labCount}</span></span>`
     },
     count1(){
-      return `<span><span class="px-2 py-1 clip badge-success ml-2">${this.imageCount}</span></span>`
+      return `<span><span class="clip badge-success ml-2">${this.imageCount}</span></span>`
     }
     },
     methods: {
@@ -92,9 +92,13 @@ export default {
 
 <style lang="scss">
 .clip {
-    font-size: 13px;
-    text-align: center;
-    /* border: 1px solid #000; */
-    border-radius: 50%;
+  font-size: 13px;
+  text-align: center;
+  padding-left: 0.3rem !important;
+  padding-right: 0.3rem !important;
+  padding-top: 0.3rem !important;
+  padding-bottom: 0.3rem !important;
+  /* border: 1px solid #000; */
+  border-radius: 50%;
 }
 </style>

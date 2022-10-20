@@ -319,21 +319,21 @@
             </svg>
             <span class="ml-2">Lab Orders</span>
           </template>
-          <EncountersLabOrders :patientData="patientData" />
+          <EncountersLabOrders :patientData="consultationData.patient" />
         </TabPanel>
         <TabPanel>
           <template #header>
             <i class="fas fa-x-ray"></i>
             <span class="ml-2">Imaging</span>
           </template>
-          <DashboardPatientImaging :data="patientData" />
+          <DashboardPatientImaging :data="consultationData.patient" />
         </TabPanel>
-        <TabPanel>
+        <!-- <TabPanel>
           <template #header>
             <i class="pi pi-user"></i>
             <span class="ml-2">Previous Medicine</span>
           </template>
-        </TabPanel>
+        </TabPanel> -->
       </TabView>
     </div>
   </div>
@@ -425,12 +425,12 @@ export default {
         let response = await this.$axios.$get(
           `encounters/encounter/${this.$route.params.id}`
         )
-        this.consultationData = await response
+        this.consultationData = response
         this.clinic = response.clinic.name
         this.department = response.clinic.name
           ? response.clinic.Department.name
           : 'nil'
-        this.patientData = this.consultationData.patient
+        this.patientData = response.patient
         let time = this.consultationData.encounter_datetime
         let y = new Date(time).toLocaleDateString()
 

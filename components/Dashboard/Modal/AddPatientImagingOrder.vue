@@ -6,13 +6,19 @@
     @show="getData()"
     @hide="clear()"
     id="add_imaging"
+    :stacking="false"
   >
     <ValidationObserver ref="form">
       <form>
         <div class="row">
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['required']">
-              <input v-model="dataObject.patient.uhid" readonly type="text" class="form-control" />
+              <input
+                v-model="dataObject.patient.uhid"
+                readonly
+                type="text"
+                class="form-control"
+              />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
@@ -74,11 +80,41 @@
             </ValidationProviderWrapper>
           </div>
 
+          <div class="col-md-12 mb-2">
+            <div class="mb-1">
+              <ValidationProviderWrapper name="Diagnosis" :rules="['']">
+                <VSelect
+                  v-model="dataObject.diagnosis"
+                  label="case"
+                  multiple
+                  taggable
+                  :noDrop="true"
+                >
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="">
+              <span class="pointer text-primary ml-1 d-flex align-items-center">
+                <svg
+                  @click="$bvModal.show('diagnosisModal')"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  class="bi bi-plus-square-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+                  />
+                </svg>
+                <span class="text-12 ml-2">Select diagnosis</span>
+              </span>
+            </div>
+          </div>
+
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Order Physician"
-              :rules="[]"
-            >
+            <ValidationProviderWrapper name="Order Physician" :rules="[]">
               <input
                 v-model="dataObject.ordering_physician"
                 type="text"
@@ -88,10 +124,7 @@
           </div>
 
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Referral Facility"
-              :rules="[]"
-            >
+            <ValidationProviderWrapper name="Referral Facility" :rules="[]">
               <input
                 v-model="dataObject.referral_facility"
                 type="text"
@@ -121,6 +154,18 @@
         </div>
       </form>
     </ValidationObserver>
+    <div>
+      <DashboardModalImagingDiagnosis
+        @page-changed="getICD10($event, searchParam)"
+        @diagnosis="setDiagnosis"
+        @searchParam="searchByString"
+        :pages="pages"
+        :index="role"
+        :options="icdTernCollection"
+        @refresh="getICD10(1, searchParam)"
+        :consultationData="consultationData"
+      />
+    </div>
   </ModalWrapper>
 </template>
 
@@ -142,6 +187,7 @@ export default {
       observations: [],
       dataObject: {
         img_obv: [],
+        diagnosis: [],
         ordering_physician: '',
         referral_facility: '',
         comments: '',
@@ -186,47 +232,36 @@ export default {
     },
   },
   watch: {
-
-    data:{
-      handler(newVal){
-        this.dataObject.patient = newVal;
+    data: {
+      handler(newVal) {
+        this.dataObject.patient = newVal
       },
-      deep:true
-    }
-    // editData: {
-    //   handler(newVal) {
-    //     if (Object.keys(newVal).length > 0) {
-    //       this.dataObject = newVal
-    //     }
-    //   },
-    //   immediate: true,
-    //   deep: true,
-    // },
-
-    // uhid: debounce(async function (newVal) {
-    //   const results = await this.getPatientByUHID(newVal)
-    //   if(results){
-    //       this.dataObject.patient = results;
-    //   }else{
-    //      this.dataObject.patient = {};
-    //   }
-
-    
-    // }, 500),
+      deep: true,
+    },
   },
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
-        // if (this.dataObject.id) {
-          // this.edit()
-        // } else {
-         await this.save()
-        // }
+        await this.save()
       }
     },
     async save() {
+      let diagnosis = this.dataObject.diagnosis
+      for(let x = 0; x < diagnosis.length; x++){
+        delete diagnosis[x].selected
+        delete diagnosis[x].confirmed
+      }
       try {
-        const data = await this.$api.imaging.saveOrder(this.dataObject)
+        const data = await this.$api.imaging.saveOrder({
+          img_obv: this.dataObject.img_obv,
+          diagnosis: diagnosis,
+          ordering_physician: this.dataObject.ordering_physician,
+          referral_facility: this.dataObject.referral_facility,
+          comments: this.dataObject.comments,
+          service_center: this.dataObject.service_center,
+          patient: this.dataObject.patient,
+          stat: this.dataObject.stat,
+        })
         this.$toast({
           type: 'success',
           text: 'Imaging Order Successful',
@@ -238,23 +273,15 @@ export default {
         console.log(error)
       }
     },
-    async edit() {
-      try {
-        const data = await this.$api.imaging.editLabUnit(
-          this.dataObject.id,
-          this.dataObject
-        )
-        this.$emit('refresh')
-        this.$bvModal.hide('modal')
-        console.log(data)
-      } catch (error) {
-        console.log(error)
-      }
+
+    setDiagnosis(e) {
+      this.dataObject.diagnosis = e
     },
 
     clear() {
       this.dataObject = {
         img_obv: [],
+        diagnosis: [],
         ordering_physician: '',
         referral_facility: '',
         comments: '',
@@ -265,7 +292,6 @@ export default {
       this.$emit('hide')
     },
     getData() {
-      debugger;
       this.dataObject.patient = this.data
       this.getServiceCenter()
       this.getObservation()
@@ -273,7 +299,7 @@ export default {
     async getPatientByUHID(uhid) {
       try {
         if (uhid.length > 0) {
-          const  results  = await this.$api.patient.getPatientByUHID( uhid )
+          const results = await this.$api.patient.getPatientByUHID(uhid)
           return results
         }
       } catch (error) {

@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
 
 export default {
   data() {
@@ -81,28 +80,9 @@ export default {
     }
   },
   watch: {
-    // filters: {
-    //   handler: debounce(function (newVal) {
-    //    // this.$emit('filter', newVal)
-    //    this.$router.replace({
-    //     name:this.$router.name,
-    //     query:{
-    //       ...this.$router.query,
-    //       filter:JSON.stringify(newVal)
-    //     }
-    //    });
-    //   }, 500),
-    //   deep: true,
-    // },
-    // "$route.query.filter"(newVal){
-    //   console.log(JSON.parse(newVal));
-    // },
     genders: {},
   },
   created() {
-    if (this.$route.query.filter) {
-      this.filters = JSON.parse(this.$route.query.filter)
-    }
   },
   methods: {
     clear() {
@@ -117,12 +97,6 @@ export default {
 
     filterFunc(newVal) {
       this.$emit('filter', this.filters)
-      this.$router.push({
-        query: {
-          ...this.$route.query,
-          filter: JSON.stringify(newVal),
-        },
-      })
     },
   },
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="card class-details-card mb-3">
+  <div :class="space ? 'mb-3' : ''" class="card class-details-card">
     <div class="card-body">
       <div
         class="d-flex align-items-center justify-content-between flex-wrap mb-3"
@@ -119,6 +119,10 @@ export default Vue.extend({
       required: true,
     },
     enableAction: {
+      type: Boolean,
+      default: true,
+    },
+    space: {
       type: Boolean,
       default: true,
     },

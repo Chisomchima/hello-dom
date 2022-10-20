@@ -6,8 +6,8 @@
         data.firstname ? data.firstname : ''
       } ${data.lastname ? data.lastname : ''}`"
       :data="data"
-      :enable-action="true"
-      
+      :enable-action="false"
+      :space="false"
       :display-key="[
         'uhid',
         'date_of_birth',
@@ -17,31 +17,11 @@
         'nationality',
         'phone_number',
       ]"
-      @edit="editRoute()"
       @make_deposit="$bvModal.show('depositModal')"
       @payers="checkPayersDetails"
-      @picture="uploadAvatar"
     >
     </UtilsHeaderCardWithAvatar>
-    <UtilsBaseCardTab>
-      <UtilsCardTab title="Encounter">
-        <keep-alive>
-          <DashboardPatientEncounters :data="data" />
-        </keep-alive>
-      </UtilsCardTab>
-      <UtilsCardTab title="Lab Order">
-        <keep-alive>
-          <EncountersLabOrders :patientData="data" />
-        </keep-alive>
-      </UtilsCardTab>
-      <UtilsCardTab title="Imaging">
-        <DashboardPatientImaging :data="data" />
-      </UtilsCardTab>
-      <UtilsCardTab title="Appointment">
-        <h5>Coming Soon</h5>
-      </UtilsCardTab>
-      <UtilsCardTab title="Finance">
-        <div class="d-flex justify-content-end align-items-center pt-1">
+    <div class="d-flex justify-content-end align-items-center pt-1">
           <div class="d-flex">
             <div class="text-14 text-grey text-right p-2">
               Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
@@ -60,28 +40,20 @@
             </button>
           </div>
         </div>
-
-        <TabView class="tabview-custom">
-          <TabPanel class="dark-panel">
-            <template #header>
-              <span class="ml-2">Billing</span>
-            </template>
-            <DashboardPatientBilling @reload_tabs="sendSignal" :data="data" />
-          </TabPanel>
-          <TabPanel class="dark-panel">
-            <template #header>
-              <span class="ml-2">Payments</span>
-            </template>
-            <DashboardPatientPayment :refresh="refresh" :data="data" />
-          </TabPanel>
-          <TabPanel class="dark-panel">
-            <template #header>
-              <span class="ml-2">Invoices</span>
-            </template>
-            <DashboardPatientInvoice :refresh="refresh" :data="data" />
-          </TabPanel>
-        </TabView>
+    <UtilsBaseCardTab>
+      <UtilsCardTab title="Billing">
+        <keep-alive>
+          <DashboardPatientBilling @reload_tabs="sendSignal" :data="data" />
+        </keep-alive>
       </UtilsCardTab>
+      <!-- <UtilsCardTab title="Payments">
+        <keep-alive>
+          <DashboardPatientPayment :refresh="refresh" :data="data" />
+        </keep-alive>
+      </UtilsCardTab>
+      <UtilsCardTab title="Invoices">
+        <DashboardPatientInvoice :refresh="refresh" :data="data" />
+      </UtilsCardTab> -->
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
@@ -91,7 +63,6 @@
       :data="data"
     />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
-    <DashboardModalUploadPicture />
   </div>
 </template>
 

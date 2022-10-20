@@ -1,6 +1,6 @@
 <template>
   <div class="filter-wrapper">
-     <div class="row mt-3">
+    <div class="row mt-3">
       <div class="col-md-4">
         <div class="mb-2">
           <label class="form-control-label">Scheme</label>
@@ -20,7 +20,10 @@
           <VSelect
             v-model="filters.scheme_type"
             :reduce="(opt) => opt.value"
-            :options="[{label: 'Self', value: 'SELF'}, {label: 'Insurance', value: 'INSURANCE'}]"
+            :options="[
+              { label: 'Self', value: 'SELF' },
+              { label: 'Insurance', value: 'INSURANCE' },
+            ]"
             label="label"
           ></VSelect>
         </div>
@@ -111,7 +114,7 @@ export default {
     },
     'filters.payer': {
       handler: debounce(function () {
-        this.applyFilter(this.filters)  
+        this.applyFilter(this.filters)
       }, 500),
       deep: true,
     },
@@ -123,14 +126,16 @@ export default {
     // },
     filters: {
       handler: debounce(function (newVal) {
-        if (newVal.by.length > 0) {
-          newFilterObject = {
-            ...newVal,
-            [newVal.by]: newVal.entry,
+        if (newVal.by) {
+          if (newVal.by.length > 0) {
+            newFilterObject = {
+              ...newVal,
+              [newVal.by]: newVal.entry,
+            }
+            this.$emit('filter', newFilterObject)
+          } else {
+            this.$emit('filter', newVal)
           }
-          this.$emit('filter', newFilterObject)
-        } else {
-          this.$emit('filter', newVal)
         }
       }, 500),
       deep: true,
@@ -156,9 +161,7 @@ export default {
       console.log(error)
     }
   },
-  mounted() {
-  
-  },
+  mounted() {},
   methods: {
     clear() {
       this.filters = {
@@ -171,18 +174,20 @@ export default {
       this.applyFilter(this.filters)
     },
     applyFilter(newVal) {
-      if (newVal.by.length > 0) {
-        const newFilterObject = {
-          ...newVal,
-          [newVal.by]: newVal.entry,
-          worklist: true,
+      if (newVal) {
+        if (newVal.by.length > 0) {
+          const newFilterObject = {
+            ...newVal,
+            [newVal.by]: newVal.entry,
+            worklist: true,
+          }
+          // console.log(newFilterObject)
+          this.filterFunc(newFilterObject)
+          this.$emit('filter', newFilterObject)
+        } else {
+          this.filterFunc(newVal)
+          this.$emit('filter', newVal)
         }
-        // console.log(newFilterObject)
-        this.filterFunc(newFilterObject)
-         this.$emit('filter', newFilterObject)
-      } else {
-        this.filterFunc(newVal)
-        this.$emit('filter', newVal)
       }
     },
     filterFunc(newVal) {

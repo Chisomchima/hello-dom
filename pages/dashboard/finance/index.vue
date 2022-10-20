@@ -6,6 +6,13 @@
         <div class="card">
           <div class="card">
             <UtilsBaseCardTab>
+              <UtilsCardTab :title="`Find patient`">
+                <keep-alive>
+                  <div>
+                    <FinanceFindPatient />
+                  </div>
+                </keep-alive>
+              </UtilsCardTab>
               <UtilsCardTab :title="`Draft Invoices`">
                 <keep-alive>
                   <div>

@@ -7,6 +7,7 @@
     ok-only
     :no-stacking="false"
     :scrollable="!notScrollable"
+    :no-close-on-backdrop="true"
     ok-title="Save"
     @ok="ok()"
     @show="$emit('show', $event)"

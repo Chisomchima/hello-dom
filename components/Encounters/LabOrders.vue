@@ -7,6 +7,7 @@
         centered
         hide-footer
         ref="orderModal"
+        :no-close-on-backdrop="true"
         @hide="closeModal()"
       >
         <ValidationObserver v-slot="{ validate }">

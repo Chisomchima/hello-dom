@@ -107,7 +107,7 @@
       <template #besideFilterButton>
         <BaseButton
           class="btn-outline-primary"
-          @click="$bvModal.show('add_imaging')"
+          @click="openImagingModal"
           >New Imaging</BaseButton
         >
       </template>
@@ -190,7 +190,7 @@
       </template>
     </UtilsFilterComponent>
     <DashboardModalAddPatientImagingOrder
-      :data="data"
+      :data="patient"
       @refresh="pageChange()"
     />
   </div>
@@ -218,6 +218,7 @@ export default {
         dateFrom: '',
         dateTo: '',
       },
+      patient: {},
       options: [],
       filterModality: [],
       filterSerice: [],
@@ -300,6 +301,7 @@ export default {
     },
   },
   watch: {
+  
      'filter.modality'() {
       if (this.filter.modality !== null) {
         this.pageChange(1, this.filter)
@@ -368,6 +370,10 @@ export default {
       }
     },
 
+    openImagingModal(){
+      this.patient = this.data
+      this.$bvModal.show('add_imaging')
+    },
      async getServiceCenter() {
       try {
         const { results } = await this.$api.imaging.getServiceCenter({
