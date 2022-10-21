@@ -79,6 +79,7 @@
                   label="case"
                   multiple
                   taggable
+                  @open="showModal"
                   :noDrop="true"
                 >
                 </VSelect>
@@ -276,6 +277,9 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    showModal(){
+      console.log('yay')
     },
     async edit() {
       try {

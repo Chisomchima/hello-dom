@@ -44,7 +44,13 @@
             <div>
               <span
                 v-if="data.item.password_recover_status"
-                class="text-info text-center border border-info rounded text-10 px-1"
+                class="
+                  text-info text-center
+                  border border-info
+                  rounded
+                  text-10
+                  px-1
+                "
                 >Password reset</span
               >
               <span v-else>
@@ -266,7 +272,10 @@ export default {
       this.$bvModal.show('editUser')
     },
     toLowerCaseFunc(e) {
-      return e.toLowerCase()
+        
+         let x = e = e.toLowerCase()
+        console.log(x)
+        return x
     },
     dateFormatter(x) {
       if (x) {

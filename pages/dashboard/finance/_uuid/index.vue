@@ -22,38 +22,38 @@
     >
     </UtilsHeaderCardWithAvatar>
     <div class="d-flex justify-content-end align-items-center pt-1">
-          <div class="d-flex">
-            <div class="text-14 text-grey text-right p-2">
-              Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
-            </div>
-            <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
-              | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
-            </div>
-          </div>
-
-          <div class="m-2">
-            <button
-              @click="$bvModal.show('depositModal')"
-              class="btn btn-outline-primary btn-sm"
-            >
-              Make deposit
-            </button>
-          </div>
+      <div class="d-flex">
+        <div class="text-14 text-grey text-right p-2">
+          Deposit Balance: {{ data.deposit !== null ? depositBalance : '' }}
         </div>
+        <div class="text-14 text-grey text-right pl-0 pr-2 py-2">
+          | Reserved: {{ data.reserve !== null ? reserveBalance : '' }}
+        </div>
+      </div>
+
+      <div class="m-2">
+        <button
+          @click="$bvModal.show('depositModal')"
+          class="btn btn-outline-primary btn-sm"
+        >
+          Make deposit
+        </button>
+      </div>
+    </div>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Billing">
         <keep-alive>
-          <DashboardPatientBilling @reload_tabs="sendSignal" :data="data" />
+          <FinanceBills @reload_tabs="sendSignal" :data="data" />
         </keep-alive>
       </UtilsCardTab>
-      <!-- <UtilsCardTab title="Payments">
+      <UtilsCardTab title="Payments">
         <keep-alive>
-          <DashboardPatientPayment :refresh="refresh" :data="data" />
+          <FinancePayments :refresh="refresh" :data="data" />
         </keep-alive>
       </UtilsCardTab>
       <UtilsCardTab title="Invoices">
-        <DashboardPatientInvoice :refresh="refresh" :data="data" />
-      </UtilsCardTab> -->
+        <FinanceInvoices :refresh="refresh" :data="data" />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
@@ -85,6 +85,26 @@ export default {
       refresh: false,
       template: {},
     }
+  },
+  mounted() {
+    function check(array) {
+      return array.reduce(
+        (r, a, i, { [i - 1]: b }) =>
+          a.map((v, j) => (i ? r[j] && b[j] < v : r)),
+        []
+      )
+    }
+
+    var array = [
+      [1, 2, 3, 2, 1, 1],
+      [2, 4, 4, 3, 2, 2],
+      [5, 5, 5, 5, 4, 4],
+      [6, 6, 7, 6, 5, 5],
+      [4, 7, 6, 8, 7, 6],
+      [4, 9, 6, 7, 8, 9],
+    ]
+
+    console.log(check(array))
   },
   computed: {
     depositBalance() {
