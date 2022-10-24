@@ -1,7 +1,7 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">OPD Settings</div>
+    <div class="page-heading mb-4">OPD Configurations</div>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Departments">
         <SettingsDepartmentList />

@@ -2,96 +2,96 @@ export default axios => ({
 
     //Directions
     getDirections(params = {}) {
-        return axios.$get(`/pharmacy/config/directions/`, {
+        return axios.$get(`/pharmacy/directions/`, {
             params
         });
     },
     createDirections(body){
-        return axios.$post(`/pharmacy/config/directions/`, body)
+        return axios.$post(`/pharmacy/directions/`, body)
     },
     updateDirections(body, id){
-        return axios.$patch(`/pharmacy/config/directions/${id}`, body)
+        return axios.$patch(`/pharmacy/directions/${id}/`, body)
     },
     deleteDirections(id){
-        return axios.$delete(`/pharmacy/config/directions/${id}`)
+        return axios.$delete(`/pharmacy/directions/${id}/`)
     },
 
     //Doses
     getDoses({params = {}}){
-        return axios.$get(`/pharmacy/config/doses/`, {
+        return axios.$get(`/pharmacy/doses/`, {
             params
         })
     },
     createDosage(body){
-        return axios.$post(`/pharmacy/config/doses/`, body)
+        return axios.$post(`/pharmacy/doses/`, body)
     },
     updateDosage(body, id){
-        return axios.$patch(`/pharmacy/config/doses/${id}`, body)
+        return axios.$patch(`/pharmacy/doses/${id}/`, body)
     },
     deleteDosage(id){
-        return axios.$delete(`/pharmacy/config/doses/${id}`)
+        return axios.$delete(`/pharmacy/doses/${id}/`)
     },
 
     //Duration
     getDurations({params= {}}){
-        return axios.$get(`/pharmacy/config/durations/`, {
+        return axios.$get(`/pharmacy/durations/`, {
             params
         })
     },
     createDurations(body){
-        return axios.$post(`/pharmacy/config/durations/`, body)
+        return axios.$post(`/pharmacy/durations/`, body)
     },
     updateDurations(body, id){
-        return axios.$patch(`/pharmacy/config/durations/${id}`, body)
+        return axios.$patch(`/pharmacy/durations/${id}/`, body)
     },
     deleteDurations(id){
-        return axios.$delete(`/pharmacy/config/durations/${id}`)
+        return axios.$delete(`/pharmacy/durations/${id}/`)
     },
 
     //Frequencies
     getFrequencies({params}){
-        return axios.$get(`/pharmacy/config/frequencies/`, {params})
+        return axios.$get(`/pharmacy/frequencies/`, {params})
     },
     createFrequency(body){
-        return axios.$post(`/pharmacy/config/frequencies/`, body)
+        return axios.$post(`/pharmacy/frequencies/`, body)
     },
     updateFrequency(body, id){
-        return axios.$patch(`/pharmacy/config/frequencies/${id}`, body)
+        return axios.$patch(`/pharmacy/frequencies/${id}/`, body)
     },
     deleteFrequency(id){
-        return axios.$delete(`/pharmacy/config/frequencies/${id}`)
+        return axios.$delete(`/pharmacy/frequencies/${id}/`)
     },
 
     //Routes
 
     getRoutes({params = {}}){
-        return axios.$get(`/pharmacy/config/routes/`, {
+        return axios.$get(`/pharmacy/routes/`, {
             params
         })
     },
     createRoute(body){
-        return axios.$post(`/pharmacy/config/routes/`, body)
+        return axios.$post(`/pharmacy/routes/`, body)
     },
     updateRoutes(body, id){
-        return axios.$patch(`/pharmacy/config/routes/${id}`, body)
+        return axios.$patch(`/pharmacy/routes/${id}/`, body)
     },
     deleteRoutes(id){
-        return axios.$delete(`/pharmacy/config/routes/${id}`)
+        return axios.$delete(`/pharmacy/routes/${id}/`)
     },
 
     //Units
     getUnits(params = {}){
-        return axios.$get(`/pharmacy/config/units/`, {
+        return axios.$get(`/pharmacy/units/`, {
             params
         })
     },
     createUnit(body){
-        return axios.$post(`/pharmacy/config/units/`, body)
+        return axios.$post(`/pharmacy/units/`, body)
     },
     updateUnit(body, id){
-        return axios.$patch(`/pharmacy/config/units/${id}`, body)
+        return axios.$patch(`/pharmacy/units/${id}/`, body)
     },
     deleteUnit(id){
-        return axios.$delete(`/pharmacy/config/units/${id}`)
+        return axios.$delete(`/pharmacy/units/${id}/`)
     }
 })

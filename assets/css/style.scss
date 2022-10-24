@@ -54,6 +54,11 @@ html {
   font-size: 8px;
 }
 
+.v-sidebar-menu .vsm--title {
+  flex-grow: 1;
+  text-transform: capitalize;
+}
+
 /* Variables */
 body {
   --sidebar-width: 250px;

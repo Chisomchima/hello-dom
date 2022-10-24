@@ -69,6 +69,11 @@ export default {
           icon: 'fa fa-cogs',
           route: '/dashboard/configurations/opd',
         },
+        {
+          name: 'Pharmacy',
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/pharmacy',
+        },
       ],
     }
   },

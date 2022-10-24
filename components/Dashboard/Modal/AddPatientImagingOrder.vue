@@ -88,12 +88,13 @@
                   label="case"
                   multiple
                   taggable
+                  @open="showModal"
                   :noDrop="true"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="">
+            <!-- <div class="">
               <span class="pointer text-primary ml-1 d-flex align-items-center">
                 <svg
                   @click="$bvModal.show('diagnosisModal')"
@@ -110,7 +111,7 @@
                 </svg>
                 <span class="text-12 ml-2">Select diagnosis</span>
               </span>
-            </div>
+            </div> -->
           </div>
 
           <div class="col-md-6 mb-2">
@@ -158,12 +159,8 @@
       <DashboardModalImagingDiagnosis
         @page-changed="getICD10($event, searchParam)"
         @diagnosis="setDiagnosis"
-        @searchParam="searchByString"
-        :pages="pages"
-        :index="role"
-        :options="icdTernCollection"
         @refresh="getICD10(1, searchParam)"
-        :consultationData="consultationData"
+       
       />
     </div>
   </ModalWrapper>
@@ -244,6 +241,9 @@ export default {
       if (await this.$refs.form.validate()) {
         await this.save()
       }
+    },
+    showModal(){
+      this.$bvModal.show('diagnosisModal')
     },
     async save() {
       let diagnosis = this.dataObject.diagnosis

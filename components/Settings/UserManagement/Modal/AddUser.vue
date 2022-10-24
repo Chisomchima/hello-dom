@@ -283,18 +283,8 @@ export default {
               ],
             },
             {
-              href: '/dashboard/configurations/opd/',
+              href: '/dashboard/configurations/opd/?tab=0',
               title: 'OPD Configurations',
-              child: [
-                {
-                  href: '/dashboard/configurations/opd/?tab=0',
-                  title: 'Department',
-                },
-                {
-                  href: '/dashboard/configurations/opd/?tab=1',
-                  title: 'Clinic',
-                },
-              ],
             },
           ],
         },

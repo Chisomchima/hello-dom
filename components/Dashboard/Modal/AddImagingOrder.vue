@@ -79,8 +79,6 @@
                   label="case"
                   multiple
                   taggable
-                  @open="showModal"
-                  :noDrop="true"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
@@ -88,7 +86,7 @@
             <div class="">
               <span class="pointer text-primary ml-1 d-flex align-items-center">
                 <svg
-                  @click="$bvModal.show('diagnosisModal')"
+                  @click="showModal"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -150,13 +148,9 @@
     <div>
       <DashboardModalImagingDiagnosis
         @page-changed="getICD10($event, searchParam)"
-        @diagnosis="setDiagnosis"
-        @searchParam="searchByString"
-        :pages="pages"
-        :index="role"
-        :options="icdTernCollection"
         @refresh="getICD10(1, searchParam)"
-        :consultationData="consultationData"
+        @diagnosis="setDiagnosis"
+        @create="closeModal"
       />
     </div>
   </ModalWrapper>
@@ -171,6 +165,9 @@ export default {
       type: Object,
       require: false,
       default: () => ({}),
+    },
+    role: {
+      require: false,
     },
   },
   data() {
@@ -256,7 +253,7 @@ export default {
     },
     async save() {
       let diagnosis = this.dataObject.diagnosis
-      for(let x = 0; x < diagnosis.length; x++){
+      for (let x = 0; x < diagnosis.length; x++) {
         delete diagnosis[x].selected
         delete diagnosis[x].confirmed
       }
@@ -278,8 +275,11 @@ export default {
         console.log(error)
       }
     },
-    showModal(){
-      console.log('yay')
+    showModal() {
+      this.$bvModal.show('diagnosisModal')
+    },
+    closeModal() {
+      this.$bvModal.hide('diagnosisModal')
     },
     async edit() {
       try {
@@ -295,6 +295,7 @@ export default {
       }
     },
     setDiagnosis(e) {
+      this.$bvModal.hide('diagnosisModal')
       this.dataObject.diagnosis = e
     },
     clear() {

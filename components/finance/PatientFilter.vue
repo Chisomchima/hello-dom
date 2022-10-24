@@ -65,7 +65,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -74,6 +73,7 @@ export default {
         uhid: '',
         firstname: '',
         lastname: '',
+        phone_number: '',
         dob: '',
         gender: '',
       },
@@ -82,21 +82,29 @@ export default {
   watch: {
     genders: {},
   },
-  created() {
-  },
+  created() {},
   methods: {
     clear() {
       this.filters = {
-        first_name: '',
-        last_name: '',
+        uhid: '',
+        firstname: '',
+        lastname: '',
+        phone_number: '',
         dob: '',
         gender: '',
       }
-      this.filterFunc(this.filters)
     },
 
     filterFunc(newVal) {
-      this.$emit('filter', this.filters)
+      if (this.filters.uhid || this.filters.firstname || this.filters.lastname || this.filters.phone_number || this.filters.dob){
+        this.$emit('filter', this.filters)
+      } 
+      else{
+        this.$toast({
+          type: 'info',
+          text: `Please include any of the first 4 search criteria`,
+        })
+      }
     },
   },
 }

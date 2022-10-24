@@ -57,6 +57,7 @@
           :fields="fields"
           :pages="pages"
           :busy="busy"
+          @row-selected="onRowSelected"
           @page-changed="goToNextPage"
         >
           <template #clear="{ data }">
@@ -102,20 +103,9 @@ export default Vue.extend({
   props: {
     options: {
       type: Array,
-      required: true,
+      required: false,
     },
-    pages: {
-      type: Number,
-      required: true,
-    },
-    index: {
-      type: Number,
-      required: true,
-    },
-    consultationData: {
-      type: Object,
-      required: true,
-    },
+   
   },
   watch: {
     searchParam() {
@@ -214,8 +204,14 @@ export default Vue.extend({
     //   this.tray = []
       this.getICD10()
       this.$emit('diagnosis', this.tray)
+      this.$emit('create')
     },
-
+    onRowSelected(items) {
+        console.log(items)
+      },
+    // selectDiagnosis(e){
+    //   console.log(e)
+    // },
     async addDiagnosis() {
       let arr = this.tray
       let requestBody = []
