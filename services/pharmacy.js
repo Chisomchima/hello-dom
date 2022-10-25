@@ -93,5 +93,39 @@ export default axios => ({
     },
     deleteUnit(id){
         return axios.$delete(`/pharmacy/units/${id}/`)
-    }
+    },
+
+    //Categories
+    getCategories(params = {}){
+        return axios.$get(`/pharmacy/categories/`, {
+            params
+        })
+    },
+    createCategories(body){
+        return axios.$post(`/pharmacy/categories/`, body)
+    },
+    updateCategories(body, id){
+        return axios.$patch(`/pharmacy/categories/${id}/`, body)
+    },
+    deleteCategories(id){
+        return axios.$delete(`/pharmacy/categories/${id}/`)
+    },
+
+    //Generic drug
+    getGeneric(params = {}){
+        return axios.$get(`/pharmacy/generic_drugs/`, {
+            params
+        })
+    },
+    createGeneric(body){
+        return axios.$post(`/pharmacy/generic_drugs/`, body)
+    },
+    updateGeneric(body, id){
+        return axios.$patch(`/pharmacy/generic_drugs/${id}/`, body)
+    },
+    deleteGeneric(id){
+        return axios.$delete(`/pharmacy/generic_drugs/${id}/`)
+    },
+
+
 })

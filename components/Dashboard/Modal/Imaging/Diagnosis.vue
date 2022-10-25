@@ -201,17 +201,12 @@ export default Vue.extend({
        this.getICD10(n, this.searchParam)
     },
     closeModal() {
-    //   this.tray = []
       this.getICD10()
       this.$emit('diagnosis', this.tray)
-      this.$emit('create')
     },
     onRowSelected(items) {
         console.log(items)
       },
-    // selectDiagnosis(e){
-    //   console.log(e)
-    // },
     async addDiagnosis() {
       let arr = this.tray
       let requestBody = []

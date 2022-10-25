@@ -70,7 +70,7 @@ export default {
         },
         {
           key: 'deposit',
-          label: 'Balance',
+          label: 'Desp Bal',
           formatter: (value) => {
             return value
               .toString()

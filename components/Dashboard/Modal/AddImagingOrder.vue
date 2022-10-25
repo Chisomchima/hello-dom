@@ -79,6 +79,7 @@
                   label="case"
                   multiple
                   taggable
+                  @open="showModal"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
@@ -150,7 +151,6 @@
         @page-changed="getICD10($event, searchParam)"
         @refresh="getICD10(1, searchParam)"
         @diagnosis="setDiagnosis"
-        @create="closeModal"
       />
     </div>
   </ModalWrapper>
