@@ -73,7 +73,7 @@ export default {
         if (Object.keys(newVal).length > 0) {
           this.dataObject.id = newVal.id
           this.dataObject.name = newVal.name
-          this.dataObject.parent = newVal.parent
+          this.dataObject.parent = newVal.parent.id
         }
       },
       immediate: true,
