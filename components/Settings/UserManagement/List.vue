@@ -27,7 +27,7 @@
           </template>
           <template #username="{ data }">
             <div>
-              <span>{{ toLowerCaseFunc(data.item.username) }}</span>
+              <span>{{ data.item.username }}</span>
             </div>
           </template>
           <template #last_login="{ data }">
