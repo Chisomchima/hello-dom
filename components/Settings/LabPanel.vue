@@ -205,7 +205,6 @@
                               label="name"
                               v-model="editPanel.obv"
                               :options="observationWithoutPagination"
-                              
                               :loading="cue"
                               multiple
                               taggable
@@ -278,15 +277,56 @@
                     class="form-control ng-untouched ng-pristine ng-valid"
                   />
                 </div>
+                <div v-show="showTemplate" class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                  <small class="text-grey text-12">Template</small>
+                  <textarea
+                    v-model="editPanel.template"
+                    cols="15"
+                    rows="15"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
+                </div>
               </div>
-              <div class="my-2 px-5 align-item-start">
-                <small class="text-grey text-14">Active</small>
-                <input
-                  v-model="editPanel.active"
-                  type="checkbox"
-                  placeholder="Name"
-                  class="ng-untouched ng-pristine ng-valid"
-                />
+              <div
+                class="
+                  my-2
+                  px-5
+                  d-flex
+                  justify-content-between
+                  align-item-start
+                "
+              >
+                <div class="d-flex">
+                  <small class="text-grey text-14 mr-2">Active</small>
+                  <input
+                    v-model="editPanel.active"
+                    type="checkbox"
+                    placeholder="Name"
+                    class="ng-untouched ng-pristine ng-valid"
+                  />
+                </div>
+                <div v-if="!showTemplate" class="d-flex text-14">
+                  <svg
+                  @click="showTemplateField"
+                  class="text-primary point"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1Zm1 15a1 1 0 1 1-2 0v-3H8a1 1 0 1 1 0-2h3V8a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="ml-1">Edit template</span>
+                </div>
+                <div v-if="showTemplate" class="d-flex text-14">
+                  <span  @click="hideTemplatefield" class="ml-1 border border-danger p-1 text-14 point text-grey">Close</span>
+                </div>
               </div>
               <div class="my-3 d-flex justify-content-center">
                 <button
@@ -378,8 +418,7 @@
         </table-component>
       </UtilsFilterComponent>
     </div>
-    <DashboardModalDeletePanel :editData="editObj"
-      @refresh="refreshMe"/>
+    <DashboardModalDeletePanel :editData="editObj" @refresh="refreshMe" />
   </div>
 </template>
 
@@ -389,6 +428,7 @@ import { debounce } from 'lodash'
 export default {
   data() {
     return {
+      showTemplate: false,
       panel: {
         name: '',
         obv: [],
@@ -409,6 +449,7 @@ export default {
         bill_price: null,
         cost_price: null,
         active: true,
+        template: ''
       },
       lab_unit: null,
       specimen_type: null,
@@ -432,7 +473,7 @@ export default {
       cue2: false,
       labPanels: [],
       fields: [
-        { key: 'identity', label: 'Name', sortable: true },
+        { key: 'name', label: 'Name', sortable: true },
         { key: 'obv', label: 'Observations', sortable: true },
 
         { key: 'specimen_type', label: 'Specimen Type', sortable: true },
@@ -440,17 +481,17 @@ export default {
         { key: 'actions', label: '', sortable: false },
       ],
       uniqueId: null,
-      searchQuery: ''
+      searchQuery: '',
     }
   },
   watch: {
     typeId() {
-      if(this.typeId !== null){
+      if (this.typeId !== null) {
         this.panel.specimen_type = this.typeId.id
       }
     },
     unitId() {
-      if(this.unitId !== null){
+      if (this.unitId !== null) {
         this.panel.lab_unit = this.unitId.id
       }
     },
@@ -459,13 +500,19 @@ export default {
     this.getLabPanels()
   },
   methods: {
-    searchMe(e){
+    searchMe(e) {
       this.getLabPanels(1, e)
     },
-    refreshMe(){
+    refreshMe() {
       this.getLabPanels(1)
     },
-    deletePanel(e){
+    showTemplateField(){
+      this.showTemplate = true
+    },
+    hideTemplatefield(){
+      this.showTemplate = false
+    },
+    deletePanel(e) {
       this.editObj = { ...e }
       this.$bvModal.show('deletePanelModal')
     },
@@ -487,33 +534,34 @@ export default {
         specimen_type: null,
         lab_unit: null,
         active: false,
+        template: ''
       }
+      this.showTemplate = false
     },
     async openLabPanelModal() {
       this.$bvModal.show('Add-panel')
-    
-        this.cue = true
-        let temp1 = await this.$api.core.observations({ size: 1000 })
-        this.observationWithoutPagination = temp1.results
-        this.cue =  false
 
-        
-        this.cue1 = true
-        let temp2 = await this.$api.core.specimens({ size: 1000 })
-        this.specimensForModal = temp2.results
-        this.cue1 = false
-    
-        this.cue2 = true
-        let temp3 = await this.$api.core.labUnits({ size: 1000 })
-        this.unitsForModal = temp3.results
-        this.cue2 = false
-     
+      this.cue = true
+      let temp1 = await this.$api.core.observations({ size: 1000 })
+      this.observationWithoutPagination = temp1.results
+      this.cue = false
+
+      this.cue1 = true
+      let temp2 = await this.$api.core.specimens({ size: 1000 })
+      this.specimensForModal = temp2.results
+      this.cue1 = false
+
+      this.cue2 = true
+      let temp3 = await this.$api.core.labUnits({ size: 1000 })
+      this.unitsForModal = temp3.results
+      this.cue2 = false
     },
 
     async openEditPanel(e) {
       console.log(e)
       this.uniqueId = e.id
-      this.editPanel.name = e.identity
+      this.editPanel.name = e.name
+      this.editPanel.template = e.template
       ;(this.editPanel.bill_price = e.bill_price),
         (this.editPanel.cost_price = e.cost_price)
 
@@ -617,7 +665,7 @@ export default {
       }
     },
 
-    async getLabPanels(page = 1,  e = "") {
+    async getLabPanels(page = 1, e = '') {
       try {
         this.busy = true
         let uri = `/laboratory/lab_panel/?page=${page}&name=${e}&size=${this.perPager}`
@@ -635,8 +683,9 @@ export default {
           // let red = iterator.obv.reduce(
           //   (start, end) => `${start.name + end.name}`
           // );
+          console.log(iterator.name)
           this.labPanels.push({
-            identity: iterator.name,
+            name: iterator.name,
             obv: iterator.obv,
             created_at: b,
             specimen_type: iterator.specimen_type,
@@ -645,6 +694,7 @@ export default {
             id: iterator.id,
             bill_price: iterator.bill_price,
             cost_price: iterator.cost_price,
+            template: iterator.template
           })
         }
 

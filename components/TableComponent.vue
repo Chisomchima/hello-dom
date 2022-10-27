@@ -173,9 +173,12 @@
           {{ data.value }}
         </slot>
       </template>
+       <template #cell()="data">
+        <span> {{ data.value }}</span>
+      </template>
 
-      <template #cell()="data">
-        <span class="text-capitalize"> {{ data.value }}</span>
+      <template #cell(uom)="data">
+        <span name="uom"> {{ data.value }}</span>
       </template>
       <template #cell(value.option)="data">
         <slot name="option" :data="data"></slot>
