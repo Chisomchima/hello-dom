@@ -8,6 +8,8 @@
       :stacking="false"
       :arrangement="false"
       :cancelText="'Close'"
+      :hideBackground="true"
+      @change="$emit('change', $event)"
     >
       <div>
         <div class="d-flex flex-wrap text-white">
@@ -105,6 +107,11 @@ export default Vue.extend({
       type: Array,
       required: false,
     },
+
+    selectedDiagnosis: {
+      type: Array,
+      required: false
+    }
    
   },
   watch: {
@@ -152,6 +159,8 @@ export default Vue.extend({
   },
   mounted() {
     this.dataOBJS = this.options
+   
+      this.tray = this.selectedDiagnosis
     this.getICD10()
   },
   methods: {
@@ -203,48 +212,11 @@ export default Vue.extend({
     closeModal() {
       this.getICD10()
       this.$emit('diagnosis', this.tray)
+      // this.tray = []
     },
     onRowSelected(items) {
         console.log(items)
       },
-    async addDiagnosis() {
-      let arr = this.tray
-      let requestBody = []
-      for (let x = 0; x < arr.length; x++) {
-        let tempObj = {
-          comment: arr[x],
-          option: 'working',
-        }
-        if (arr[x].confirmed === true) {
-          tempObj.option = 'confirmed'
-        }
-        delete tempObj.comment.selected
-        delete tempObj.comment.confirmed
-        requestBody.push(tempObj)
-      }
-      try {
-        let response = await this.$axios.$post(
-          `encounters/${this.consultationData.id}/charts/`,
-          {
-            chart: {
-              diag: requestBody,
-            },
-          }
-        )
-        this.$toast({
-          type: 'success',
-          text: 'Diagnosis added',
-        })
-        this.tray = []
-        this.$bvModal.hide('diagnosisModal')
-      } catch (error) {
-        this.$toast({
-          type: 'error',
-          text: 'An error occured',
-        })
-      } finally {
-      }
-    },
   },
 })
 </script>

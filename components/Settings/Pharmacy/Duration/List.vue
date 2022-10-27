@@ -18,6 +18,7 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @edit="edit($event)"
+          @delete="deleteItem($event)"
         >
         </TableComponent>
       </template>
@@ -95,6 +96,21 @@ export default {
       this.editObj = e
       this.modalTitle = 'Edit Duration'
       this.$bvModal.show('addDurations')
+    },
+    async deleteItem(item) {
+      const result = await this.showConfirmMessageBox('Delete duration ?')
+      try {
+        if (result) {
+          let response = await this.$api.pharmacy.deleteDurations(item.id)
+          this.$toast({
+            type: 'success',
+            text: `Deleted`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }

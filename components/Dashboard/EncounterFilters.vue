@@ -260,7 +260,7 @@ export default {
     if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
-    this.applyFilter(this.filters)
+    // this.applyFilter(this.filters)
     try {
       const providers = await this.$api.core.providers({
         size: 1000,

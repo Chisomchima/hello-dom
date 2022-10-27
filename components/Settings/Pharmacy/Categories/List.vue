@@ -18,6 +18,7 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @edit="edit($event)"
+          @delete="deleteItem($event)"
         >
         </TableComponent>
       </template>
@@ -93,7 +94,22 @@ export default {
       this.modalTitle = 'Edit Category'
       this.$bvModal.show('addCategory')
     },
-  },
+    async deleteItem(item) {
+      const result = await this.showConfirmMessageBox('Delete categories ?')
+      try {
+        if (result) {
+          let response = await this.$api.pharmacy.deleteCategories(item.id)
+          this.$toast({
+            type: 'success',
+            text: `Deleted`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  }
 }
 </script>
 

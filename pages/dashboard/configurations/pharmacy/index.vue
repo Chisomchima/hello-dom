@@ -44,12 +44,12 @@ export default {
     return {
       cards: [
         {
-          name: 'Drug administration',
+          name: 'Drug Admin Config',
           icon: 'fa fa-sliders',
           route: '/dashboard/configurations/pharmacy/drug-administration/',
         },
         {
-          name: 'Drug config',
+          name: 'Generic Drug Config',
           icon: 'fa fa-sliders',
           route: '/dashboard/configurations/pharmacy/drug-config/',
         },

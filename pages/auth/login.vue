@@ -52,6 +52,10 @@ export default {
       loading: false,
     };
   },
+
+  mounted(){
+     this.$store.commit('toggleRequestInProgress', false)
+  },
   
 
   methods: {

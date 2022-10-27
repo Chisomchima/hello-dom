@@ -1,12 +1,12 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">Drug administration </div>
+    <div class="page-heading mb-4">Drug Admin Configurations</div>
     <UtilsBaseCardTab>
-      <UtilsCardTab title="Generic drugs">
+      <UtilsCardTab title="Generic drug(s)">
         <SettingsPharmacyGenericList />
       </UtilsCardTab>
-       <UtilsCardTab title="Categories">
+       <UtilsCardTab title="Categorie(s)">
         <SettingsPharmacyCategoriesList />
       </UtilsCardTab>
     </UtilsBaseCardTab>

@@ -90,6 +90,8 @@
                   taggable
                   @open="showModal"
                   :noDrop="true"
+                  :closeOnSelect="true"
+                  @option:deselected="updateChild"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
@@ -160,7 +162,8 @@
         @page-changed="getICD10($event, searchParam)"
         @diagnosis="setDiagnosis"
         @refresh="getICD10(1, searchParam)"
-       
+        @change="helloWorld"
+        :selectedDiagnosis="selected"
       />
     </div>
   </ModalWrapper>
@@ -180,6 +183,8 @@ export default {
   data() {
     return {
       uhid: '',
+      selected: [],
+      present: false,
       service_centers: [],
       observations: [],
       dataObject: {
@@ -235,6 +240,11 @@ export default {
       },
       deep: true,
     },
+    'dataObject.diagnosis': {
+      handler(newVal) {
+        this.selected = newVal
+      },
+    },
   },
   methods: {
     async ok() {
@@ -242,12 +252,20 @@ export default {
         await this.save()
       }
     },
-    showModal(){
-      this.$bvModal.show('diagnosisModal')
+    helloWorld(e) {
+      this.present = e
+    },
+    showModal() {
+      if (!this.present) {
+        this.$bvModal.show('diagnosisModal')
+      } else {
+        this.present = false
+        this.$bvModal.hide('diagnosisModal')
+      }
     },
     async save() {
       let diagnosis = this.dataObject.diagnosis
-      for(let x = 0; x < diagnosis.length; x++){
+      for (let x = 0; x < diagnosis.length; x++) {
         delete diagnosis[x].selected
         delete diagnosis[x].confirmed
       }

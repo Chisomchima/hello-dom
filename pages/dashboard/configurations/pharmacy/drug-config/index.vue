@@ -1,24 +1,24 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">Drug configurations</div>
+    <div class="page-heading mb-4">Generic Drug Configurations</div>
     <UtilsBaseCardTab>
-      <UtilsCardTab title="Doses">
+      <UtilsCardTab title="Dose(s)">
         <SettingsPharmacyDosesList />
       </UtilsCardTab>
-      <UtilsCardTab title="Units">
+      <UtilsCardTab title="Unit(s)">
         <SettingsPharmacyUnitsList />
       </UtilsCardTab>
-      <UtilsCardTab title="Routes">
+      <UtilsCardTab title="Route(s)">
         <SettingsPharmacyRoutesList />
       </UtilsCardTab>
-      <UtilsCardTab title="Frequencies">
+      <UtilsCardTab title="Frequencie(s)">
         <SettingsPharmacyFrequenciesList />
       </UtilsCardTab>
-      <UtilsCardTab title="Directions">
+      <UtilsCardTab title="Direction(s)">
         <SettingsPharmacyDirectionsList />
       </UtilsCardTab>
-      <UtilsCardTab title="Durations">
+      <UtilsCardTab title="Duration(s)">
         <SettingsPharmacyDurationList />
       </UtilsCardTab>
     </UtilsBaseCardTab>

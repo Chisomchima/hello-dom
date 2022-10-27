@@ -4,6 +4,7 @@
     :title="modalTitle"
     @ok="ok()"
     @hide="clear()"
+    :notScrollable="true"
   >
     <ValidationObserver ref="form">
       <form>

@@ -10,10 +10,12 @@
     :scrollable="!notScrollable"
     :hide-footer="noFooter"
     :no-close-on-backdrop="true"
+    :hide-backdrop="hideBackground"
     ok-title="Save"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"
     @hide="$emit('hide', $event)"
+    @change="$emit('change', $event)"
   >
     <slot></slot>
     <template #modal-header="{ close }">
@@ -123,6 +125,10 @@ export default {
     arrangement: {
       type: Boolean,
       default: true,
+    },
+    hideBackground: {
+      type: Boolean,
+      default: false,
     },
     specialHeader: {
       type: Boolean,

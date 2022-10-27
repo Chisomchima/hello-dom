@@ -18,6 +18,7 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @edit="edit($event)"
+          @delete="deleteItem($event)"
         >
         </TableComponent>
       </template>
@@ -96,6 +97,21 @@ export default {
       this.editObj = e
       this.modalTitle = 'Edit Generic Drug'
       this.$bvModal.show('addGeneric')
+    },
+     async deleteItem(item) {
+      const result = await this.showConfirmMessageBox('Delete generic drug ?')
+      try {
+        if (result) {
+          let response = await this.$api.pharmacy.deleteGeneric(item.id)
+          this.$toast({
+            type: 'success',
+            text: `Deleted`,
+          })
+          this.pageChange(1, this.filters)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }

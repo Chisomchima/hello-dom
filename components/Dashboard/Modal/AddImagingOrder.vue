@@ -80,27 +80,12 @@
                   multiple
                   taggable
                   @open="showModal"
+                  :closeOnSelect="true"
+                  :noDrop="true"
+                  @option:deselected="updateChild"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
-            </div>
-            <div class="">
-              <span class="pointer text-primary ml-1 d-flex align-items-center">
-                <svg
-                  @click="showModal"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  class="bi bi-plus-square-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
-                  />
-                </svg>
-                <span class="text-12 ml-2">Select diagnosis</span>
-              </span>
             </div>
           </div>
 
@@ -151,6 +136,8 @@
         @page-changed="getICD10($event, searchParam)"
         @refresh="getICD10(1, searchParam)"
         @diagnosis="setDiagnosis"
+        @change="helloWorld"
+        :selectedDiagnosis="selected"
       />
     </div>
   </ModalWrapper>
@@ -173,6 +160,8 @@ export default {
   data() {
     return {
       uhid: '',
+      selected: [],
+      present: false,
       service_centers: [],
       observations: [],
       dataObject: {
@@ -231,6 +220,11 @@ export default {
       immediate: true,
       deep: true,
     },
+    'dataObject.diagnosis':{
+      handler(newVal){
+        this.selected = newVal
+      }
+    },
 
     uhid: debounce(async function (newVal) {
       const results = await this.getPatientByUHID(newVal)
@@ -250,6 +244,9 @@ export default {
           this.save()
         }
       }
+    },
+    helloWorld(e){
+      this.present = e
     },
     async save() {
       let diagnosis = this.dataObject.diagnosis
@@ -276,7 +273,13 @@ export default {
       }
     },
     showModal() {
-      this.$bvModal.show('diagnosisModal')
+      if(!this.present){
+        this.$bvModal.show('diagnosisModal')
+      }
+      else{
+        this.present = false
+        this.$bvModal.hide('diagnosisModal')
+      }
     },
     closeModal() {
       this.$bvModal.hide('diagnosisModal')

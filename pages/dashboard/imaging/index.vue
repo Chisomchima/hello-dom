@@ -74,6 +74,12 @@
     <DashboardModalAddImagingOrder
       @refresh="filter(currentPage, currentFilter)"
     />
+    <div>
+      <DashboardModalImagingDiagnosis
+        @page-changed="getICD10($event, searchParam)"
+        @refresh="getICD10(1, searchParam)"
+      />
+    </div>
     <DashboardModalImagingOrderCapture
       :data="modalData"
       @hide="modalData = {}"

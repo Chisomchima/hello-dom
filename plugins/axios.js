@@ -22,7 +22,7 @@ export default function ({ $axios, $toast, store, redirect }) {
     store.commit('toggleRequestInProgress', false)
 
     if (error.response && error.response.status === 401) {
-      // store.dispatch('auth/logout')
+      store.commit('toggleRequestInProgress', true)
       redirect('/auth/login?redirect=true');
       $toast({
         type: 'error',
@@ -32,7 +32,6 @@ export default function ({ $axios, $toast, store, redirect }) {
     }
 
     if (error.response && error.response.status === 403) {
-      debugger
       store.commit('auth/SET_PAGE_DISABLED', true)
       $toast({
         type: 'info',

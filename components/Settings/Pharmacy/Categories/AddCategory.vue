@@ -4,6 +4,7 @@
     :title="modalTitle"
     @ok="ok()"
     @hide="clear()"
+    :notScrollable="true"
   >
     <ValidationObserver ref="form">
       <form>
@@ -25,6 +26,7 @@
                   :options="parents"
                   label="name"
                   v-model="dataObject.parent"
+                  :reduce="opt => opt.id"
                 >
                 </v-select>
             </ValidationProviderWrapper>
