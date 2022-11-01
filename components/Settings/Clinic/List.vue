@@ -20,6 +20,7 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @edit="edit($event)"
+           @page-changed="pageChange($event, filter)"
         >
           <template #description="{ data }">
             <div class="">
@@ -59,9 +60,11 @@ export default {
       fields: [
         {
           key: 'name',
+          label: 'Clinic',
         },
         {
-          key: 'Department.name',
+          key: 'department.name',
+          label: 'Department',
         },
         {
           key: 'bill_price',
@@ -73,7 +76,7 @@ export default {
 
         {
           key: 'cost_price',
-          label: '',
+          label: 'Cost price',
         },
 
         {

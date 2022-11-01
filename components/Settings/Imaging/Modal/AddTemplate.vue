@@ -53,7 +53,7 @@ export default {
     modalTitle: {
       type: String,
       require: false,
-      default: () => 'Add clinic',
+      default: () => 'Add template',
     },
   },
   data() {
@@ -64,7 +64,7 @@ export default {
         content: null,
         source: 'IMAGING',
       },
-      title: '',
+      title: 'Add template',
       departments: [],
     }
   },
@@ -105,7 +105,14 @@ export default {
     },
     async save() {
       try {
-        const data = await this.$api.templates.createTemplate(this.dataObject)
+        const data = await this.$api.templates.createTemplate(
+          {
+            title: this.dataObject.title,
+            description: this.dataObject.description,
+            content: this.dataObject.content,
+            source: 'IMAGING'
+          }
+        )
         this.$emit('refresh')
         this.$bvModal.hide('addImagingTemplate')
         console.log(data)

@@ -18,6 +18,7 @@
           :modalTitle="modalTitle"
           :busy="busy"
           @row-clicked="edit($event)"
+           @page-changed="pageChange($event, filters)"
           @delete="deleteUser"
         >
           <template #description="{ data }">
@@ -142,7 +143,7 @@ export default {
         is_active: true,
       },
       filters: {
-        username: '',
+        name: '',
         size: 10,
       },
       modalTitle: 'Add User',
@@ -183,7 +184,7 @@ export default {
       this.filters.name = e
       this.pageChange(1, this.filters)
     },
-    async pageChange(page = 1, e = { username: '', size: 10 }) {
+    async pageChange(page = 1, e = { name: '', size: 10 }) {
       try {
         this.busy = true
         const data = await this.$api.users.getUsers({ page, ...e })

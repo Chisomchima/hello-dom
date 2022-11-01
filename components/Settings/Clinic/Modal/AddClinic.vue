@@ -1,10 +1,10 @@
 <template>
-  <ModalWrapper id="addClinic" :title="title" @ok="ok()" @hide="clear()">
+  <ModalWrapper id="addClinic" :title="modalTitle" @ok="ok()" @hide="clear()">
     <ValidationObserver ref="form">
       <form>
         <div class="row">
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Name" :rules="['required']">
+            <ValidationProviderWrapper name="Clinic" :rules="['required']">
               <!-- <input
                 class="form-control"
                 type="text
@@ -18,7 +18,7 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Name" :rules="['required']">
+            <ValidationProviderWrapper name="Department" :rules="['required']">
               <v-select
                 class="style-chooser text-grey text-14"
                 placeholder="Department"
@@ -113,8 +113,15 @@ export default {
     editData: {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
-          this.dataObject = newVal
-          delete this.dataObject.bill_item_code
+          this.dataObject.id = newVal.id
+          this.dataObject.bill_price = newVal.bill_price
+          this.dataObject.cost_price = newVal.cost_price
+          if(newVal.department){
+            this.dataObject.department = newVal.department.id
+          }
+          this.dataObject.name = newVal.name
+          this.dataObject.is_active = newVal.is_active
+          // delete this.dataObject.bill_item_code
         }
       },
       immediate: true,
