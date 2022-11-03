@@ -4,6 +4,8 @@
       size="lg"
       id="fillresult"
       title="Fill result"
+      :notScrollable="false"
+      :submitTitle="'Submit'"
       @clearForm="clear()"
       @hide="clear()"
       @ok="savePanelOrder()"
@@ -28,15 +30,29 @@
               <template #value="{ data }">
                 <div
                   v-if="
-                    data.item.type.name === 'Integer' ||
-                    data.item.type.name === 'Float' ||
                     data.item.type.name === 'Text'
                   "
                 >
                   <ValidationProviderWrapper :rules="['required']">
                     <div class="p-2">
                       <input
-                        :type="manageInput"
+                        type="text"
+                        placeholder="Value"
+                        v-model="data.item.value"
+                        class="form-control ng-untouched ng-pristine ng-valid"
+                      />
+                    </div>
+                  </ValidationProviderWrapper>
+                </div>
+                <div
+                  v-if="
+                    data.item.type.name === 'Integer' ||
+                    data.item.type.name === 'Float'"
+                >
+                  <ValidationProviderWrapper :rules="['required']">
+                    <div class="p-2">
+                      <input
+                        type="number"
                         placeholder="Value"
                         v-model="data.item.value"
                         class="form-control ng-untouched ng-pristine ng-valid"

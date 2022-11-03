@@ -52,7 +52,7 @@ export default {
         {
           name: 'Patient',
           icon: 'fa fa-file',
-          route: '/dashboard/reports/patient/',
+          route: '/dashboard/reports/registeration/',
         },
         {
           name: 'Laboratory',

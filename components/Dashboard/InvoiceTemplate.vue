@@ -6,7 +6,7 @@
       id="text"
       class="ticket"
     >
-      <!-- <h2
+      <h2
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="
           margin: 0rem;
@@ -16,7 +16,7 @@
         "
       >
         {{ companyName }}
-      </h2> -->
+      </h2>
 
       <!-- theme -->
       <div
@@ -25,7 +25,7 @@
       >
         <!-- Chem Health -->
 
-        <!-- <svg
+         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
           width="170px"
@@ -4651,12 +4651,10 @@ c-31 27 -51 31 -61 15z"
       <h3
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="font-size: 1.2rem; margin: 0.3rem; font-size: 16px"
-        v-if="reciept.payment_lines.length > 0"
       >
         Payment(s)
       </h3>
       <table
-        v-if="reciept.payment_lines.length > 0"
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="border-collapse: collapse; text-align: center; font-size: 16px"
       >
@@ -4707,7 +4705,6 @@ c-31 27 -51 31 -61 15z"
       <p
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="text-align: end; font-size: 16px"
-        v-if="reciept.payment_lines.length > 0"
       >
         Total: {{ numberWithCommas(reciept.total_charge) }}
       </p>

@@ -6,6 +6,7 @@
       title="Lab Order"
       :arrangement="false"
       :cancelText="`Close`"
+      :stacking="false"
       @show="getData()"
       @hide="save"
     >

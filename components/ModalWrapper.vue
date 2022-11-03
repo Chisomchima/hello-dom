@@ -11,7 +11,7 @@
     :hide-footer="noFooter"
     :no-close-on-backdrop="true"
     :hide-backdrop="hideBackground"
-    ok-title="Save"
+    :ok-title="saveText"
     @ok="$emit('ok', $event)"
     @show="$emit('show', $event)"
     @hide="$emit('hide', $event)"
@@ -137,6 +137,10 @@ export default {
     cancelText: {
       type: String,
       default: 'Cancel',
+    },
+    saveText: {
+      type: String,
+      default: 'Submit',
     },
   },
   methods: {

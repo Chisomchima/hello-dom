@@ -7,7 +7,8 @@
         centered
         hide-footer
         ref="addLabModal"
-        @hide="closeModal"
+        @hide="closeModalFunc"
+        @show="clearState"
       >
         <div>
           <ValidationObserver v-slot="{ validate }">
@@ -53,6 +54,9 @@
                           :options="observationWithoutPagination"
                           :loading="cue"
                           :reduce="(option) => option"
+                          @open="obvModal"
+                          :noDrop="true"
+                          :closeOnSelect="true"
                           multiple
                           taggable
                         >
@@ -130,7 +134,7 @@
 
               <div class="my-3 d-flex justify-content-center">
                 <button
-                  @click.prevent="closeModal"
+                  @click.prevent="closeModalFunc"
                   class="btn btn-light text-grey mr-5 text-14"
                   style="height: 38px; width: 5rem; text-align: center"
                 >
@@ -160,6 +164,7 @@
         title="Edit Laboratory Panel"
         centered
         hide-footer
+        :no-stacking="false"
         ref="editLabModal"
         @hide="closeEditModal"
       >
@@ -206,6 +211,9 @@
                               v-model="editPanel.obv"
                               :options="observationWithoutPagination"
                               :loading="cue"
+                              @open="obvModal"
+                              :noDrop="true"
+                              :closeOnSelect="true"
                               multiple
                               taggable
                             ></v-select>
@@ -277,7 +285,10 @@
                     class="form-control ng-untouched ng-pristine ng-valid"
                   />
                 </div>
-                <div v-show="showTemplate" class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10">
+                <div
+                  v-show="showTemplate"
+                  class="mb-2 col-lg-10 px-0 col-md-10 col-sm-10"
+                >
                   <small class="text-grey text-12">Template</small>
                   <textarea
                     v-model="editPanel.template"
@@ -307,8 +318,8 @@
                 </div>
                 <div v-if="!showTemplate" class="d-flex text-14">
                   <svg
-                  @click="showTemplateField"
-                  class="text-primary point"
+                    @click="showTemplateField"
+                    class="text-primary point"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -325,7 +336,18 @@
                   <span class="ml-1">Edit template</span>
                 </div>
                 <div v-if="showTemplate" class="d-flex text-14">
-                  <span  @click="hideTemplatefield" class="ml-1 border border-danger p-1 text-14 point text-grey">Close</span>
+                  <span
+                    @click="hideTemplatefield"
+                    class="
+                      ml-1
+                      border border-danger
+                      p-1
+                      text-14
+                      point
+                      text-grey
+                    "
+                    >Close</span
+                  >
                 </div>
               </div>
               <div class="my-3 d-flex justify-content-center">
@@ -393,7 +415,7 @@
           <template #lab_unit="{ data }">
             <span>{{ data.item.lab_unit.name }}</span>
           </template>
-          <template #edit="{ data }">
+          <!-- <template #edit="{ data }">
             <div @click="openEditPanel(data.item)" class="text-start">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -414,21 +436,29 @@
                 />
               </svg>
             </div>
-          </template>
+          </template> -->
         </table-component>
       </UtilsFilterComponent>
     </div>
+    <SettingsObvModal
+      :observations="editPanel.obv"
+      :closeModal="closeModal"
+      @fetch_Data="handleProps"
+      @toggle="handleToggle"
+      @change="helloWorld"
+      @sendData="setObservation"
+    />
     <DashboardModalDeletePanel :editData="editObj" @refresh="refreshMe" />
   </div>
 </template>
 
 <script>
-import { debounce } from 'lodash'
 
 export default {
   data() {
     return {
       showTemplate: false,
+      closeModal: false,
       panel: {
         name: '',
         obv: [],
@@ -438,6 +468,8 @@ export default {
         bill_price: null,
         cost_price: null,
       },
+      labServiceOptions: [],
+      present: false,
       editObj: {},
       sswap: null,
       lswap: null,
@@ -448,8 +480,8 @@ export default {
         lab_unit: null,
         bill_price: null,
         cost_price: null,
-        active: true,
-        template: ''
+        active: false,
+        template: '',
       },
       lab_unit: null,
       specimen_type: null,
@@ -460,6 +492,7 @@ export default {
       perPage: 20,
       perPager: 12,
       pages: 0,
+      labObvCount: 0,
       observations: [],
       observationWithoutPagination: [],
       busy: false,
@@ -503,20 +536,34 @@ export default {
     searchMe(e) {
       this.getLabPanels(1, e)
     },
+    helloWorld(e) {
+      this.present = e
+    },
+    obvModal() {
+      if (!this.present) {
+        this.$bvModal.show('orderLab')
+      } else {
+        this.present = false
+        this.$bvModal.hide('orderLab')
+      }
+    },
+    clearState() {
+      this.panel.obv = []
+    },
     refreshMe() {
       this.getLabPanels(1)
     },
-    showTemplateField(){
+    showTemplateField() {
       this.showTemplate = true
     },
-    hideTemplatefield(){
+    hideTemplatefield() {
       this.showTemplate = false
     },
     deletePanel(e) {
       this.editObj = { ...e }
       this.$bvModal.show('deletePanelModal')
     },
-    closeModal() {
+    closeModalFunc() {
       this.$bvModal.hide('Add-panel')
       this.panel = {
         name: '',
@@ -528,13 +575,14 @@ export default {
     },
     closeEditModal() {
       this.$bvModal.hide('Edit-panel')
+      this.closeModal = true
       this.editPanel = {
         name: '',
         obv: [],
         specimen_type: null,
         lab_unit: null,
         active: false,
-        template: ''
+        template: '',
       }
       this.showTemplate = false
     },
@@ -543,7 +591,7 @@ export default {
 
       this.cue = true
       let temp1 = await this.$api.core.observations({ size: 1000 })
-      this.observationWithoutPagination = temp1.results
+      // this.observationWithoutPagination = temp1.results
       this.cue = false
 
       this.cue1 = true
@@ -557,8 +605,54 @@ export default {
       this.cue2 = false
     },
 
+    setObservation(list) {
+      this.panel.obv = list
+      if (this.editPanel.obv.length === 0) {
+        this.editPanel.obv = list
+      } else {
+        // Selected array list
+        let pocket = list
+        // Present observation array
+        let arrayPack = this.editPanel.obv
+        // loop to check selected options
+        for (let x = 0; x < pocket.length; x++) {
+          // Check condition before pushing item into cart
+          const exists =
+            arrayPack.findIndex((el) => el.id === pocket[x].id) > -1
+          if (!exists) {
+            // Push item that does not exist into array
+            this.editPanel.obv.push(pocket[x])
+          }
+        }
+      }
+    },
+
+    handleProps(list) {
+      console.log(list)
+      this.observationWithoutPagination = list
+    },
+
+    handleToggle(obj) {
+      const { child, parent, state } = obj
+      console.log(obj)
+      // this.labServiceOptions[parent].lab_panels[child].selected = state
+      // if (state == true) {
+      //   this.labObvCount++
+      // }
+    },
+    removeLabOrder(obj) {
+      const { parent, child, state } = obj
+      // if ((this.labServiceOptions[parent].lab_panels[child].selected = true)) {
+      //   this.labServiceOptions[parent].lab_panels[child].selected = false
+      //   this.labObvCount--
+      // }
+    },
+    closeLabOrder() {
+      this.labObvCount = 0
+      this.labServiceOptions = []
+    },
+
     async openEditPanel(e) {
-      console.log(e)
       this.uniqueId = e.id
       this.editPanel.name = e.name
       this.editPanel.template = e.template
@@ -570,6 +664,7 @@ export default {
       this.editPanel.obv = e.obv
       this.editPanel.active = e.active
       this.$bvModal.show('Edit-panel')
+      this.closeModal = false
       if (this.observationWithoutPagination.length < 1) {
         this.cue = true
         let temp = await this.$api.core.observations({ size: 1000 })
@@ -620,6 +715,13 @@ export default {
             lab_unit: null,
             active: false,
           }
+          this.editPanel = {
+            name: '',
+            obv: [],
+            specimen_type: null,
+            lab_unit: null,
+            active: false,
+          }
         } catch {
           this.$toast({
             type: 'error',
@@ -634,7 +736,6 @@ export default {
       if (this.$refs.runValidation) {
         this.$refs.runValidation.click()
       }
-
       this.editPanel.lab_unit = this.lswap.id
       this.editPanel.specimen_type = this.sswap.id
 
@@ -654,6 +755,13 @@ export default {
           })
           this.getLabPanels()
           this.$bvModal.hide('Edit-panel')
+          this.panel = {
+            name: '',
+            obv: [],
+            specimen_type: null,
+            lab_unit: null,
+            active: false,
+          }
         } catch {
           this.$toast({
             type: 'error',
@@ -668,7 +776,7 @@ export default {
     async getLabPanels(page = 1, e = '') {
       try {
         this.busy = true
-        let uri = `/laboratory/lab_panel/?page=${page}&name=${e}&size=${this.perPager}`
+        let uri = `/laboratory/lab_panel/?page=${page}&name=${e}&size=${this.perPager}&active=${true}`
 
         const response = await this.$axios.$get(uri)
 
@@ -690,11 +798,11 @@ export default {
             created_at: b,
             specimen_type: iterator.specimen_type,
             lab_unit: iterator.lab_unit,
-            active: true,
+            active: iterator.active,
             id: iterator.id,
             bill_price: iterator.bill_price,
             cost_price: iterator.cost_price,
-            template: iterator.template
+            template: iterator.template,
           })
         }
 

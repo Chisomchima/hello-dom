@@ -35,6 +35,7 @@
             :pages="pages"
             :items="itemsToShow"
             :busy="busy"
+            @row-clicked="openInvestigation"
             :dropdown-item="['cancel']"
             @cancel="cancelRequestModal($event)"
             @page-changed="filter($event, currentFilter)"
@@ -42,7 +43,9 @@
             <template #status="{ data }">
               <div>
                 <div style="width: 9rem">
-                  <button
+                  <span>
+                    <button
+                    @click.passive="openSpecimenTaken(data.item)"
                     v-if="data.item.status === 'NEW'"
                     :disabled="data.item.bill.cleared_status === 'UNCLEARED'"
                     class="text-center text-capitalize text-12"
@@ -51,7 +54,7 @@
                         ? 'btn btn-warning'
                         : 'btn btn-outline-info '
                     "
-                    @click="openSpecimenTaken(data.item)"
+                   
                   >
                     {{
                       data.item.status === 'NEW'
@@ -59,9 +62,10 @@
                         : data.item.status
                     }}
                   </button>
+                  </span>
                 </div>
                 <div>
-                  <div
+                  <button
                     v-if="data.item.status === 'recieve specimen'"
                     style="width: 9rem"
                     class="
@@ -72,8 +76,8 @@
                     @click="openFillResult(data.item)"
                   >
                     {{ data.item.status }}
-                  </div>
-                  <div
+                  </button>
+                  <button
                     v-if="data.item.status === 'fill result'"
                     style="width: 8rem"
                     class="
@@ -84,8 +88,8 @@
                     @click="openEditPanel(data.item)"
                   >
                     {{ data.item.status }}
-                  </div>
-                  <div
+                  </button>
+                  <button
                     v-if="data.item.status === 'awaiting approval'"
                     style="width: 9rem"
                     class="
@@ -96,7 +100,7 @@
                     @click="setStatusToApproved(data.item)"
                   >
                     {{ data.item.status }}
-                  </div>
+                  </button>
                   <div v-if="data.item.status === 'approved'">
                     <div class="d-flex">
                       <span
@@ -243,6 +247,11 @@
         @refresh="filter()"
       />
     </div>
+    <div>
+      <DashboardModalLabStepsComments
+        :lab-order-panel="labOrderPanel"
+      />
+    </div>
 
     <!-- ********************************* -->
   </div>
@@ -333,6 +342,10 @@ export default {
           this.downloading = false
         })
     },
+    openInvestigation(e){
+      this.$bvModal.show('comments')
+      this.labOrderPanel = e
+    },
     async mailReport(e) {
       try {
         this.downloading = true
@@ -400,7 +413,6 @@ export default {
       }
     },
     openEditPanel(e) {
-      console.log(e)
       this.$bvModal.show('fillresult')
 
       for (const iterator of e.panel.obv) {
@@ -424,7 +436,6 @@ export default {
 
       this.labOrderPanel.lab_order = e.lab_order
       this.labOrderPanel.panel = e.panel
-      console.log(this.labOrderPanel.panel.obv)
       this.labOrderPanel.status = e.stats
       this.labOrderPanel.asn = e.asn
       this.labOrderPanel.id = e.id

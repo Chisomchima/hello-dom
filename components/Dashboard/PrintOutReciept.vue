@@ -5,19 +5,18 @@
       id="text"
       class="ticket"
     >
-      <!-- <h2
+      <h2
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0; text-align: center; font-size: 16px"
       >
         {{ companyName }}
-      </h2> -->
+      </h2>
       <!-- theme -->
       <div
         :style="printLayout ? { width: '18rem' } : { width: '48rem' }"
         style="text-align: center; margin: 0.5rem 0"
       >
-
-      <!-- chem health -->
+        <!-- chem health -->
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
@@ -138,8 +137,8 @@
           src="~/assets/theme/client-logo.svg"
           alt=""
         /> -->
-<!-- **************Mireva Medical************** -->
-      <svg
+        <!-- **************Mireva Medical************** -->
+        <!-- <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
           width="180px"
@@ -4541,7 +4540,7 @@ c-31 27 -51 31 -61 15z"
               d="M6338 1033 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"
             />
           </g>
-        </svg>
+        </svg> -->
       </div>
       <h3
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
@@ -4576,14 +4575,17 @@ c-31 27 -51 31 -61 15z"
         "
       >
         <p v-if="reciept.user" style="margin: 0">
-          Printed by: {{ reciept.user.first_name }}
+          Printed by: {{ reciept.user ? reciept.user.first_name : '' }}
         </p>
         <p style="margin: 0">Date: {{ transactionDate }}</p>
       </div>
       <p
+        v-if="reciept.invoice"
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0rem 0; font-size: 14px"
       >
+        Invoice No: {{ reciept.invoice }}
+        <br />
         Patient name:
         {{ data.firstname + ' ' + data.middlename + ' ' + data.lastname }}
         <br />
@@ -4677,12 +4679,12 @@ c-31 27 -51 31 -61 15z"
           </tr>
         </tbody>
       </table>
-      <div v-if="reciept.total_amount">
+      <div v-if="reciept">
         <p
           :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
           style="text-align: end"
         >
-          Total: {{ numberWithCommas(reciept.total_amount) }}
+          Total: {{ reciept.total_amount ? numberWithCommas(reciept.total_amount) : ''}}
         </p>
       </div>
     </div>

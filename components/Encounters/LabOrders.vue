@@ -438,15 +438,15 @@
                 :key="index"
               >
                 <!-- <pre>{{panel.panel}}</pre> -->
-                <Accordion :activeIndex="0">
+                <Accordion>
                   <AccordionTab>
                     <template #header>
                       <div class="w-100 d-flex justify-content-between">
-                        <div>
+                        <div class="col-md-4">
                           {{ panel.panel.name }}
                         </div>
-                        <div class="d-flex align-items-center">
-                          {{ panel.panel.specimen_type.name }}
+                        <div class="d-flex align-items-center  col-md-4">
+                         
 
                           <div
                             style="
@@ -457,12 +457,23 @@
                               border: 1px solid #727d71;
                             "
                             :style="`background: ${panel.panel.specimen_type.color}`"
-                            class="first pointer ml-2"
+                            class="first pointer mr-2"
                           ></div>
+                           {{ panel.panel.specimen_type.name }}
+                        </div>
+                        <div class="col-md-4 text-capitalize">
+                          status:
+                          {{
+                            panel.status === 'NEW'
+                              ? 'Open'
+                              : panel.status === 'fill result'
+                              ? 'Reported'
+                              : panel.status
+                          }}
                         </div>
                       </div>
                     </template>
-                    <p class="my-2 text-capitalize text-14 text-info">
+                    <!-- <p class="my-2 text-capitalize text-14 text-info">
                       Status:
                       {{
                         panel.status === 'NEW'
@@ -471,7 +482,7 @@
                           ? 'Reported'
                           : panel.status
                       }}
-                    </p>
+                    </p> -->
 
                     <div
                       class="
@@ -699,7 +710,7 @@ export default {
     //   this.getLabOrders(1, this.filter)
     // },
     'filter.dateTo'() {
-      if(this.filter.dateFrom !== ''){
+      if (this.filter.dateFrom !== '') {
         this.getLabOrders(1, this.filter)
       }
     },
