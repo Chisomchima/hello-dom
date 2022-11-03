@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date from</label>
           <input
-            v-model="filters.date_before"
+            v-model="filters.date_after"
             type="date"
             name=""
             class="form-control"
@@ -17,7 +17,7 @@
         <div class="mb-2">
           <label class="form-control-label">Date to</label>
           <input
-            v-model="filters.date_after"
+            v-model="filters.date_before"
             type="date"
             name=""
             class="form-control"
