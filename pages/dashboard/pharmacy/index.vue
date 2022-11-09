@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 mb-3">
         <div class="d-flex justify-content-between">
-          <div class="page-heading mb-4">Prescriptions</div>
+          <div class="page-heading mb-4">Pharmacy Worklist</div>
           <div>
             <BaseButton
               class="btn-primary btn-lg"
@@ -19,7 +19,7 @@
       <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
-            <DashboardImagingFilters @filter="filter(currentPage, $event)" />
+            <PharmacyMenuFilter @filter="filter(currentPage, $event)" />
           </div>
         </div>
       </div>
@@ -70,20 +70,10 @@
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddImagingOrder
+    <PharmacyAddPrescriptionWithPatient
       @refresh="filter(currentPage, currentFilter)"
     />
-    <div>
-      <DashboardModalImagingDiagnosis
-        @page-changed="getICD10($event, searchParam)"
-        @refresh="getICD10(1, searchParam)"
-      />
-    </div>
-    <DashboardModalImagingOrderCapture
-      :data="modalData"
-      @hide="modalData = {}"
-      @refresh="filter(currentPage, currentFilter)"
-    />
+
     <DashboardModalImagingOrderReport
       :data="modalData"
       @hide="modalData = {}"
@@ -115,42 +105,44 @@ export default {
         {
           key: 'created_at',
           label: 'Date',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+          },
           sortable: true,
         },
-        {
-          key: 'created_by',
-          label: 'Ordered by',
-          // formatter: (val, key, item) => {
-          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-          // },
+         {
+          key: 'patient',
+          label: 'Patient',
           sortable: true,
+          formatter: (val) => {
+            return (
+              (val.salutation ? val.salutation : '') +
+              ' ' +
+              val.firstname +
+              ' ' +
+              val.lastname
+            )
+          },
         },
         {
           key: 'prc_id',
           label: 'PRC ID',
-          // formatter: (val, key, item) => {
-          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-          // },
-          sortable: true,
-        },
-
-        {
-          key: 'source',
-          label: 'Source',
-          // formatter: (val, key, item) => {
-          //   return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-          // },
           sortable: true,
         },
         {
           key: 'prescribing_physician',
           label: 'Prescribing physician',
           sortable: true,
-          formatter: (val) => {
-            return (val.salutation ? val.salutation : '') + ' ' + val.firstname + ' ' + val.lastname
-          },
         },
-        { key: 'store', label: 'Observation', sortable: true },
+        // {
+        //   key: 'created_by',
+        //   label: 'Ordered by',
+        //   formatter: (val, key, item) => {
+        //     return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
+        //   },
+        //   sortable: true,
+        // },
+        { key: 'store', label: 'Store', sortable: true },
         { key: 'status', label: 'Status', sortable: true },
         { key: 'dots', label: '', sortable: false },
       ],
@@ -165,7 +157,7 @@ export default {
       this.currentPage = page
       try {
         this.busy = true
-        const data = await this.$api.imaging.getObservationOrder({
+        const data = await this.$api.pharmacy.getPrescriptions({
           ...e,
           page,
           worklist: true,
@@ -203,7 +195,7 @@ export default {
           await this.$api.imaging.patchObservationOrder(e.id, {
             status: 'CANCELLED',
           })
-          this.filter(this.currentPage,this.currentFilter);
+          this.filter(this.currentPage, this.currentFilter)
         }
       } catch (error) {
         console.log(error)

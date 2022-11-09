@@ -17,7 +17,7 @@ export default axios => ({
     },
 
     //Doses
-    getDoses({params = {}}){
+    getDoses(params = {}){
         return axios.$get(`/pharmacy/doses/`, {
             params
         })
@@ -33,7 +33,7 @@ export default axios => ({
     },
 
     //Duration
-    getDurations({params= {}}){
+    getDurations(params){
         return axios.$get(`/pharmacy/durations/`, {
             params
         })
@@ -49,7 +49,7 @@ export default axios => ({
     },
 
     //Frequencies
-    getFrequencies({params}){
+    getFrequencies(params){
         return axios.$get(`/pharmacy/frequencies/`, {params})
     },
     createFrequency(body){
@@ -64,7 +64,7 @@ export default axios => ({
 
     //Routes
 
-    getRoutes({params = {}}){
+    getRoutes(params){
         return axios.$get(`/pharmacy/routes/`, {
             params
         })
@@ -80,7 +80,7 @@ export default axios => ({
     },
 
     //Units
-    getUnits(params = {}){
+    getUnits(params){
         return axios.$get(`/pharmacy/units/`, {
             params
         })
@@ -127,5 +127,15 @@ export default axios => ({
         return axios.$delete(`/pharmacy/generic_drugs/${id}/`)
     },
 
+
+    ////////////Prescriptions
+    getPrescriptions(params) {
+        return axios.$get('/pharmacy/prescriptions/', {
+            params
+        })
+    },
+    orderPrescription(body){
+        return axios.$post(`/pharmacy/prescriptions/`, body)
+    },
 
 })
