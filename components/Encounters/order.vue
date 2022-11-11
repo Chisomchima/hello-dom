@@ -43,7 +43,7 @@
                 Imaging
               </button>
             </div>
-            <div class="mx-2">
+            <div @click="orderPrescription" class="mx-2">
               <button class="btn btn-sm btn-outline-primary">
                 Prescription
               </button>
@@ -265,9 +265,9 @@
           />
         </div>
 
-        <!-- <div>
-          <EncountersOrdersPrescription />
-        </div> -->
+        <div>
+          <EncountersAddPrescription :patient="consultationData.patient" />
+        </div>
 
         <div
           v-if="labObvCount != 0 || imgObvCount != 0"
@@ -279,55 +279,55 @@
           </BaseButton>
         </div>
 
-
-              <div v-if="labitems != null" class="p-2">
-        <p class="text-16 text-grey">Laboratory orders</p>
-        <TableComponent
-          :perPage="filter.size"
-          :pages="pages"
-          :items="labitems"
-          :busy="busy"
-          :paginate="false"
-          :fields="labfields"
-          @row-hovered="showToolTip"
-          :currentPage="currentPage"
-          @sortData="showToolTip"
-          @page-changed="filter($event, currentFilter)"
-        >
-          <template #value.laboratory="{ data }">
-            <div>
-              {{ labPanelNames(data.item.value.lab_panel_orders) }}
-            </div>
-          </template>
-          <template #value.imaging="{ data }">
-            <pre class="d-none">
+        <div v-if="labitems != null" class="p-2">
+          <p class="text-16 text-grey">Laboratory orders</p>
+          <TableComponent
+            :perPage="filter.size"
+            :pages="pages"
+            :items="labitems"
+            :busy="busy"
+            :paginate="false"
+            :fields="labfields"
+            @row-hovered="showToolTip"
+            :currentPage="currentPage"
+            @sortData="showToolTip"
+            @page-changed="filter($event, currentFilter)"
+          >
+            <template #value.laboratory="{ data }">
+              <div>
+                {{ labPanelNames(data.item.value.lab_panel_orders) }}
+              </div>
+            </template>
+            <template #value.imaging="{ data }">
+              <pre class="d-none">
               {{ data.item }}
-            </pre>
-          </template>
-        </TableComponent>
-      </div>
+            </pre
+              >
+            </template>
+          </TableComponent>
+        </div>
 
-      <div v-if="imgitems != null" class="p-2">
-        <p class="text-16 text-grey">Imaging orders</p>
-        <TableComponent
-          :perPage="filter.size"
-          :pages="pages"
-          :items="imgitems"
-          :busy="busy"
-          :paginate="false"
-          :fields="imgfields"
-          @row-hovered="showToolTip"
-          :currentPage="currentPage"
-          @sortData="showToolTip"
-          @page-changed="filter($event, currentFilter)"
-        >
-          <template #value.imaging="{ data }">
-            <div>
-              {{ imgObvNames(data.item.value.img_obv_orders) }}
-            </div>
-          </template>
-        </TableComponent>
-      </div>
+        <div v-if="imgitems != null" class="p-2">
+          <p class="text-16 text-grey">Imaging orders</p>
+          <TableComponent
+            :perPage="filter.size"
+            :pages="pages"
+            :items="imgitems"
+            :busy="busy"
+            :paginate="false"
+            :fields="imgfields"
+            @row-hovered="showToolTip"
+            :currentPage="currentPage"
+            @sortData="showToolTip"
+            @page-changed="filter($event, currentFilter)"
+          >
+            <template #value.imaging="{ data }">
+              <div>
+                {{ imgObvNames(data.item.value.img_obv_orders) }}
+              </div>
+            </template>
+          </TableComponent>
+        </div>
       </div>
 
       <!-- ************************************************************ -->
@@ -359,8 +359,6 @@
           </div>
         </div> -->
       </div>
-
-
     </div>
   </div>
 </template>
@@ -530,6 +528,9 @@ export default {
       } finally {
         this.busy = false
       }
+    },
+    orderPrescription(){
+      this.$bvModal.show('prescribe')
     },
     labPanelNames(e) {
       console.log(e)

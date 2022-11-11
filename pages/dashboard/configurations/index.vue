@@ -74,11 +74,11 @@ export default {
           icon: 'fa fa-cogs',
           route: '/dashboard/configurations/pharmacy',
         },
-        // {
-        //   name: 'Inventory',
-        //   icon: 'fa fa-cogs',
-        //   route: '/dashboard/configurations/inventory',
-        // },
+        {
+          name: 'Inventory',
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/inventory',
+        },
       ],
     }
   },

@@ -93,8 +93,12 @@
                   listStyle="height:200px"
                   dataKey="id"
                 >
-                  <template #sourceheader><span class="text-14">Available</span></template>
-                  <template #targetheader><span class="text-14">Selected</span></template>
+                  <template #sourceheader
+                    ><span class="text-14">Available</span></template
+                  >
+                  <template #targetheader
+                    ><span class="text-14">Selected</span></template
+                  >
                   <template #item="data">
                     <div class="product-list-action">
                       <span class="mb-2 text-gray text-10 p-1">{{
@@ -176,6 +180,11 @@ export default {
           ],
         },
 
+        {
+          href: '/dashboard/pharmacy',
+          title: 'Pharmacy',
+          icon: 'fas fa-pills',
+        },
         {
           href: '/dashboard/imaging',
           title: 'Imaging',
@@ -360,7 +369,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.p-picklist-buttons{
-  color: grey
+.p-picklist-buttons {
+  color: grey;
 }
 </style>

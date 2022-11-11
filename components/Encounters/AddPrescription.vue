@@ -1,6 +1,7 @@
 <template>
   <ModalWrapper
     size="lg"
+    id="prescribe"
     title="Add Prescription"
     @ok="ok()"
     @show="getData()"
@@ -13,15 +14,7 @@
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['']">
               <div class="d-flex">
-                <input v-model="uhid" type="text" class="form-control" />
-                <div class="ml-2 mt-1">
-                  <b-spinner
-                    style="width: 1.7rem; height: 1.7rem"
-                    v-if="downloading"
-                    variant="primary"
-                    label="grow"
-                  ></b-spinner>
-                </div>
+                <input readonly :value="uhid" type="text" class="form-control" />
               </div>
             </ValidationProviderWrapper>
           </div>
@@ -86,7 +79,7 @@
             class="row p-1 mt-2 mx-2 border border-secondary rounded"
           >
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Generic drug" :rules="['required']">
+              <ValidationProviderWrapper name="Generic drug" :rules="[]">
                 <VSelect
                   v-model="drug.generic_drug"
                   :options="generic_drug"
@@ -97,7 +90,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Product" :rules="['']">
+              <ValidationProviderWrapper name="Product" :rules="[]">
                 <VSelect
                   v-model="drug.product"
                   :options="products"
@@ -109,7 +102,7 @@
             </div>
 
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Dose" :rules="['required']">
+              <ValidationProviderWrapper name="Dose" :rules="[]">
                 <VSelect
                   v-model="drug.dose"
                   :options="doses"
@@ -120,7 +113,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Unit" :rules="['required']">
+              <ValidationProviderWrapper name="Unit" :rules="[]">
                 <VSelect
                   v-model="drug.unit"
                   :options="units"
@@ -131,7 +124,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Frequency" :rules="['required']">
+              <ValidationProviderWrapper name="Frequency" :rules="[]">
                 <VSelect
                   v-model="drug.frequency"
                   :options="frequencies"
@@ -143,7 +136,7 @@
             </div>
 
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Direction" :rules="['required']">
+              <ValidationProviderWrapper name="Direction" :rules="[]">
                 <VSelect
                   v-model="drug.direction"
                   :options="directions"
@@ -154,7 +147,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Duration" :rules="['required']">
+              <ValidationProviderWrapper name="Duration" :rules="[]">
                 <VSelect
                   v-model="drug.duration"
                   :options="durations"
@@ -165,7 +158,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Route" :rules="['required']">
+              <ValidationProviderWrapper name="Route" :rules="[]">
                 <VSelect
                   v-model="drug.route"
                   :options="routes"
@@ -238,7 +231,7 @@ import { debounce } from 'lodash'
 
 export default {
   props: {
-    editData: {
+    patient: {
       type: Object,
       require: false,
       default: () => ({}),
@@ -249,7 +242,6 @@ export default {
   },
   data() {
     return {
-      uhid: '',
       selected: [],
       present: false,
       downloading: false,
@@ -279,57 +271,64 @@ export default {
           },
         ],
         patient: {},
-        source: 'OPD',
+        source: null,
         store: null,
       },
     }
   },
   computed: {
     name() {
-      if (Object.keys(this.dataObject.patient).length > 0) {
+      if (Object.keys(this.patient).length > 0) {
         return (
-          this.dataObject.patient.salutation +
+          this.patient.salutation +
           ' ' +
-          this.dataObject.patient.firstname +
+          this.patient.firstname +
           ' ' +
-          this.dataObject.patient.lastname
+          this.patient.lastname
         )
       }
       return ''
     },
     gender() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.gender
+      if (this.patient) {
+        return this.patient.gender
       }
       return ''
     },
 
     dob() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.date_of_birth
+      if (this.patient) {
+        return this.patient.date_of_birth
       }
       return ''
     },
 
     email() {
-      if (this.dataObject.patient) {
-        return this.dataObject.patient.email
+      if (this.patient) {
+        return this.patient.email
       }
       return ''
     },
+    uhid() {
+      if (this.patient) {
+        return this.patient.uhid
+      }
+      return ''
+    },
+
   },
   watch: {
-    uhid: debounce(async function (newVal) {
-      this.downloading = true
-      const results = await this.getPatientByUHID(newVal)
-      if (results) {
-        this.dataObject.patient = results
-        this.downloading = false
-      } else {
-        this.dataObject.patient = {}
-        this.downloading = false
-      }
-    }, 1000),
+    // uhid: debounce(async function (newVal) {
+    //   this.downloading = true
+    //   const results = await this.getPatientByUHID(newVal)
+    //   if (results) {
+    //     this.dataObject.patient = results
+    //     this.downloading = false
+    //   } else {
+    //     this.dataObject.patient = {}
+    //     this.downloading = false
+    //   }
+    // }, 1000),
   },
   methods: {
     async ok() {
@@ -400,7 +399,7 @@ export default {
         details: [
           {
             generic_drug: null,
-            product: null,
+            product: '',
             dose: null,
             unit: null,
             route: null,
@@ -408,11 +407,11 @@ export default {
             direction: null,
             duration: null,
             dispense_quantity: 1,
-            status: 'FULFILLED IN',
+            status: '',
           },
         ],
         patient: {},
-        source: 'OPD',
+        source: null,
         store: null,
         note: '',
       }

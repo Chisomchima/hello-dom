@@ -15,6 +15,7 @@ import Opd from "@/services/opd_settings";
 import Users from "@/services/users";
 import Templates from "@/services/templates";
 import pharmacy from "@/services/pharmacy";
+import inventory from "@/services/inventory";
 
 export default (context, inject) => {
     // Initialize API factories
@@ -33,7 +34,8 @@ export default (context, inject) => {
         opd: Opd(context.$axios),
         users: Users(context.$axios),
         templates: Templates(context.$axios),
-        pharmacy: pharmacy(context.$axios)
+        pharmacy: pharmacy(context.$axios),
+        inventory: inventory(context.$axios)
     };
 
     // Inject $api

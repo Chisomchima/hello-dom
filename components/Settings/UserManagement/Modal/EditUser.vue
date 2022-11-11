@@ -180,6 +180,11 @@ export default {
           ],
         },
         {
+          href: '/dashboard/pharmacy',
+          title: 'Pharmacy',
+          icon: 'fas fa-pills',
+        },
+        {
           href: '/dashboard/cso',
           title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',

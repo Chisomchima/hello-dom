@@ -9,7 +9,7 @@
         <BaseButton
           class="btn-outline-primary"
           @click="openModal"
-          >Add Product</BaseButton
+          >Add Category</BaseButton
         >
       </template>
       <template>
@@ -25,11 +25,11 @@
         </TableComponent>
       </template>
     </UtilsFilterComponent>
-    <SettingsPharmacyDosesAddDoses
+    <!-- <SettingsPharmacyDosesAddDoses
       :edit-data="editObj"
       @refresh="pageChange(1)"
       :modalTitle="modalTitle"
-    />
+    /> -->
   </div>
 </template>
 
@@ -48,7 +48,7 @@ export default {
         name: '',
         size: 10,
       },
-      modalTitle: 'Add Product',
+      modalTitle: 'Add Category',
       fields: [
         {
           key: 'name',
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     searchMe(e) {
-      this.pageChange(1, this.filters)
+    //   this.pageChange(1, this.filters)
     },
     async pageChange(page = 1, e = { name: '', size: 10 }) {
       try {
