@@ -166,7 +166,6 @@ export default {
             },
           ],
         },
-
         {
           href: '/dashboard/imaging',
           title: 'Imaging',
