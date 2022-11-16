@@ -1,12 +1,13 @@
 <template>
   <ModalWrapper
     size="lg"
-    id="prescribe"
-    title="Add Prescription"
-    @ok="ok()"
+    id="viewPrescription"
+    title="View Prescription"
+    @ok="save()"
     @show="getData()"
-    @hide="clear()"
     :stacking="false"
+    :submitTitle="'Save'"
+    :cancelText="'Close'"
   >
     <ValidationObserver ref="form">
       <form>
@@ -14,12 +15,15 @@
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['']">
               <div class="d-flex">
-                <input
-                  readonly
-                  :value="uhid"
-                  type="text"
-                  class="form-control"
-                />
+                <input :value="formatUHID(dataObject.patient)" readonly type="text" class="form-control" />
+                <div class="ml-2 mt-1">
+                  <b-spinner
+                    style="width: 1.7rem; height: 1.7rem"
+                    v-if="downloading"
+                    variant="primary"
+                    label="grow"
+                  ></b-spinner>
+                </div>
               </div>
             </ValidationProviderWrapper>
           </div>
@@ -28,7 +32,7 @@
               name="Patient Name"
               :rules="['required']"
             >
-              <input :value="name" type="text" class="form-control" readonly />
+              <input :value="patientName(dataObject.patient)" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
@@ -48,10 +52,9 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Store" :rules="['']">
+            <ValidationProviderWrapper name="Pharmacy*" :rules="['']">
               <VSelect
                 v-model="dataObject.store"
-                :multiple="true"
                 :options="stores"
                 :reduce="(opt) => opt.id"
                 label="name"
@@ -60,7 +63,18 @@
             </ValidationProviderWrapper>
           </div>
 
-          <div class="col-md-12 d-flex ml-0 text-primary text-14">
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Ordered by" :rules="[]">
+              <input
+                :value="physician ? physician : ''"
+                type="text"
+                readonly
+                class="form-control"
+              />
+            </ValidationProviderWrapper>
+          </div>
+
+          <div class="col-md-12 d-flex align-items-center justify-content-between ml-0 text-primary text-14">
             <span class="point" @click="addDrug">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,6 +90,9 @@
               </svg>
               Add
             </span>
+            <span>
+              <button disabled class="btn btn-outline-primary">Confirm</button>
+            </span>
           </div>
 
           <div
@@ -83,8 +100,36 @@
             :key="index"
             class="row p-1 mt-2 mx-2 border border-secondary rounded"
           >
-            <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Generic drug" :rules="[]">
+            <div
+              class="
+              shrink
+                col-md-12
+                d-flex
+                justify-content-end
+                ml-0
+                text-primary text-14
+              "
+            >
+              <span  class="point float text-danger" @click="deleteDrug(index)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper
+                name="Medication"
+                :rules="['required']"
+              >
                 <VSelect
                   v-model="drug.generic_drug"
                   :options="generic_drug"
@@ -94,20 +139,14 @@
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Product" :rules="[]">
-                <VSelect
-                  v-model="drug.product"
-                  :options="products"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
-                </VSelect>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="SIG" :rules="['']">
+                <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
               </ValidationProviderWrapper>
             </div>
 
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Dose" :rules="[]">
+              <ValidationProviderWrapper name="Dose" :rules="['']">
                 <VSelect
                   v-model="drug.dose"
                   :options="doses"
@@ -118,7 +157,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Unit" :rules="[]">
+              <ValidationProviderWrapper name="Unit" :rules="['']">
                 <VSelect
                   v-model="drug.unit"
                   :options="units"
@@ -129,7 +168,7 @@
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Frequency" :rules="[]">
+              <ValidationProviderWrapper name="Frequency" :rules="['']">
                 <VSelect
                   v-model="drug.frequency"
                   :options="frequencies"
@@ -141,32 +180,41 @@
             </div>
 
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Direction" :rules="[]">
+              <ValidationProviderWrapper name="Direction" :rules="['required']">
                 <VSelect
                   v-model="drug.direction"
                   :options="directions"
-                  :reduce="(opt) => opt.id"
                   label="name"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Duration" :rules="[]">
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Duration" :rules="['required']">
                 <VSelect
                   v-model="drug.duration"
                   :options="durations"
+                  label="name"
+                >
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Route" :rules="['']">
+                <VSelect
+                  v-model="drug.route"
+                  :options="routes"
                   :reduce="(opt) => opt.id"
                   label="name"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Route" :rules="[]">
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Product" :rules="['']">
                 <VSelect
-                  v-model="drug.route"
-                  :options="routes"
+                  v-model="drug.product"
+                  :options="products"
                   :reduce="(opt) => opt.id"
                   label="name"
                 >
@@ -178,11 +226,16 @@
                 <input
                   v-model="drug.dispense_quantity"
                   type="number"
-                  readonly
                   class="form-control"
                 />
               </ValidationProviderWrapper>
             </div>
+            <div v-if="drug.product != null" class="col-md-12 mb-2">
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="col-md-6 text-14 text-info text-center">Bottle(s)</div>
+              </div>
+            </div>
+
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Notes" :rules="['']">
                 <textarea
@@ -195,32 +248,7 @@
                 ></textarea>
               </ValidationProviderWrapper>
             </div>
-            <div
-              class="
-                col-md-12
-                d-flex
-                justify-content-end
-                ml-0
-                text-primary text-14
-              "
-            >
-              <span class="point" @click="deleteDrug(index)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </div>
+
             <!-- <div class="col-md-12">
               <hr />
             </div> -->
@@ -236,7 +264,7 @@ import { debounce } from 'lodash'
 
 export default {
   props: {
-    patient: {
+    dataObject: {
       type: Object,
       require: false,
       default: () => ({}),
@@ -247,6 +275,7 @@ export default {
   },
   data() {
     return {
+      uhid: '',
       selected: [],
       present: false,
       downloading: false,
@@ -259,69 +288,64 @@ export default {
       routes: [],
       products: [],
       stores: [],
-      dataObject: {
-        details: [
-          {
-            generic_drug: null,
-            product: null,
-            dose: null,
-            unit: null,
-            route: null,
-            frequency: null,
-            direction: null,
-            duration: null,
-            dispense_quantity: 1,
-            status: 'FULFILLED IN',
-            note: '',
-          },
-        ],
-        patient: {},
-        source: null,
-        store: null,
-      },
+    //   dataObject: {
+    //     details: [
+    //       {
+    //         generic_drug: null,
+    //         product: null,
+    //         dose: null,
+    //         unit: null,
+    //         route: null,
+    //         frequency: null,
+    //         direction: null,
+    //         duration: null,
+    //         dispense_quantity: 1,
+    //         status: 'FULFILLED IN',
+    //         note: '',
+    //       },
+    //     ],
+    //     patient: {},
+    //     source: 'OPD',
+    //     prescribing_physician: '',
+    //     store: null,
+    //   },
     }
   },
   computed: {
-    name() {
-      if (Object.keys(this.patient).length > 0) {
-        return (
-          this.patient.salutation +
-          ' ' +
-          this.patient.firstname +
-          ' ' +
-          this.patient.lastname
-        )
-      }
-      return ''
-    },
     gender() {
-      if (this.patient) {
-        return this.patient.gender
+      if (this.dataObject.patient) {
+        return this.dataObject.patient.gender
       }
       return ''
     },
 
     dob() {
-      if (this.patient) {
-        return this.patient.date_of_birth
+      if (this.dataObject.patient) {
+        return this.dataObject.patient.date_of_birth
       }
       return ''
     },
 
-    email() {
-      if (this.patient) {
-        return this.patient.email
-      }
-      return ''
-    },
-    uhid() {
-      if (this.patient) {
-        return this.patient.uhid
+    physician() {
+      if (this.dataObject.prescribing_physician) {
+        return this.dataObject.prescribing_physician.first_name + " " + this.dataObject.prescribing_physician.last_name
       }
       return ''
     },
   },
-  watch: {},
+  watch: {
+    uhid: debounce(async function (newVal) {
+      this.downloading = true
+      const results = await this.getPatientByUHID(newVal)
+      if (results) {
+        this.dataObject.patient = results
+        this.downloading = false
+      } else {
+        this.dataObject.patient = {}
+        this.downloading = false
+      }
+    }, 1000),
+  },
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
@@ -345,8 +369,31 @@ export default {
     },
     async save() {
       try {
-        // this.dataObject.store = 1
-        const data = await this.$api.pharmacy.orderPrescription(this.dataObject)
+        let prescribeDetails = this.dataObject.details
+        let direction = []
+        let duration = []
+        for (let x = 0; x < prescribeDetails.length; x++) {
+          duration.push(prescribeDetails[x].duration.id)
+          direction.push(prescribeDetails[x].direction.id)
+        }
+
+        //  console.log({direction}, {duration})
+        var pocket = prescribeDetails
+
+        for (let x = 0; x < prescribeDetails.length; x++) {
+          pocket[x].direction = direction[x]
+          pocket[x].duration = duration[x]
+        }
+        console.log(pocket)
+
+        const data = await this.$api.pharmacy.updatePrescription({
+          store: this.dataObject.store,
+          patient: this.dataObject.patient,
+          source: this.dataObject.source,
+          prescribing_physician: this.dataObject.prescribing_physician,
+          note: this.dataObject.note,
+          details: pocket,
+        }, this.dataObject.id)
         this.$emit('refresh')
         this.$bvModal.hide('modal')
         console.log(data)
@@ -354,13 +401,27 @@ export default {
         console.log(error)
       }
     },
-    showModal() {
-      if (!this.present) {
-        this.$bvModal.show('diagnosisModal')
-      } else {
-        this.present = false
-        this.$bvModal.hide('diagnosisModal')
+    
+    sigFormatter(direction, duration) {
+      if(direction && duration){
+        return direction.name + " every " + duration.name
       }
+      else{
+        return null
+      }
+    },
+    patientName(patient){
+        if(patient){
+            return patient.salutation + ' ' + patient.firstname + ' ' + patient.lastname
+        }
+    },
+    formatUHID(e){
+        if(e){
+            return e.uhid
+        }
+        else{
+            return ""
+        }
     },
     deleteDrug(e) {
       if (this.dataObject.details.length !== 1) {
@@ -381,38 +442,6 @@ export default {
         status: '',
       })
     },
-
-    closeModal() {
-      this.$bvModal.hide('diagnosisModal')
-    },
-    setDiagnosis(e) {
-      this.$bvModal.hide('diagnosisModal')
-      this.dataObject.diagnosis = e
-    },
-    clear() {
-      this.dataObject = {
-        details: [
-          {
-            generic_drug: null,
-            product: '',
-            dose: null,
-            unit: null,
-            route: null,
-            frequency: null,
-            direction: null,
-            duration: null,
-            dispense_quantity: 1,
-            status: '',
-          },
-        ],
-        patient: {},
-        source: null,
-        store: null,
-        note: '',
-      }
-      this.uhid = ''
-      this.$emit('hide')
-    },
     getData() {
       this.getGenericDrugs()
       this.getDoses()
@@ -423,7 +452,7 @@ export default {
       this.getRoutes()
       this.getProducts()
       this.getStores()
-      this.productLogic()
+      this.productLogic
     },
     async getPatientByUHID(uhid) {
       try {
@@ -535,5 +564,13 @@ textarea.form-control {
   min-height: 50px;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+.float{
+  position: relative;
+  top: -10px;
+  right: -25px
+}
+.shrink{
+  height: 2px;
 }
 </style>

@@ -17,7 +17,7 @@
             label="name"
             :multiple="true"
             :reduce="(opt) => opt.id"
-            :options="[]"
+            :options="stores"
           />
         </div>
       </div>
@@ -51,7 +51,7 @@
       <div class="col-md-4">
         <div class="row mt-4">
           <div class="col-6">
-            <BaseButton class="w-100" @click="filterFunc(filters)">
+            <BaseButton class="w-100" @click="applyFilter(filters)">
               Search
             </BaseButton>
           </div>
@@ -79,7 +79,7 @@ export default {
         { label: 'Awaiting approval', val: 'AWAITING_APPROVAL' },
       ],
       genericDrugs: [],
-      modalities: [],
+      stores: [],
       filters: {
         dateFrom: '',
         dateTo: '',
@@ -89,52 +89,43 @@ export default {
       },
     }
   },
-  //   watch: {
-  //     filters: {
-  //       handler: debounce(function (newVal) {
-  //         if (newVal.by.length > 0) {
-  //           const newFilterObject = {
-  //             ...newVal,
-  //             [newVal.by]: newVal.entry,
-  //             worklist: true,
-  //           }
-  //           this.$emit('filter', newFilterObject)
-  //         } else {
-  //           this.$emit('filter', newVal)
-  //         }
-  //       }, 500),
-  //       deep: true,
-  //       immediate: true,
-  //     },
-  //     'filters.status': {
-  //       handler: debounce(function () {
-  //         this.filterFunc(this.filters)
-  //       }, 500),
-  //       deep: true,
-  //     },
+    watch: {
+      filters: {
+        handler: debounce(function (newVal) {
+          this.applyFilter(this.filters)
+          // this.$emit('filter', newVal)
+        }, 500),
+        deep: true,
+        immediate: true,
+      },
 
-  //     'filters.modality': {
-  //       handler: debounce(function () {
-  //         this.filterFunc(this.filters)
-  //       }, 500),
-  //       deep: true,
-  //     },
-  //     'filters.service_center': {
-  //       handler: debounce(function () {
-  //         this.filterFunc(this.filters)
-  //       }, 500),
-  //       deep: true,
-  //     },
+      'filters.by': {
+        handler: debounce(function () {
+          if (newVal.by.length > 0) {
+            const newFilterObject = {
+              ...newVal,
+              [newVal.by]: newVal.entry,
+              worklist: true,
+            }
+            this.applyFilter(newFilterObject)
+            // this.$emit('filter', newFilterObject)
+          } else {
+            // this.$emit('filter', newVal)
+            this.applyFilter(this.filters)
+          }
+        }, 500),
+        deep: true,
+      },
 
-  //     genders: {},
-  //   },
+      genders: {},
+    },
   created() {
     // if (this.$route.query.filter) {
     //   this.filters = JSON.parse(this.$route.query.filter)
     // }
     // this.applyFilter(this.filters)
     this.getGenericDrugs()
-    // this.getModality()
+    this.getStores()
   },
   methods: {
     clear() {
@@ -170,6 +161,7 @@ export default {
           filter: JSON.stringify(newVal),
         },
       })
+
     },
     async getGenericDrugs() {
       try {
@@ -179,14 +171,15 @@ export default {
         console.log(error)
       }
     },
-
-    async getModality() {
-      try {
-        const data = await this.$api.imaging.getLabUnit({ size: 1000 })
-        this.modalities = data.results
-      } catch (error) {
-        console.log(error)
-      }
+    getStores() {
+      this.$api.inventory
+        .getStores({ size: 1000, is_pharmacy: true })
+        .then((res) => {
+          this.stores = res.results
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }

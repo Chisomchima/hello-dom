@@ -34,6 +34,7 @@
             :pages="pages"
             :items="items"
             :busy="busy"
+            @row-clicked="viewPrescription"
             @page-changed="filter($event, currentFilter)"
             @cancel="cancelImaging($event)"
           >
@@ -74,14 +75,8 @@
       @refresh="filter(currentPage, currentFilter)"
     />
 
-    <DashboardModalImagingOrderReport
-      :data="modalData"
-      @hide="modalData = {}"
-      @refresh="filter(currentPage, currentFilter)"
-    />
-
-    <DashboardModalImagingOrderAwaitingApproval
-      :data="modalData"
+    <PharmacyShowPrescription
+      :dataObject="modalData"
       @hide="modalData = {}"
       @refresh="filter(currentPage, currentFilter)"
     />
@@ -110,7 +105,7 @@ export default {
           },
           sortable: true,
         },
-         {
+        {
           key: 'patient',
           label: 'Patient',
           sortable: true,
@@ -133,6 +128,14 @@ export default {
           key: 'prescribing_physician',
           label: 'Prescribing physician',
           sortable: true,
+          formatter: (val) => {
+            if (Object.keys(val).length > 0) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else{
+              return ''
+            }
+          },
         },
         // {
         //   key: 'created_by',
@@ -142,14 +145,14 @@ export default {
         //   },
         //   sortable: true,
         // },
-        { key: 'store', label: 'Store', sortable: true },
-        { key: 'status', label: 'Status', sortable: true },
-        { key: 'dots', label: '', sortable: false },
+        { key: 'store.name', label: 'Store', sortable: true },
+        // { key: 'status', label: 'Status', sortable: true },
+        // { key: 'dots', label: '', sortable: false },
       ],
     }
   },
   // mounted() {
-  //   // this.filter(1, {})
+  //   this.filter(1, {})
   // },
   methods: {
     async filter(page, e) {
@@ -172,18 +175,9 @@ export default {
       }
     },
 
-    captureImaging(e) {
+    viewPrescription(e) {
       this.modalData = e
-      this.$bvModal.show('imaging_order_capture_id')
-    },
-    captureReport(e) {
-      this.modalData = e
-      this.$bvModal.show('imaging_order_report_id')
-    },
-
-    awaitApproval(e) {
-      this.modalData = e
-      this.$bvModal.show('imaging_order_awaiting_approval')
+      this.$bvModal.show('viewPrescription')
     },
 
     async cancelImaging(e) {

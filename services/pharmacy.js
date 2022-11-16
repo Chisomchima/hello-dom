@@ -137,5 +137,8 @@ export default axios => ({
     orderPrescription(body){
         return axios.$post(`/pharmacy/prescriptions/`, body)
     },
+    updatePrescription(body, id){
+        return axios.$patch(`/pharmacy/prescriptions/${id}/`, body)
+    },
 
 })
