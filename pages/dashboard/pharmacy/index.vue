@@ -105,6 +105,7 @@ export default {
           },
           sortable: true,
         },
+         { key: 'patient.uhid', label: 'UHID', sortable: true },
         {
           key: 'patient',
           label: 'Patient',
@@ -137,15 +138,16 @@ export default {
             }
           },
         },
-        // {
-        //   key: 'created_by',
-        //   label: 'Ordered by',
-        //   formatter: (val, key, item) => {
-        //     return val.ordered_by.first_name + ' ' +val.ordered_by.first_name
-        //   },
-        //   sortable: true,
-        // },
+       
         { key: 'store.name', label: 'Store', sortable: true },
+         {
+          key: 'created_by',
+          label: 'Ordered by',
+          formatter: (val, key, item) => {
+            return val.first_name + ' ' +val.first_name
+          },
+          sortable: true,
+        },
         // { key: 'status', label: 'Status', sortable: true },
         // { key: 'dots', label: '', sortable: false },
       ],

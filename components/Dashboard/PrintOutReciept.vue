@@ -16,7 +16,8 @@
         :style="printLayout ? { width: '18rem' } : { width: '48rem' }"
         style="text-align: center; margin: 0.5rem 0"
       >
-        <!-- chem health -->
+
+      <!-- chem health -->
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
@@ -137,8 +138,8 @@
           src="~/assets/theme/client-logo.svg"
           alt=""
         /> -->
-        <!-- **************Mireva Medical************** -->
-        <svg
+<!-- **************Mireva Medical************** -->
+      <!-- <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
           width="180px"
@@ -4540,7 +4541,7 @@ c-31 27 -51 31 -61 15z"
               d="M6338 1033 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"
             />
           </g>
-        </svg>
+        </svg> -->
       </div>
       <h3
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
@@ -4574,13 +4575,12 @@ c-31 27 -51 31 -61 15z"
           line-height: 10px;
         "
       >
-        <p v-if="reciept.user" style="margin: 0">
-          Printed by: {{ reciept.user ? reciept.user.first_name : '' }}
+        <p style="margin: 0">
+          Printed by: {{ reciept.audit_log[0].user.first_name }}
         </p>
         <p style="margin: 0">Date: {{ transactionDate }}</p>
       </div>
       <p
-        v-if="reciept.invoice"
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0rem 0; font-size: 14px"
       >
@@ -4615,9 +4615,9 @@ c-31 27 -51 31 -61 15z"
             <th>Amount</th>
           </tr>
         </thead>
-        <tbody v-if="reciept.payments">
+        <tbody v-if="reciept.payment_details">
           <tr
-            v-for="(item, index) in reciept.payments"
+            v-for="(item, index) in reciept.payment_details"
             :key="index"
             style="
               text-align: center;
@@ -4684,7 +4684,7 @@ c-31 27 -51 31 -61 15z"
           :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
           style="text-align: end"
         >
-          Total: {{ reciept.total_amount ? numberWithCommas(reciept.total_amount) : ''}}
+          Total: {{ numberWithCommas(reciept.total_amount) }}
         </p>
       </div>
     </div>

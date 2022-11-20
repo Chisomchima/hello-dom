@@ -1,33 +1,18 @@
 <template>
-  <ModalWrapper
-    size="lg"
-    id="prescribe"
-    title="Add Prescription"
-    @ok="ok()"
-    @show="getData()"
-    @hide="clear()"
-    :stacking="false"
-  >
+  <ModalWrapper size="lg" id="prescribe" title="Add Prescription" @ok="ok()" @show="getData()" @hide="clear()"
+    :stacking="false">
     <ValidationObserver ref="form">
       <form>
         <div class="row">
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['']">
               <div class="d-flex">
-                <input
-                  readonly
-                  :value="uhid"
-                  type="text"
-                  class="form-control"
-                />
+                <input readonly :value="uhid" type="text" class="form-control" />
               </div>
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Patient Name"
-              :rules="['required']"
-            >
+            <ValidationProviderWrapper name="Patient Name" :rules="['required']">
               <input :value="name" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
@@ -38,193 +23,131 @@
           </div>
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Gender" :rules="['required']">
-              <input
-                :value="gender"
-                type="text"
-                class="form-control"
-                readonly
-              />
+              <input :value="gender" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
 
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Store" :rules="['']">
-              <VSelect
-                v-model="dataObject.store"
-                :multiple="true"
-                :options="stores"
-                :reduce="(opt) => opt.id"
-                label="name"
-              >
+              <VSelect v-model="dataObject.store" :options="stores" :reduce="(opt) => opt.id"
+                label="name">
               </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
+              <input v-model="dataObject.prescribing_physician" type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
 
           <div class="col-md-12 d-flex ml-0 text-primary text-14">
             <span class="point" @click="addDrug">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fill="currentColor"
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 16 16">
+                <path fill="currentColor"
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
               </svg>
               Add
             </span>
           </div>
 
-          <div
-            v-for="(drug, index) in dataObject.details"
-            :key="index"
-            class="row p-1 mt-2 mx-2 border border-secondary rounded"
-          >
-            <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Generic drug" :rules="[]">
-                <VSelect
-                  v-model="drug.generic_drug"
-                  :options="generic_drug"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+          <div v-for="(drug, index) in dataObject.details" :key="index"
+            class="row p-1 mt-2 mx-2 border border-secondary rounded">
+            <div class="
+                col-md-12
+               
+                d-flex
+                justify-content-end
+                ml-0
+                text-danger text-14
+              ">
+              <span class="point" @click="deleteDrug(index)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
+                </svg>
+              </span>
+            </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Medication" :rules="['required']">
+                <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-6 mb-2">
-              <ValidationProviderWrapper name="Product" :rules="[]">
-                <VSelect
-                  v-model="drug.product"
-                  :options="products"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+            <!-- <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="SIG" :rules="['']">
+                <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
+              </ValidationProviderWrapper>
+            </div> -->
+
+            <div class="col-md-3 mb-2">
+              <ValidationProviderWrapper name="Dose" :rules="['']">
+                <VSelect v-model="drug.dose" :options="doses" :reduce="(opt) => opt.id" label="name">
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-3 mb-2">
+              <ValidationProviderWrapper name="Unit" :rules="['']">
+                <VSelect v-model="drug.unit" :options="units" :reduce="(opt) => opt.id" label="name">
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-3 mb-2">
+              <ValidationProviderWrapper name="Frequency" :rules="['']">
+                <VSelect v-model="drug.frequency" :options="frequencies" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
 
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Dose" :rules="[]">
-                <VSelect
-                  v-model="drug.dose"
-                  :options="doses"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+              <ValidationProviderWrapper name="Direction" :rules="['required']">
+                <VSelect v-model="drug.direction" :options="directions" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Unit" :rules="[]">
-                <VSelect
-                  v-model="drug.unit"
-                  :options="units"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Duration" :rules="['required']">
+                <VSelect v-model="drug.duration" :options="durations" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Frequency" :rules="[]">
-                <VSelect
-                  v-model="drug.frequency"
-                  :options="frequencies"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Route" :rules="['']">
+                <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Direction" :rules="[]">
-                <VSelect
-                  v-model="drug.direction"
-                  :options="directions"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
-                </VSelect>
-              </ValidationProviderWrapper>
-            </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Duration" :rules="[]">
-                <VSelect
-                  v-model="drug.duration"
-                  :options="durations"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
-                </VSelect>
-              </ValidationProviderWrapper>
-            </div>
-            <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Route" :rules="[]">
-                <VSelect
-                  v-model="drug.route"
-                  :options="routes"
-                  :reduce="(opt) => opt.id"
-                  label="name"
-                >
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Product" :rules="['']">
+                <VSelect v-model="drug.product" :options="products" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
-                <input
-                  v-model="drug.dispense_quantity"
-                  type="number"
-                  readonly
-                  class="form-control"
-                />
+                <input v-model="drug.dispense_quantity" type="number" class="form-control" />
               </ValidationProviderWrapper>
             </div>
-            <div class="col-md-12 mb-2">
-              <ValidationProviderWrapper name="Notes" :rules="['']">
-                <textarea
-                  id=""
-                  v-model="drug.note"
-                  class="form-control"
-                  name=""
-                  cols="30"
-                  rows="2"
-                ></textarea>
-              </ValidationProviderWrapper>
+            <div v-if="drug.product" class="col-md-12 mb-2">
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="col-md-6 text-14 text-info text-center">
+                  Bottle(s)
+                </div>
+              </div>
             </div>
-            <div
-              class="
-                col-md-12
-                d-flex
-                justify-content-end
-                ml-0
-                text-primary text-14
-              "
-            >
-              <span class="point" @click="deleteDrug(index)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </div>
+
             <!-- <div class="col-md-12">
               <hr />
             </div> -->
           </div>
+
+          <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Notes" :rules="['']">
+                <textarea id="" v-model="dataObject.note" class="form-control" name="" cols="30" rows="2"></textarea>
+              </ValidationProviderWrapper>
+            </div>
         </div>
       </form>
     </ValidationObserver>
@@ -272,11 +195,12 @@ export default {
             duration: null,
             dispense_quantity: 1,
             status: 'FULFILLED IN',
-            note: '',
           },
         ],
         patient: {},
-        source: null,
+        note: '',
+        source: "OPD",
+        prescribing_physician: '',
         store: null,
       },
     }
@@ -345,10 +269,37 @@ export default {
     },
     async save() {
       try {
-        // this.dataObject.store = 1
-        const data = await this.$api.pharmacy.orderPrescription(this.dataObject)
+        let prescribeDetails = this.dataObject.details
+        let direction = []
+        let duration = []
+        for (let x = 0; x < prescribeDetails.length; x++) {
+          duration.push(prescribeDetails[x].duration.id)
+          direction.push(prescribeDetails[x].direction.id)
+        }
+
+        //  console.log({direction}, {duration})
+        var pocket = prescribeDetails
+
+        for (let x = 0; x < prescribeDetails.length; x++) {
+          pocket[x].direction = direction[x]
+          pocket[x].duration = duration[x]
+        }
+        console.log(pocket)
+
+        const data = await this.$api.pharmacy.orderPrescription({
+          store: this.dataObject.store,
+          patient: this.patient,
+          source: this.dataObject.source,
+          prescribing_physician: this.dataObject.prescribing_physician,
+          note: this.dataObject.note,
+          details: pocket,
+        })
         this.$emit('refresh')
-        this.$bvModal.hide('modal')
+        this.$bvModal.hide('prescribe')
+        this.$toast({
+          type: 'success',
+          text: 'Success',
+        })
         console.log(data)
       } catch (error) {
         console.log(error)
@@ -424,6 +375,10 @@ export default {
       this.getProducts()
       this.getStores()
       this.productLogic()
+      this.dataObject.prescribing_physician =
+        this.$store.state.auth.user.first_name +
+        ' ' +
+        this.$store.state.auth.user.last_name
     },
     async getPatientByUHID(uhid) {
       try {

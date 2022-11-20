@@ -3,11 +3,11 @@
     <div class="row">
       <div class="col-md-4">
         <span class="text-12 text-grey">Date from:</span>
-        <input type="date" class="form-control" v-model="filters.dateFrom" />
+        <input type="date" class="form-control" v-model="filters.date_from" />
       </div>
       <div class="col-md-4">
         <span class="text-12 text-grey">Date to:</span>
-        <input type="date" class="form-control" v-model="filters.dateTo" />
+        <input type="date" class="form-control" v-model="filters.date_to" />
       </div>
       <div class="col-md-4">
         <div class="mb-2">
@@ -15,7 +15,6 @@
           <VSelect
             v-model="filters.store"
             label="name"
-            :multiple="true"
             :reduce="(opt) => opt.id"
             :options="stores"
           />
@@ -81,11 +80,12 @@ export default {
       genericDrugs: [],
       stores: [],
       filters: {
-        dateFrom: '',
-        dateTo: '',
-        store: [],
+        date_from: '',
+        date_to: '',
+        store: null,
         by: [],
         entry: '',
+        status: 'NEW'
       },
     }
   },

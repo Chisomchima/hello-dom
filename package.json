@@ -38,6 +38,7 @@
     "@pdftron/webviewer": "^8.2.0",
     "@popperjs/core": "^2.11.2",
     "@types/lodash": "^4.14.177",
+    "@vue/compiler-dom": "^3.2.45",
     "ap-style-title-case": "^1.1.2",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",

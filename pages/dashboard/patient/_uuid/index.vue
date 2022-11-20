@@ -37,6 +37,9 @@
       <UtilsCardTab title="Imaging">
         <DashboardPatientImaging :data="data" />
       </UtilsCardTab>
+      <UtilsCardTab title="Prescription">
+        <DashboardPatientPrescription :data="data" />
+      </UtilsCardTab>
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>

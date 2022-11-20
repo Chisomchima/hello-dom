@@ -21,6 +21,9 @@
       <UtilsCardTab title="Duration(s)">
         <SettingsPharmacyDurationList />
       </UtilsCardTab>
+      <UtilsCardTab title="Template(s)">
+        <SettingsPharmacyTemplatesList />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>
