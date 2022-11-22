@@ -53,7 +53,7 @@
                     </b-sidebar>
                 </div>
             </template> -->
-            <template #besideFilterButton>
+            <template v-if="show" #besideFilterButton>
                 <BaseButton @click="$bvModal.show('prescribe')" class="btn-outline-primary">New Prescription</BaseButton>
             </template>
             <template>
@@ -77,6 +77,11 @@ export default {
             type: Object,
             required: true,
         },
+        show: {
+            type: Boolean,
+            required: false,
+            default: true
+        }
     },
     data() {
         return {

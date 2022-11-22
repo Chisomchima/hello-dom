@@ -328,12 +328,13 @@
           </template>
           <DashboardPatientImaging :data="consultationData.patient" />
         </TabPanel>
-        <!-- <TabPanel>
+        <TabPanel>
           <template #header>
-            <i class="pi pi-user"></i>
-            <span class="ml-2">Previous Medicine</span>
+            <i class="fas fa-pills"></i>
+            <span class="ml-2">Prescriptions</span>
           </template>
-        </TabPanel> -->
+          <DashboardPatientPrescription :show="false" :data="consultationData.patient" />
+        </TabPanel>
       </TabView>
     </div>
   </div>

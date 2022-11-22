@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 mb-3">
         <div class="d-flex justify-content-between">
-          <div class="page-heading mb-4">Pharmacy Worklist</div>
+          <div class="page-heading mb-4">Prescription Worklist</div>
           <div>
             <BaseButton
               class="btn-primary btn-lg"

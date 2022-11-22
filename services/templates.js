@@ -1,22 +1,16 @@
 export default axios => ({
     getTemplates(params = {}) {
-        return axios.$get("/core/templates/", {
+        return axios.$get("/pharmacy/templates/", {
             params
         });
     },
     createTemplate(body) {
-        return axios.$post(`/core/templates/`, body);
+        return axios.$post(`/pharmacy/templates/`, body);
     },
     updateTemplate(id, body) {
-        return axios.$patch(`/core/templates/${id}/`, body)
+        return axios.$patch(`/pharmacy/templates/${id}/`, body)
     },
     deleteTemplate(id) {
-        return axios.$delete(`/core/templates/${id}/`)
-    },
-    createPrescription(body){
-        return axios.$post(`/core/templates/`, body);
-    },
-    updatePrescription(id, body) {
-        return axios.$patch(`/core/templates/${id}/`, body)
-    },
+        return axios.$delete(`/pharmacy/templates/${id}/`)
+    }
 });

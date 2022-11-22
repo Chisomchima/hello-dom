@@ -29,8 +29,7 @@
 
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Store" :rules="['']">
-              <VSelect v-model="dataObject.store" :options="stores" :reduce="(opt) => opt.id"
-                label="name">
+              <VSelect v-model="dataObject.store" :options="stores" :reduce="(opt) => opt.id" label="name">
               </VSelect>
             </ValidationProviderWrapper>
           </div>
@@ -56,13 +55,13 @@
             class="row p-1 mt-2 mx-2 border border-secondary rounded">
             <div class="
                 col-md-12
-               
+                
                 d-flex
                 justify-content-end
                 ml-0
                 text-danger text-14
               ">
-              <span class="point" @click="deleteDrug(index)">
+              <span class="point float" @click="deleteDrug(index)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                   viewBox="0 0 24 24">
                   <path fill="currentColor"
@@ -138,16 +137,23 @@
               </div>
             </div>
 
-            <!-- <div class="col-md-12">
-              <hr />
-            </div> -->
-          </div>
-
-          <div class="col-md-12 mb-2">
+            <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Notes" :rules="['']">
-                <textarea id="" v-model="dataObject.note" class="form-control" name="" cols="30" rows="2"></textarea>
+                <textarea id="" v-model="drug.note" class="form-control" name="" cols="30" rows="2"></textarea>
               </ValidationProviderWrapper>
             </div>
+          </div>
+
+          <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
+            <span class="point" @click="addDrug">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 16 16">
+                <path fill="currentColor"
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+              </svg>
+              Add
+            </span>
+          </div>
         </div>
       </form>
     </ValidationObserver>
@@ -195,10 +201,10 @@ export default {
             duration: null,
             dispense_quantity: 1,
             status: 'FULFILLED IN',
+            note: ''
           },
         ],
         patient: {},
-        note: '',
         source: "OPD",
         prescribing_physician: '',
         store: null,
@@ -291,7 +297,6 @@ export default {
           patient: this.patient,
           source: this.dataObject.source,
           prescribing_physician: this.dataObject.prescribing_physician,
-          note: this.dataObject.note,
           details: pocket,
         })
         this.$emit('refresh')
@@ -330,6 +335,7 @@ export default {
         duration: null,
         dispense_quantity: 1,
         status: '',
+        note: ''
       })
     },
 
@@ -354,6 +360,7 @@ export default {
             duration: null,
             dispense_quantity: 1,
             status: '',
+            note: ''
           },
         ],
         patient: {},
@@ -490,5 +497,11 @@ textarea.form-control {
   min-height: 50px;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.float {
+  position: relative;
+  top: -3px;
+  right: -17px;
 }
 </style>

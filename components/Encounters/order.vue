@@ -266,7 +266,7 @@
         </div>
 
         <div>
-          <EncountersAddPrescription :patient="consultationData.patient" />
+          <EncountersOrderPrescription :id="consultationData.id" :patient="consultationData.patient" />
         </div>
 
         <div
@@ -328,6 +328,20 @@
             </template>
           </TableComponent>
         </div>
+        <div v-if="drugitems != null" class="p-2">
+          <p class="text-16 text-grey">Prescription orders</p>
+          <TableComponent
+            :perPage="filter.size"
+            :pages="pages"
+            :items="drugitems"
+            :busy="busy"
+            :paginate="false"
+            :fields="drugfields"
+            :currentPage="currentPage"
+            @page-changed="filter($event, currentFilter)"
+          >
+          </TableComponent>
+        </div>
       </div>
 
       <!-- ************************************************************ -->
@@ -378,6 +392,7 @@ export default {
       items: [],
       labitems: [],
       imgitems: [],
+      drugitems: [],
       pages: 1,
       currentPage: 1,
       labObvCount: 0,
@@ -422,6 +437,33 @@ export default {
         {
           key: 'value.imaging',
           label: 'Imaging orders',
+          sortable: true,
+          formatter: (value) => {
+            if (value) {
+              return value
+            } else {
+              return ''
+            }
+          },
+        },
+        {
+          key: 'created_by',
+          label: 'Ordered by',
+          sortable: true,
+          formatter: (value) => {
+            return value.first_name + ' ' + value.last_name
+          },
+        },
+      ],
+      drugfields: [
+        {
+          key: 'created_at',
+          label: 'Order date',
+          sortable: true,
+        },
+        {
+          key: 'value.prc_id',
+          label: 'Prescription ID',
           sortable: true,
           formatter: (value) => {
             if (value) {
@@ -520,6 +562,7 @@ export default {
         )
         this.labitems = response.result.laboratory
         this.imgitems = response.result.imaging
+        this.drugitems = response.result.prescription
         this.busy = false
         // this.pages = response.total_pages
         // this.totalRecords = response.total_count
@@ -530,7 +573,7 @@ export default {
       }
     },
     orderPrescription(){
-      this.$bvModal.show('prescribe')
+      this.$bvModal.show('orderDrug')
     },
     labPanelNames(e) {
       console.log(e)

@@ -1,24 +1,21 @@
 <template>
-    <ModalWrapper size="lg" id="editPrescription" title="Edit Prescription Template" @ok="ok()" @show="getData()"
-        @hide="clear()" :stacking="false">
+    <ModalWrapper size="lg" id="orderDrug" title="Add Prescription" @ok="ok()" @show="getData()" @hide="clear()"
+        :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
-                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-end">
-                        <span class="text-16 text-info mr-2">Publicly available</span>
-                        <b-form-checkbox size="lg" switch v-model="editData.is_public">
-                        </b-form-checkbox>
-                    </div>
                     <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Title" :rules="['required']">
-                            <input v-model="editData.title" type="text" class="form-control" />
+                        <ValidationProviderWrapper name="Store" :rules="['']">
+                            <VSelect v-model="dataObject.store" :options="stores" :reduce="(opt) => opt.id"
+                                label="name">
+                            </VSelect>
                         </ValidationProviderWrapper>
                     </div>
 
                     <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Description" :rules="['']">
-                            <textarea id="" v-model="editData.description" class="form-control" name="" cols="30"
-                                rows="2"></textarea>
+                        <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
+                            <input readonly v-model="dataObject.prescribing_physician" type="text"
+                                class="form-control" />
                         </ValidationProviderWrapper>
                     </div>
 
@@ -33,11 +30,11 @@
                         </span>
                     </div>
 
-                    <div v-for="(drug, index) in editData.content" :key="index"
+                    <div v-for="(drug, index) in dataObject.details" :key="index"
                         class="row p-1 mt-2 mx-2 border border-secondary rounded">
                         <div class="
                   col-md-12
-                 
+                  
                   d-flex
                   justify-content-end
                   ml-0
@@ -52,7 +49,7 @@
                             </span>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Medication" :rules="['']">
+                            <ValidationProviderWrapper name="Medication" :rules="['required']">
                                 <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id"
                                     label="name">
                                 </VSelect>
@@ -85,16 +82,14 @@
                         </div>
 
                         <div class="col-md-3 mb-2">
-                            <ValidationProviderWrapper name="Direction" :rules="['']">
-                                <VSelect v-model="drug.direction" :reduce="(opt) => opt.id" :options="directions"
-                                    label="name">
+                            <ValidationProviderWrapper name="Direction" :rules="['required']">
+                                <VSelect v-model="drug.direction" :options="directions" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <ValidationProviderWrapper name="Duration" :rules="['']">
-                                <VSelect v-model="drug.duration" :reduce="(opt) => opt.id" :options="durations"
-                                    label="name">
+                            <ValidationProviderWrapper name="Duration" :rules="['required']">
+                                <VSelect v-model="drug.duration" :options="durations" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
@@ -130,11 +125,9 @@
                                     rows="2"></textarea>
                             </ValidationProviderWrapper>
                         </div>
-
-
                     </div>
 
-                    <div class="col-md-12 d-flex justify-content-end ml-0 text-primary pt-2 text-14">
+                    <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
                         <span class="point" @click="addDrug">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -144,30 +137,35 @@
                             Add
                         </span>
                     </div>
-
-
                 </div>
             </form>
         </ValidationObserver>
     </ModalWrapper>
 </template>
-    
+  
 <script>
 import { debounce } from 'lodash'
 
 export default {
     props: {
+        patient: {
+            type: Object,
+            require: false,
+            default: () => ({}),
+        },
+        id: {
+            type: String,
+            require: true,
+        },
         role: {
             require: false,
         },
-        editData: {
-            type: Object,
-            required: true
-        }
     },
     data() {
         return {
+            selected: [],
             present: false,
+            downloading: false,
             generic_drug: [],
             doses: [],
             units: [],
@@ -177,8 +175,29 @@ export default {
             routes: [],
             products: [],
             stores: [],
+            requestBody: {
+                laboratory: {
+                    comments: '',
+                    lab_panels: [],
+                    stat: false,
+                    service_center: null,
+                    payment_scheme: null,
+                },
+                imaging: {
+                    comments: '',
+                    img_obv: [],
+                    stat: false,
+                    service_center: null,
+                    payment_scheme: null,
+                },
+                prescription: {
+                    prescription_lines: [],
+                    status: '',
+                    source: '',
+                },
+            },
             dataObject: {
-                content: [
+                details: [
                     {
                         generic_drug: null,
                         product: null,
@@ -190,16 +209,55 @@ export default {
                         duration: null,
                         dispense_quantity: 1,
                         status: 'FULFILLED IN',
-                        note: ''
                     },
                 ],
-                publicly_available: true,
-                description: '',
-                title: ''
+                patient: {},
+                note: '',
+                source: "OPD",
+                prescribing_physician: '',
+                store: null,
             },
         }
     },
     computed: {
+        name() {
+            if (Object.keys(this.patient).length > 0) {
+                return (
+                    this.patient.salutation +
+                    ' ' +
+                    this.patient.firstname +
+                    ' ' +
+                    this.patient.lastname
+                )
+            }
+            return ''
+        },
+        gender() {
+            if (this.patient) {
+                return this.patient.gender
+            }
+            return ''
+        },
+
+        dob() {
+            if (this.patient) {
+                return this.patient.date_of_birth
+            }
+            return ''
+        },
+
+        email() {
+            if (this.patient) {
+                return this.patient.email
+            }
+            return ''
+        },
+        uhid() {
+            if (this.patient) {
+                return this.patient.uhid
+            }
+            return ''
+        },
     },
     watch: {},
     methods: {
@@ -225,32 +283,36 @@ export default {
         },
         async save() {
             try {
-                let prescribecontent = this.editData.content
+                let prescribeDetails = this.dataObject.details
                 let direction = []
                 let duration = []
-                for (let x = 0; x < prescribecontent.length; x++) {
-                    duration.push(prescribecontent[x].duration.id)
-                    direction.push(prescribecontent[x].direction.id)
+                for (let x = 0; x < prescribeDetails.length; x++) {
+                    duration.push(prescribeDetails[x].duration.id)
+                    direction.push(prescribeDetails[x].direction.id)
                 }
 
                 //  console.log({direction}, {duration})
-                var pocket = prescribecontent
+                var pocket = prescribeDetails
 
-                for (let x = 0; x < prescribecontent.length; x++) {
+                for (let x = 0; x < prescribeDetails.length; x++) {
                     pocket[x].direction = direction[x]
                     pocket[x].duration = duration[x]
                 }
                 console.log(pocket)
 
-                const data = await this.$api.templates.updateTemplate(this.dataObject.id, {
-                    title: this.editData.title,
-                    description: this.editData.description,
-                    is_public: this.editData.is_public,
-                    source: this.editData.source,
-                    content: pocket,
-                })
+                const data = await this.$api.pharmacy.orderPrescriptionOnEnc({
+                    imaging: null,
+                    laboratory: null,
+                    prescription: {
+                        store: this.dataObject.store,
+                        patient: this.patient,
+                        source: this.dataObject.source,
+                        prescribing_physician: this.dataObject.prescribing_physician,
+                        details: pocket,
+                    }
+                }, this.id)
                 this.$emit('refresh')
-                this.$bvModal.hide('editPrescription')
+                this.$bvModal.hide('orderDrug')
                 this.$toast({
                     type: 'success',
                     text: 'Success',
@@ -260,14 +322,21 @@ export default {
                 console.log(error)
             }
         },
-
+        showModal() {
+            if (!this.present) {
+                this.$bvModal.show('diagnosisModal')
+            } else {
+                this.present = false
+                this.$bvModal.hide('diagnosisModal')
+            }
+        },
         deleteDrug(e) {
-            if (this.dataObject.content.length !== 1) {
-                this.dataObject.content.splice(e, 1)
+            if (this.dataObject.details.length !== 1) {
+                this.dataObject.details.splice(e, 1)
             }
         },
         addDrug() {
-            this.dataObject.content.push({
+            this.dataObject.details.push({
                 generic_drug: null,
                 product: '',
                 dose: null,
@@ -280,9 +349,17 @@ export default {
                 status: '',
             })
         },
+
+        closeModal() {
+            this.$bvModal.hide('diagnosisModal')
+        },
+        setDiagnosis(e) {
+            this.$bvModal.hide('diagnosisModal')
+            this.dataObject.diagnosis = e
+        },
         clear() {
             this.dataObject = {
-                content: [
+                details: [
                     {
                         generic_drug: null,
                         product: '',
@@ -293,24 +370,19 @@ export default {
                         direction: null,
                         duration: null,
                         dispense_quantity: 1,
-                        status: 'FULFILLED IN',
+                        status: '',
                         note: ''
                     },
                 ],
-                source: "PHARMACY",
-                publicly_available: true,
-                description: '',
-                title: ''
+                patient: {},
+                source: null,
+                store: null,
+                note: '',
             }
+            this.uhid = ''
             this.$emit('hide')
         },
         getData() {
-            this.dataObject.description = this.editData.description
-            this.dataObject.title = this.editData.title
-            this.dataObject.content = this.editData.content
-            this.dataObject.source = this.editData.source
-            this.dataObject.id = this.editData.id
-            this.dataObject.is_public = true
             this.getGenericDrugs()
             this.getDoses()
             this.getUnits()
@@ -321,8 +393,21 @@ export default {
             this.getProducts()
             this.getStores()
             this.productLogic()
+            this.dataObject.prescribing_physician =
+                this.$store.state.auth.user.first_name +
+                ' ' +
+                this.$store.state.auth.user.last_name
         },
-
+        async getPatientByUHID(uhid) {
+            try {
+                if (uhid.length > 0) {
+                    const results = await this.$api.patient.getPatientByUHID(uhid)
+                    return results
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
         getGenericDrugs() {
             this.$api.pharmacy
                 .getGeneric({ size: 1000 })
@@ -417,7 +502,7 @@ export default {
     },
 }
 </script>
-    
+  
 <style lang="scss" scoped>
 textarea.form-control {
     min-height: 50px;
