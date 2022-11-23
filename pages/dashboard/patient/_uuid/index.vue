@@ -85,6 +85,9 @@
           </TabPanel>
         </TabView>
       </UtilsCardTab>
+      <UtilsCardTab title="Document">
+        <DashboardPatientDocument :data="data" />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />

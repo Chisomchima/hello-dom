@@ -4576,7 +4576,7 @@ c-31 27 -51 31 -61 15z"
         "
       >
         <p style="margin: 0">
-          Printed by: {{ reciept.audit_log[0].user.first_name }}
+          Printed by: {{ reciept.user.first_name }}
         </p>
         <p style="margin: 0">Date: {{ transactionDate }}</p>
       </div>
@@ -4615,9 +4615,9 @@ c-31 27 -51 31 -61 15z"
             <th>Amount</th>
           </tr>
         </thead>
-        <tbody v-if="reciept.payment_details">
+        <tbody v-if="reciept.payments">
           <tr
-            v-for="(item, index) in reciept.payment_details"
+            v-for="(item, index) in reciept.payments"
             :key="index"
             style="
               text-align: center;
