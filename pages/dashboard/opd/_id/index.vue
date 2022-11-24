@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isLoading" class="skeleton">
-      <b-row>
+      <b-row> 
         <b-col cols="12" class="mt-5">
           <b-skeleton animation="wave" width="85%"></b-skeleton>
           <b-skeleton animation="wave" width="55%"></b-skeleton>
@@ -334,6 +334,13 @@
             <span class="ml-2">Prescriptions</span>
           </template>
           <DashboardPatientPrescription :show="false" :data="consultationData.patient" />
+        </TabPanel>
+        <TabPanel>
+          <template #header>
+            <i class="far fa-file-alt"></i>
+            <span class="ml-2">Document</span>
+          </template>
+          <DashboardPatientDocument :show="!true" :data="consultationData.patient" />
         </TabPanel>
       </TabView>
     </div>

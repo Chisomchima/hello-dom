@@ -53,14 +53,16 @@
                     </b-sidebar>
                 </div>
             </template> -->
-            <template #besideFilterButton>
-                <BaseButton @click="$bvModal.show('prescribe')" class="btn-outline-primary">Add Document</BaseButton>
+            <template v-if="show" #besideFilterButton>
+                <BaseButton @click="$bvModal.show('document')" class="btn-outline-primary">Add Document</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="[]" :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
+                <TableComponent :fields="fields" @row-clicked="viewDocument" :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
+
+        <DashboardModalAddPatientDocument @refresh="pageChange(1, filter)" :patient="data" />
     </div>
 </template>
   
@@ -86,10 +88,6 @@ export default {
         return {
             filter: {
                 size: 10,
-                modality: [],
-                service_center: [],
-                dateFrom: '',
-                dateTo: '',
             },
             patient: {},
             options: [],
@@ -106,48 +104,22 @@ export default {
                     },
                     sortable: true,
                 },
-                // { key: 'patient.uhid', label: 'UHID', sortable: true },
-                // {
-                //     key: 'patient',
-                //     label: 'Patient',
-                //     sortable: true,
-                //     formatter: (val) => {
-                //         return (
-                //             (val.salutation ? val.salutation : '') +
-                //             ' ' +
-                //             val.firstname +
-                //             ' ' +
-                //             val.lastname
-                //         )
-                //     },
-                // },
                 {
-                    key: 'prc_id',
-                    label: 'PRC ID',
+                    key: 'title',
+                    label: 'Title',
                     sortable: true,
                 },
-                {
-                    key: 'prescribing_physician',
-                    label: 'Prescribing physician',
-                    sortable: true,
-                    formatter: (val) => {
-                        if (Object.keys(val).length > 0) {
-                            return val.first_name + ' ' + val.last_name
-                        }
-                        else {
-                            return ''
-                        }
-                    },
-                },
-
-                { key: 'store.name', label: 'Store', sortable: true },
                 {
                     key: 'created_by',
-                    label: 'Ordered by',
-                    formatter: (val, key, item) => {
-                        return val.first_name + ' ' + val.first_name
-                    },
+                    label: 'Created by',
                     sortable: true,
+                    formatter: (val) => {
+                        return (
+                            val.first_name +
+                            ' ' +
+                            val.last_name
+                        )
+                    },
                 },
                 // { key: 'status', label: 'Status', sortable: true },
                 // { key: 'dots', label: '', sortable: false },
@@ -156,8 +128,6 @@ export default {
     },
     async mounted() {
         await this.pageChange(1)
-        this.getServiceCenter()
-        this.getModality()
     },
     computed: {
         maxDate() {
@@ -205,23 +175,21 @@ export default {
     methods: {
         async pageChange(page = 1, e = {
             size: 10,
-            dateFrom: '',
-            dateTo: '',
         }) {
 
             const newFilterObject = {
                 ...e,
                 page: page,
-                patient_uhid: this.data.uhid,
+                patient: this.data.id,
             }
             this.currentFilter = e
             this.currentPage = page
             try {
                 this.busy = true
-                const data = await this.$api.pharmacy.getPrescriptions({
+                const data = await this.$api.files.getDocuments({
                     ...e,
                     page,
-                    patient_uhid: this.data.uhid,
+                    patient: this.data.id,
                 })
                 this.items = data.results
                 this.pages = data.total_pages
@@ -232,42 +200,12 @@ export default {
                 this.busy = false
             }
         },
-
-        setOption(e) {
-            this.placeholder = e
-            if (e === 'Service center') {
-                this.filter.by = 'service_center'
-                this.getServiceCenter()
-            }
-            if (e === 'Modality') {
-                this.filter.by = 'modality'
-                this.getModality()
-            }
-        },
-
-        openImagingModal() {
-            this.patient = this.data
-            this.$bvModal.show('add_imaging')
-        },
-        async getServiceCenter() {
-            try {
-                const { results } = await this.$api.imaging.getServiceCenter({
-                    size: 1000,
-                })
-                this.filterSerice = results
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getModality() {
-            try {
-                const { results } = await this.$api.imaging.getLabUnit({
-                    size: 1000,
-                })
-                this.filterModality = results
-            } catch (error) {
-                console.log(error)
-            }
+        viewDocument(e){
+            let url = e.path
+            let trimmed = url.substring(1)
+            let baseURL = process.env.STATIC
+            let a = baseURL + trimmed
+            window.open(a)
         },
 
         async cancelImaging(e) {
