@@ -7,7 +7,7 @@
         <div class="d-flex align-items-center">
           <div>
             <span>
-              <button @click="confirmPrescription" class="btn btn-outline-primary">Confirm</button>
+              <button @click="confirm" class="btn btn-outline-primary">Confirm</button>
               <span class="ml-2 mt-1">
                 <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" variant="primary" label="grow">
                 </b-spinner>
@@ -399,6 +399,14 @@ export default {
         this.busy = false
       } catch {
         this.busy = false
+      }
+    },
+    async confirm() {
+      const result = await this.showConfirmMessageBox(
+        'Do you want to confirm this prescription ?', 'Yes'
+      )
+      if (result) {
+        this.confirmPrescription()
       }
     },
     async save() {

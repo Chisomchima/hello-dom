@@ -1,11 +1,16 @@
 <template>
-    <ModalWrapper :submitTitle="`Upload`" id="document" title="Attach Document" @ok="ok()" @hide="clear()">
+    <ModalWrapper :submitTitle="`Upload`" id="document" title="Attach Document" @ok="ok()" @hide="clear()" @show="getData">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Title" :rules="['required']">
                             <input v-model="dataObject.title" class="form-control" type="text" />
+                        </ValidationProviderWrapper>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <ValidationProviderWrapper name="File type" :rules="['required']">
+                            <VSelect v-model="dataObject.file_type" :reduce="opt => opt.id" :options="fileTypes" label="name"></VSelect>
                         </ValidationProviderWrapper>
                     </div>
                     <div class="d-none">
@@ -68,8 +73,10 @@ export default {
             dataObject: {
                 title: '',
                 file: null,
-                patient: this.patient
+                patient: this.patient,
+                file_type: null
             },
+            fileTypes: [],
             uploadedFile: null,
             fileInfo: {
                 name: '',
@@ -90,7 +97,7 @@ export default {
             deep: true,
         },
     },
-    mounted(){
+    mounted() {
         this.getData()
     },
     methods: {
@@ -130,12 +137,14 @@ export default {
             this.dataObject.id = this.editData.id
             this.dataObject.title = this.editData.title
             this.dataObject.patient = this.editData.patient
+            this.getFileTypes()
         },
         async save() {
             try {
                 let formData = new FormData();
                 formData.append('file', this.uploadedFile)
                 formData.append('title', this.dataObject.title)
+                formData.append('file_type', this.dataObject.file_type)
                 formData.append('patient', this.patient.id)
                 const data = await this.$api.files.attachDocument(formData)
                 this.$emit('refresh')
@@ -163,12 +172,24 @@ export default {
             }
         },
 
+        async getFileTypes() {
+            try {
+                const { results } = await this.$api.core.getFileTypes({
+                    size: 1000,
+                })
+                this.fileTypes = results
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
         clear() {
             this.$emit('hide')
             this.dataObject = {
                 title: '',
                 file: null,
-                patient: this.patient
+                patient: this.patient,
+                file_type: null
             }
             this.uploadedFile = null
             this.fileInfo = {

@@ -83,5 +83,10 @@ export default axios => ({
         return axios.$get("/facilities/departments/", {
             params
         })
+    },
+    getFileTypes(params = {}){
+        return axios.$get("/core/file_types/", {
+            params
+        })
     }
 });

@@ -111,6 +111,11 @@ export default {
                     sortable: true,
                 },
                 {
+                    key: 'file_type',
+                    label: 'File type',
+                    sortable: true,
+                },
+                {
                     key: 'created_by',
                     label: 'Created by',
                     sortable: true,
