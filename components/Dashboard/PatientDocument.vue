@@ -57,12 +57,12 @@
                 <BaseButton @click="$bvModal.show('document')" class="btn-outline-primary">Add Document</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" @row-clicked="viewDocument" :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
+                <TableComponent :fields="fields" @edit="editFile" @delete="cancelImaging" @row-clicked="viewDocument"  :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
 
-        <DashboardModalAddPatientDocument @refresh="pageChange(1, filter)" :patient="data" />
+        <DashboardModalAddPatientDocument :editData="editData" @refresh="pageChange(1, filter)" :patient="data" />
     </div>
 </template>
   
@@ -89,6 +89,7 @@ export default {
             filter: {
                 size: 10,
             },
+            editData: {},
             patient: {},
             options: [],
             items: [],
@@ -122,7 +123,7 @@ export default {
                     },
                 },
                 // { key: 'status', label: 'Status', sortable: true },
-                // { key: 'dots', label: '', sortable: false },
+                { key: 'actions', label: '', sortable: false },
             ],
         }
     },
@@ -208,14 +209,17 @@ export default {
             window.open(a)
         },
 
+        editFile(e){
+            this.editData = e
+            this.$bvModal.show('document')
+        },
+
         async cancelImaging(e) {
             const result = await this.showDeleteMessageBox(
-                'Do you want to cancel Imaging Order'
+                'Do you want to delete this file ?'
             )
             if (result) {
-                await this.$api.imaging.patchObservationOrder(e.id, {
-                    status: 'CANCELED',
-                })
+                await this.$api.files.deleteDocument(e.id)
             }
         },
 

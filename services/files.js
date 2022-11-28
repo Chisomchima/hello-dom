@@ -7,10 +7,10 @@ export default axios => ({
     attachDocument(body) {
         return axios.$post(`/patient/files/`, body);
     },
-    updateTemplate(id, body) {
-        return axios.$patch(`/pharmacy/templates/${id}/`, body)
+    updateDocument(id, body) {
+        return axios.$patch(`/patient/files/${id}/`, body)
     },
     deleteDocument(id) {
-        return axios.$delete(`/pharmacy/templates/${id}/`)
+        return axios.$delete(`/patient/files/${id}/`)
     }
 });

@@ -81,12 +81,17 @@ export default {
         editData: {
             handler(newVal) {
                 if (Object.keys(newVal).length > 0) {
-                    this.dataObject = newVal
+                    this.dataObject.id = newVal.id
+                    this.dataObject.title = newVal.title
+                    this.dataObject.patient = newVal.patient
                 }
             },
             immediate: true,
             deep: true,
         },
+    },
+    mounted(){
+        this.getData()
     },
     methods: {
         async ok() {
@@ -121,12 +126,17 @@ export default {
                 this.uploadedFile = e.target.files[0]
             }
         },
+        getData() {
+            this.dataObject.id = this.editData.id
+            this.dataObject.title = this.editData.title
+            this.dataObject.patient = this.editData.patient
+        },
         async save() {
             try {
                 let formData = new FormData();
-                formData.append('file',this.uploadedFile)
-                formData.append('title',this.dataObject.title)
-                formData.append('patient',this.patient.id)
+                formData.append('file', this.uploadedFile)
+                formData.append('title', this.dataObject.title)
+                formData.append('patient', this.patient.id)
                 const data = await this.$api.files.attachDocument(formData)
                 this.$emit('refresh')
                 this.$bvModal.hide('document')
@@ -137,12 +147,16 @@ export default {
         },
         async edit() {
             try {
-                const data = await this.$api.laboratory.editSpecimen(
+                let formData = new FormData();
+                formData.append('file', this.uploadedFile)
+                formData.append('title', this.dataObject.title)
+                formData.append('patient', this.patient.id)
+                const data = await this.$api.files.updateDocument(
                     this.dataObject.id,
-                    this.dataObject
+                    formData
                 )
                 this.$emit('refresh')
-                this.$bvModal.hide('modal')
+                this.$bvModal.hide('document')
                 console.log(data)
             } catch (error) {
                 console.log(error)
@@ -150,11 +164,18 @@ export default {
         },
 
         clear() {
-            this.dataObject = {
-                name: '',
-            }
             this.$emit('hide')
-        },
+            this.dataObject = {
+                title: '',
+                file: null,
+                patient: this.patient
+            }
+            this.uploadedFile = null
+            this.fileInfo = {
+                name: '',
+                size: null,
+            }
+        }
     },
 }
 </script>
@@ -165,7 +186,8 @@ export default {
     top: -58px;
     right: -203px;
 }
-.height{
+
+.height {
     height: 5rem;
 }
 </style>

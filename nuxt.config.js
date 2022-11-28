@@ -152,7 +152,6 @@ export default {
 
   env: {
     BASE_URL: process.env.BASE_URL,
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     APP_NAME_LONG: process.env.APP_NAME_LONG || "HEHEH",
     APP_NAME_SHORT: process.env.APP_NAME_SHORT || "Hello",
     db_type: process.env.db_type,

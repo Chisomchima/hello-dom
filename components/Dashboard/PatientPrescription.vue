@@ -57,11 +57,12 @@
                 <BaseButton @click="$bvModal.show('prescribe')" class="btn-outline-primary">New Prescription</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
+                <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" @row-clicked="showData" @page-changed="pageChange">
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
         <EncountersAddPrescription :patient="data" @refresh="pageChange()" />
+        <DashboardViewPatientPrescription :dataObject="modaldata" />
     </div>
 </template>
   
@@ -93,6 +94,7 @@ export default {
                 dateTo: '',
             },
             patient: {},
+            modaldata: {},
             options: [],
             items: [],
             filterModality: [],
@@ -232,6 +234,11 @@ export default {
             } finally {
                 this.busy = false
             }
+        },
+
+        showData(e){
+            this.modaldata = e
+            this.$bvModal.show('viewPatientPrescription')
         },
 
         setOption(e) {

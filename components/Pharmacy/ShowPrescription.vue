@@ -6,13 +6,13 @@
         <h5 class="mb-0 mt-2">View Prescription</h5>
         <div class="d-flex align-items-center">
           <div>
-            <!-- <span>
+            <span>
               <button @click="confirmPrescription" class="btn btn-outline-primary">Confirm</button>
               <span class="ml-2 mt-1">
                 <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" variant="primary" label="grow">
                 </b-spinner>
               </span>
-            </span> -->
+            </span>
             <span class="mx-2 text-primary pointer">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">

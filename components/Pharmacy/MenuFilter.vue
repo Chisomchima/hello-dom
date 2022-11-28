@@ -25,7 +25,7 @@
     <hr class="mb-0" />
     <div class="row justify-content-between">
       <div class="mb-0 col-md-4">
-        <label class="form-control-label">UHID/NAME</label>
+        <label class="form-control-label">UHID/NAME/Prescribing physician</label>
         <div class="row">
           <div class="col-md-6">
             <VSelect
@@ -37,6 +37,7 @@
               :options="[
                 { name: 'patient_name', label: 'Name' },
                 { name: 'patient_uhid', label: 'UHID' },
+                { name: 'prescribing_physician', label: 'Prescribing physician' },
               ]"
             >
             </VSelect>
