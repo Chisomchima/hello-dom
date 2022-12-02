@@ -9,7 +9,7 @@
                         </ValidationProviderWrapper>
                     </div>
                     <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="File type" :rules="['required']">
+                        <ValidationProviderWrapper name="Document type" :rules="['']">
                             <VSelect v-model="dataObject.file_type" :reduce="opt => opt.id" :options="fileTypes" label="name"></VSelect>
                         </ValidationProviderWrapper>
                     </div>

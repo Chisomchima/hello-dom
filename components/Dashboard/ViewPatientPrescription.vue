@@ -1,5 +1,5 @@
 <template>
-    <b-modal size="lg" id="viewPatientPrescription" title="View Prescription" ref="modal" centered :no-stacking="false"
+    <b-modal @show="getData" size="lg" id="viewPatientPrescription" title="View Prescription" ref="modal" centered :no-stacking="false"
       :no-close-on-backdrop="true" :scrollable="false" ok-title="Save" @hide="cancel">
       <template #modal-header="{ close }">
         <slot name="header" :close="close">
@@ -24,7 +24,38 @@
         </div>
       </template>
       <div v-if="!present">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+              <ValidationProviderWrapper name="Patient Name" :rules="['required']">
+                <input :value="patientName(editData.patient)" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-4 mb-2">
+              <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+                <input :value="dob" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-4 mb-2">
+              <ValidationProviderWrapper name="Gender" :rules="['required']">
+                <input :value="gender" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
+
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Pharmacy*" :rules="['']">
+                <VSelect v-model="editData.store" :options="stores" :reduce="(opt) => opt.id" label="name">
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
+                <input :value="physician ? physician : ''" type="text" readonly class="form-control" />
+              </ValidationProviderWrapper>
+            </div>
+        </div>
         <div class="text-14" v-for="(drug, index) in editData.details" :key="index">
+          <p class="text-info text-16">Prescriptions</p>
           <div class="w-100 p-3 my-2 border border-secondary rounded">
             <div> Medication: {{ drug.generic_drug ? drug.generic_drug.name : '' }}</div>
             <div>Instruction: {{ instructionFormat(drug) }}</div>
@@ -220,16 +251,7 @@
         })
       },
       getData() {
-        this.getGenericDrugs()
-        this.getDoses()
-        this.getUnits()
-        this.getFrequencies()
-        this.getDurations()
-        this.getDirections()
-        this.getRoutes()
-        this.getProducts()
         this.getStores()
-        this.productLogic()
       },
       async getPatientByUHID(uhid) {
         try {

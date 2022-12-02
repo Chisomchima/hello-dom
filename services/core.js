@@ -85,7 +85,7 @@ export default axios => ({
         })
     },
     getFileTypes(params = {}){
-        return axios.$get("/core/file_types/", {
+        return axios.$get("/core/document_types/", {
             params
         })
     }

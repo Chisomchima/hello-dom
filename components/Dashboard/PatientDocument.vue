@@ -2,7 +2,7 @@
     <div>
         <UtilsFilterComponent disable-pagination :disableSearch="true" :disable-visualization="true"
             search-placeholder="Search">
-            <!-- <template #beforeActions>
+            <template #beforeActions>
                 <div>
                     <button v-b-toggle.sidebar-backdrop3 class="btn btn-sm btn-outline-secondary">
                         <span>
@@ -24,35 +24,30 @@
                                         v-model="filter.name" />
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <span class="text-12 text-grey">Document types</span>
+                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.document_type"
+                                    :placeholder="'Document types'" :reduce="(option) => option.id" multiple taggable
+                                    :options="fileTypes">
+                                </VSelect>
+                            </div>
+    
                             <div class="">
                                 <div class="col-md-12">
                                     <span class="text-12 text-grey">Date from:</span>
-                                    <input type="date" class="form-control" :max="maxDate" v-model="filter.dateFrom" />
+                                    <input type="date" class="form-control" :max="maxDate" v-model="filter.date_from" />
                                 </div>
                                 <div class="col-md-12">
                                     <span class="text-12 text-grey">Date to:</span>
-                                    <input type="date" class="form-control" :min="minDate" v-model="filter.dateTo" />
+                                    <input type="date" class="form-control" :min="minDate" v-model="filter.date_to" />
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <span class="text-12 text-grey">Service centers</span>
-                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.service_center"
-                                    :placeholder="'Service centers'" :reduce="(option) => option.id" multiple taggable
-                                    :options="filterSerice">
-                                </VSelect>
-                            </div>
-                            <div class="col-md-12">
-                                <span class="text-12 text-grey">Modality</span>
-                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.modality"
-                                    :placeholder="'Lab unit'" :reduce="(option) => option.id" multiple taggable
-                                    :options="filterModality">
-                                </VSelect>
-                            </div>
+                           
                         </div>
                     </b-sidebar>
                 </div>
-            </template> -->
+            </template>
             <template v-if="show" #besideFilterButton>
                 <BaseButton @click="$bvModal.show('document')" class="btn-outline-primary">Add Document</BaseButton>
             </template>
@@ -88,10 +83,14 @@ export default {
         return {
             filter: {
                 size: 10,
+                document_type: '',
+                date_from: '',
+                date_to: ''
             },
             editData: {},
             patient: {},
             options: [],
+            fileTypes: [],
             items: [],
             filterModality: [],
             filterSerice: [],
@@ -134,6 +133,7 @@ export default {
     },
     async mounted() {
         await this.pageChange(1)
+        this.getFileTypes()
     },
     computed: {
         maxDate() {
@@ -158,15 +158,17 @@ export default {
                 this.pageChange(1, this.filter)
             }
         },
-        'filter.service_center'() {
-            if (this.filter.service_center !== null) {
+        'filter.document_type'() {
+            if (this.filter.document_type !== null) {
                 this.pageChange(1, this.filter)
             }
         },
-        // 'filter.dateFrom'() {
-        //   this.getLabOrders(1, this.filter)
-        // },
-        'filter.dateTo'() {
+        'filter.date_from'() {
+            if (this.filter.dateFrom !== '') {
+                this.pageChange(1, this.filter)
+            }
+        },
+        'filter.date_to'() {
             if (this.filter.dateFrom !== '') {
                 this.pageChange(1, this.filter)
             }
@@ -212,6 +214,17 @@ export default {
             let baseURL = process.env.STATIC
             let a = baseURL + trimmed
             window.open(a)
+        },
+
+        async getFileTypes() {
+            try {
+                const { results } = await this.$api.core.getFileTypes({
+                    size: 1000,
+                })
+                this.fileTypes = results
+            } catch (error) {
+                console.log(error)
+            }
         },
 
         editFile(e){

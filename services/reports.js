@@ -19,4 +19,9 @@ export default axios => ({
             params
         })
     },
+    financeSummaryReport(params = {}) {
+        return axios.$get('/finance/revenue/summary', {
+            params
+        })
+    },
 })
