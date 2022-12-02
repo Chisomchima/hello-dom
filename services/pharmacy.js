@@ -144,8 +144,7 @@ export default axios => ({
         return axios.$patch(`/pharmacy/prescriptions/${id}/`, body)
     },
     confirmPrescription(id){
-        return axios.$patch(`/pharmacy/prescriptions/${id}/fulfill/`)
+        return axios.$patch(`/pharmacy/prescriptions/${id}/confirm/`)
     },
-
 
 })

@@ -38,35 +38,6 @@
             @page-changed="filter($event, currentFilter)"
             @cancel="cancelImaging($event)"
           >
-            <template #status="{ data }">
-              <template v-if="data.item.status === 'NEW'">
-                <button
-                  :disabled="data.item.bill.cleared_status !== 'CLEARED'"
-                  class="btn btn-outline-primary btn-sm"
-                  @click="captureImaging(data.item)"
-                >
-                  Capture
-                </button>
-              </template>
-              <template v-if="data.item.status === 'CAPTURED'">
-                <button
-                  :disabled="data.item.bill.cleared_status !== 'CLEARED'"
-                  class="btn btn-outline-warning btn-sm"
-                  @click="captureReport(data.item)"
-                >
-                  Report
-                </button>
-              </template>
-
-              <template v-if="data.item.status === 'AWAITING_APPROVAL'">
-                <button
-                  class="btn btn-sm btn-outline-info text-nowrap"
-                  @click="awaitApproval(data.item)"
-                >
-                  AWAITING APPROVAL
-                </button>
-              </template>
-            </template>
           </TableComponent>
         </UtilsFilterComponent>
       </div>

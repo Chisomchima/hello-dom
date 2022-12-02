@@ -2,7 +2,7 @@
     <div>
         <UtilsFilterComponent disable-pagination :disableSearch="true" :disable-visualization="true"
             search-placeholder="Search">
-            <!-- <template #beforeActions>
+            <template #beforeActions>
                 <div>
                     <button v-b-toggle.sidebar-backdrop3 class="btn btn-sm btn-outline-secondary">
                         <span>
@@ -24,43 +24,40 @@
                                         v-model="filter.name" />
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <span class="text-12 text-grey">Document types</span>
+                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.document_type"
+                                    :placeholder="'Document types'" :reduce="(option) => option.id" multiple taggable
+                                    :options="fileTypes">
+                                </VSelect>
+                            </div>
+    
                             <div class="">
                                 <div class="col-md-12">
                                     <span class="text-12 text-grey">Date from:</span>
-                                    <input type="date" class="form-control" :max="maxDate" v-model="filter.dateFrom" />
+                                    <input type="date" class="form-control" :max="maxDate" v-model="filter.date_from" />
                                 </div>
                                 <div class="col-md-12">
                                     <span class="text-12 text-grey">Date to:</span>
-                                    <input type="date" class="form-control" :min="minDate" v-model="filter.dateTo" />
+                                    <input type="date" class="form-control" :min="minDate" v-model="filter.date_to" />
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <span class="text-12 text-grey">Service centers</span>
-                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.service_center"
-                                    :placeholder="'Service centers'" :reduce="(option) => option.id" multiple taggable
-                                    :options="filterSerice">
-                                </VSelect>
-                            </div>
-                            <div class="col-md-12">
-                                <span class="text-12 text-grey">Modality</span>
-                                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.modality"
-                                    :placeholder="'Lab unit'" :reduce="(option) => option.id" multiple taggable
-                                    :options="filterModality">
-                                </VSelect>
-                            </div>
+                           
                         </div>
                     </b-sidebar>
                 </div>
-            </template> -->
-            <template #besideFilterButton>
-                <BaseButton @click="$bvModal.show('prescribe')" class="btn-outline-primary">Add Document</BaseButton>
+            </template>
+            <template v-if="show" #besideFilterButton>
+                <BaseButton @click="$bvModal.show('document')" class="btn-outline-primary">Add Document</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="[]" :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
+                <TableComponent :fields="fields" @edit="editFile" @delete="cancelImaging" @row-clicked="viewDocument"  :pages="pages" :items="items" :busy="busy" @page-changed="pageChange">
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
+
+        <DashboardModalAddPatientDocument :editData="editData" @refresh="pageChange(1, filter)" :patient="data" />
     </div>
 </template>
   
@@ -86,13 +83,14 @@ export default {
         return {
             filter: {
                 size: 10,
-                modality: [],
-                service_center: [],
-                dateFrom: '',
-                dateTo: '',
+                document_type: '',
+                date_from: '',
+                date_to: ''
             },
+            editData: {},
             patient: {},
             options: [],
+            fileTypes: [],
             items: [],
             filterModality: [],
             filterSerice: [],
@@ -106,58 +104,36 @@ export default {
                     },
                     sortable: true,
                 },
-                // { key: 'patient.uhid', label: 'UHID', sortable: true },
-                // {
-                //     key: 'patient',
-                //     label: 'Patient',
-                //     sortable: true,
-                //     formatter: (val) => {
-                //         return (
-                //             (val.salutation ? val.salutation : '') +
-                //             ' ' +
-                //             val.firstname +
-                //             ' ' +
-                //             val.lastname
-                //         )
-                //     },
-                // },
                 {
-                    key: 'prc_id',
-                    label: 'PRC ID',
+                    key: 'title',
+                    label: 'Title',
                     sortable: true,
                 },
                 {
-                    key: 'prescribing_physician',
-                    label: 'Prescribing physician',
+                    key: 'file_type',
+                    label: 'File type',
                     sortable: true,
-                    formatter: (val) => {
-                        if (Object.keys(val).length > 0) {
-                            return val.first_name + ' ' + val.last_name
-                        }
-                        else {
-                            return ''
-                        }
-                    },
                 },
-
-                { key: 'store.name', label: 'Store', sortable: true },
                 {
                     key: 'created_by',
-                    label: 'Ordered by',
-                    formatter: (val, key, item) => {
-                        return val.first_name + ' ' + val.first_name
-                    },
+                    label: 'Created by',
                     sortable: true,
+                    formatter: (val) => {
+                        return (
+                            val.first_name +
+                            ' ' +
+                            val.last_name
+                        )
+                    },
                 },
                 // { key: 'status', label: 'Status', sortable: true },
-                // { key: 'dots', label: '', sortable: false },
+                { key: 'actions', label: '', sortable: false },
             ],
         }
     },
     async mounted() {
         await this.pageChange(1)
-        this.getServiceCenter()
-        this.getModality()
+        this.getFileTypes()
     },
     computed: {
         maxDate() {
@@ -182,15 +158,17 @@ export default {
                 this.pageChange(1, this.filter)
             }
         },
-        'filter.service_center'() {
-            if (this.filter.service_center !== null) {
+        'filter.document_type'() {
+            if (this.filter.document_type !== null) {
                 this.pageChange(1, this.filter)
             }
         },
-        // 'filter.dateFrom'() {
-        //   this.getLabOrders(1, this.filter)
-        // },
-        'filter.dateTo'() {
+        'filter.date_from'() {
+            if (this.filter.dateFrom !== '') {
+                this.pageChange(1, this.filter)
+            }
+        },
+        'filter.date_to'() {
             if (this.filter.dateFrom !== '') {
                 this.pageChange(1, this.filter)
             }
@@ -205,23 +183,21 @@ export default {
     methods: {
         async pageChange(page = 1, e = {
             size: 10,
-            dateFrom: '',
-            dateTo: '',
         }) {
 
             const newFilterObject = {
                 ...e,
                 page: page,
-                patient_uhid: this.data.uhid,
+                patient: this.data.id,
             }
             this.currentFilter = e
             this.currentPage = page
             try {
                 this.busy = true
-                const data = await this.$api.pharmacy.getPrescriptions({
+                const data = await this.$api.files.getDocuments({
                     ...e,
                     page,
-                    patient_uhid: this.data.uhid,
+                    patient: this.data.id,
                 })
                 this.items = data.results
                 this.pages = data.total_pages
@@ -232,52 +208,36 @@ export default {
                 this.busy = false
             }
         },
-
-        setOption(e) {
-            this.placeholder = e
-            if (e === 'Service center') {
-                this.filter.by = 'service_center'
-                this.getServiceCenter()
-            }
-            if (e === 'Modality') {
-                this.filter.by = 'modality'
-                this.getModality()
-            }
+        viewDocument(e){
+            let url = e.path
+            let trimmed = url.substring(1)
+            let baseURL = process.env.STATIC
+            let a = baseURL + trimmed
+            window.open(a)
         },
 
-        openImagingModal() {
-            this.patient = this.data
-            this.$bvModal.show('add_imaging')
-        },
-        async getServiceCenter() {
+        async getFileTypes() {
             try {
-                const { results } = await this.$api.imaging.getServiceCenter({
+                const { results } = await this.$api.core.getFileTypes({
                     size: 1000,
                 })
-                this.filterSerice = results
+                this.fileTypes = results
             } catch (error) {
                 console.log(error)
             }
         },
-        async getModality() {
-            try {
-                const { results } = await this.$api.imaging.getLabUnit({
-                    size: 1000,
-                })
-                this.filterModality = results
-            } catch (error) {
-                console.log(error)
-            }
+
+        editFile(e){
+            this.editData = e
+            this.$bvModal.show('document')
         },
 
         async cancelImaging(e) {
             const result = await this.showDeleteMessageBox(
-                'Do you want to cancel Imaging Order'
+                'Do you want to delete this file ?'
             )
             if (result) {
-                await this.$api.imaging.patchObservationOrder(e.id, {
-                    status: 'CANCELED',
-                })
+                await this.$api.files.deleteDocument(e.id)
             }
         },
 

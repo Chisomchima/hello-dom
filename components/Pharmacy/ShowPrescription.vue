@@ -1,106 +1,113 @@
 <template>
-  <b-modal size="lg" id="viewPrescription" title="View Prescription" ref="modal" centered :no-stacking="false"
-    :no-close-on-backdrop="true" :scrollable="false" ok-title="Save" @ok="save()" @show="getData()" @hide="cancel">
-    <template #modal-header="{ close }">
-      <slot name="header" :close="close">
-        <h5 class="mb-0 mt-2">View Prescription</h5>
-        <div class="d-flex align-items-center">
-          <div>
-            <!-- <span>
-              <button @click="confirmPrescription" class="btn btn-outline-primary">Confirm</button>
-              <span class="ml-2 mt-1">
-                <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" variant="primary" label="grow">
-                </b-spinner>
+  <div>
+    <b-modal size="lg" id="viewPrescription" title="View Prescription" ref="modal" centered :no-stacking="false"
+      :no-close-on-backdrop="true" :scrollable="false" ok-title="Save" @ok="save()" @show="getData()" @hide="cancel">
+      <template #modal-header="{ close }">
+        <slot name="header" :close="close">
+          <h5 class="mb-0 mt-2">View Prescription</h5>
+          <div class="d-flex align-items-center">
+            <div>
+              <span>
+                <button @click="confirm" class="btn btn-outline-primary">Confirm</button>
+                <span class="ml-2 mt-1">
+                  <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" variant="primary" label="grow">
+                  </b-spinner>
+                </span>
               </span>
-            </span> -->
-            <span class="mx-2 text-primary pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
-                preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
-                <path fill="currentColor"
-                  d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5Zm9 0a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5h8v-.5Zm-8 7v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5Z" />
+              <span @click="printPrescription" class="mx-2 text-primary pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
+                  preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
+                  <path fill="currentColor"
+                    d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5Zm9 0a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5h8v-.5Zm-8 7v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5Z" />
+                </svg>
+                <!-- <span class="ml-2 mt-1">
+                  <b-spinner style="width: 1.1rem; height: 1.1rem" v-if="printing" variant="primary" type="grow"
+                    label="grow">
+                  </b-spinner>
+                </span> -->
+              </span>
+            </div>
+            <span @click="close()" class="point">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                  d="M6 18L18 6m0 12L6 6" />
               </svg>
             </span>
           </div>
-          <span @click="close()" class="point">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 24 24">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 18L18 6m0 12L6 6" />
-            </svg>
-          </span>
+        </slot>
+      </template>
+      <template #modal-footer="{ cancel }">
+        <div class=" w-100 d-flex px-5 justify-content-between">
+          <div v-if="!present">
+            <button size="sm" variant="light" class="px-5 btn btn-light text-secondary mr-2" @click="cancel()">
+              Close
+            </button>
+          </div>
+          <div v-if="present">
+            <button @click="present = false" class="btn btn-secondary">
+              Cancel
+            </button>
+          </div>
+          <div v-if="!present">
+            <button @click="editMode" class="btn btn-secondary">
+              Edit
+            </button>
+          </div>
+          <div v-if="present">
+            <BaseButton class="px-5" @click="save">
+              Save
+            </BaseButton>
+          </div>
         </div>
-      </slot>
-    </template>
-    <template #modal-footer="{ cancel }">
-      <div class=" w-100 d-flex px-5 justify-content-between">
-        <div v-if="!present">
-          <button size="sm" variant="light" class="px-5 btn btn-light text-secondary mr-2" @click="cancel()">
-            Close
-          </button>
-        </div>
-        <div v-if="present">
-          <button @click="present = false" class="btn btn-secondary">
-            Cancel
-          </button>
-        </div>
-        <div v-if="!present">
-          <button @click="editMode" class="btn btn-secondary">
-            Edit
-          </button>
-        </div>
-        <div v-if="present">
-          <BaseButton class="px-5" @click="save">
-            Save
-          </BaseButton>
-        </div>
-      </div>
-    </template>
-    <ValidationObserver ref="form">
+      </template>
+      <ValidationObserver ref="form">
 
-      <form>
+        <form>
 
-        <div class="row">
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="UHID" :rules="['']">
-              <div class="d-flex">
-                <input :value="formatUHID(dataObject.patient)" readonly type="text" class="form-control" />
-                <div class="ml-2 mt-1">
-                  <b-spinner style="width: 1.7rem; height: 1.7rem" v-if="downloading" variant="primary" label="grow">
-                  </b-spinner>
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="UHID" :rules="['']">
+                <div class="d-flex">
+                  <input :value="formatUHID(dataObject.patient)" readonly type="text" class="form-control" />
+                  <div class="ml-2 mt-1">
+                    <b-spinner style="width: 1.7rem; height: 1.7rem" v-if="downloading" variant="primary" label="grow">
+                    </b-spinner>
 
+                  </div>
                 </div>
-              </div>
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="Patient Name" :rules="['required']">
-              <input :value="patientName(dataObject.patient)" type="text" class="form-control" readonly />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="D.O.B" :rules="['required']">
-              <input :value="dob" type="text" class="form-control" readonly />
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="Gender" :rules="['required']">
-              <input :value="gender" type="text" class="form-control" readonly />
-            </ValidationProviderWrapper>
-          </div>
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Patient Name" :rules="['required']">
+                <input :value="patientName(dataObject.patient)" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+                <input :value="dob" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Gender" :rules="['required']">
+                <input :value="gender" type="text" class="form-control" readonly />
+              </ValidationProviderWrapper>
+            </div>
 
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Pharmacy*" :rules="['']">
-              <VSelect v-model="editData.store" :options="stores" :reduce="(opt) => opt.id" label="name">
-              </VSelect>
-            </ValidationProviderWrapper>
-          </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Pharmacy*" :rules="['']">
+                <VSelect v-model="editData.store" :options="stores" :reduce="(opt) => opt.id" label="name">
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
 
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
-              <input :value="physician ? physician : ''" type="text" readonly class="form-control" />
-            </ValidationProviderWrapper>
-          </div>
+            <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
+                <input :value="physician ? physician : ''" type="text" readonly class="form-control" />
+              </ValidationProviderWrapper>
+            </div>
 
-          <div class="
+            <div class="
               col-md-12
               d-flex
               align-items-center
@@ -108,21 +115,21 @@
               ml-0
               text-primary text-14
             ">
-            <span class="point" @click="addDrug">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 16 16">
-                <path fill="currentColor"
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-              </svg>
-              Add
-            </span>
-          </div>
+              <span class="point" @click="addDrug">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 16 16">
+                  <path fill="currentColor"
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                </svg>
+                Add
+              </span>
+            </div>
 
 
-          <div v-if="present">
-            <div v-for="(drug, index) in editData.details" :key="index"
-              class="row p-1 mt-2 mx-2 border border-secondary rounded">
-              <div class="
+            <div v-if="present">
+              <div v-for="(drug, index) in editData.details" :key="index"
+                class="row p-1 mt-2 mx-2 border border-secondary rounded">
+                <div class="
                 shrink
                 col-md-12
                 
@@ -131,21 +138,21 @@
                 ml-0
                 text-primary text-14
               ">
-                <span class="point text-danger float" @click="deleteDrug(index)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
-                    viewBox="0 0 24 24">
-                    <path fill="currentColor"
-                      d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
-                  </svg>
-                </span>
-              </div>
-              <div class="col-md-12 mb-2">
-                <ValidationProviderWrapper name="Medication" :rules="['required']">
-                  <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <!-- <div class="col-md-12 mb-2">
+                  <span class="point text-danger float" @click="deleteDrug(index)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24">
+                      <path fill="currentColor"
+                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="col-md-12 mb-2">
+                  <ValidationProviderWrapper name="Medication" :rules="['required']">
+                    <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <!-- <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="SIG" :rules="['']">
                 <input
                   :value="sigFormatter(drug.direction, drug.duration)"
@@ -155,113 +162,116 @@
               </ValidationProviderWrapper>
             </div> -->
 
-              <div class="col-md-3 mb-2">
-                <ValidationProviderWrapper name="Dose" :rules="['']">
-                  <VSelect v-model="drug.dose" :options="doses" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-3 mb-2">
-                <ValidationProviderWrapper name="Unit" :rules="['']">
-                  <VSelect v-model="drug.unit" :options="units" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-3 mb-2">
-                <ValidationProviderWrapper name="Frequency" :rules="['']">
-                  <VSelect v-model="drug.frequency" :options="frequencies" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
+                <div class="col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Dose" :rules="['']">
+                    <VSelect v-model="drug.dose" :options="doses" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Unit" :rules="['']">
+                    <VSelect v-model="drug.unit" :options="units" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Frequency" :rules="['']">
+                    <VSelect v-model="drug.frequency" :options="frequencies" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
 
-              <div class="col-md-3 mb-2">
-                <ValidationProviderWrapper name="Direction" :rules="['required']">
-                  <VSelect v-model="drug.direction" :options="directions" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-6 mb-2">
-                <ValidationProviderWrapper name="Duration" :rules="['required']">
-                  <VSelect v-model="drug.duration" :options="durations" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-6 mb-2">
-                <ValidationProviderWrapper name="Route" :rules="['']">
-                  <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-6 mb-2">
-                <ValidationProviderWrapper name="Product" :rules="['']">
-                  <VSelect v-model="drug.product" :options="products" :reduce="(opt) => opt.id" label="name">
-                  </VSelect>
-                </ValidationProviderWrapper>
-              </div>
-              <div class="col-md-6 mb-2">
-                <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
-                  <input v-model="drug.dispense_quantity" type="number" class="form-control" />
-                </ValidationProviderWrapper>
-              </div>
-              <div v-if="drug.product != null" class="col-md-12 mb-2">
-                <div class="d-flex justify-content-end align-items-center">
-                  <div class="col-md-6 text-14 text-info text-center">
-                    Bottle(s)
+                <div class="col-md-3 mb-2">
+                  <ValidationProviderWrapper name="Direction" :rules="['required']">
+                    <VSelect v-model="drug.direction" :options="directions" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <ValidationProviderWrapper name="Duration" :rules="['required']">
+                    <VSelect v-model="drug.duration" :options="durations" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <ValidationProviderWrapper name="Route" :rules="['']">
+                    <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <ValidationProviderWrapper name="Product" :rules="['']">
+                    <VSelect v-model="drug.product" :options="products" :reduce="(opt) => opt.id" label="name">
+                    </VSelect>
+                  </ValidationProviderWrapper>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
+                    <input v-model="drug.dispense_quantity" type="number" class="form-control" />
+                  </ValidationProviderWrapper>
+                </div>
+                <div v-if="drug.product != null" class="col-md-12 mb-2">
+                  <div class="d-flex justify-content-end align-items-center">
+                    <div class="col-md-6 text-14 text-info text-center">
+                      Bottle(s)
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-12 mb-0">
-                <ValidationProviderWrapper name="Notes" :rules="['']">
-                  <textarea id="" v-model="drug.note" class="form-control" name="" cols="30" rows="2"></textarea>
-                </ValidationProviderWrapper>
+                <div class="col-md-12 mb-0">
+                  <ValidationProviderWrapper name="Notes" :rules="['']">
+                    <textarea id="" v-model="drug.note" class="form-control" name="" cols="30" rows="2"></textarea>
+                  </ValidationProviderWrapper>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
+                  <span class="point" @click="addDrug">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 16 16">
+                      <path fill="currentColor"
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                    </svg>
+                    Add
+                  </span>
+                </div>
               </div>
 
-              <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
-                <span class="point" @click="addDrug">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
-                    viewBox="0 0 16 16">
-                    <path fill="currentColor"
-                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                  </svg>
-                  Add
-                </span>
+            </div>
+          </div>
+
+        </form>
+
+      </ValidationObserver>
+
+
+      <div v-if="!present">
+        <div class="text-14" v-for="(drug, index) in editData.details" :key="index">
+          <div class="w-100 p-3 my-2 border border-secondary rounded">
+            <div> Medication: {{ drug.generic_drug ? drug.generic_drug.name : '' }}</div>
+            <div>Instruction: {{ instructionFormat(drug) }}</div>
+            <div class="d-flex">
+              <div class="col-md-6 px-0">
+                <span>Brand: {{ drug.product ? drug.product.name : "" }}</span>
+              </div>
+              <div class="col-md-6 px-0">
+                <span>Dispense quantity: {{ drug.dispense_quantity }}</span>
               </div>
             </div>
-
+            <div>
+              <p class="text-16 mb-1 text-decoration-underline"><u>Note</u></p>
+              <div class="text-14 text-info">
+                {{ drug.note }}
+              </div>
+            </div>
           </div>
+
         </div>
-
-      </form>
-
-    </ValidationObserver>
-
-
-    <div v-if="!present">
-      <div class="text-14" v-for="(drug, index) in editData.details" :key="index">
-        <div class="w-100 p-3 my-2 border border-secondary rounded">
-          <div> Medication: {{ drug.generic_drug ? drug.generic_drug.name : '' }}</div>
-          <div>Instruction: {{ instructionFormat(drug) }}</div>
-          <div class="d-flex">
-            <div class="col-md-6 px-0">
-              <span>Brand: {{ drug.product ? drug.product.name : "" }}</span>
-            </div>
-            <div class="col-md-6 px-0">
-              <span>Dispense quantity: {{ drug.dispense_quantity }}</span>
-            </div>
-          </div>
-          <div>
-            <p class="text-16 mb-1 text-decoration-underline"><u>Note</u></p>
-            <div class="text-14 text-info">
-              {{ drug.note }}
-            </div>
-          </div>
-        </div>
-
       </div>
+    </b-modal>
+
+    <div>
+      <PharmacyConfirmPrescriptionPrint :prescription="editData" :data="editData.patient" />
     </div>
-
-
-  </b-modal>
+  </div>
 </template>
 
 <script>
@@ -284,6 +294,7 @@ export default {
       selected: [],
       present: false,
       downloading: false,
+      printing: false,
       busy: false,
       generic_drug: [],
       doses: [],
@@ -383,6 +394,42 @@ export default {
       let qty = Math.floor(product)
       console.log(qty)
     },
+
+    async printPrescription() {
+      this.printing = true
+      let confirm = await this.confirmPrescription()
+        const response = await fetch(
+          `${process.env.BASE_URL}pharmacy/prescriptions/${this.dataObject.id}/download/`,
+          {
+            headers: {
+              Authorization: `Token ${this.$store.state.auth.token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          const data = await response.blob()
+          const objectURL = URL.createObjectURL(data)
+          const link = document.createElement('a')
+          link.download = `Prescription Report - ${this.editData.patient.uhid}`
+          link.href = objectURL
+          this.printing = false
+          // this.filter(1)
+          link.click()
+        } else if (response.status === 403) {
+          this.printing = false
+          this.$toast({
+            type: 'info',
+            text: `You don't have the permission to perform this action`,
+          })
+        } else {
+          this.printing = false
+          this.$toast({
+            type: 'error',
+            text: `An error occured`,
+          })
+        }
+    },
+
     async confirmPrescription() {
       try {
         this.busy = true
@@ -395,10 +442,19 @@ export default {
             type: 'success',
             message: 'Success'
           })
+          this.$bvModal.hide('viewPrescription')
         }
         this.busy = false
       } catch {
         this.busy = false
+      }
+    },
+    async confirm() {
+      const result = await this.showConfirmMessageBox(
+        'Do you want to confirm this prescription ?', 'Yes'
+      )
+      if (result) {
+        this.confirmPrescription()
       }
     },
     async save() {

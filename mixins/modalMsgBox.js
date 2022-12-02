@@ -16,11 +16,11 @@ export default {
       return result
     },
 
-    async showConfirmMessageBox(text = 'Please confirm ') {
+    async showConfirmMessageBox(text = 'Please confirm ', message = 'Confirm') {
       const result = await this.$bvModal.msgBoxConfirm(text, {
         title: 'Please Confirm',
         okVariant: 'primary',
-        okTitle: 'Confirm',
+        okTitle: message,
         cancelVariant: 'light',
         cancelTitle: 'Cancel',
         hideHeaderClose: false,

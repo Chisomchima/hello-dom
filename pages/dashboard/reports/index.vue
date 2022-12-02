@@ -64,6 +64,11 @@ export default {
           icon: 'fa fa-file',
           route: '/dashboard/reports/imaging',
         },
+        {
+          name: 'Finance',
+          icon: 'fa fa-file',
+          route: '/dashboard/reports/finance',
+        },
       ],
     }
   },

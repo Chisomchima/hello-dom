@@ -16,6 +16,7 @@ import Users from "@/services/users";
 import Templates from "@/services/templates";
 import pharmacy from "@/services/pharmacy";
 import inventory from "@/services/inventory";
+import files from "@/services/files";
 
 export default (context, inject) => {
     // Initialize API factories
@@ -35,7 +36,8 @@ export default (context, inject) => {
         users: Users(context.$axios),
         templates: Templates(context.$axios),
         pharmacy: pharmacy(context.$axios),
-        inventory: inventory(context.$axios)
+        inventory: inventory(context.$axios),
+        files: files(context.$axios)
     };
 
     // Inject $api
