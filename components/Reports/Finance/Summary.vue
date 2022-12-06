@@ -128,14 +128,21 @@
         ],
       }
     },
+    computed: {
+      date(){
+        const DATE = new Date().toISOString().split('T')[0]
+        let reportdate = DATE
+        return reportdate
+      }
+    },
     methods: {
       async filter(page, e) {
         this.currentFilter = e
         try {
           this.busy = true
           const data = await this.$api.reports.financeSummaryReport({ ...e, page })
-          this.items = data.results
-          this.pages = data.total_pages
+          this.items = data
+          // this.pages = data.total_pages
   
           this.busy = false
         } catch (error) {
@@ -157,7 +164,7 @@
           }
           let download_string = new URLSearchParams(filter).toString()
           const response = await fetch(
-            `${process.env.BASE_URL}finance/revenue/summary?${download_string}}`,
+            `${process.env.BASE_URL}finance/revenue/summary?${download_string}`,
             {
               headers: {
                 Authorization: `Token ${this.$store.state.auth.token}`,
@@ -168,7 +175,7 @@
             const data = await response.blob()
             const objectURL = URL.createObjectURL(data)
             const link = document.createElement('a')
-            link.download = `Encounter Report`
+            link.download = `Finance Summary Report - ${this.date}`
             link.href = objectURL
             this.downloading = false
             // this.filter(1)

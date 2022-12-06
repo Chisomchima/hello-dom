@@ -24,4 +24,9 @@ export default axios => ({
             params
         })
     },
+    financeDetailedReport(params = {}) {
+        return axios.$get('/finance/revenue/detailed', {
+            params
+        })
+    },
 })

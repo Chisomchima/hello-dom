@@ -232,6 +232,11 @@ export default {
               title: 'Registeration report',
               icon: 'fas fa-list-ul',
             },
+            {
+              href: '/dashboard/reports/finance/?tab=0',
+              title: 'Finance report',
+              icon: 'fas fa-list-ul',
+            },
           ],
         },
         {

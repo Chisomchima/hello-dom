@@ -1,16 +1,16 @@
 <template>
   <div>
-    <b-modal size="lg" id="viewPrescription" title="View Prescription" ref="modal" centered :no-stacking="false"
+    <b-modal size="lg" id="viewPrescription" title="Prescription details" ref="modal" centered :no-stacking="false"
       :no-close-on-backdrop="true" :scrollable="false" ok-title="Save" @ok="save()" @show="getData()" @hide="cancel">
       <template #modal-header="{ close }">
         <slot name="header" :close="close">
-          <h5 class="mb-0 mt-2">View Prescription</h5>
+          <h5 class="mb-0 mt-2">Prescription details</h5>
           <div class="d-flex align-items-center">
             <div>
               <span>
                 <button @click="confirm" class="btn btn-outline-primary">Confirm</button>
                 <span class="ml-2 mt-1">
-                  <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" variant="primary" label="grow">
+                  <b-spinner style="width: 1.2rem; height: 1.2rem" v-if="busy" type="grow" variant="primary" label="grow">
                   </b-spinner>
                 </span>
               </span>
@@ -65,8 +65,38 @@
 
         <form>
 
-          <div class="row">
-            <div class="col-md-6 mb-2">
+          <div class="row text-14 special">
+
+            <div class="col-md-12">
+              <p>UHID: {{  formatUHID(dataObject.patient)  }}</p>
+            </div>
+            <div class="col-md-12">
+              <p>Patient Name: {{  patientName(dataObject.patient)  }}</p>
+            </div>
+            <div class="col-md-12">
+              <p>DOB: {{ dob }}</p>
+            </div>
+            <div class="col-md-12">
+              <p>Age:</p>
+            </div>
+            <div class="col-md-12">
+              <p>Gender: {{  gender  }}</p>
+            </div>
+            <div class="col-md-12">
+              <hr class="mt-0">
+            </div>
+            <div class="col-md-6">
+              <p>Prescription date: {{prescriptionDate}} </p>
+            </div>
+
+            <div class="col-md-6">
+              <p>Prescription ID: {{ dataObject.prc_id }}</p>
+            </div>
+            <div class="col-md-6">
+              <p>Prescribing Physician: {{ physician }}</p>
+            </div>
+
+            <!-- <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="UHID" :rules="['']">
                 <div class="d-flex">
                   <input :value="formatUHID(dataObject.patient)" readonly type="text" class="form-control" />
@@ -78,6 +108,7 @@
                 </div>
               </ValidationProviderWrapper>
             </div>
+
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Patient Name" :rules="['required']">
                 <input :value="patientName(dataObject.patient)" type="text" class="form-control" readonly />
@@ -92,22 +123,22 @@
               <ValidationProviderWrapper name="Gender" :rules="['required']">
                 <input :value="gender" type="text" class="form-control" readonly />
               </ValidationProviderWrapper>
-            </div>
+            </div> -->
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Pharmacy*" :rules="['']">
-                <VSelect v-model="editData.store" :options="stores" :reduce="(opt) => opt.id" label="name">
+                <VSelect v-model="editData.store" :disabled="!present" :options="stores" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
 
-            <div class="col-md-12 mb-2">
+            <!-- <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
                 <input :value="physician ? physician : ''" type="text" readonly class="form-control" />
               </ValidationProviderWrapper>
-            </div>
+            </div> -->
 
-            <div class="
+            <div v-if="present" class="
               col-md-12
               d-flex
               align-items-center
@@ -276,7 +307,7 @@
 
 <script>
 import { debounce } from 'lodash'
-
+import { DateTime } from 'luxon'
 export default {
   props: {
     dataObject: {
@@ -336,6 +367,10 @@ export default {
       return ''
     },
 
+    prescriptionDate(){
+      return DateTime.fromISO(this.dataObject.created_at).toFormat('yyyy-LL-dd, T')
+    },
+
     dob() {
       if (this.dataObject.patient) {
         return this.dataObject.patient.date_of_birth
@@ -344,14 +379,17 @@ export default {
     },
 
     physician() {
-      if (this.dataObject.prescribing_physician) {
+      if (Object.keys(this.editData.prescribing_physician).length > 0) {
         return (
           this.dataObject.prescribing_physician.first_name +
           ' ' +
           this.dataObject.prescribing_physician.last_name
         )
       }
-      return ''
+      else {
+        return 'nil'
+      }
+
     },
   },
   watch: {
@@ -368,6 +406,7 @@ export default {
     }, 1000),
     dataObject() {
       this.editData.store = this.dataObject.store.id
+      this.editData.created_at = this.dataObject.created_at
       this.editData.patient = this.dataObject.patient
       this.editData.prescribing_physician = this.dataObject.prescribing_physician
       this.editData.details = this.dataObject.details
@@ -398,36 +437,36 @@ export default {
     async printPrescription() {
       this.printing = true
       let confirm = await this.confirmPrescription()
-        const response = await fetch(
-          `${process.env.BASE_URL}pharmacy/prescriptions/${this.dataObject.id}/download/`,
-          {
-            headers: {
-              Authorization: `Token ${this.$store.state.auth.token}`,
-            },
-          }
-        )
-        if (response.status === 200) {
-          const data = await response.blob()
-          const objectURL = URL.createObjectURL(data)
-          const link = document.createElement('a')
-          link.download = `Prescription Report - ${this.editData.patient.uhid}`
-          link.href = objectURL
-          this.printing = false
-          // this.filter(1)
-          link.click()
-        } else if (response.status === 403) {
-          this.printing = false
-          this.$toast({
-            type: 'info',
-            text: `You don't have the permission to perform this action`,
-          })
-        } else {
-          this.printing = false
-          this.$toast({
-            type: 'error',
-            text: `An error occured`,
-          })
+      const response = await fetch(
+        `${process.env.BASE_URL}pharmacy/prescriptions/${this.dataObject.id}/download/`,
+        {
+          headers: {
+            Authorization: `Token ${this.$store.state.auth.token}`,
+          },
         }
+      )
+      if (response.status === 200) {
+        const data = await response.blob()
+        const objectURL = URL.createObjectURL(data)
+        const link = document.createElement('a')
+        link.download = `Prescription Report - ${this.editData.patient.uhid}`
+        link.href = objectURL
+        this.printing = false
+        // this.filter(1)
+        link.click()
+      } else if (response.status === 403) {
+        this.printing = false
+        this.$toast({
+          type: 'info',
+          text: `You don't have the permission to perform this action`,
+        })
+      } else {
+        this.printing = false
+        this.$toast({
+          type: 'error',
+          text: `An error occured`,
+        })
+      }
     },
 
     async confirmPrescription() {
@@ -440,7 +479,7 @@ export default {
           this.$emit('refresh')
           this.$toast({
             type: 'success',
-            message: 'Success'
+            text: 'Success',
           })
           this.$bvModal.hide('viewPrescription')
         }
@@ -679,6 +718,10 @@ textarea.form-control {
 
 .slide-fade-enter-active {
   transition: all .3s ease;
+}
+
+.special p{
+  margin-bottom: .5rem;
 }
 
 .slide-fade-leave-active {

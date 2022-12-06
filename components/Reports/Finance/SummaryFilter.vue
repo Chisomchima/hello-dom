@@ -80,12 +80,12 @@
       return {
         genders: ['Male', 'Female'],
         sources: [
-        {name: 'Encounters', val: 'ENCOUNTERS'}, 
-        {name: 'Imaging', val: 'IMAGING'}, 
-        {name: 'Inventory', val: 'INVENTORY'},
-        {name: 'Laboratory', val: 'LABORATORY'},
-        {name: 'Nursing', val: 'NURSING'},
-        {name: 'Pharmacy', val: 'PHARMACY'}
+        {name: 'Encounter', val: 'Encounter'}, 
+        {name: 'Imaging', val: 'Imaging'}, 
+        {name: 'Inventory', val: 'Inventory'},
+        {name: 'Laboratory', val: 'Laboratory'},
+        {name: 'Nursing', val: 'Nursing'},
+        {name: 'Pharmacy', val: 'Pharmacy'}
     ],
         service_centers: [],
         modalities: [],

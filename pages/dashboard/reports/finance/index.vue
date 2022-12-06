@@ -7,6 +7,7 @@
           <ReportsFinanceSummary />
         </UtilsCardTab>
          <UtilsCardTab title="Details">
+          <ReportsFinanceDetailed />
         </UtilsCardTab>
       </UtilsBaseCardTab>
     </div>
