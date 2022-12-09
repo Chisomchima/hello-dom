@@ -97,7 +97,7 @@
       :data="data"
     />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
-    <DashboardModalUploadPicture />
+    <DashboardModalUploadPicture :data="data" />
   </div>
 </template>
 

@@ -32,5 +32,8 @@ export default axios => ({
     },
     payOutstanding(id, body){
         return axios.$put(`/finance/invoices/${id}/pay/`, body)
+    },
+    profilePicture(id, body){
+        return axios.$patch(`/patient/patients/${id}/profile_picture/`, body)
     }
 });

@@ -1,14 +1,14 @@
 <template>
     <div class="filter-wrapper">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="mb-2">
                     <label class="form-control-label">Date from</label>
                     <input v-model="filters.date_after" type="date" name="" class="form-control" />
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="mb-2">
                     <label class="form-control-label">Date to</label>
                     <input v-model="filters.date_before" type="date" name="" class="form-control" />
@@ -16,29 +16,37 @@
             </div>
             <div class="col-md-4">
                 <div class="mb-2">
-                    <label class="form-control-label">Revenue Source</label>
+                    <label class="form-control-label">Revenue Head</label>
                     <VSelect v-model="filters.bill_source" label="name" :options="sources" :multiple="true"
                         :reduce="(opt) => opt.val"></VSelect>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="mb-3">
-                    <label class="form-control-label">Bill type</label>
-                    <VSelect v-model="filters.billed_to_type" label="name" :options="billTypes" :multiple="true"
+                    <label class="form-control-label">Scheme type</label>
+                    <VSelect v-model="filters.billed_to_type" label="name" :options="billTypes"
                         :reduce="(opt) => opt.val"></VSelect>
                 </div>
             </div>
 
-            <div class="col-md-8 d-flex justify-content-end">
+            <div class="col-md-4">
+                <div class="mb-2">
+                    <label class="form-control-label">Scheme</label>
+                    <VSelect v-model="filters.scheme" label="name" :options="schemes" :reduce="(opt) => opt.id">
+                    </VSelect>
+                </div>
+            </div>
+
+            <div class="col-md-12 d-flex justify-content-end">
                 <div class="col-md-3 pr-0">
-                    <div class="mt-3 pt-2">
+                    <div class=" pt-2">
                         <BaseButton class="w-100" @click="applyFilter(filters)">
                             Search
                         </BaseButton>
                     </div>
                 </div>
                 <div class="col-md-3 pr-0">
-                    <div class="mt-3 pt-2">
+                    <div class=" pt-2">
                         <BaseButton class="w-100 btn-danger" @click="clear()">
                             Clear
                         </BaseButton>
@@ -65,21 +73,29 @@ export default {
                 { name: 'Pharmacy', val: 'Pharmacy' }
             ],
             billTypes: [
-                { name: 'Corporate', val: 'CORPORATE' },
-                { name: 'Insurance', val: 'INSURANCE' },
                 { name: 'Self postpaid', val: 'SELF_POSTPAID' },
                 { name: 'Self prepaid', val: 'SELF_PREPAID' },
+                { name: 'Corporate', val: 'CORPORATE' },
+                { name: 'Insurance', val: 'INSURANCE' },
             ],
+            schemeCategory: [],
+            schemes: [],
             filters: {
                 date_before: '',
                 date_after: '',
                 bill_source: '',
+                scheme: '',
                 billed_to_type: '',
             },
         }
     },
-    created() {
-
+    mounted() {
+    },
+    watch: {
+        'filters.billed_to_type'(newValue) {
+            this.getScheme(newValue)
+            console.log(newValue)
+        }
     },
     methods: {
         clear() {
@@ -87,8 +103,19 @@ export default {
                 date_before: '',
                 date_after: '',
                 bill_source: '',
+                scheme: '',
                 billed_to_type: '',
             }
+        },
+        getScheme(scheme) {
+            this.$api.finance_settings
+                .getPayerSchemes({ size: 1000, type: scheme })
+                .then((res) => {
+                    this.schemes = res.results
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         },
 
         applyFilter(newVal) {

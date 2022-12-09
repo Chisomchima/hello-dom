@@ -86,7 +86,7 @@
             </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Medication" :rules="['required']">
-                <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -283,9 +283,17 @@ export default {
         this.save()
       }
     },
-    helloWorld(e) {
-      this.present = e
+    fetchOPtions(e, i){
+      this.$api.inventory
+        .getProducts({ size: 1500, generic_drug: e.id })
+        .then((res) => {
+          this.products = res.results
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
+
     findPatient() {
       this.$bvModal.show('findPatient')
     },
@@ -335,14 +343,7 @@ export default {
         console.log(error)
       }
     },
-    showModal() {
-      if (!this.present) {
-        this.$bvModal.show('diagnosisModal')
-      } else {
-        this.present = false
-        this.$bvModal.hide('diagnosisModal')
-      }
-    },
+
     sigFormatter(direction, duration) {
       if (direction && duration) {
         return direction.name + ' every ' + duration.name
@@ -430,7 +431,7 @@ export default {
     },
     getGenericDrugs() {
       this.$api.pharmacy
-        .getGeneric({ size: 1000 })
+        .getGeneric({ size: 1500 })
         .then((res) => {
           this.generic_drug = res.results
         })
@@ -501,7 +502,7 @@ export default {
     },
     getProducts() {
       this.$api.inventory
-        .getProducts({ size: 1000 })
+        .getProducts({ size: 1500 })
         .then((res) => {
           this.products = res.results
         })

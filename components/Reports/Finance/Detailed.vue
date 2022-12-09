@@ -27,7 +27,7 @@
                             </button>
                         </div>
                     </template>
-                    <TableComponent :fields="[]" :pages="pages" :items="items" :busy="busy"
+                    <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
                         @page-changed="filter($event, currentFilter)">
                         <template #description="{ data }">
                             <div class="">
@@ -56,65 +56,28 @@ export default {
             currentFilter: {},
             downloading: false,
             fields: [
-                {
-                    key: 'created_datetime',
-                    label: 'Date',
-                    sortable: true,
-                    formatter: (value) => {
-                        if (value != null) {
-                            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
-                        } else {
-                            return ''
-                        }
-                    },
-                },
-                { key: 'encounter_id', label: 'Encounter ID', sortable: true },
-                { key: 'patient_uhid', label: 'UHID', sortable: true },
+                { key: 'bill_source', label: 'Bill Source', sortable: true },
+                { key: 'bill_item_code', label: 'Bill Code', sortable: true },
 
-                { key: 'clinic', label: 'Clinic', sortable: true },
+                { key: 'description', label: 'Clinic', sortable: true },
+                
                 {
-                    key: 'patient',
-                    label: 'Patient',
-                    sortable: true,
-                },
-                // {
-                //   key: 'patient_service_arm',
-                //   label: 'Arm of Service',
-                //   sortable: true,
-                // },
-                // {
-                //   key: 'patient_service_arm_no',
-                //   label: 'Service no',
-                //   sortable: true,
-                // },
-                {
-                    key: 'provider',
-                    label: 'Provider Name',
+                    key: 'count',
+                    label: 'Count',
                     sortable: true,
                 },
                 {
-                    key: 'acknowledged_at',
-                    label: 'Date acknowledged',
+                    key: 'total_quantity',
+                    label: 'Total quantity',
                     sortable: true,
                 },
                 {
-                    key: 'signed_date',
-                    label: 'Signed date',
-                    formatter: (value) => {
-                        if (value != null) {
-                            return DateTime.fromISO(value).toLocaleString(
-                                DateTime.DATETIME_SHORT
-                            )
-                        } else {
-                            return ''
-                        }
-                    },
+                    key: 'total_amount',
+                    label: 'Total amount',
                     sortable: true,
                 },
-                // { key: 'signed_by', label: 'Signed by', sortable: true },
-                { key: 'encounter_type', label: 'Encounter Type', sortable: true },
 
-                { key: 'status', label: 'Status', sortable: true },
+
             ],
         }
     },

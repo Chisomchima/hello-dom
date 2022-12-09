@@ -94,6 +94,7 @@
             <div class="col-md-2">
               <b-avatar
                 size="7rem"
+                src="picture"
                 class="text-center"
               ></b-avatar>
             </div>
@@ -143,6 +144,14 @@ export default Vue.extend({
     filterData(): Object {
       return pick(this.data, this.displayKey)
     },
+    picture(): String {
+      if(this.data.profile_picture){
+        return this.data.data.profile_picture
+      }
+      else{
+        return ''
+      }
+    }
   },
   methods: {
     edit() {

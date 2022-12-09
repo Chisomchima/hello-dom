@@ -129,7 +129,7 @@ export default {
     },
     gotoPricelistItem(e) {
       this.$router.push({
-        name: 'dashboard-settings-finance-pricelist-id',
+        name: 'dashboard-configurations-finance-pricelist-id',
         params: {
           id: e.id,
         },
