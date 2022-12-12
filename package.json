@@ -82,6 +82,7 @@
     "vue-debounce": "^4.0.0",
     "vue-emoji-picker": "^1.0.3",
     "vue-gates": "^2.1.2",
+    "vue-image-upload-resize": "^2.3.0",
     "vue-lazytube": "^1.0.2",
     "vue-pdf": "^4.3.0",
     "vue-select": "^3.16.0",
