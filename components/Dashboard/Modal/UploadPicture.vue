@@ -131,16 +131,16 @@ export default {
       }
     },
     async uploadPicture() {
-      let formData = new FormData()
-      formData.append('file', this.uploadedFile)
-
       if (this.uploadedFile != null) {
         try {
           const data = await this.$api.patient.profilePicture(
             this.data.id,
-            formData
+            {
+              profile_picture: this.uploadedFile
+            }
           )
           this.$emit('refresh')
+          this.$nuxt.refresh()
           this.$toast({
             type: 'success',
             text: `${data.message}`,
