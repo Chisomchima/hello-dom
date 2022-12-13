@@ -7,9 +7,8 @@
       </h2>
       <!-- theme -->
       <div :style="printLayout ? { width: '18rem' } : { width: '48rem' }" style="text-align: center; margin: 0.5rem 0">
-
         <!-- chem health -->
-        <!-- <svg
+         <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.0"
           width="170px"
@@ -122,7 +121,7 @@
               d="M26630 2646 l0 -436 45 0 45 0 0 175 0 176 117 -3 117 -3 111 -172 110 -172 53 -1 c28 0 52 2 52 5 0 2 -52 83 -115 180 l-115 176 26 9 c14 6 29 10 33 10 20 0 92 75 112 118 19 38 24 63 23 128 0 107 -28 165 -99 209 l-48 30 -234 3 -233 3 0 -435z m444 334 c90 -46 109 -200 34 -277 -42 -43 -102 -55 -258 -51 l-125 3 -3 160 c-1 87 0 165 3 173 8 20 307 13 349 -8z"
             />
           </g>
-        </svg> -->
+        </svg>
         <!-- <img
           width="170px"
           height="50px"
@@ -130,7 +129,7 @@
           alt=""
         /> -->
         <!-- **************Mireva Medical************** -->
-        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="180px" height="60px"
+        <!-- <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="180px" height="60px"
           viewBox="0 0 1219.000000 1109.000000" preserveAspectRatio="xMidYMid meet">
           <g transform="translate(0.000000,1109.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
             <path d="M5865 10000 c-3 -6 -18 -8 -33 -5 -23 4 -24 4 -7 -4 19 -9 18 -10 -5
@@ -2246,7 +2245,7 @@ c-31 27 -51 31 -61 15z" />
             <path d="M5865 1040 c3 -5 18 -10 32 -10 32 0 28 5 -10 14 -19 4 -26 3 -22 -4z" />
             <path d="M6338 1033 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z" />
           </g>
-        </svg>
+        </svg> -->
       </div>
       <h3 :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="
           margin: 0;
