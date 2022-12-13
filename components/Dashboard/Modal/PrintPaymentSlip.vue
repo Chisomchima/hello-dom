@@ -28,7 +28,7 @@
     </div>
 
     <div class="d-none">
-      <DashboardPrintOutReciept :reciept="reciept" :data="data" :printLayout="format_prop" />
+      <DashboardBillsTemplate :reciept="reciept" :data="data" :printLayout="format_prop" />
     </div>
   </ModalWrapper>
 </template>
@@ -126,7 +126,7 @@ export default {
   methods: {
     async ok() {
       var mywindow = window.open('', 'PRINT', 'height=400,width=600')
-      let text = document.getElementById('text').innerHTML
+      let text = document.getElementById('bills').innerHTML
       mywindow.document.write('</head><body >')
       mywindow.document.write(text)
       mywindow.document.write('</body></html>')
