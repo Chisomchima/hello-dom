@@ -46,6 +46,13 @@ const copyFiles = async () => {
                 console.log('Reciept template copied successfully');
             });
         }
+        const billsTemplate = await fs.exists('./theme/BillsTemplate.vue')
+        if(billsTemplate){
+            await fs.copyFile('./theme/BillsTemplate.vue', './components/Dashboard/BillsTemplate.vue', (err) => {
+                if (err) throw err;
+                console.log('Bills template copied successfully');
+            });
+        }
     } catch (error) {
         console.log(error)
     }

@@ -5,7 +5,7 @@
     title="Print Payment slip"
     id="printPaymentSlip"
     @ok="ok()"
-    @hide="$bvModal.hide('printPaymentSlip')"
+    @hide="hideDialogue"
     size="md"
   >
     <div>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="d-none">
-      <DashboardPrintOutReciept :reciept="reciept" :data="data" :printLayout="format_prop" />
+      <DashboardBillsTemplate :reciept="reciept" :data="data" :printLayout="format_prop" />
     </div>
   </ModalWrapper>
 </template>
@@ -126,7 +126,7 @@ export default {
   methods: {
     async ok() {
       var mywindow = window.open('', 'PRINT', 'height=400,width=600')
-      let text = document.getElementById('text').innerHTML
+      let text = document.getElementById('bills').innerHTML
       mywindow.document.write('</head><body >')
       mywindow.document.write(text)
       mywindow.document.write('</body></html>')
@@ -137,6 +137,9 @@ export default {
       mywindow.close()
 
       return true
+    },
+    hideDialogue(){
+      this.$bvModal.hide('printPaymentSlip')
     },
     numberWithCommas(x) {
       return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
