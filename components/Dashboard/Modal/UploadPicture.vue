@@ -4,10 +4,10 @@
       @hide="clear()" @ok="ok">
       <ValidationObserver ref="form">
         <form>
-          <div class="row">
+          <div class="">
             <div class="col-md-12 mb-2">
               <div class="text-center p-3">
-                <!-- <b-avatar :src="uploadedFile" size="8rem" /> -->
+                <b-avatar :src="uploadedFile" size="8rem" />
 
                 <div v-if="uploadedFile" class="border border-info p-3 height rounded text-14 m-3">
                   <div>
@@ -16,8 +16,10 @@
                   </div>
                 </div>
 
+                
+
                 <div class="d-flex justify-content-center">
-                  <span v-if="!uploadedFile" @click="$refs.file.click()" class="btn-outline-primary btn-sm m-3 point">
+                  <!-- <span v-if="!uploadedFile" @click="$refs.file.click()" class="btn-outline-primary btn-sm m-3 point">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                       viewBox="0 0 24 24">
                       <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -27,7 +29,12 @@
                         <path d="M17 17a5 5 0 1 0-1.17-9.862L14.5 7.5" />
                       </g>
                     </svg>
-                  </span>
+                  </span> -->
+
+                  <div class="m-3">
+                    <button @click="$refs.file.click()" v-if="!uploadedFile" class="btn btn-primary rounded">Select profile image</button>
+                  </div>
+                  
                   <span v-if="uploadedFile" @click="deleteFile" class="btn-outline-danger btn-sm m-3 point">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                       viewBox="0 0 16 16">

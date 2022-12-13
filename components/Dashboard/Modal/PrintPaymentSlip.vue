@@ -5,7 +5,7 @@
     title="Print Payment slip"
     id="printPaymentSlip"
     @ok="ok()"
-    @hide="$bvModal.hide('printPaymentSlip')"
+    @hide="hideDialogue"
     size="md"
   >
     <div>
@@ -137,6 +137,9 @@ export default {
       mywindow.close()
 
       return true
+    },
+    hideDialogue(){
+      this.$bvModal.hide('printPaymentSlip')
     },
     numberWithCommas(x) {
       return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
