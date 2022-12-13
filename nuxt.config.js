@@ -103,6 +103,8 @@ export default {
     '~/plugins/api.js',
     '~/plugins/prime-vue.js',
 
+    { src: '~/plugins/imageUploader.js', mode: 'client' },
+
 
     // '~/assets/js/jquery-latest.min.js'
     // '~/plugins/gleap.js'

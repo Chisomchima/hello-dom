@@ -2458,9 +2458,7 @@
     },
     methods: {
       numberWithCommas(x) {
-        if(typeof(x) === 'string'){
-          return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-        }
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
       },
       convDate(x) {
         return DateTime.fromISO(x).toFormat('yy-LL-dd T')

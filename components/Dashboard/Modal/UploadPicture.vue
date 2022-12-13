@@ -7,50 +7,67 @@
           <div class="">
             <div class="col-md-12 mb-2">
               <div class="text-center p-3">
-                <b-avatar :src="uploadedFile" size="8rem" />
+                <b-avatar :src="uploadedFile" size="10rem" />
 
-                <div v-if="uploadedFile" class="border border-info p-3 height rounded text-14 m-3">
+                <div v-if="false" class="border border-info p-3 height rounded text-14 m-3">
                   <div>
                     <div>Name: {{ fileInfo.name }}</div>
                     <div>Size: {{ fileInfo.size }}</div>
                   </div>
                 </div>
 
-                
-
                 <div class="d-flex justify-content-center">
-                  <!-- <span v-if="!uploadedFile" @click="$refs.file.click()" class="btn-outline-primary btn-sm m-3 point">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
-                      viewBox="0 0 24 24">
-                      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2">
-                        <path d="M12 12v9m0-9l-2.5 2m2.5-2l2.5 2M5.034 9.117A4.002 4.002 0 0 0 6 17h1" />
-                        <path d="M15.83 7.138a5.5 5.5 0 0 0-10.796 1.98S5.187 10 5.5 10.5" />
-                        <path d="M17 17a5 5 0 1 0-1.17-9.862L14.5 7.5" />
-                      </g>
-                    </svg>
-                  </span> -->
-
-                  <div class="m-3">
-                    <button @click="$refs.file.click()" v-if="!uploadedFile" class="btn btn-primary rounded">Select profile image</button>
+                  <div v-if="!uploadedFile" class="m-3">
+                    <button @click.prevent="$refs.reduce.click()" class="btn btn-primary rounded">Select
+                      profile image</button>
                   </div>
-                  
-                  <span v-if="uploadedFile" @click="deleteFile" class="btn-outline-danger btn-sm m-3 point">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
-                      viewBox="0 0 16 16">
-                      <g fill="currentColor">
-                        <path
-                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                        <path fill-rule="evenodd"
-                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                      </g>
-                    </svg>
-                  </span>
+
+                  <div v-if="uploadedFile" class="m-3">
+                    <button @click.prevent="changeImage"  class="btn btn-primary rounded">Change image</button>
+                  </div>
                 </div>
               </div>
-
               <div class="input-field">
-                <input @change="importData" type="file" accept=".png, .jpg, .jpeg" ref="file" />
+                <client-only>
+                    <image-uploader
+                          :preview="true"
+                          :className="[
+                            'fileinput',
+                            { 'fileinput--loaded': hasImage },
+                          ]"
+                          :capture="false"
+                          :debug="1"
+                          :quality="0.2"
+                          doNotResize="gif"
+                          :autoRotate="true"
+                          outputFormat="verbose"
+                          @input="setImage"
+                          accept="image/*"
+                        >
+                          <label
+                            ref="reduce"
+                            for="fileInput"
+                            slot="upload-label"
+                          >
+                            <figure>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                              >
+                                <path
+                                  class="path1"
+                                  d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
+                                ></path>
+                              </svg>
+                            </figure>
+                            <span class="upload-caption">{{
+                              hasImage ? 'Replace' : 'Click to upload'
+                            }}</span>
+                          </label>
+                        </image-uploader>
+                </client-only>
               </div>
             </div>
           </div>
@@ -66,6 +83,7 @@ export default {
   data() {
     return {
       uploadedFile: null,
+      hasImage: false,
       show: false,
       fileInfo: {
         name: '',
@@ -83,6 +101,13 @@ export default {
   mounted() { },
 
   methods: {
+    setImage(file) {
+      this.hasImage = true
+      console.log(file)
+      this.uploadedFile = file.dataUrl
+      this.fileInfo.name = file.info.name
+      this.fileInfo.size = ''
+    },
     importData(e) {
       const formatFileSize = function (byte) {
         const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
@@ -95,9 +120,9 @@ export default {
         this.uploadedFile = e.target.files[0]
       }
     },
-    deleteFile() {
+    changeImage(){
       this.uploadedFile = null
-      this.show = false
+      this.$refs.reduce.click()
     },
 
     async ok() {
