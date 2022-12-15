@@ -49,12 +49,11 @@
                             <input v-model="dataObject.name" type="text" class="form-control" />
                         </ValidationProviderWrapper>
                     </div>
-
-                    <!-- <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
-                            <input v-model="dataObject.prescribing_physician" type="text" class="form-control" />
+                    <div class="col-md-12 mb-2">
+                        <ValidationProviderWrapper name="Description" :rules="['required']">
+                            <input v-model="dataObject.description" type="text" class="form-control" />
                         </ValidationProviderWrapper>
-                    </div> -->
+                    </div>
 
                     <div class="col-md-12 d-flex ml-0 text-primary text-14">
                         <span class="point" @click="addTask">
@@ -63,7 +62,7 @@
                                 <path fill="currentColor"
                                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                             </svg>
-                            Add
+                            Add task
                         </span>
                     </div>
 
@@ -85,11 +84,6 @@
                                 </svg>
                             </span>
                         </div>
-                        <!-- <div class="col-md-12 mb-2">
-                <ValidationProviderWrapper name="SIG" :rules="['']">
-                  <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
-                </ValidationProviderWrapper>
-              </div> -->
 
                         <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Title" :rules="['']">
@@ -99,30 +93,60 @@
 
                         <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Nursing service" :rules="['']">
-                                <input v-model="task.nursing_services" type="text" class="form-control" />
+                                <VSelect v-model="task.nursing_services" :multiple="true" :options="services" :reduce="(opt) => opt.id"
+                                    label="name">
+                                </VSelect>
                             </ValidationProviderWrapper>
                         </div>
 
-                        <div v-for="(pint, index) in task.inventory" :key="index" class="d-flex col-md-12 mb-2">
+                        <div class="col-md-12">
+                            <p class="ml-3 mb-2 text-grey text-underline text-16 text-center">Inventory</p>
+                        </div>
+                        <div v-for="(pint, innerIndex) in task.inventory" :key="innerIndex" class="d-flex col-md-12 mb-2">
                             <div class="col-md-6 px-0 pr-1">
                                 <ValidationProviderWrapper name="Store" :rules="['']">
-                                    <VSelect v-model="pint.store" :options="stores" :reduce="(opt) => opt.id" label="name">
+                                    <VSelect v-model="pint.store" :options="stores" :reduce="(opt) => opt.id"
+                                        label="name">
                                     </VSelect>
                                 </ValidationProviderWrapper>
                             </div>
 
-                            <div class="col-md-6 px-0 pl-1">
+                            <div class="col-md-6 px-0 pl-1 pr-2">
                                 <ValidationProviderWrapper name="Product" :rules="['']">
                                     <VSelect v-model="pint.product" :options="products" :reduce="(opt) => opt.id"
                                         label="name">
                                     </VSelect>
                                 </ValidationProviderWrapper>
                             </div>
+
+                            <div class="px-0 text-danger d-flex align-items-center">
+                                <span class="point pt-3" @click="deleteInventory(index,innerIndex)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                        <g fill="currentColor">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                            <path fill-rule="evenodd"
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                        </g>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 px-0 d-flex justify-content-end align-items-center pr-2">
+                            <span @click="addInventory(index)" class="point text-primary text-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                    <path fill="currentColor"
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                </svg>
+                                Add inventory
+                            </span>
                         </div>
 
                         <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Notes" :rules="['']">
-                                <textarea id="" v-model="task.note" class="form-control" name="" cols="30"
+                                <textarea id="" v-model="task.notes" class="form-control" name="" cols="30"
                                     rows="2"></textarea>
                             </ValidationProviderWrapper>
                         </div>
@@ -135,7 +159,7 @@
                                 <path fill="currentColor"
                                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                             </svg>
-                            Add
+                            Add task
                         </span>
                     </div>
                 </div>
@@ -174,6 +198,7 @@ export default {
             routes: [],
             products: [],
             stores: [],
+            services: [],
             dataObject: {
                 tasks: [
                     {
@@ -181,17 +206,15 @@ export default {
                         notes: "",
                         inventory: [
                             {
-                                product: "",
-                                store: ""
+                                product: null,
+                                store: null
                             }
                         ],
-                        nursing_services: [
-                            ""
-                        ]
+                        nursing_services: []
                     }
                 ],
                 name: "",
-                status: "COMPLETED",
+                description: '',
                 patient: {},
             },
         }
@@ -264,33 +287,23 @@ export default {
             this.$bvModal.show('findPatient')
         },
 
+        addInventory(index) {
+            this.dataObject.tasks[index].inventory.push(
+                {
+                    product: "",
+                    store: ""
+                }
+            )
+        },
+
+        deleteInventory(index, e){
+            console.log(index, e)
+            this.dataObject.tasks[index].inventory.splice(e, 1)
+        },
+
         async save() {
             try {
-                let prescribeDetails = this.dataObject.details
-                let direction = []
-                let duration = []
-                for (let x = 0; x < prescribeDetails.length; x++) {
-                    duration.push(prescribeDetails[x].duration.id)
-                    direction.push(prescribeDetails[x].direction.id)
-                }
-
-                //  console.log({direction}, {duration})
-                var pocket = prescribeDetails
-
-                for (let x = 0; x < prescribeDetails.length; x++) {
-                    pocket[x].direction = direction[x]
-                    pocket[x].duration = duration[x]
-                }
-                console.log(pocket)
-
-                const data = await this.$api.pharmacy.orderPrescription({
-                    store: this.dataObject.store,
-                    patient: this.dataObject.patient,
-                    source: this.dataObject.source,
-                    prescribing_physician: this.dataObject.prescribing_physician,
-                    note: this.dataObject.note,
-                    details: pocket,
-                })
+                const data = await this.$api.nursing.createNursingTask(this.dataObject)
                 this.$emit('refresh')
                 this.$bvModal.hide('modal')
                 console.log(data)
@@ -299,8 +312,8 @@ export default {
             }
         },
         deleteTask(e) {
-            if (this.dataObject.details.length !== 1) {
-                this.dataObject.details.splice(e, 1)
+            if (this.dataObject.tasks.length !== 1) {
+                this.dataObject.tasks.splice(e, 1)
             }
         },
         addTask() {
@@ -326,13 +339,11 @@ export default {
                         notes: "",
                         inventory: [
                             {
-                                product: "",
-                                store: ""
+                                product: null,
+                                store: null
                             }
                         ],
-                        nursing_services: [
-                            ""
-                        ]
+                        nursing_services: []
                     }
                 ],
                 name: "",
@@ -345,10 +356,7 @@ export default {
         getData() {
             this.getProducts()
             this.getStores()
-            this.dataObject.prescribing_physician =
-                this.$store.state.auth.user.first_name +
-                ' ' +
-                this.$store.state.auth.user.last_name
+            this.getServices()
         },
         async getPatientByUHID(uhid) {
             try {
@@ -377,6 +385,16 @@ export default {
                 .getStores({ size: 1000, is_pharmacy: true })
                 .then((res) => {
                     this.stores = res.results
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
+        getServices() {
+            this.$api.nursing
+                .getServices({ size: 1000 })
+                .then((res) => {
+                    this.services = res.results
                 })
                 .catch((err) => {
                     console.log(err)

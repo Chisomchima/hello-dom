@@ -19,7 +19,7 @@
                 <div class="d-flex justify-content-center">
                   <div v-if="!uploadedFile" class="m-3">
                     <button @click.prevent="$refs.reduce.click()" class="btn btn-primary rounded">Select
-                      profile image</button>
+                      profile picture</button>
                   </div>
 
                   <div v-if="uploadedFile" class="m-3">
