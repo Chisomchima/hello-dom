@@ -79,6 +79,11 @@ export default {
           icon: 'fa fa-cogs',
           route: '/dashboard/configurations/inventory',
         },
+        {
+          name: 'Nursing',
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/nursing',
+        },
       ],
     }
   },

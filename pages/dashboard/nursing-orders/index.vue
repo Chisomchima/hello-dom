@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Nursing Worklist</div>
           <div>
-            <BaseButton @click="$bvModal.show('modal')" class="btn-primary btn-lg">New nursing task</BaseButton>
+            <BaseButton @click="$bvModal.show('createTask')" class="btn-primary btn-lg">New nursing task</BaseButton>
           </div>
         </div>
       </div>
@@ -21,16 +21,20 @@
       </div>
       <div class="col-md-12">
         <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
-          <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
+          <TableComponent @row-clicked="goToTask" :fields="fields" :pages="pages" :items="items" :busy="busy"
             @page-changed="filter($event, currentFilter)" @cancel="cancelImaging($event)">
+            <template #status="{ data }">
+              <div class="">
+                <span>{{ data.item.status }}</span>
+              </div>
+            </template>
           </TableComponent>
         </UtilsFilterComponent>
       </div>
     </div>
     <NursingModalAddNursingTask @refresh="filter(currentPage, currentFilter)" />
 
-    <PharmacyShowPrescription :dataObject="modalData" @hide="modalData = {}"
-      @refresh="filter(currentPage, currentFilter)" />
+    <NursingModalCreateTask @refresh="filter(currentPage, currentFilter)" />
   </div>
 </template>
   
@@ -61,11 +65,7 @@ export default {
           label: 'Order ID',
           sortable: true,
         },
-        {
-          key: 'name',
-          label: 'Name',
-          sortable: true,
-        },
+
         { key: 'patient.uhid', label: 'UHID', sortable: true },
         {
           key: 'patient',
@@ -81,18 +81,27 @@ export default {
             )
           },
         },
-
+        {
+          key: 'station.name',
+          label: 'Station',
+          sortable: true,
+        },
 
         {
           key: 'created_by',
           label: 'Ordered by',
           formatter: (val, key, item) => {
-            return val.first_name + ' ' + val.first_name
+            if (Object.keys(val).length > 0) {
+              return val.first_name + ' ' + val.last_name
+            }
+            else {
+              return ''
+            }
           },
           sortable: true,
         },
         { key: 'status', label: 'Status', sortable: true },
-        { key: 'dots', label: '', sortable: false },
+        // { key: 'dots', label: '', sortable: false },
       ],
     }
   },
@@ -120,9 +129,13 @@ export default {
       }
     },
 
-    viewTask(e) {
-      this.modalData = e
-      this.$bvModal.show('viewTask')
+    goToTask(task) {
+      this.$router.push({
+        name: 'dashboard-nursing-orders-uid',
+        params: {
+          uid: task.id,
+        },
+      })
     },
 
     async cancelImaging(e) {

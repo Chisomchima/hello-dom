@@ -114,19 +114,20 @@
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-
             <div class="col-md-3 mb-2">
-              <ValidationProviderWrapper name="Direction" :rules="['required']">
-                <VSelect v-model="drug.direction" :options="directions" label="name">
-                </VSelect>
-              </ValidationProviderWrapper>
-            </div>
-            <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Duration" :rules="['required']">
                 <VSelect v-model="drug.duration" :options="durations" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
+
+            <div class="col-md-6 mb-2">
+              <ValidationProviderWrapper name="Direction" :rules="['required']">
+                <VSelect v-model="drug.direction" :options="directions" label="name">
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
+            
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Route" :rules="['']">
                 <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">

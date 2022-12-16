@@ -1,27 +1,17 @@
 <template>
   <div>
     <BackwardNavigation />
-    <UtilsHeaderCardWithAvatar
-      :title="`${data.salutation ? data.salutation : ''} ${
-        data.firstname ? data.firstname : ''
-      } ${data.lastname ? data.lastname : ''}`"
-      :data="data"
-      :enable-action="true"
-      
-      :display-key="[
-        'uhid',
-        'date_of_birth',
-        'gender',
-        'marital_status',
-        'religion',
-        'nationality',
-        'phone_number',
-      ]"
-      @edit="editRoute()"
-      @make_deposit="$bvModal.show('depositModal')"
-      @payers="checkPayersDetails"
-      @picture="uploadAvatar"
-    >
+    <UtilsHeaderCardWithAvatar :title="`${data.salutation ? data.salutation : ''} ${data.firstname ? data.firstname : ''
+    } ${data.lastname ? data.lastname : ''}`" :data="data" :enable-action="true" :display-key="[
+    'uhid',
+    'date_of_birth',
+    'gender',
+    'marital_status',
+    'religion',
+    'nationality',
+    'phone_number',
+  ]" @edit="editRoute()" @make_deposit="$bvModal.show('depositModal')" @payers="checkPayersDetails"
+      @picture="uploadAvatar">
     </UtilsHeaderCardWithAvatar>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Encounter">
@@ -43,6 +33,9 @@
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>
+      <UtilsCardTab title="Document">
+        <DashboardPatientDocument :data="data" />
+      </UtilsCardTab>
       <UtilsCardTab title="Finance">
         <div class="d-flex justify-content-end align-items-center pt-1">
           <div class="d-flex">
@@ -55,10 +48,7 @@
           </div>
 
           <div class="m-2">
-            <button
-              @click="$bvModal.show('depositModal')"
-              class="btn btn-outline-primary btn-sm"
-            >
+            <button @click="$bvModal.show('depositModal')" class="btn btn-outline-primary btn-sm">
               Make deposit
             </button>
           </div>
@@ -85,17 +75,10 @@
           </TabPanel>
         </TabView>
       </UtilsCardTab>
-      <UtilsCardTab title="Document">
-        <DashboardPatientDocument :data="data" />
-      </UtilsCardTab>
     </UtilsBaseCardTab>
 
     <DashboardModalPayerDetails :data="data.payment_scheme" />
-    <DashboardModalPatientDepositModal
-      @payload="printDepositSlip($event)"
-      @refresh="getNewData"
-      :data="data"
-    />
+    <DashboardModalPatientDepositModal @payload="printDepositSlip($event)" @refresh="getNewData" :data="data" />
     <DashboardModalConfirmDepositPrint :data="data" :reciept="template" />
     <DashboardModalUploadPicture :data="data" />
   </div>
@@ -165,7 +148,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul > li {
+ul>li {
   padding: 5px;
 }
 </style>

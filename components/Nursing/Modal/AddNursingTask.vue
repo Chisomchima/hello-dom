@@ -76,6 +76,12 @@
                   ml-0
                   text-danger text-14
                 ">
+                            <!-- <span>
+                                <span>Immediate</span>
+                                <b-form-checkbox size="lg" switch @change="setToConfirmed($event, index)">
+                                </b-form-checkbox>
+                                <span>Scheduled</span>
+                            </span> -->
                             <span class="point float" @click="deleteTask(index)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -85,16 +91,16 @@
                             </span>
                         </div>
 
-                        <div class="col-md-12 mb-2">
+                        <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Title" :rules="['']">
                                 <input v-model="task.title" type="text" class="form-control" />
                             </ValidationProviderWrapper>
                         </div>
 
-                        <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Nursing service" :rules="['']">
-                                <VSelect v-model="task.nursing_services" :multiple="true" :options="services" :reduce="(opt) => opt.id"
-                                    label="name">
+                        <div class="col-md-6 mb-2">
+                            <ValidationProviderWrapper name="Type" :rules="['']">
+                                <VSelect v-model="task.type" :multiple="true" :options="path"
+                                    :reduce="(opt) => opt.val" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
@@ -102,7 +108,8 @@
                         <div class="col-md-12">
                             <p class="ml-3 mb-2 text-grey text-underline text-16 text-center">Inventory</p>
                         </div>
-                        <div v-for="(pint, innerIndex) in task.inventory" :key="innerIndex" class="d-flex col-md-12 mb-2">
+                        <div v-for="(pint, innerIndex) in task.inventory" :key="innerIndex"
+                            class="d-flex col-md-12 mb-2">
                             <div class="col-md-6 px-0 pr-1">
                                 <ValidationProviderWrapper name="Store" :rules="['']">
                                     <VSelect v-model="pint.store" :options="stores" :reduce="(opt) => opt.id"
@@ -120,7 +127,7 @@
                             </div>
 
                             <div class="px-0 text-danger d-flex align-items-center">
-                                <span class="point pt-3" @click="deleteInventory(index,innerIndex)">
+                                <span class="point pt-3" @click="deleteInventory(index, innerIndex)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
                                         <g fill="currentColor">
@@ -193,6 +200,7 @@ export default {
             present: false,
             downloading: false,
             generic_drug: [],
+            path: ['IMMEDIATE', 'SCHEDULED'],
             doses: [],
             units: [],
             routes: [],
@@ -204,13 +212,15 @@ export default {
                     {
                         title: "",
                         notes: "",
+                        type: null,
                         inventory: [
                             {
                                 product: null,
                                 store: null
                             }
                         ],
-                        nursing_services: []
+                        nursing_services: [],
+                        executed_at: ''
                     }
                 ],
                 name: "",
@@ -272,6 +282,9 @@ export default {
                 this.save()
             }
         },
+        setToConfirmed() {
+
+        },
         fetchOPtions(e, i) {
             this.$api.inventory
                 .getProducts({ size: 1500, generic_drug: e.id })
@@ -296,7 +309,7 @@ export default {
             )
         },
 
-        deleteInventory(index, e){
+        deleteInventory(index, e) {
             console.log(index, e)
             this.dataObject.tasks[index].inventory.splice(e, 1)
         },
