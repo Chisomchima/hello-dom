@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Nursing Worklist</div>
           <div>
-            <BaseButton @click="$bvModal.show('createTask')" class="btn-primary btn-lg">New nursing task</BaseButton>
+            <BaseButton @click="$bvModal.show('createTask')" class="btn-primary btn-lg">New nursing order</BaseButton>
           </div>
         </div>
       </div>
@@ -21,8 +21,8 @@
       </div>
       <div class="col-md-12">
         <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
-          <TableComponent @row-clicked="goToTask" :fields="fields" :pages="pages" :items="items" :busy="busy"
-            @page-changed="filter($event, currentFilter)" @cancel="cancelImaging($event)">
+          <TableComponent @row-clicked="goToTask" :fields="fields" :pages="pages" :items="items" :busy="busy" :dropdown-item="['close_order', 'cancel_order']"
+            @page-changed="filter($event, currentFilter)" @close_order="closeOrder" @cancel_order="cancelOrder"  @cancel="cancelImaging($event)">
             <template #status="{ data }">
               <div class="">
                 <span>{{ data.item.status }}</span>
@@ -32,7 +32,6 @@
         </UtilsFilterComponent>
       </div>
     </div>
-    <NursingModalAddNursingTask @refresh="filter(currentPage, currentFilter)" />
 
     <NursingModalCreateTask @refresh="filter(currentPage, currentFilter)" />
   </div>
@@ -101,7 +100,7 @@ export default {
           sortable: true,
         },
         { key: 'status', label: 'Status', sortable: true },
-        // { key: 'dots', label: '', sortable: false },
+        { key: 'dots', label: '', sortable: false },
       ],
     }
   },
@@ -138,15 +137,26 @@ export default {
       })
     },
 
-    async cancelImaging(e) {
-      const result = await this.showDeleteMessageBox(
-        'Do you want to cancel Imaging Order'
+    async closeOrder(e) {
+      const result = await this.showConfirmMessageBox(
+        'Do you want to close this nursing order', 'Close'
       )
       try {
         if (result) {
-          await this.$api.imaging.patchObservationOrder(e.id, {
-            status: 'CANCELLED',
-          })
+          await this.$api.nursing.closeNursingOrder(e.id)
+          this.filter(this.currentPage, this.currentFilter)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async cancelOrder(e) {
+      const result = await this.showConfirmMessageBox(
+        'Do you want to cancel this nursing order', 'Cancel'
+      )
+      try {
+        if (result) {
+          await this.$api.nursing.cancelNursingOrder(e.id)
           this.filter(this.currentPage, this.currentFilter)
         }
       } catch (error) {

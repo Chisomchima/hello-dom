@@ -7,6 +7,13 @@ export default axios => ({
     createNursingTask(body) {
         return axios.$post(`/nursing/orders/`, body);
     },
+
+    closeNursingOrder(id){
+        return axios.$patch(`/nursing/orders/${id}/close/`)
+    },
+    cancelNursingOrder(id){
+        return axios.$patch(`/nursing/orders/${id}/cancel/`)
+    },
     getServices(params = {}) {
         return axios.$get('/nursing/services/', {
             params
@@ -19,9 +26,21 @@ export default axios => ({
     // Get task by ID
 
     getSpecificTask(id) {
-        return axios.$get(`/nursing/orders/${id}/tasks`);
+        return axios.$get(`/nursing/orders/${id}/`);
     },
 
+    getTaskSlug(params = {}, id){
+        return axios.$get(`/nursing/orders/${id}/tasks/`, {
+            params
+        });
+    },
+    createTask(body, id) {
+        return axios.$post(`/nursing/orders/${id}/tasks/`, body);
+    },
+
+    closeNursingTask(orderID, taskID){
+        return axios.$patch(`/nursing/orders/${orderID}/tasks/${taskID}/close/`)
+    },
 
     // Config
 

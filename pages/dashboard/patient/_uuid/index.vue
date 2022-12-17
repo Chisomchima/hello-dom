@@ -36,6 +36,9 @@
       <UtilsCardTab title="Document">
         <DashboardPatientDocument :data="data" />
       </UtilsCardTab>
+      <UtilsCardTab title="Nursing tasks">
+        <DashboardPatientTasks :data="data" />
+      </UtilsCardTab>
       <UtilsCardTab title="Finance">
         <div class="d-flex justify-content-end align-items-center pt-1">
           <div class="d-flex">

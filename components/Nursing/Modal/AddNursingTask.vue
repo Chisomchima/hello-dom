@@ -1,30 +1,13 @@
 <template>
-    <ModalWrapper size="lg" title="Add nursing task" @ok="ok()" @show="getData()" @hide="clear()" :stacking="false">
+    <ModalWrapper size="lg" id="nurseTask" title="Add nursing task" @ok="ok()" @show="getData()" @hide="clear()"
+        :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
                     <div class="col-md-6 mb-2">
                         <ValidationProviderWrapper name="UHID" :rules="['']">
                             <div class="d-flex">
-                                <input v-model="uhid" type="text" class="form-control" />
-                                <div class="ml-2 mt-1">
-                                    <b-spinner style="width: 1.7rem; height: 1.7rem" v-if="downloading"
-                                        variant="primary" label="grow">
-                                    </b-spinner>
-                                    <div class="text-info icon" v-if="false">
-                                        <span @click="findPatient">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16" class="point">
-                                                <g fill="currentColor">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="m8.93 6.588l-2.29.287l-.082.38l.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319c.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246c-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0a1 1 0 0 1 2 0z" />
-                                                </g>
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
+                                <input :value="uhid" type="text" class="form-control" readonly />
                             </div>
                         </ValidationProviderWrapper>
                     </div>
@@ -44,18 +27,7 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Name" :rules="['']">
-                            <input v-model="dataObject.name" type="text" class="form-control" />
-                        </ValidationProviderWrapper>
-                    </div>
-                    <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Description" :rules="['required']">
-                            <input v-model="dataObject.description" type="text" class="form-control" />
-                        </ValidationProviderWrapper>
-                    </div>
-
-                    <div class="col-md-12 d-flex ml-0 text-primary text-14">
+                    <!-- <div class="col-md-12 d-flex ml-0 text-primary text-14">
                         <span class="point" @click="addTask">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -64,11 +36,10 @@
                             </svg>
                             Add task
                         </span>
-                    </div>
+                    </div> -->
 
-                    <div v-for="(task, index) in dataObject.tasks" :key="index"
-                        class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
-                        <div class="
+                    <div class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
+                        <!-- <div class="
                   col-md-12
                   
                   d-flex
@@ -76,12 +47,7 @@
                   ml-0
                   text-danger text-14
                 ">
-                            <!-- <span>
-                                <span>Immediate</span>
-                                <b-form-checkbox size="lg" switch @change="setToConfirmed($event, index)">
-                                </b-form-checkbox>
-                                <span>Scheduled</span>
-                            </span> -->
+                           
                             <span class="point float" @click="deleteTask(index)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -89,18 +55,31 @@
                                         d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
                                 </svg>
                             </span>
-                        </div>
+                        </div> -->
 
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Title" :rules="['']">
-                                <input v-model="task.title" type="text" class="form-control" />
+                                <input v-model="dataObject.title" type="text" class="form-control" />
                             </ValidationProviderWrapper>
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <ValidationProviderWrapper name="Type" :rules="['']">
-                                <VSelect v-model="task.type" :multiple="true" :options="path"
-                                    :reduce="(opt) => opt.val" label="name">
+                            <ValidationProviderWrapper name="Type" :rules="['required']">
+                                <VSelect v-model="dataObject.type" :options="path" :reduce="(opt) => opt.val"
+                                    label="name">
+                                </VSelect>
+                            </ValidationProviderWrapper>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
+                                <input v-model="dataObject.scheduled_at" :disabled="dataObject.type === 'IMMEDIATE'"
+                                    type="date" :min="minDate" class="form-control" />
+                            </ValidationProviderWrapper>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <ValidationProviderWrapper name="Nursing service" :rules="['']">
+                                <VSelect v-model="dataObject.nursing_services" :multiple="true" :options="services"
+                                    :reduce="(opt) => opt.id" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
@@ -108,7 +87,7 @@
                         <div class="col-md-12">
                             <p class="ml-3 mb-2 text-grey text-underline text-16 text-center">Inventory</p>
                         </div>
-                        <div v-for="(pint, innerIndex) in task.inventory" :key="innerIndex"
+                        <div v-for="(pint, innerIndex) in dataObject.inventory" :key="innerIndex"
                             class="d-flex col-md-12 mb-2">
                             <div class="col-md-6 px-0 pr-1">
                                 <ValidationProviderWrapper name="Store" :rules="['']">
@@ -127,7 +106,7 @@
                             </div>
 
                             <div class="px-0 text-danger d-flex align-items-center">
-                                <span class="point pt-3" @click="deleteInventory(index, innerIndex)">
+                                <span class="point pt-3" @click="deleteInventory(innerIndex)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
                                         <g fill="currentColor">
@@ -153,13 +132,13 @@
 
                         <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Notes" :rules="['']">
-                                <textarea id="" v-model="task.notes" class="form-control" name="" cols="30"
+                                <textarea id="" v-model="dataObject.notes" class="form-control" name="" cols="30"
                                     rows="2"></textarea>
                             </ValidationProviderWrapper>
                         </div>
                     </div>
 
-                    <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
+                    <!-- <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
                         <span class="point" @click="addTask">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -168,20 +147,15 @@
                             </svg>
                             Add task
                         </span>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </ValidationObserver>
-
-        <div>
-            <PharmacyFindPatient />
-        </div>
     </ModalWrapper>
 </template>
   
 <script>
-import { debounce } from 'lodash'
-
+import { DateTime } from 'luxon'
 export default {
     props: {
         editData: {
@@ -189,18 +163,19 @@ export default {
             require: false,
             default: () => ({}),
         },
-        role: {
+        patient: {
+            type: Object,
             require: false,
+            default: () => ({}),
         },
     },
     data() {
         return {
-            uhid: '',
             selected: [],
             present: false,
             downloading: false,
             generic_drug: [],
-            path: ['IMMEDIATE', 'SCHEDULED'],
+            path: [{ name: 'Immediate', val: 'IMMEDIATE' }, { name: 'Scheduled', val: 'SCHEDULED' }],
             doses: [],
             units: [],
             routes: [],
@@ -208,73 +183,82 @@ export default {
             stores: [],
             services: [],
             dataObject: {
-                tasks: [
+                title: "",
+                notes: "",
+                type: 'IMMEDIATE',
+                nursing_services: [],
+                inventory: [
                     {
-                        title: "",
-                        notes: "",
-                        type: null,
-                        inventory: [
-                            {
-                                product: null,
-                                store: null
-                            }
-                        ],
-                        nursing_services: [],
-                        executed_at: ''
+                        product: null,
+                        store: null
                     }
                 ],
-                name: "",
-                description: '',
-                patient: {},
+                scheduled_at: ''
             },
         }
     },
+    watch: {
+        'dataObject.type': {
+            handler(){
+                if (this.dataObject.type === 'IMMEDIATE') {
+                let today = new Date()
+                today = today.toISOString()
+                let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+                console.log(x)
+                this.dataObject.scheduled_at = x
+            }
+            else {
+                this.dataObject.scheduled_at = ''
+            }
+            }
+        }
+    },
     computed: {
+        minDate() {
+            let today = new Date()
+            today = today.toISOString()
+            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+            console.log(x)
+            return x
+        },
         name() {
-            if (Object.keys(this.dataObject.patient).length > 0) {
+            if (Object.keys(this.patient).length > 0) {
                 return (
-                    this.dataObject.patient.salutation +
+                    this.patient.salutation +
                     ' ' +
-                    this.dataObject.patient.firstname +
+                    this.patient.firstname +
                     ' ' +
-                    this.dataObject.patient.lastname
+                    this.patient.lastname
                 )
             }
             return ''
         },
         gender() {
-            if (this.dataObject.patient) {
-                return this.dataObject.patient.gender
+            if (this.patient.gender) {
+                return this.patient.gender
             }
             return ''
         },
 
         dob() {
-            if (this.dataObject.patient) {
-                return this.dataObject.patient.date_of_birth
+            if (this.patient.date_of_birth) {
+                return this.patient.date_of_birth
             }
             return ''
         },
 
         email() {
-            if (this.dataObject.patient) {
-                return this.dataObject.patient.email
+            if (this.patient.email) {
+                return this.patient.email
             }
             return ''
         },
-    },
-    watch: {
-        uhid: debounce(async function (newVal) {
-            this.downloading = true
-            const results = await this.getPatientByUHID(newVal)
-            if (results) {
-                this.dataObject.patient = results
-                this.downloading = false
-            } else {
-                this.dataObject.patient = {}
-                this.downloading = false
+        uhid() {
+            if (this.patient.uhid) {
+                return this.patient.uhid
             }
-        }, 1000),
+            return ''
+        },
     },
     methods: {
         async ok() {
@@ -296,12 +280,8 @@ export default {
                 })
         },
 
-        findPatient() {
-            this.$bvModal.show('findPatient')
-        },
-
         addInventory(index) {
-            this.dataObject.tasks[index].inventory.push(
+            this.dataObject.inventory.push(
                 {
                     product: "",
                     store: ""
@@ -309,16 +289,17 @@ export default {
             )
         },
 
-        deleteInventory(index, e) {
-            console.log(index, e)
-            this.dataObject.tasks[index].inventory.splice(e, 1)
+        deleteInventory(e) {
+            if (this.dataObject.inventory.length !== 1) {
+                this.dataObject.inventory.splice(e, 1)
+            }  
         },
 
         async save() {
             try {
-                const data = await this.$api.nursing.createNursingTask(this.dataObject)
+                const data = await this.$api.nursing.createTask(this.dataObject, this.$route.params.uid)
                 this.$emit('refresh')
-                this.$bvModal.hide('modal')
+                this.$bvModal.hide('nurseTask')
                 console.log(data)
             } catch (error) {
                 console.log(error)
@@ -333,35 +314,30 @@ export default {
             this.dataObject.tasks.push({
                 title: "",
                 notes: "",
+                type: null,
+                nursing_services: [],
                 inventory: [
                     {
-                        product: "",
-                        store: ""
+                        product: null,
+                        store: null
                     }
                 ],
-                nursing_services: [
-                    ""
-                ]
+                scheduled_at: ''
             })
         },
         clear() {
             this.dataObject = {
-                tasks: [
+                title: "",
+                notes: "",
+                type: null,
+                nursing_services: [],
+                inventory: [
                     {
-                        title: "",
-                        notes: "",
-                        inventory: [
-                            {
-                                product: null,
-                                store: null
-                            }
-                        ],
-                        nursing_services: []
+                        product: null,
+                        store: null
                     }
                 ],
-                name: "",
-                status: "COMPLETED",
-                patient: {},
+                scheduled_at: ''
             }
             this.uhid = ''
             this.$emit('hide')
@@ -370,6 +346,11 @@ export default {
             this.getProducts()
             this.getStores()
             this.getServices()
+            let today = new Date()
+            today = today.toISOString()
+            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+            console.log(x)
+            this.dataObject.scheduled_at = x
         },
         async getPatientByUHID(uhid) {
             try {

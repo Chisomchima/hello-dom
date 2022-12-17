@@ -342,6 +342,13 @@
           </template>
           <DashboardPatientDocument :show="!true" :data="consultationData.patient" />
         </TabPanel>
+        <TabPanel>
+          <template #header>
+            <i class="far fa-file-alt"></i>
+            <span class="ml-2">Nursing tasks</span>
+          </template>
+          <DashboardPatientTasks :data="consultationData.patient" />
+        </TabPanel>
       </TabView>
     </div>
   </div>
