@@ -143,7 +143,7 @@
         </TableComponent>
       </UtilsFilterComponent>
     </div>
-    <DashboardModalPrintPaymentSlip :reciept="paymentData" :data="data" />
+    <!-- <DashboardModalPrintPaymentSlip :reciept="paymentData" :data="data" /> -->
   </div>
 </template>
 
