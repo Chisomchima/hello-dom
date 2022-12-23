@@ -81,7 +81,7 @@ export default {
       downloading: false,
       fields: [
         {
-          key: 'created_datetime',
+          key: 'created_at',
           label: 'Date',
           sortable: true,
           formatter: (value) => {

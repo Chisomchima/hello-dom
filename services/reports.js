@@ -29,4 +29,14 @@ export default axios => ({
             params
         })
     },
+    paymentsSummaryReport(params = {}) {
+        return axios.$get('finance/reports/payments/summary', {
+            params
+        })
+    },
+    paymentsDetailedReport(params = {}) {
+        return axios.$get('finance/reports/payments/detailed', {
+            params
+        })
+    },
 })

@@ -22,13 +22,13 @@
                 class="dropdown-menu dropdown-menu-right"
                 aria-labelledby="dropdownMenuButton"
               >
-              <a class="dropdown-item" href="#" @click.prevent="$emit('make_deposit')"
+              <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('make_deposit')"
                   >Make deposit</a
                 >
-                <a class="dropdown-item" href="#" @click.prevent="$emit('edit')"
+                <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('edit')"
                   >Edit</a
                 >
-                <a class="dropdown-item" href="#" @click.prevent="$emit('picture')"
+                <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('picture')"
                   >Upload picture</a
                 >
                 <a
@@ -39,7 +39,7 @@
                   @click.prevent="$emit(action)"
                   >{{ action.split('_').join(' ') }}</a
                 >
-                <a
+                <a v-if="patientContext"
                   class="dropdown-item text-danger"
                   href="#"
                   @click.prevent="$emit('delete')"
@@ -79,14 +79,13 @@
                     >
                   </template>
                 </div>
+               
 
-                <div v-if="showScheme">
-                  <div  class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme != null && data.payment_scheme.length > 0">
+               <div  class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme != null && data.payment_scheme.length > 0 && showScheme">
                 <span class="class-details-data_label"> Payment scheme(s): {{data.payment_scheme ? data.payment_scheme[0].payer_scheme.name : ''}}</span>
                   <span v-if="data.payment_scheme.length > 0" class="class-details-data_value text-truncate">
                     <span @click="check" class="badge-info p-1 text-12 rounded point ml-2">more</span>
                   </span>
-                </div>
                 </div>
                 
               </div>
@@ -122,6 +121,10 @@ export default Vue.extend({
       required: true,
     },
     enableAction: {
+      type: Boolean,
+      default: true,
+    },
+    patientContext: {
       type: Boolean,
       default: true,
     },

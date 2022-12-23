@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" id="nurseTask" title="Add nursing task" @ok="ok()" @show="getData()" 
+    <ModalWrapper size="lg" id="actionTask" title="Add nursing task" @ok="ok()" @show="getData()" @hide="clear()"
         :stacking="false">
         <ValidationObserver ref="form">
             <form>
@@ -57,47 +57,37 @@
                             </span>
                         </div> -->
 
-                        <!-- <div class="col-md-12 mb-2">
+                        <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Title" :rules="['']">
-                                <input v-model="dataObject.title" type="text" class="form-control" />
+                                <input v-model="editData.title" type="text" class="form-control" />
                             </ValidationProviderWrapper>
-                        </div> -->
-
-                        <div class="col-md-12 p-3">
-                            <p class="text-14 mb-0 text-info">Instruction: {{ data.description }}</p>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Type" :rules="['required']">
-                                <VSelect v-model="dataObject.type" :options="path" :reduce="(opt) => opt.val"
+                                <VSelect v-model="editData.type" :options="path" :reduce="(opt) => opt.val"
                                     label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
                         <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
-                                <input v-model="dataObject.scheduled_at" :disabled="dataObject.type === 'IMMEDIATE'"
+                                <input v-model="editData.scheduled_at" :disabled="editData.type === 'IMMEDIATE'"
                                     type="date" :min="minDate" class="form-control" />
                             </ValidationProviderWrapper>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Notes" :rules="['']">
-                                <textarea id="" v-model="dataObject.notes" class="form-control" name="" cols="30"
-                                    rows="2"></textarea>
-                            </ValidationProviderWrapper>
-                        </div>
-                        <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Nursing service" :rules="['']">
-                                <VSelect v-model="dataObject.nursing_services" :multiple="true" :options="services"
+                                <VSelect v-model="editData.nursing_services" :multiple="true" :options="services"
                                     :reduce="(opt) => opt.id" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
                         </div>
 
-                        <!-- <div class="col-md-12">
+                        <div class="col-md-12">
                             <p class="ml-3 mb-2 text-grey text-underline text-16 text-center">Inventory</p>
-                        </div> -->
-                        <!-- <div v-for="(pint, innerIndex) in dataObject.inventory" :key="innerIndex"
+                        </div>
+                        <div v-for="(pint, innerIndex) in editData.inventory" :key="innerIndex"
                             class="d-flex col-md-12 mb-2">
                             <div class="col-md-6 px-0 pr-1">
                                 <ValidationProviderWrapper name="Store" :rules="['']">
@@ -128,8 +118,8 @@
                                     </svg>
                                 </span>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-md-12 px-0 d-flex justify-content-end align-items-center pr-2">
+                        </div>
+                        <div class="col-md-12 px-0 d-flex justify-content-end align-items-center pr-2">
                             <span @click="addInventory(index)" class="point text-primary text-12">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -138,9 +128,14 @@
                                 </svg>
                                 Add inventory
                             </span>
-                        </div> -->
+                        </div>
 
-                       
+                        <div class="col-md-12 mb-2">
+                            <ValidationProviderWrapper name="Notes" :rules="['']">
+                                <textarea id="" v-model="editData.notes" class="form-control" name="" cols="30"
+                                    rows="2"></textarea>
+                            </ValidationProviderWrapper>
+                        </div>
                     </div>
 
                     <!-- <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
@@ -173,11 +168,6 @@ export default {
             require: false,
             default: () => ({}),
         },
-        data: {
-            type: Object,
-            require: false,
-            default: () => ({}),
-        },
     },
     data() {
         return {
@@ -192,34 +182,22 @@ export default {
             products: [],
             stores: [],
             services: [],
-            dataObject: {
-                title: "",
-                notes: "",
-                type: 'IMMEDIATE',
-                nursing_services: [],
-                inventory: [
-                    {
-                        product: null,
-                        store: null
-                    }
-                ],
-                scheduled_at: ''
-            },
+            
         }
     },
     watch: {
         'dataObject.type': {
-            handler() {
+            handler(){
                 if (this.dataObject.type === 'IMMEDIATE') {
-                    let today = new Date()
-                    today = today.toISOString()
-                    let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-                    console.log(x)
-                    this.dataObject.scheduled_at = x
-                }
-                else {
-                    this.dataObject.scheduled_at = ''
-                }
+                let today = new Date()
+                today = today.toISOString()
+                let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+                console.log(x)
+                this.dataObject.scheduled_at = x
+            }
+            else {
+                this.dataObject.scheduled_at = ''
+            }
             }
         }
     },
@@ -302,7 +280,7 @@ export default {
         deleteInventory(e) {
             if (this.dataObject.inventory.length !== 1) {
                 this.dataObject.inventory.splice(e, 1)
-            }
+            }  
         },
 
         async save() {
@@ -358,6 +336,7 @@ export default {
             this.getServices()
             let today = new Date()
             today = today.toISOString()
+            this.dataObject = this.editData
             let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
             console.log(x)
             this.dataObject.scheduled_at = x

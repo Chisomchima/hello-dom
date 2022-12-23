@@ -179,6 +179,11 @@ export default {
           ],
         },
         {
+          href: '/dashboard/nursing-orders',
+          title: 'Nursing',
+          icon: 'fas fa-user-nurse',
+        },
+        {
           href: '/dashboard/pharmacy',
           title: 'Pharmacy',
           icon: 'fas fa-pills',

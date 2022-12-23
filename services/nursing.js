@@ -8,11 +8,11 @@ export default axios => ({
         return axios.$post(`/nursing/orders/`, body);
     },
 
-    closeNursingOrder(id){
-        return axios.$patch(`/nursing/orders/${id}/close/`)
+    closeNursingOrder(id, body){
+        return axios.$patch(`/nursing/orders/${id}/close/`, body)
     },
-    cancelNursingOrder(id){
-        return axios.$patch(`/nursing/orders/${id}/cancel/`)
+    cancelNursingOrder(id, body){
+        return axios.$patch(`/nursing/orders/${id}/cancel/`, body)
     },
     getServices(params = {}) {
         return axios.$get('/nursing/services/', {
@@ -38,8 +38,11 @@ export default axios => ({
         return axios.$post(`/nursing/orders/${id}/tasks/`, body);
     },
 
-    closeNursingTask(orderID, taskID){
-        return axios.$patch(`/nursing/orders/${orderID}/tasks/${taskID}/close/`)
+    closeNursingTask(orderID, taskID, body){
+        return axios.$patch(`/nursing/orders/${orderID}/tasks/${taskID}/close/`, body)
+    },
+    cancelNursingTask(orderID, taskID, body){
+        return axios.$patch(`/nursing/orders/${orderID}/tasks/${taskID}/cancel/`, body)
     },
 
     // Config

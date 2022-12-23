@@ -5,7 +5,7 @@
                 <BaseButton class="btn-outline-primary" @click="openModal">Add task</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" :pages="pages" :items="items" :dropdown-item="['close_task', 'cancel_task']" :busy="busy"
+                <TableComponent :fields="fields" :pages="pages" @row-clicked="editdialogue" :items="items" :dropdown-item="['close_task', 'cancel_task']" :busy="busy"
                     @edit="edit($event)" @close_task="closeTask" @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
                         <div class="">
@@ -20,7 +20,11 @@
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
-        <NursingModalAddNursingTask :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+        <NursingModalAddNursingTask :data="data" :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+        <!-- <NursingTabsAddTasks :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" /> -->
+        <NursingModalActionTask :editData="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+        <NursingModalCloseTask :editData="editData" @refresh="filter(currentPage, currentFilter)" />
+        <NursingModalCancelTask :editData="editData" @refresh="filter(currentPage, currentFilter)" />
     </div>
 </template>
   
@@ -35,12 +39,27 @@ export default {
             require: false,
             default: () => ({}),
         },
+        data: {
+            type: Object,
+            require: false,
+            default: () => ({}),
+        },
     },
     data() {
         return {
+            editData: {},
             editObj: {
-                name: "",
-                description: ""
+                title: "",
+                notes: "",
+                type: 'IMMEDIATE',
+                nursing_services: [],
+                inventory: [
+                    {
+                        product: null,
+                        store: null
+                    }
+                ],
+                scheduled_at: ''
             },
             filters: {
                 name: '',
@@ -113,40 +132,19 @@ export default {
             this.modalTitle = 'Add Task'
             this.$bvModal.show('nurseTask')
         },
-        edit(e) {
+        editdialogue(e) {
             this.editObj = e
             this.modalTitle = 'Edit Task'
-            this.$bvModal.show('nurseTask')
+            this.$bvModal.show('actionTask')
         },
         async closeTask(item){
-            const result = await this.showConfirmMessageBox('Close nursing task ?', 'Close')
-            try {
-                if (result) {
-                    let response = await this.$api.nursing.closeNursingTask(this.$route.params.uid, item.id)
-                    this.$toast({
-                        type: 'success',
-                        text: `Task closed`,
-                    })
-                    this.pageChange(1, this.filters)
-                }
-            } catch (error) {
-                console.log(error)
-            }
+            this.editData = item
+            console.log(item)
+            this.$bvModal.show('closeTask')
         },
         async cancelTask(item) {
-            const result = await this.showConfirmMessageBox('Delete nursing service ?')
-            try {
-                if (result) {
-                    let response = await this.$api.nursing.deleteServices(item.id)
-                    this.$toast({
-                        type: 'success',
-                        text: `Deleted`,
-                    })
-                    this.pageChange(1, this.filters)
-                }
-            } catch (error) {
-                console.log(error)
-            }
+           this.editData = item
+           this.$bvModal.show('cancelTask')
         },
     },
 }

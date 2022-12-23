@@ -198,6 +198,11 @@ export default {
           ],
         },
         {
+          href: '/dashboard/nursing-orders',
+          title: 'Nursing',
+          icon: 'fas fa-user-nurse',
+        },
+        {
           href: '/dashboard/cso',
           title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',

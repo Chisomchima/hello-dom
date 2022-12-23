@@ -111,6 +111,7 @@ export default {
         )
         if (response.status === 200) {
           const data = await response.blob()
+          console.log(data)
           const objectURL = URL.createObjectURL(data)
           const link = document.createElement('a')
           link.download = `Finance Summary Report - ${this.date}`

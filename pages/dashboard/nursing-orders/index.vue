@@ -11,7 +11,9 @@
       </div>
     </div>
 
-    <div class="row">
+    <UtilsBaseCardTab>
+      <UtilsCardTab title="Orders">
+        <div class="row">
       <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
@@ -21,8 +23,9 @@
       </div>
       <div class="col-md-12">
         <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
-          <TableComponent @row-clicked="goToTask" :fields="fields" :pages="pages" :items="items" :busy="busy" :dropdown-item="['close_order', 'cancel_order']"
-            @page-changed="filter($event, currentFilter)" @close_order="closeOrder" @cancel_order="cancelOrder"  @cancel="cancelImaging($event)">
+          <TableComponent @row-clicked="goToTask" :fields="fields" :pages="pages" :items="items" :busy="busy"
+            :dropdown-item="['close_order', 'cancel_order']" @page-changed="filter($event, currentFilter)"
+            @close_order="closeOrder" @cancel_order="cancelOrder">
             <template #status="{ data }">
               <div class="">
                 <span>{{ data.item.status }}</span>
@@ -32,8 +35,21 @@
         </UtilsFilterComponent>
       </div>
     </div>
+      </UtilsCardTab>
+      <UtilsCardTab title="Tasks">
+        <!-- <NursingTabsTasks /> -->
+
+        <div class="p-3">
+          <h3>Hello world</h3>
+        </div>
+      </UtilsCardTab>
+    </UtilsBaseCardTab>
+
+   
 
     <NursingModalCreateTask @refresh="filter(currentPage, currentFilter)" />
+    <NursingModalCancelOrder :editData="editData" />
+    <NursingModalCloseOrder :editData="editData" />
   </div>
 </template>
   
@@ -50,6 +66,7 @@ export default {
       busy: false,
       currentPage: 1,
       currentFilter: {},
+      editData: {},
       fields: [
         {
           key: 'created_at',
@@ -137,31 +154,13 @@ export default {
       })
     },
 
-    async closeOrder(e) {
-      const result = await this.showConfirmMessageBox(
-        'Do you want to close this nursing order', 'Close'
-      )
-      try {
-        if (result) {
-          await this.$api.nursing.closeNursingOrder(e.id)
-          this.filter(this.currentPage, this.currentFilter)
-        }
-      } catch (error) {
-        console.log(error)
-      }
+    closeOrder(e) {
+     this.editData = e
+     this.$bvModal.show('closeOrder')
     },
-    async cancelOrder(e) {
-      const result = await this.showConfirmMessageBox(
-        'Do you want to cancel this nursing order', 'Cancel'
-      )
-      try {
-        if (result) {
-          await this.$api.nursing.cancelNursingOrder(e.id)
-          this.filter(this.currentPage, this.currentFilter)
-        }
-      } catch (error) {
-        console.log(error)
-      }
+    cancelOrder(e) {
+      this.editData = e
+      this.$bvModal.show('cancelOrder')
     },
   },
 }
