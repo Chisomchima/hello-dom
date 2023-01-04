@@ -149,7 +149,7 @@ export default {
     baseURL: process.env.BASE_URL,
     APP_NAME_LONG: process.env.APP_NAME_LONG || "HEHEH",
     APP_NAME_SHORT: process.env.APP_NAME_SHORT || "Hello",
-    db_type: process.env.db_type
+    db_type: process.env.db_type,
   },
 
   env: {

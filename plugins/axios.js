@@ -32,6 +32,10 @@ export default function ({ $axios, $toast, store, redirect }) {
     }
 
     if (error.response && error.response.status === 403) {
+      // setTimeout(() => {
+      //   redirect('/dashboard');
+      // }, 2000)
+      // store.commit('toggleRequestInProgress', true)
       store.commit('auth/SET_PAGE_DISABLED', true)
       $toast({
         type: 'info',

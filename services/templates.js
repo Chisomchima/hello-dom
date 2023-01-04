@@ -12,5 +12,17 @@ export default axios => ({
     },
     deleteTemplate(id) {
         return axios.$delete(`/pharmacy/templates/${id}/`)
-    }
+    },
+
+    createEncTemplate(body){
+        return axios.$post(`/encounters/templates/`, body)
+    },
+    getEncTemplates(params = {}){
+        return axios.$get('/encounters/templates/', {
+            params
+        })
+    },
+    updateEncTemplate(id, body){
+        return axios.$patch(`/encounters/templates/${id}/`, body)
+    },
 });

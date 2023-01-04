@@ -6,6 +6,7 @@
       :fields="sortable_cols"
       stacked="md"
       :filter="filter"
+      :scrollable="scrollable"
       hover
       striped
       responsive
@@ -510,6 +511,10 @@ import { DateTime } from 'luxon'
 export default {
   props: {
     isClientPagination: {
+      type: Boolean,
+      default: false,
+    },
+    scrollable: {
       type: Boolean,
       default: false,
     },

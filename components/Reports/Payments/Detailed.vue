@@ -47,15 +47,19 @@ export default {
             downloading: false,
             fields: [
 
-                { key: 'created_at', label: 'Date', sortable: true },
-                { key: 'created_by', label: 'Cashier', sortable: true },
+                {
+                    key: 'transaction_date', formatter: (value) => {
+                        return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+                    }, label: 'Date', sortable: true
+                },
+                { key: 'cashier', label: 'Cashier', sortable: true },
                 {
                     key: 'patient',
                     label: 'Patient',
                     sortable: true,
-                    formatter: (val) => {
-                        return val.salutation + ' ' + val.firstname + ' ' + val.lastname
-                    },
+                    // formatter: (val) => {
+                    //     return val.salutation + ' ' + val.firstname + ' ' + val.lastname
+                    // },
                 },
                 { key: 'total_amount', label: 'Total amount', sortable: true },
                 { key: 'payment_method', label: 'Payment method', sortable: true },
@@ -78,8 +82,8 @@ export default {
             try {
                 this.busy = true
                 const data = await this.$api.reports.paymentsDetailedReport({ ...e, page })
-                this.items = data
-                // this.pages = data.total_pages
+                this.items = data.results
+                this.pages = data.total_pages
 
                 this.busy = false
             } catch (error) {
