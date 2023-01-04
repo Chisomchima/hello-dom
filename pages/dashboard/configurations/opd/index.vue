@@ -9,6 +9,9 @@
        <UtilsCardTab title="Clinics">
         <SettingsClinicList />
       </UtilsCardTab>
+       <UtilsCardTab title="Templates">
+        <SettingsTemplateList />
+      </UtilsCardTab>
     </UtilsBaseCardTab>
   </div>
 </template>

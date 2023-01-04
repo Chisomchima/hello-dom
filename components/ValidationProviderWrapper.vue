@@ -5,7 +5,7 @@
     :rules="rulesArr"
     v-bind="moreProps"
   >
-    <label class="form-control-label">{{ label || name }}</label>
+    <label v-if="label || name" class="form-control-label">{{ label || name }}</label>
     <slot></slot>
     <span class="text-danger form-control-label font-weight-light">{{ errors[0] }}</span>
   </ValidationProvider>
