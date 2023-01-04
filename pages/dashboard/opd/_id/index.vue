@@ -159,11 +159,7 @@ export default {
         DateTime.DATETIME_SHORT
       )
     },
-    dateCreated() {
-      return DateTime.fromISO(this.consultationData.encounter_datetime).toLocaleString(
-        DateTime.DATETIME_SHORT
-      )
-    },
+
   },
   methods: {
     showSignature() {
@@ -200,14 +196,7 @@ export default {
           this.activeIndex = 0
       }
     },
-    gotoPatientProfile() {
-      this.$router.push({
-        name: 'dashboard-patient-uuid',
-        params: {
-          uuid: this.consultationData.patient.id,
-        },
-      })
-    },
+
     async acknowledgeEnc() {
       const result = await this.showConfirmMessageBox(
         'Do you want to acknowledge this encounter ?'
