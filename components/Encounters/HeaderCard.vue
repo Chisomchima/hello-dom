@@ -16,10 +16,10 @@
                     <div class="col-md-6 col-sm-6 col-lg-6">
                         <b>ENC-ID:</b>
                         {{
-                        consultationData.encounter_id
-                            ? consultationData.encounter_id
-                            : 'nil'
-                        }}
+        consultationData.encounter_id
+            ? consultationData.encounter_id
+            : 'nil'
+}}
                     </div>
 
                     <div class="col-md-6 col-sm-6 col-lg-6">
@@ -37,14 +37,14 @@
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6">
                         <b>Provider:</b>
-                    <span
-                        v-if="Object.values(consultationData.provider ? consultationData.provider : {}).length > 0">{{
-                consultationData.provider
-                    ? consultationData.provider.first_name +
-                    ' ' +
-                    consultationData.provider.last_name
-                    : ''
-                }}</span>
+                        <span
+                            v-if="Object.values(consultationData.provider ? consultationData.provider : {}).length > 0">{{
+        consultationData.provider
+            ? consultationData.provider.first_name +
+            ' ' +
+            consultationData.provider.last_name
+            : ''
+}}</span>
                     </div>
                 </div>
                 <div style="
@@ -57,11 +57,11 @@
                 </div>
                 <div v-if="consultationData.signed_date" class="col-md-12 col-sm-12">
                     <b>Signed by:</b>
-                            {{
-                consultationData.provider.first_name +
-                ' ' +
-                consultationData.provider.last_name
-                }}, {{ dateSigned }}
+                    {{
+        consultationData.provider.first_name +
+        ' ' +
+        consultationData.provider.last_name
+}}, {{ dateSigned }}
                 </div>
             </div>
             <div v-if="consultationData" class="
@@ -79,11 +79,11 @@
                     <div class="px-2">
                         <p class="text-14 mb-0 text-grey text-capitalize">
                             <b>Name:</b>
-                    {{
-                    consultationData.patient.firstname
-                ? consultationData.patient.firstname + ' ' + consultationData.patient.lastname
-                : 'nil' 
-                    }}
+                            {{
+        consultationData.patient.firstname
+            ? consultationData.patient.firstname + ' ' + consultationData.patient.lastname
+            : 'nil'
+}}
                         </p>
                     </div>
                     <div class="px-2">
@@ -115,42 +115,43 @@
 
                 <div class="px-0">
                     <div id="button-2" class="theme-color-text">
-                        <b-avatar square :src="consultationData.patient ? consultationData.patient.profile_picture : ''" variant="#e7f0f8" style="border: 2px solid #f5f6f7" size="8rem" />
+                        <b-avatar square :src="consultationData.patient ? consultationData.patient.profile_picture : ''"
+                            variant="#e7f0f8" style="border: 2px solid #f5f6f7" size="8rem" />
 
                         <b-tooltip target="button-2" variant="secondary" placement="bottom">
                             <div class="d-block text-14 text-white">
-                        {{ consultationData.patient.salutation ? consultationData.patient.salutation : 'Mr.' }}
+                                {{ consultationData.patient.salutation ? consultationData.patient.salutation : 'Mr.' }}
 
                                 {{
-                        consultationData.patient.firstname
-                            ? consultationData.patient.firstname +
-                            ' ' +
-                            consultationData.patient.middlename +
-                            ' ' +
-                            consultationData.patient.lastname
-                            : 'Anonymous'
-                            }}
+        consultationData.patient.firstname
+            ? consultationData.patient.firstname +
+            ' ' +
+            consultationData.patient.middlename +
+            ' ' +
+            consultationData.patient.lastname
+            : 'Anonymous'
+}}
                                 <br />
                                 Gender: {{ consultationData.patient.gender ? consultationData.patient.gender : 'Male' }}
                                 <br />
                                 Phone No:
                                 {{
-                            consultationData.patient.phone_number ? consultationData.patient.phone_number : 'nil'
-                            }}
+        consultationData.patient.phone_number ? consultationData.patient.phone_number : 'nil'
+}}
                                 <br />
                                 Nationality:
                                 {{
-                            consultationData.patient.nationality
-                                ? consultationData.patient.nationality
-                                : 'Nigerian'
-                            }}
+        consultationData.patient.nationality
+            ? consultationData.patient.nationality
+            : 'Nigerian'
+}}
                                 <br />
                                 Marital Status:
                                 {{
-                            consultationData.patient.marital_status
-                                ? consultationData.patient.marital_status
-                                : 'Single'
-                            }}
+        consultationData.patient.marital_status
+            ? consultationData.patient.marital_status
+            : 'Single'
+}}
                                 <br />
                                 Religion:
                                 {{ consultationData.patient.religion ? consultationData.patient.religion : 'nil' }}
@@ -172,6 +173,21 @@ export default {
             type: Object,
             required: true
         }
+    },
+    methods: {
+        gotoPatientProfile() {
+            this.$router.push({
+                name: 'dashboard-patient-uuid',
+                params: {
+                    uuid: this.consultationData.patient.id,
+                },
+            })
+        },
+        dateCreated() {
+            return DateTime.fromISO(this.consultationData.encounter_datetime).toLocaleString(
+                DateTime.DATETIME_SHORT
+            )
+        },
     }
 }
 </script>
