@@ -3,10 +3,10 @@
       <BackwardNavigation />
       <div class="page-heading mb-4">Nursing Configurations</div>
       <UtilsBaseCardTab>
-        <UtilsCardTab title="Nursing stations">
+        <UtilsCardTab title="Nursing Stations">
           <SettingsStationList />
         </UtilsCardTab>
-         <UtilsCardTab title="Nursing services">
+         <UtilsCardTab title="Nursing Services">
           <SettingsServicesList />
         </UtilsCardTab>
       </UtilsBaseCardTab>

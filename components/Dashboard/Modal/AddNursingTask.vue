@@ -29,7 +29,8 @@
 
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Nursing station" :rules="['']">
-                            <VSelect v-model="dataObject.station" :options="stations" :reduce="(opt) => opt.id" label="name">
+                            <VSelect v-model="dataObject.station" :options="stations" :reduce="(opt) => opt.id"
+                                label="name">
                             </VSelect>
                         </ValidationProviderWrapper>
                     </div>
@@ -46,7 +47,7 @@
 </template>
   
 <script>
-import { debounce } from 'lodash'
+import calcAge from '@/mixins/calcAge'
 
 export default {
     props: {
@@ -113,7 +114,7 @@ export default {
             return ''
         },
     },
-    
+
     methods: {
         async ok() {
             if (await this.$refs.form.validate()) {
@@ -143,6 +144,16 @@ export default {
         },
         getData() {
             this.dataObject.patient = this.patient
+            let currentAge = calcAge(this.patient.date_of_birth)
+            let verdict = ''
+            if (currentAge.year === 0)
+                verdict = 'Less than a year'
+            else if (currentAge.year === 1)
+                verdict = '1 year'
+            else
+                verdict = `${currentAge.year} years`
+            console.log(verdict)
+            this.dataObject.patient.age = verdict
             this.getProducts()
             this.getStores()
             this.getStations()

@@ -12,6 +12,7 @@
                 'religion',
                 'nationality',
                 'phone_number',
+                'age'
             ]">
         </UtilsHeaderCardWithAvatar>
 

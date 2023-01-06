@@ -167,6 +167,7 @@
 </template>
 
 <script>
+import { DateTime } from 'luxon'
 export default {
     props: {
         consultationData: {
@@ -183,8 +184,10 @@ export default {
                 },
             })
         },
+    },
+    computed: {
         dateCreated() {
-            return DateTime.fromISO(this.consultationData.encounter_datetime).toLocaleString(
+            return DateTime.fromISO(this.consultationData?.encounter_datetime).toLocaleString(
                 DateTime.DATETIME_SHORT
             )
         },

@@ -21,7 +21,7 @@
       </div>
       <div class="col-md-3">
         <div class="mb-2">
-          <label class="form-control-label">Nursing station</label>
+          <label class="form-control-label">Nursing Station</label>
           <VSelect v-model="filters.nursing_station" label="name" :reduce="(opt) => opt.id" :multiple="true" :options="stations" />
         </div>
       </div>

@@ -128,11 +128,10 @@
 
 <script>
 import { DateTime } from 'luxon'
-import calcAge from '~/mixins/calcAge'
 import modalMsgBox from '~/mixins/modalMsgBox'
 export default {
   layout: 'dashboard',
-  mixins: [calcAge, modalMsgBox],
+  mixins: [modalMsgBox],
   data() {
     return {
       items: [],

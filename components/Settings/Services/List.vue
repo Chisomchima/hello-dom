@@ -46,7 +46,7 @@ export default {
                 },
                 {
                     key: 'bill_price',
-                    label: 'Bills price',
+                    label: 'Selling price',
                 },
                 {
                     key: 'description',

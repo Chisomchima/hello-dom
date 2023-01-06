@@ -15,7 +15,7 @@
             text="Actions"
             class="m-md-2"
           >
-            <b-dropdown-item @click="upload"
+            <b-dropdown-item @click.prevent="upload"
               >Upload billable item sheet</b-dropdown-item
             >
             <b-dropdown-divider></b-dropdown-divider>
@@ -34,8 +34,8 @@
           :currentPage="currentPage"
           :totalRecords="totalRecords"
         >
-          <template #type="{ data }">
-            <span class="text-capitalize">{{ data.item.type }}</span>
+        <template #description="{ data }">
+            <span class="text-capitalize">{{ data.item.description }}</span>
           </template>
           <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">
@@ -69,8 +69,12 @@
         />
       </div>
 
+      <div>
+        <DashboardModalFinanceAddBulkBillableItems @triggerUpload="setInput"/>
+      </div>
+
       <div class="input-field">
-        <input type="file" accept=".xlsx, .xls," ref="file" />
+        <input type="file" accept=".xlsx, .xls," ref="bulk" />
       </div>
     </div>
   </div>
@@ -204,10 +208,13 @@ export default {
       this.getBillableItems(this.currentPage)
     },
     upload() {
-      console.log('ghjdj')
-      this.$refs.file.click()
+      this.$bvModal.show('addBillableBulk')
+      // this.$refs.file2.click()
     },
-         async downloadTemplate() {
+    setInput(){
+      this.$refs.bulk.click()
+    }, 
+    async downloadTemplate() {
       this.downloading = true
       const response = await fetch(
         `${process.env.BASE_URL}finance/billable_items/price_lists/spreadsheet_template/`,

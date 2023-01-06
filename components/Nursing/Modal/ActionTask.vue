@@ -57,11 +57,19 @@
                             </span>
                         </div> -->
 
-                        <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Title" :rules="['']">
-                                <input v-model="editData.title" type="text" class="form-control" />
-                            </ValidationProviderWrapper>
+                        <div class="col-md-6 p-2">
+                            <span class="text-16 text-grey mb-1">Age:</span>
+                            <p class="text-14 mb-0">{{ patient.age }}</p>
                         </div>
+                        
+                        <div class="col-md-12 pt-2 px-2">
+                            <p class="text-16 text-grey mb-1">Instruction</p>
+                            <ul>
+                                <li class="text-14 mb-0">{{ editData.description }}</li>
+                            </ul>
+                        </div>
+
+                       
 
                         <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Type" :rules="['required']">

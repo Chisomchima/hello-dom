@@ -1,6 +1,9 @@
-export default {
-   methods: {
-    calcAge(e) {
+export default function calcAge(e) {
+        let age = {
+            year: '',
+            month: '',
+            day: ''
+        }
         // **********calc year***********
         let presentDate = new Date().getFullYear();
         let yearOfBirth = e.substring(0, 4);
@@ -10,19 +13,19 @@ export default {
         let diff = presentDate - yearOfBirth;
         let x = parseInt(diff);
         if (x === 0) {
-            this.year = 0;
-            this.month = 0;
+            age.year = 0;
+            age.month = 0;
         } else {
-            this.year = x;
+            age.year = x;
         }
 
         if (monthOfBirth < month) {
-            this.year;
+            age.year;
         } else {
-            if (this.year === 0) {
-                this.year;
+            if (age.year === 0) {
+                age.year;
             } else {
-                this.year--;
+                age.year--;
             }
         }
 
@@ -31,18 +34,18 @@ export default {
        
         // tempMonth = monthOfBirth - month
         if (presentDate === yearOfBirth) {
-            this.patient.age.month = 0;
+            age.month = 0;
         } else {
             tempMonth = 12 - monthOfBirth;
         }
 
         if (monthOfBirth <= month) {
-            this.month = month - monthOfBirth;
+            age.month = month - monthOfBirth;
             // this.patient.age.month + 1;
         } else if (month + 1 === monthOfBirth) {
-            this.month = 0;
+            age.month = 0;
         } else {
-            this.month = tempMonth + month;
+            age.month = tempMonth + month;
             // this.patient.age.month + 1;
         }
 
@@ -52,14 +55,14 @@ export default {
         // this.patient.age.day = new Date().getDate();
 
         if (day > dayOfBirth) {
-            this.day = day - dayOfBirth;
+            age.day = day - dayOfBirth;
         } else if (day === dayOfBirth) {
-            this.day = 0;
+            age.day = 0;
         } else {
-            this.day = day;
+            age.day = day;
         }
 
         // *********************************
-    },
-   }
+
+        return age
 }

@@ -8,9 +8,15 @@
                 <TableComponent :fields="fields" :pages="pages" @row-clicked="editdialogue" :items="items" :dropdown-item="['close_task', 'cancel_task']" :busy="busy"
                     @edit="edit($event)" @close_task="closeTask" @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
-                        <div class="">
-                            <span>{{ data.item.status }}</span>
-                        </div>
+                        <div v-if="data.item.status === 'OPEN'" class="">
+                <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+              </div>
+              <div v-if="data.item.status === 'SCHEDULED'" class="">
+                <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+              </div>
+              <div v-if="data.item.status === 'CLOSED'" class="">
+                <span class="text-12 badge-danger rounded text-center p-1 text-white">DONE</span>
+              </div>
                     </template>
                     <template #type="{ data }">
                         <div class="">
@@ -76,13 +82,8 @@ export default {
                     sortable: true,
                 },
                 {
-                    key: 'title',
-                    label: 'Title',
-                    sortable: true,
-                },
-                {
-                    key: 'type',
-                    label: 'Type',
+                    key: 'notes',
+                    label: 'Description',
                     sortable: true,
                 },
                 

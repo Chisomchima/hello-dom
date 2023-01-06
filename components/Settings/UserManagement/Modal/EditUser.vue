@@ -180,7 +180,7 @@ export default {
         },
         {
           href: '/dashboard/nursing-orders',
-          title: 'Nursing',
+          title: 'Nursing station',
           icon: 'fas fa-user-nurse',
         },
         {
