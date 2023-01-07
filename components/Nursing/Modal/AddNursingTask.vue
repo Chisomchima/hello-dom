@@ -71,8 +71,8 @@
                         
                         <div class="col-md-12 pt-2 px-2">
                             <p class="text-16 text-grey mb-1">Instruction</p>
-                            <ul>
-                                <li class="text-14 mb-0">{{ data.description }}</li>
+                            <ul class="pl-4">
+                                <li class="text-14 p-0 mb-0">{{ data.description }}</li>
                             </ul>
                         </div>
 

@@ -49,21 +49,38 @@
                 </div>
             </template> -->
             <template v-if="show" #besideFilterButton>
-                <BaseButton @click="$bvModal.show('nurseTask')" class="btn-outline-primary">Add Task</BaseButton>
+                <BaseButton @click="$bvModal.show('nurseTask')" class="btn-outline-primary">Add Nursing Order
+                </BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" :pages="pages" :items="items" :modalTitle="modalTitle" :busy="busy"
+                <TableComponent @row-clicked="viewDocument" :fields="fields" :pages="pages" :items="items" :busy="busy"
                     @edit="edit($event)" @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
-                        <div class="">
-                            <span>{{ data.item.status }}</span>
+                        <div v-if="data.item.status === 'OPEN'" class="">
+                            <span class="text-12 badge-success rounded text-center p-1 text-white">OPEN</span>
                         </div>
+                        <div v-if="data.item.status === 'SCHEDULED'" class="">
+                            <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                        </div>
+                        <div v-if="data.item.status === 'CLOSED'" class="">
+                            <span class="text-12 badge-danger rounded text-center p-1 text-white">CLOSED</span>
+                        </div>
+                    </template>
+                    <template #description="{ data }">
+                        <div class="">
+                            <span>{{ data.item.description }}</span>
+                        </div>
+                        
                     </template>
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
 
-        <DashboardModalAddNursingTask  @refresh="pageChange(1, filter)" :patient="data" />
+        <DashboardModalAddNursingTask @refresh="pageChange(1, filter)" :patient="data" />
+        <div v-show="viewModal">
+            <DashboardModalViewPatientTask  :data="taskLine" @hide="viewModal = false" :editData="taskLine" @refresh="pageChange(1, filter)" :patient="data" />
+        </div>
+       
     </div>
 </template>
   
@@ -94,6 +111,10 @@ export default {
                 date_to: ''
             },
             editData: {},
+            taskLine: {
+
+            },
+            viewModal: false,
             patient: {},
             options: [],
             fileTypes: [],
@@ -120,6 +141,11 @@ export default {
                     label: 'Station',
                     sortable: true,
                 },
+                {
+                    key: 'description',
+                    label: 'Service',
+                    sortable: true,
+                },
 
                 {
                     key: 'created_by',
@@ -141,7 +167,6 @@ export default {
     },
     async mounted() {
         await this.pageChange(1)
-        this.getFileTypes()
     },
     computed: {
         maxDate() {
@@ -216,38 +241,12 @@ export default {
                 this.busy = false
             }
         },
-        viewDocument(e){
-            let url = e.path
-            let trimmed = url.substring(1)
-            let baseURL = process.env.STATIC
-            let a = baseURL + trimmed
-            window.open(a)
+        viewDocument(e) {
+            this.taskLine = e
+            this.viewModal = true
+            this.$bvModal.show('viewpatientTask')
         },
 
-        async getFileTypes() {
-            try {
-                const { results } = await this.$api.core.getFileTypes({
-                    size: 1000,
-                })
-                this.fileTypes = results
-            } catch (error) {
-                console.log(error)
-            }
-        },
-
-        editFile(e){
-            this.editData = e
-            this.$bvModal.show('document')
-        },
-
-        async cancelImaging(e) {
-            const result = await this.showDeleteMessageBox(
-                'Do you want to delete this file ?'
-            )
-            if (result) {
-                await this.$api.files.deleteDocument(e.id)
-            }
-        },
 
         formatName(obj) {
             if (Object.values(obj).length > 0) {

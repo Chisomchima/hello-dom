@@ -139,7 +139,6 @@ export default {
                 patient: {},
                 station: null,
             }
-            this.uhid = ''
             this.$emit('hide')
         },
         getData() {
