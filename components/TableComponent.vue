@@ -374,6 +374,7 @@
       <template #cell(panel)="item">
         <slot name="panel" :data="item"></slot>
       </template>
+      
       <template #cell(cancel)="item">
         <slot name="cancel" :data="item"></slot>
       </template>
@@ -466,6 +467,11 @@
           />
           <col
             v-else-if="field.key === 'order_no'"
+            :key="field.key"
+            :style="{ width: '20rem' }"
+          />
+          <col
+            v-else-if="field.key === 'notes'"
             :key="field.key"
             :style="{ width: '20rem' }"
           />

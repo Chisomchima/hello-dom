@@ -1,6 +1,6 @@
 <template>
-    <ModalWrapper size="lg" :submitTitle="'Done'" id="actionTask" title="Add nursing task" @ok="ok()" @show="getData()"
-        @hide="clear()" :stacking="false">
+    <ModalWrapper size="lg" :cancelText="'Close'" :arrangement="false" id="viewpatientTask" title="View nursing order"
+        @ok="ok()" @show="getData()" @hide="clear()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
@@ -27,35 +27,10 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <!-- <div class="col-md-12 d-flex ml-0 text-primary text-14">
-                        <span class="point" @click="addTask">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                <path fill="currentColor"
-                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                            </svg>
-                            Add task
-                        </span>
-                    </div> -->
+
 
                     <div class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
-                        <!-- <div class="
-                  col-md-12
-                  
-                  d-flex
-                  justify-content-end
-                  ml-0
-                  text-danger text-14
-                ">
-                           
-                            <span class="point float" @click="deleteTask(index)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
-                                </svg>
-                            </span>
-                        </div> -->
+
 
                         <div class="col-md-6 p-2">
                             <span class="text-16 text-grey mb-1">Age:</span>
@@ -69,94 +44,47 @@
                             </ul>
                         </div>
 
+                        <div class="col-md-12 px-0" v-if="taskArray != 0">
+                            <p class="text-grey text-16 px-2">Tasks</p>
 
+                            <div v-for="(task, index) in data.tasks" :key="index" class=" col-md-12">
+                                <div class="col-md-12 mb-2">
+                                    <p class="text-14 text-grey mb-1 text-right">
+                                        <span>Scheduled date</span>
+                                        <span>{{ convertDate(task.scheduled_at) }}</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <ValidationProviderWrapper name="Nursing service" :rules="['']">
+                                        <VSelect v-model="task.nursing_services" :disabled="true" :noDrop="true" :multiple="true"
+                                            :options="services" :reduce="(opt) => opt.id" label="name">
+                                        </VSelect>
+                                    </ValidationProviderWrapper>
+                                </div>
 
-
-                        <div class="col-md-6 mb-2">
-                            <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
-                                <input v-model="dataObject.scheduled_at" :disabled="editData.type === 'IMMEDIATE'"
-                                    type="date" :min="minDate" class="form-control" />
-                            </ValidationProviderWrapper>
+                                <div class="col-md-12 mb-2">
+                                    <p class="mb-1">
+                                        Notes
+                                    </p>
+                                    <p class="text-14 text-grey mb-1"><span>{{ task.notes }}</span></p>
+                                </div>
+                                <hr>
+                            </div>
                         </div>
-                        <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Nursing service" :rules="['']">
-                                <VSelect v-model="editData.nursing_services" :multiple="true" :options="services"
-                                    :reduce="(opt) => opt.id" label="name">
-                                </VSelect>
-                            </ValidationProviderWrapper>
-                        </div>
 
-                        <!-- <div class="col-md-12">
-                            <p class="ml-3 mb-2 text-grey text-underline text-16 text-center">Inventory</p>
-                        </div> -->
-                        <!-- <div v-for="(pint, innerIndex) in editData.inventory" :key="innerIndex"
-                            class="d-flex col-md-12 mb-2">
-                            <div class="col-md-6 px-0 pr-1">
-                                <ValidationProviderWrapper name="Store" :rules="['']">
-                                    <VSelect v-model="pint.store" :options="stores" :reduce="(opt) => opt.id"
-                                        label="name">
-                                    </VSelect>
-                                </ValidationProviderWrapper>
-                            </div>
-
-                            <div class="col-md-6 px-0 pl-1 pr-2">
-                                <ValidationProviderWrapper name="Product" :rules="['']">
-                                    <VSelect v-model="pint.product" :options="products" :reduce="(opt) => opt.id"
-                                        label="name">
-                                    </VSelect>
-                                </ValidationProviderWrapper>
-                            </div>
-
-                            <div class="px-0 text-danger d-flex align-items-center">
-                                <span class="point pt-3" @click="deleteInventory(innerIndex)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                        <g fill="currentColor">
-                                            <path
-                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                            <path fill-rule="evenodd"
-                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                        </g>
-                                    </svg>
-                                </span>
-                            </div>
-                        </div> -->
-                        <!-- <div class="col-md-12 px-0 d-flex justify-content-end align-items-center pr-2">
-                            <span @click="addInventory(index)" class="point text-primary text-12">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                    <path fill="currentColor"
-                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                </svg>
-                                Add inventory
-                            </span>
-                        </div> -->
-
-                        <div class="col-md-12 mb-2">
-                            <ValidationProviderWrapper name="Notes" :rules="['']">
-                                <textarea id="" v-model="editData.notes" class="form-control" name="" cols="30"
-                                    rows="2"></textarea>
-                            </ValidationProviderWrapper>
+                        <div class="col-md-12" v-else>
+                            <p class="text-center text-16 text-grey p-4">No tasks assigned yet</p>
                         </div>
                     </div>
 
-                    <!-- <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
-                        <span class="point" @click="addTask">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                <path fill="currentColor"
-                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                            </svg>
-                            Add task
-                        </span>
-                    </div> -->
+
                 </div>
 
                 <div class="col-md-=12 text-14 text-grey p-0">
                     <span>Date created: </span><span>{{ dateCreated }}</span>
                 </div>
                 <div class="col-md-=12 text-14 text-grey p-0">
-                    <span>Scheduled by: </span><span>{{ createdBy }}</span>
+                    <span>Provider: </span><span>{{ createdBy }}</span>
                 </div>
             </form>
         </ValidationObserver>
@@ -221,14 +149,23 @@ export default {
             return x
         },
         dateCreated() {
-            let x = DateTime.fromISO(this.dataObject.scheduled_at).toFormat('yyyy-LL-dd')
-            return x
+            if (this.editData.created_at) {
+                let x = DateTime.fromISO(this.editData.created_at).toFormat('yyyy-LL-dd')
+                return x
+            }
         },
-        createdBy(){
-            if(this.editData.scheduled_by)
-                return this.editData.scheduled_by.first_name + " " + this.editData.scheduled_by.last_name
-            else
+        createdBy() {
+            if (this.editData.created_by)
+                return (this.editData.created_by.first_name || '') + " " + (this.editData.created_by.last_name || '')
+            else {
                 return ''
+            }
+        },
+        taskArray() {
+            if (this.data.tasks) {
+                return this.data.tasks.length
+            }
+
         },
         name() {
             if (Object.keys(this.patient).length > 0) {
@@ -275,8 +212,9 @@ export default {
                 this.save()
             }
         },
-        setToConfirmed() {
-
+        convertDate(date) {
+            let x = DateTime.fromISO(date).toFormat('yyyy-LL-dd')
+            return x
         },
         fetchOPtions(e, i) {
             this.$api.inventory
@@ -337,7 +275,6 @@ export default {
                 nursing_services: [],
                 scheduled_at: ''
             }
-            this.uhid = ''
             this.$emit('hide')
         },
         getData() {

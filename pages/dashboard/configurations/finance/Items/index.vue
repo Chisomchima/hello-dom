@@ -19,30 +19,47 @@
         </keep-alive>
       </UtilsCardTab>
       <UtilsCardTab title="Billable Items">
-        <TabView class="tabview-custom">
+        <TabView @tab-click="showMe" class="tabview-custom">
           <TabPanel class="dark-panel">
             <template #header>
               <span class="ml-2">All</span>
             </template>
-            <DashboardFinanceBillableItemsAll />
+            <div v-if="activeIndex === 0">
+              <DashboardFinanceBillableItemsAll />
+            </div>
           </TabPanel>
           <TabPanel class="dark-panel">
             <template #header>
               <span class="ml-2">Encounters</span>
             </template>
-            <DashboardFinanceBillableItemsEncounters />
+            <div v-if="activeIndex === 1">
+              <DashboardFinanceBillableItemsEncounters />
+            </div>
+            
           </TabPanel>
           <TabPanel class="dark-panel">
             <template #header>
               <span class="ml-2">Imaging</span>
             </template>
-            <DashboardFinanceBillableItemsImaging />
+            <div v-if="activeIndex === 2">
+              <DashboardFinanceBillableItemsImaging />
+            </div>
           </TabPanel>
           <TabPanel class="dark-panel">
             <template #header>
               <span class="ml-2">Laboratory</span>
             </template>
-            <DashboardFinanceBillableItemsLaboratory />
+            <div v-if="activeIndex === 3">
+              <DashboardFinanceBillableItemsLaboratory />
+            </div>
+          </TabPanel>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Nursing</span>
+            </template>
+            <div v-if="activeIndex === 4">
+              <DashboardFinanceBillableItemsNursing />
+            </div>
           </TabPanel>
         </TabView>
       </UtilsCardTab>
@@ -55,8 +72,33 @@ export default {
   data() {
     return {
       data: null,
+      activeIndex: 0
     }
   },
+
+  methods: {
+    showMe(e) {
+      switch (e.index) {
+        case 0:
+          this.activeIndex = 0
+          break;
+        case 1:
+          this.activeIndex = 1
+          break;
+        case 2:
+          this.activeIndex = 2
+          break;
+        case 3:
+          this.activeIndex = 3
+          break;
+        case 4:
+          this.activeIndex = 4
+          break;
+        default:
+          this.activeIndex = 0
+      }
+    },
+  }
 }
 </script>
 

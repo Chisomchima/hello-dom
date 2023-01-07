@@ -5,11 +5,18 @@
                 <BaseButton class="btn-outline-primary" @click="openModal">Add task</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" :pages="pages" @row-clicked="editdialogue" :items="items" :dropdown-item="['close_task', 'cancel_task']" :busy="busy"
-                    @edit="edit($event)" @close_task="closeTask" @page-changed="pageChange($event, filter)">
+                <TableComponent :fields="fields" :pages="pages" @row-clicked="editdialogue" :items="items"
+                    :dropdown-item="['close_task', 'cancel_task']" :busy="busy" @edit="edit($event)"
+                    @close_task="closeTask" @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
-                        <div class="">
-                            <span>{{ data.item.status }}</span>
+                        <div v-if="data.item.status === 'OPEN'" class="">
+                            <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                        </div>
+                        <div v-if="data.item.status === 'SCHEDULED'" class="">
+                            <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                        </div>
+                        <div v-if="data.item.status === 'CLOSED'" class="">
+                            <span class="text-12 badge-danger rounded text-center p-1 text-white">DONE</span>
                         </div>
                     </template>
                     <template #type="{ data }">
@@ -20,11 +27,13 @@
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
-        <NursingModalAddNursingTask :data="data" :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+        <NursingModalAddNursingTask :data="data" :edit-data="editObj" :patient="patient" @refresh="pageChange(1)"
+            :modalTitle="modalTitle" />
         <!-- <NursingTabsAddTasks :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" /> -->
-        <NursingModalActionTask :editData="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" />
-        <NursingModalCloseTask :editData="editData" @refresh="filter(currentPage, currentFilter)" />
-        <NursingModalCancelTask :editData="editData" @refresh="filter(currentPage, currentFilter)" />
+        <NursingModalActionTask :data="data" :editData="editObj" :patient="patient" @refresh="pageChange(1)"
+            :modalTitle="modalTitle" />
+        <NursingModalCloseTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
+        <NursingModalCancelTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
     </div>
 </template>
   
@@ -76,16 +85,11 @@ export default {
                     sortable: true,
                 },
                 {
-                    key: 'title',
-                    label: 'Title',
+                    key: 'notes',
+                    label: 'Description',
                     sortable: true,
                 },
-                {
-                    key: 'type',
-                    label: 'Type',
-                    sortable: true,
-                },
-                
+
                 {
                     key: 'scheduled_at',
                     label: 'Scheduled date',
@@ -133,18 +137,25 @@ export default {
             this.$bvModal.show('nurseTask')
         },
         editdialogue(e) {
-            this.editObj = e
-            this.modalTitle = 'Edit Task'
-            this.$bvModal.show('actionTask')
+            if (e.status === 'SCHEDULED') {
+                this.editObj = e
+                this.modalTitle = 'Edit Task'
+                this.$bvModal.show('actionTask')
+            }
+            else
+                this.$toast({
+                    type: 'info',
+                    text: `Service has been rendered`,
+                })
         },
-        async closeTask(item){
+        async closeTask(item) {
             this.editData = item
             console.log(item)
             this.$bvModal.show('closeTask')
         },
         async cancelTask(item) {
-           this.editData = item
-           this.$bvModal.show('cancelTask')
+            this.editData = item
+            this.$bvModal.show('cancelTask')
         },
     },
 }

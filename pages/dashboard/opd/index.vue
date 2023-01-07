@@ -23,12 +23,12 @@
         <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
           <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" :dropdown-item="['nurse_vital']"
             @nurse_vital="addVitals($event)" @page-changed="filter($event, currentFilter)"
-            @row-clicked="viewPatientData" >
+            @row-clicked="viewPatientData">
           </TableComponent>
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalNewEncounter @get-encounter="filter(1,{})" />
+    <DashboardModalNewEncounter @get-encounter="filter(1, {})" />
     <DashboardModalAddVitalOnOpd :encounterData="tempEncounterData" @refresh="filter(1, {})" />
   </div>
 </template>
@@ -38,7 +38,7 @@
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc,FilterLogic],
+  mixins: [TableFunc, FilterLogic],
   data() {
     return {
       busy: false,
@@ -49,7 +49,7 @@ export default {
           key: 'encounter_datetime',
           label: 'Date',
           sortable: true,
-          
+
         },
         { key: 'encounter_id', label: 'Encounter ID', sortable: true },
         {
@@ -81,9 +81,9 @@ export default {
           },
         },
         { key: 'encounter_type', label: 'Encounter Type', sortable: true },
-       
+
         { key: 'status', label: 'Status', sortable: true },
-        { key: 'dots', label:'', sortable: false },
+        { key: 'dots', label: '', sortable: false },
       ],
     }
   },
@@ -104,8 +104,14 @@ export default {
     },
     viewPatientData(e) {
       console.log(e)
-      if (e.bill.cleared_status === 'CLEARED' ) {
-        this.$router.push(`/dashboard/opd/${e.id}`)
+
+      if (e.bill.cleared_status === 'CLEARED') {
+        this.$router.push({
+          name: 'dashboard-opd-id',
+          params: {
+            id: e.id,
+          },
+        })
       }
       // else {
       //   this.$toast({
@@ -123,7 +129,7 @@ export default {
       //     text: 'Nurses are yet to take vitals'
       //   });
       // }
-      
+
     },
     addVitals(e) {
       this.tempEncounterData = e
@@ -134,4 +140,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

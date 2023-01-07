@@ -25,8 +25,8 @@
           :currentPage="currentPage"
           :totalRecords="totalRecords"
         >
-        <template #type="{ data }">
-            <span class="text-capitalize">{{data.item.type}}</span>
+        <template #description="{ data }">
+            <span class="text-capitalize">{{ data.item.description }}</span>
           </template>
           <template #edit="{ data }">
             <div @click="edit(data.item)" class="text-start">

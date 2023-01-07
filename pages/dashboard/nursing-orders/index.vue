@@ -27,9 +27,21 @@
             :dropdown-item="['close_order', 'cancel_order']" @page-changed="filter($event, currentFilter)"
             @close_order="closeOrder" @cancel_order="cancelOrder">
             <template #status="{ data }">
-              <div class="">
-                <span>{{ data.item.status }}</span>
+              <div v-if="data.item.status === 'OPEN'" class="">
+                <span class="text-12 badge-success rounded text-center p-1 text-white">OPEN</span>
               </div>
+              <div v-if="data.item.status === 'SCHEDULED'" class="">
+                <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+              </div>
+              <div v-if="data.item.status === 'CLOSED'" class="">
+                <span class="text-12 badge-danger rounded text-center p-1 text-white">CLOSED</span>
+              </div>
+            </template>
+            <template #description="{ data }">
+              <div>
+                <span> {{ data.item.description }}</span>
+              </div>
+              
             </template>
           </TableComponent>
         </UtilsFilterComponent>
@@ -102,7 +114,7 @@ export default {
           label: 'Station',
           sortable: true,
         },
-
+        { key: 'description', label: 'Service', sortable: true },
         {
           key: 'created_by',
           label: 'Ordered by',

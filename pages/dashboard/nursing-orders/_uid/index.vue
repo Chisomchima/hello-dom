@@ -1,8 +1,8 @@
 <template>
     <div>
         <BackwardNavigation />
-        <UtilsHeaderCardWithAvatar :actions="['close_order', 'cancel_order']" @close_order="closeOrder" @cancel_order="cancelOrder" :patientContext="false"
-            :showScheme="false" :title="`${data.patient.salutation ? data.patient.salutation : ''} ${data.patient.firstname ? data.patient.firstname : ''
+        <UtilsHeaderCardWithAvatar :actions="['close_order', 'cancel_order']" @close_order="closeOrder"
+            @cancel_order="cancelOrder" :patientContext="false" :showScheme="false" :title="`${data.patient.salutation ? data.patient.salutation : ''} ${data.patient.firstname ? data.patient.firstname : ''
             } ${data.patient.lastname ? data.patient.lastname : ''}`" :data="data.patient" :enable-action="true"
             :display-key="[
                 'uhid',
@@ -12,12 +12,23 @@
                 'religion',
                 'nationality',
                 'phone_number',
+                'age'
             ]">
         </UtilsHeaderCardWithAvatar>
 
         <div class="bg-white my-3 p-3">
-            <h3 class="text-16 mb-2">Instruction</h3>
-            <p class="text-14 mb-0 text-info">{{ data.description }}</p>
+            <p class="text-16 text-grey mb-1">Instruction</p>
+            <ul class="pl-3">
+                <li class="text-14 p-0 mb-0">{{ data.description }}</li>
+            </ul>
+            <div class="row px-3">
+                <div class="col-md-3 text-14 text-grey p-0">
+                    <span>Date ordered: </span><span>{{ dateCreated }}</span>
+                </div>
+                <div class="col-md-6 text-14 text-grey p-0">
+                    <span>Scheduled by: </span><span>{{ createdBy }}</span>
+                </div>
+            </div>
         </div>
         <UtilsBaseCardTab>
             <UtilsCardTab title="Tasks">
@@ -41,6 +52,7 @@
 </template>
   
 <script>
+import { DateTime } from 'luxon'
 export default {
     async asyncData({ $api, route }) {
         try {
@@ -61,13 +73,22 @@ export default {
         }
     },
     computed: {
-
+        dateCreated() {
+            let x = DateTime.fromISO(this.data.created_at).toFormat('yyyy-LL-dd')
+            return x
+        },
+        createdBy(){
+            if(Object.keys(this.data.created_by).length > 0)
+                return this.data.created_by.first_name + " " + this.data.created_by.last_name
+            else
+                return ''
+        },
     },
     methods: {
         closeOrder() {
             this.$bvModal.show('closeOrder')
         },
-        cancelOrder(){
+        cancelOrder() {
             this.$bvModal.show('cancelOrder')
         }
     },

@@ -1,6 +1,5 @@
 <template>
-    <ModalWrapper size="lg" id="nurseTask" title="Add nursing task" @ok="ok()" @show="getData()" 
-        :stacking="false">
+    <ModalWrapper size="lg" id="nurseTask" title="Add task" @ok="ok()" @show="getData()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
@@ -63,8 +62,18 @@
                             </ValidationProviderWrapper>
                         </div> -->
 
-                        <div class="col-md-12 p-3">
-                            <p class="text-14 mb-0 text-info">Instruction: {{ data.description }}</p>
+
+
+                        <div class="col-md-6 p-2">
+                            <span class="text-16 text-grey mb-1">Age:</span>
+                            <p class="text-14 mb-0">{{ patient.age }}</p>
+                        </div>
+                        
+                        <div class="col-md-12 pt-2 px-2">
+                            <p class="text-16 text-grey mb-1">Instruction</p>
+                            <ul class="pl-4">
+                                <li class="text-14 p-0 mb-0">{{ data.description }}</li>
+                            </ul>
                         </div>
 
                         <div class="col-md-6 mb-2">
@@ -140,7 +149,7 @@
                             </span>
                         </div> -->
 
-                       
+
                     </div>
 
                     <!-- <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
@@ -193,16 +202,9 @@ export default {
             stores: [],
             services: [],
             dataObject: {
-                title: "",
                 notes: "",
                 type: 'IMMEDIATE',
                 nursing_services: [],
-                inventory: [
-                    {
-                        product: null,
-                        store: null
-                    }
-                ],
                 scheduled_at: ''
             },
         }
@@ -322,16 +324,9 @@ export default {
         },
         addTask() {
             this.dataObject.tasks.push({
-                title: "",
                 notes: "",
                 type: null,
                 nursing_services: [],
-                inventory: [
-                    {
-                        product: null,
-                        store: null
-                    }
-                ],
                 scheduled_at: ''
             })
         },
