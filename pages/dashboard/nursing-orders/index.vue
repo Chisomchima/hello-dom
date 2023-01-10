@@ -114,7 +114,7 @@ export default {
           label: 'Station',
           sortable: true,
         },
-        { key: 'description', label: 'Service', sortable: true },
+        { key: 'description', label: 'Order', sortable: true },
         {
           key: 'created_by',
           label: 'Ordered by',

@@ -107,21 +107,22 @@ export default {
             return ''
         },
         gender() {
-            if (this.dataObject.patient) {
+            if (Object.keys(this.dataObject.patient).length > 0) {
                 return this.dataObject.patient.gender
             }
             return ''
         },
 
         dob() {
-            if (this.dataObject.patient) {
-                return this.dataObject.patient.date_of_birth
+            if (Object.keys(this.dataObject.patient).length > 0) {
+                let response = calcAge(this.dataObject.patient.date_of_birth)
+                return `${this.dataObject.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
             }
             return ''
         },
 
         email() {
-            if (this.dataObject.patient) {
+            if (Object.keys(this.dataObject.patient).length > 0) {
                 return this.dataObject.patient.email
             }
             return ''
@@ -142,7 +143,7 @@ export default {
                  else 
                     verdict = `${currentAge.year} years`
                 console.log(verdict)
-                this.dataObject.patient.age = verdict
+                this.dataObject.patient.age = currentAge
                 this.downloading = false
             } else {
                 this.dataObject.patient = {}

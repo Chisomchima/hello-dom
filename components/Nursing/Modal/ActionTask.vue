@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" :submitTitle="'Done'" id="actionTask" title="Add nursing task" @ok="ok()" @show="getData()"
+    <ModalWrapper size="lg" :submitTitle="'Done'" id="actionTask" title="Complete task" @ok="ok()" @show="getData()"
         @hide="clear()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
@@ -27,7 +27,23 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <!-- <div class="col-md-12 d-flex ml-0 text-primary text-14">
+                    <div class="col-md-12 pt-2 px-3">
+                        <p class="text-16 text-grey mb-1">Instruction</p>
+                        <ul class="pl-4">
+                            <li class="text-14 p-0 mb-0">{{ data.description }}</li>
+                        </ul>
+                        <div class="d-flex text-14">
+                            
+                            <div class="col-md-4">
+                                <span class="text-grey">Scheduled by: </span><span>{{ createdBy }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-12 d-flex ml-0 text-primary text-14 my-2">
                         <span class="point" @click="addTask">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -57,33 +73,34 @@
                             </span>
                         </div> -->
 
-                        <div class="col-md-6 p-2">
+                        <!-- <div class="col-md-6 p-2">
                             <span class="text-16 text-grey mb-1">Age:</span>
                             <span class="text-14 mb-0">{{ patient.age }}</span>
-                        </div>
-
-                        <div class="col-md-12 pt-2 px-2">
-                            <p class="text-16 text-grey mb-1">Instruction</p>
-                            <ul class="pl-4">
-                                <li class="text-14 p-0 mb-0">{{ data.description }}</li>
-                            </ul>
-                        </div>
+                        </div> -->
 
 
 
 
-                        <div class="col-md-6 mb-2">
-                            <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
-                                <input v-model="dataObject.scheduled_at" :disabled="editData.type === 'IMMEDIATE'"
-                                    type="date" :min="minDate" class="form-control" />
-                            </ValidationProviderWrapper>
+
+
+                        <div class="col-md-12 mb-2">
+                            <div class="col-md-12 px-0 d-flex justify-content-end">
+                                <div class="col-md-5 px-0">
+                                    <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
+                                        <input v-model="dataObject.scheduled_at"
+                                            :disabled="true" type="date" :min="minDate"
+                                            class="form-control" />
+                                    </ValidationProviderWrapper>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Nursing service" :rules="['']">
-                                <VSelect v-model="editData.nursing_services" :multiple="true" :options="services"
+                                <VSelect :disabled="true" v-model="editData.nursing_services" :multiple="true" :options="services"
                                     :reduce="(opt) => opt.id" label="name">
                                 </VSelect>
                             </ValidationProviderWrapper>
+                           
                         </div>
 
                         <!-- <div class="col-md-12">
@@ -152,12 +169,7 @@
                     </div> -->
                 </div>
 
-                <div class="col-md-=12 text-14 text-grey p-0">
-                    <span>Date created: </span><span>{{ dateCreated }}</span>
-                </div>
-                <div class="col-md-=12 text-14 text-grey p-0">
-                    <span>Scheduled by: </span><span>{{ createdBy }}</span>
-                </div>
+
             </form>
         </ValidationObserver>
     </ModalWrapper>
@@ -165,6 +177,7 @@
   
 <script>
 import { DateTime } from 'luxon'
+import calcAge from '@/mixins/calcAge'
 export default {
     props: {
         data: {
@@ -224,8 +237,8 @@ export default {
             let x = DateTime.fromISO(this.dataObject.scheduled_at).toFormat('yyyy-LL-dd')
             return x
         },
-        createdBy(){
-            if(this.editData.scheduled_by)
+        createdBy() {
+            if (this.editData.scheduled_by)
                 return this.editData.scheduled_by.first_name + " " + this.editData.scheduled_by.last_name
             else
                 return ''
@@ -251,7 +264,8 @@ export default {
 
         dob() {
             if (this.patient.date_of_birth) {
-                return this.patient.date_of_birth
+                let response = calcAge(this.patient.date_of_birth)
+                return `${this.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
             }
             return ''
         },
@@ -278,6 +292,7 @@ export default {
         setToConfirmed() {
 
         },
+        
         fetchOPtions(e, i) {
             this.$api.inventory
                 .getProducts({ size: 1500, generic_drug: e.id })
