@@ -70,13 +70,14 @@
                     class="class-details-data_value"
                     ><slot :name="name" :value="value">{{ value }}</slot>
                   </span>
+                  
                   <template v-else>
                     <span
                      v-for="(val, index) in value"
                       :key="index"
                       class="class-details-data_value text-truncate"
-                      ><slot :name="name" :value="val">{{ value }}</slot></span
-                    >
+                      ><slot :name="name" :value="val">{{ value }}</slot>
+                    </span>
                   </template>
                 </div>
                

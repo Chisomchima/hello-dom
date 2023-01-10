@@ -1,6 +1,6 @@
 <template>
-    <ModalWrapper size="lg" :cancelText="'Close'" :arrangement="false" id="viewpatientTask" title="View nursing order"
-        @ok="ok()" @show="getData()" @hide="clear()" :stacking="false">
+    <ModalWrapper size="lg" :submitTitle="'Done'" id="viewTask" title="View task" @ok="ok()" @show="getData()"
+        @hide="clear()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
@@ -27,59 +27,52 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-12 pt-2 px-3">
                         <p class="text-16 text-grey mb-1">Instruction</p>
                         <ul class="pl-4">
                             <li class="text-14 p-0 mb-0">{{ data.description }}</li>
                         </ul>
+                        <div class="d-flex text-14">
+                            <div class="col-md-4">
+                                <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <span class="text-grey">Scheduled by: </span><span>{{ createdBy }}</span>
+                            </div>
+                        </div>
                     </div>
 
-                   <div class="col-md-12 row">
-                    <div class="col-md-4 text-14">
-                        <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
-                    </div>
-                    <div class="col-md-4 text-14">
-                        <span class="text-grey">Ordered by: </span><span>{{ createdBy }}</span>
-                    </div>
-                   </div>
+                    <div class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
 
-                    <div class="row w-100 p-1 mt-2 mx-2">
-
-                        <div class="col-md-12 px-0" v-if="taskArray != 0">
-                            <p class="text-grey text-16 px-3 mb-2">Tasks</p>
-
-                            <div v-for="(task, index) in data.tasks" :key="index" class="border border-secondary rounded m-3 px-0">
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 text-grey mb-1 text-right">
-                                        <span>Scheduled date</span>
-                                        <span>{{ convertDate(task.scheduled_at) }}</span>
-                                    </p>
-                                </div>
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 mb-1 text-grey">
-                                        Nursing services(s)
-                                    </p>
-                                    <p class="text-14 mb-1">{{ convertServices(task.nursing_services) }}<span></span></p>
-
-                                </div>
-
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 mb-1 text-grey">
-                                        Notes
-                                    </p>
-                                    <p class="text-14 mb-1"><span>{{ task.notes }}</span></p>
+                        <div class="col-md-12 mb-2">
+                            <div class="col-md-12 px-0 d-flex justify-content-end">
+                                <div class="col-md-5 px-0">
+                                    <div class="col-md-12 mb-2">
+                                        <p class="text-14 text-grey mb-1 text-right">
+                                            <span>Scheduled date</span>
+                                            <span>{{ editData.scheduled_at && convertDate(editData.scheduled_at) }}</span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <p class="text-14 mb-1 text-grey">
+                                Nursing services(s)
+                            </p>
+                            <p class="text-14 mb-1">{{ editData.nursing_services && convertServices(editData.nursing_services) }}<span></span></p>
 
-                        <div class="col-md-12 border border-secondary rounded" v-else>
-                            <p class="text-center text-16 text-grey p-5">No tasks assigned yet</p>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <p class="text-14 mb-1 text-grey">
+                                Notes
+                            </p>
+                            <p class="text-14 mb-1"><span>{{  editData ? editData.notes : ''  }}</span></p>
                         </div>
                     </div>
 
-
                 </div>
-
 
             </form>
         </ValidationObserver>
@@ -89,7 +82,6 @@
 <script>
 import { DateTime } from 'luxon'
 import calcAge from '@/mixins/calcAge'
-import { te } from 'date-fns/locale'
 export default {
     props: {
         data: {
@@ -145,24 +137,16 @@ export default {
             let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
             return x
         },
+
         dateCreated() {
-            if (this.editData.created_at) {
-                let x = DateTime.fromISO(this.editData.created_at).toFormat('yyyy-LL-dd')
-                return x
-            }
+            let x = DateTime.fromISO(this.editData.scheduled_at).toFormat('yyyy-LL-dd')
+            return x
         },
         createdBy() {
-            if (this.editData.created_by)
-                return (this.editData.created_by.first_name || '') + " " + (this.editData.created_by.last_name || '')
-            else {
+            if (this.editData.scheduled_by)
+                return this.editData.scheduled_by.first_name + " " + this.editData.scheduled_by.last_name
+            else
                 return ''
-            }
-        },
-        taskArray() {
-            if (this.data.tasks) {
-                return this.data.tasks.length
-            }
-
         },
         name() {
             if (Object.keys(this.patient).length > 0) {
@@ -184,7 +168,7 @@ export default {
         },
 
         dob() {
-           if (this.patient.date_of_birth) {
+            if (this.patient.date_of_birth) {
                 let response = calcAge(this.patient.date_of_birth)
                 return `${this.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
             }
@@ -215,6 +199,7 @@ export default {
             return x
         },
         convertServices(service){
+            console.log(service)
             let Arr = []
             for(let x = 0; x < service.length; x++){
                 Arr.push(service[x].name)
@@ -284,55 +269,9 @@ export default {
             this.$emit('hide')
         },
         getData() {
-            this.getProducts()
-            this.getStores()
-            this.getServices()
-            let today = new Date()
-            today = today.toISOString()
             this.dataObject = this.editData
         },
-        async getPatientByUHID(uhid) {
-            try {
-                if (uhid.length > 0) {
-                    const results = await this.$api.patient.getPatientByUHID(uhid)
-                    return results
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        },
 
-        getProducts() {
-            this.$api.inventory
-                .getProducts({ size: 1000 })
-                .then((res) => {
-                    this.products = res.results
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
-
-        getStores() {
-            this.$api.inventory
-                .getStores({ size: 1000, is_pharmacy: true })
-                .then((res) => {
-                    this.stores = res.results
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
-        getServices() {
-            this.$api.nursing
-                .getServices({ size: 1000 })
-                .then((res) => {
-                    this.services = res.results
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
     },
 }
 </script>

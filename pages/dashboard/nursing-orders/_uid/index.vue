@@ -1,7 +1,7 @@
 <template>
     <div>
         <BackwardNavigation />
-        <UtilsHeaderCardWithAvatar :actions="['close_order', 'cancel_order']" @close_order="closeOrder"
+        <UtilsHeaderCardWithAvatar :enableAction="false" @close_order="closeOrder"
             @cancel_order="cancelOrder" :patientContext="false" :showScheme="false" :title="`${data.patient.salutation ? data.patient.salutation : ''} ${data.patient.firstname ? data.patient.firstname : ''
             } ${data.patient.lastname ? data.patient.lastname : ''}`" :data="data.patient" :enable-action="true"
             :display-key="[
@@ -12,7 +12,6 @@
                 'religion',
                 'nationality',
                 'phone_number',
-                'age'
             ]">
         </UtilsHeaderCardWithAvatar>
 
@@ -22,11 +21,11 @@
                 <li class="text-14 p-0 mb-0">{{ data.description }}</li>
             </ul>
             <div class="row px-3">
+                <div class="col-md-4 text-14 text-grey p-0">
+                    <span>Ordered by: </span><span>{{ createdBy }}</span>
+                </div>
                 <div class="col-md-3 text-14 text-grey p-0">
                     <span>Date ordered: </span><span>{{ dateCreated }}</span>
-                </div>
-                <div class="col-md-6 text-14 text-grey p-0">
-                    <span>Scheduled by: </span><span>{{ createdBy }}</span>
                 </div>
             </div>
         </div>

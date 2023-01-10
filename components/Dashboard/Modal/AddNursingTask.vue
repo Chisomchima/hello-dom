@@ -95,8 +95,9 @@ export default {
         },
 
         dob() {
-            if (this.patient.date_of_birth) {
-                return this.patient.date_of_birth
+            if (Object.keys(this.dataObject.patient).length > 0) {
+                let response = calcAge(this.patient.date_of_birth)
+                return `${this.dataObject.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
             }
             return ''
         },
@@ -152,7 +153,7 @@ export default {
             else
                 verdict = `${currentAge.year} years`
             console.log(verdict)
-            this.dataObject.patient.age = verdict
+            this.dataObject.patient.age = currentAge
             this.getProducts()
             this.getStores()
             this.getStations()

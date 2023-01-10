@@ -37,6 +37,9 @@ export default axios => ({
     createTask(body, id) {
         return axios.$post(`/nursing/orders/${id}/tasks/`, body);
     },
+    createTaskBulk(body, id) {
+        return axios.$post(`nursing/orders/${id}/tasks/bulk/`, body);
+    },
 
     closeNursingTask(orderID, taskID, body){
         return axios.$patch(`/nursing/orders/${orderID}/tasks/${taskID}/close/`, body)

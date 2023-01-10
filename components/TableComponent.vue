@@ -440,11 +440,7 @@
             :key="field.key"
             :style="{ width: '8.5rem' }"
           />
-          <!-- <col
-            v-else-if="field.key === 'patient'"
-            :key="field.key"
-            :style="{ width: 'rem' }"
-          /> -->
+          
           <col
             v-else-if="field.key === 'value.option'"
             :key="field.key"
@@ -470,11 +466,11 @@
             :key="field.key"
             :style="{ width: '20rem' }"
           />
-          <col
+          <!-- <col
             v-else-if="field.key === 'notes'"
             :key="field.key"
-            :style="{ width: '20rem' }"
-          />
+            :style="{ width: '30rem' }"
+          /> -->
           <col
             v-else-if="field.key === 'created_at'"
             :key="field.key"

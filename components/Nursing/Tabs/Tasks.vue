@@ -6,23 +6,38 @@
             </template>
             <template>
                 <TableComponent :fields="fields" :pages="pages" @row-clicked="editdialogue" :items="items"
-                    :dropdown-item="['close_task', 'cancel_task']" :busy="busy" @edit="edit($event)"
-                    @close_task="closeTask" @page-changed="pageChange($event, filter)">
+                     :busy="busy" @edit="edit($event)"
+                    @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
                         <div v-if="data.item.status === 'OPEN'" class="">
-                            <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                            <span class="text-12 badge-success rounded text-center p-1 text-white">DONE</span>
                         </div>
                         <div v-if="data.item.status === 'SCHEDULED'" class="">
                             <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
                         </div>
                         <div v-if="data.item.status === 'CLOSED'" class="">
-                            <span class="text-12 badge-danger rounded text-center p-1 text-white">DONE</span>
+                            <span class="text-12 badge-success rounded text-center p-1 text-white">DONE</span>
                         </div>
                     </template>
                     <template #type="{ data }">
                         <div class="">
                             <span>{{ data.item.type }}</span>
                         </div>
+                    </template>
+                    <template #triple_actions="{ data }">
+                        <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
+                            <template #button-content>
+                                <b-icon icon="three-dots-vertical"></b-icon>
+                            </template>
+                            <template>
+                                <b-dropdown-item @click="closeTask" v-if="data.item.status === 'SCHEDULED'" class="text-capitalize">
+                                    Close task
+                                </b-dropdown-item>
+                                <b-dropdown-item v-else class="text-capitalize">
+                                    No options
+                                </b-dropdown-item>
+                            </template>
+                        </b-dropdown>
                     </template>
                 </TableComponent>
             </template>
@@ -34,6 +49,8 @@
             :modalTitle="modalTitle" />
         <NursingModalCloseTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
         <NursingModalCancelTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
+        <NursingModalViewTask :data="data" :editData="editObj" :patient="patient"
+            @refresh="filter(currentPage, currentFilter)" />
     </div>
 </template>
   
@@ -85,6 +102,16 @@ export default {
                     sortable: true,
                 },
                 {
+                    key: 'created_by',
+                    label: 'Created by',
+                    sortable: true,
+                    formatter: (val) => {
+                        if (val !== null) {
+                            return val.first_name + ' ' + val.last_name
+                        }
+                    },
+                },
+                {
                     key: 'notes',
                     label: 'Description',
                     sortable: true,
@@ -94,20 +121,44 @@ export default {
                     key: 'scheduled_at',
                     label: 'Scheduled date',
                     formatter: (value) => {
-                        return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+                        if (value !== null) {
+                            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+                        }
                     },
                     sortable: true,
+                },
+                {
+                    key: 'scheduled_by',
+                    label: 'Scheduled by',
+                    sortable: true,
+                    formatter: (val) => {
+                        if (val !== null) {
+                            return val.first_name + ' ' + val.last_name
+                        }
+                    },
                 },
                 {
                     key: 'closed_at',
                     label: 'Close date',
                     formatter: (value) => {
-                        return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+                        if (value !== null) {
+                            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+                        }
                     },
                     sortable: true,
                 },
+                {
+                    key: 'closed_by',
+                    label: 'Performed by',
+                    sortable: true,
+                    formatter: (val) => {
+                        if (val !== null) {
+                            return val.first_name + ' ' + val.last_name
+                        }
+                    },
+                },
                 { key: 'status', label: 'Status', sortable: true },
-                { key: 'dots', label: '', sortable: false },
+                { key: 'triple_actions', label: '', sortable: false },
             ],
         }
     },
@@ -137,16 +188,18 @@ export default {
             this.$bvModal.show('nurseTask')
         },
         editdialogue(e) {
+            console.log(e)
+
             if (e.status === 'SCHEDULED') {
                 this.editObj = e
                 this.modalTitle = 'Edit Task'
                 this.$bvModal.show('actionTask')
             }
-            else
-                this.$toast({
-                    type: 'info',
-                    text: `Service has been rendered`,
-                })
+            if (e.status === 'OPEN' || e.status === 'CLOSED' || e.status === 'DONE') {
+                this.editObj = e
+                this.modalTitle = 'View Task'
+                this.$bvModal.show('viewTask')
+            }
         },
         async closeTask(item) {
             this.editData = item
