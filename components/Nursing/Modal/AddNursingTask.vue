@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" id="nurseTask" title="Add task" @ok="ok()" @show="getData()" :stacking="false">
+    <ModalWrapper size="lg" id="nurseTask" title="Add task" @ok="ok()" @show="getData()" @hide="clear" :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
@@ -28,11 +28,11 @@
 
 
 
-                    <div class="col-md-12 pt-2">
+                    <div class="w-100 p-2 border border-secondary rounded mx-3">
                         <p class="text-16 text-grey mb-1">Instruction</p>
-                        <ul class="pl-4">
-                            <li class="text-14 p-0 mb-0">{{ data.description }}</li>
-                        </ul>
+                        <div class="text-14">
+                            {{ data.description }}
+                        </div>
                     </div>
 
                     <div class="col-md-12 d-flex ml-0 text-primary py-2 text-14">
@@ -47,7 +47,7 @@
                     </div>
 
                     <div v-for="(task, index) in dataObject" :key="index"
-                        class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
+                        class="row w-100 p-1 mt-2 mx-3 border border-secondary rounded">
 
                         <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Type" :rules="['required']">
@@ -60,7 +60,7 @@
                         <div class="col-md-6 mb-2">
                             <ValidationProviderWrapper name="Scheduled date" :rules="['required']">
                                 <input v-model="task.scheduled_at" :disabled="dataObject[index].type === 'IMMEDIATE'"
-                                    type="date" :min="minDate" class="form-control" />
+                                    type="datetime-local" :min="minDate" class="form-control" />
                             </ValidationProviderWrapper>
                         </div>
                         <div class="col-md-12 mb-2">
@@ -69,7 +69,13 @@
                                     rows="2"></textarea>
                             </ValidationProviderWrapper>
                         </div>
-                        <div class="col-md-12 mb-2">
+                        <div v-if="dataObject[index].type === 'IMMEDIATE'" class="col-md-12 mb-2">
+                            <ValidationProviderWrapper name="Disposition" :rules="['']">
+                                <textarea id="" v-model="task.disposition" class="form-control" name="" cols="30"
+                                    rows="2"></textarea>
+                            </ValidationProviderWrapper>
+                        </div>
+                        <div v-if="dataObject[index].type === 'IMMEDIATE'" class="col-md-12 mb-2">
                             <ValidationProviderWrapper name="Nursing service(s)" :rules="['']">
                                 <VSelect v-model="task.nursing_services" :multiple="true" :options="services"
                                     :reduce="(opt) => opt.id" label="name">
@@ -276,9 +282,9 @@ export default {
                 "disposition": ""
             })
             let today = new Date()
-            today = today.toISOString()
-            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-            this.dataObject[this.dataObject.length - 1].scheduled_at = x
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            today = today.toISOString().slice(0, 16)
+            this.dataObject[this.dataObject.length - 1].scheduled_at = today
         },
         clear() {
             this.dataObject = [
@@ -292,7 +298,6 @@ export default {
                     "disposition": ""
                 }
             ]
-            this.uhid = ''
             this.$emit('hide')
         },
         getData() {
@@ -300,9 +305,9 @@ export default {
             this.getStores()
             this.getServices()
             let today = new Date()
-            today = today.toISOString()
-            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-            this.dataObject[0].scheduled_at = x
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            today = today.toISOString().slice(0, 16)
+            this.dataObject[0].scheduled_at = today
         },
         async getPatientByUHID(uhid) {
             try {

@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" id="nurseTask" title="Add nursing task" @ok="ok()" @show="getData()" @hide="clear()"
+    <ModalWrapper size="lg" id="nurseTask" title="Add nursing order" @ok="ok()" @show="getData()" @hide="clear()"
         :stacking="false">
         <ValidationObserver ref="form">
             <form>

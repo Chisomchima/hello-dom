@@ -191,7 +191,7 @@ export default {
     },
     edit(e) {
       this.modalData = e
-      this.newTitle = 'Edit Scheme'
+      this.newTitle = 'Edit Billable Item'
       this.$bvModal.show('editBill')
     },
     refreshMe() {

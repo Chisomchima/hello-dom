@@ -1,10 +1,10 @@
 <template>
-    <ModalWrapper size="lg" id="closeTask" :cancelText="'Close'" :submitTitle="`Confirm`" title="Close task" @ok="ok()" @hide="clear()"
+    <ModalWrapper size="lg" id="closeTask" :cancelText="'Close'" :submitTitle="`Confirm`" title="Complete task" @ok="ok()" @hide="clear()"
         :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
-                    <p class="text-16 mx-3">Please confirm that you want to close this task</p>
+                    <p class="text-16 mx-3">Please confirm that you want to mark this task as done</p>
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Disposition" :rules="['required']">
                             <textarea id="" v-model="reason" class="form-control" name="" cols="30" rows="10">
@@ -55,12 +55,23 @@ export default {
         async save() {
             try {
                 const data = await this.$api.nursing.closeNursingTask(this.$route.params.uid, this.editData.id, {disposition: this.reason})
-                // this.$emit('refresh')
+                this.$emit('refresh')
                 this.$bvModal.hide('closeOrder')
                 console.log(data)
             } catch (error) {
                 console.log(error)
             }
+        },
+
+        getServices() {
+            this.$api.nursing
+                .getServices({ size: 1000 })
+                .then((res) => {
+                    this.services = res.results
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         },
 
         clear() {

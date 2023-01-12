@@ -36,7 +36,7 @@
       <UtilsCardTab title="Document">
         <DashboardPatientDocument :data="data" />
       </UtilsCardTab>
-      <UtilsCardTab title="Nursing orders">
+      <UtilsCardTab title="Nursing Orders">
         <DashboardPatientTasks :data="data" />
       </UtilsCardTab>
       <UtilsCardTab title="Finance">

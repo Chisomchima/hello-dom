@@ -1,6 +1,6 @@
 <template>
-    <ModalWrapper size="lg" :submitTitle="'Done'" id="viewTask" title="View task" @ok="ok()" @show="getData()"
-        @hide="clear()" :stacking="false">
+    <ModalWrapper size="lg" :cancelText="'Close'" :arrangement="false" id="viewTask" title="View task" @ok="ok()"
+        @show="getData()" @hide="clear()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
                 <div class="row">
@@ -27,48 +27,70 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <div class="col-md-12 pt-2 px-3">
+                    <div class="w-100 p-2 border border-secondary rounded mx-3">
                         <p class="text-16 text-grey mb-1">Instruction</p>
-                        <ul class="pl-4">
-                            <li class="text-14 p-0 mb-0">{{ data.description }}</li>
-                        </ul>
-                        <div class="d-flex text-14">
-                            <div class="col-md-4">
-                                <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <span class="text-grey">Scheduled by: </span><span>{{ createdBy }}</span>
-                            </div>
+                        <div class="text-14">
+                            {{ data.description }}
                         </div>
                     </div>
 
-                    <div class="row w-100 p-1 mt-2 mx-2 border border-secondary rounded">
+                    <p class="text-16 text-grey ml-3 mb-0 pt-2">Task(s)</p>
 
-                        <div class="col-md-12 mb-2">
-                            <div class="col-md-12 px-0 d-flex justify-content-end">
-                                <div class="col-md-5 px-0">
-                                    <div class="col-md-12 mb-2">
-                                        <p class="text-14 text-grey mb-1 text-right">
-                                            <span>Scheduled date</span>
-                                            <span>{{ editData.scheduled_at && convertDate(editData.scheduled_at) }}</span>
-                                        </p>
+
+
+                    <div class="row w-100 p-1 mt-2 mx-3 border border-secondary rounded">
+
+                        <div class="w-100 py-2 px-3 border-bottom">
+
+                            <div class="d-flex justify-content-between text-14">
+                                <div class="">
+                                    <div class="">
+                                        <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                                    </div>
+
+                                    <div class="">
+                                        <span class="text-grey">Created by: </span><span>{{ createdBy }}</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="">
+                                        <span class="text-grey">Scheduled date: </span><span>{{ scheduleDate }}</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-12 my-2">
+                            <p class="text-14 mb-1 text-grey">
+                                Notes
+                            </p>
+                            <p class="text-14 mb-1"><span>{{ editData? editData.notes : '' }}</span></p>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <p class="text-14 mb-1 text-grey">
+                                Disposition
+                            </p>
+                            <p class="text-14 mb-1"><span>{{ editData? editData.disposition : '' }}</span></p>
                         </div>
                         <div class="col-md-12 mb-2">
                             <p class="text-14 mb-1 text-grey">
                                 Nursing services(s)
                             </p>
-                            <p class="text-14 mb-1">{{ editData.nursing_services && convertServices(editData.nursing_services) }}<span></span></p>
+                            <p class="text-14 mb-1">{{
+                                editData.nursing_services &&
+                                    convertServices(editData.nursing_services)
+                            }}<span></span></p>
 
                         </div>
-                        <div class="col-md-12 mb-2">
-                            <p class="text-14 mb-1 text-grey">
-                                Notes
-                            </p>
-                            <p class="text-14 mb-1"><span>{{  editData ? editData.notes : ''  }}</span></p>
+
+                    </div>
+
+                    <div class="row justify-content-between w-100 p-1 mt-2 mx-3 text-14">
+                        <div class="">
+                            <span class="text-grey">Performed by: </span><span>{{ performedBy }}</span>
+                        </div>
+                        <div class="">
+                            <span class="text-grey">Performed at: </span><span>{{ performedAt }}</span>
                         </div>
                     </div>
 
@@ -139,12 +161,26 @@ export default {
         },
 
         dateCreated() {
-            let x = DateTime.fromISO(this.editData.scheduled_at).toFormat('yyyy-LL-dd')
+            let x = DateTime.fromISO(this.editData.created_at).toFormat('yyyy-LL-dd, T')
+            return x
+        },
+        performedAt(){
+            let x = DateTime.fromISO(this.editData.closed_at).toFormat('yyyy-LL-dd, T')
+            return x
+        },
+        scheduleDate() {
+            let x = DateTime.fromISO(this.editData.scheduled_at).toFormat('yyyy-LL-dd, T')
             return x
         },
         createdBy() {
             if (this.editData.scheduled_by)
                 return this.editData.scheduled_by.first_name + " " + this.editData.scheduled_by.last_name
+            else
+                return ''
+        },
+        performedBy(){
+            if (this.editData.closed_by)
+                return this.editData.closed_by.first_name + " " + this.editData.closed_by.last_name
             else
                 return ''
         },
@@ -198,10 +234,10 @@ export default {
             let x = DateTime.fromISO(date).toFormat('yyyy-LL-dd')
             return x
         },
-        convertServices(service){
+        convertServices(service) {
             console.log(service)
             let Arr = []
-            for(let x = 0; x < service.length; x++){
+            for (let x = 0; x < service.length; x++) {
                 Arr.push(service[x].name)
             }
             let text = Arr.join(', ')

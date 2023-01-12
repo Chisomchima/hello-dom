@@ -6,6 +6,10 @@
       >
         <div class="class-name mr-1 text-capitalize">{{ title }}</div>
         <slot name="actions">
+          <div v-if="nursingActions" class="col-md-4 d-flex justify-content-end px-0">
+            <button @click.prevent="$emit('closeOrder')" class="btn btn-outline-primary">Close</button>
+            <button @click.prevent="$emit('cancelOrder')" class="ml-2 btn btn-outline-primary">Cancel</button>
+          </div>
           <div v-if="enableAction" class="actions-dropdown">
             <div class="dropdown">
               <button
@@ -129,6 +133,10 @@ export default Vue.extend({
     patientContext: {
       type: Boolean,
       default: true,
+    },
+    nursingActions: {
+      type: Boolean,
+      default: false,
     },
     space: {
       type: Boolean,

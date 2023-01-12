@@ -1,8 +1,8 @@
 <template>
     <div>
         <BackwardNavigation />
-        <UtilsHeaderCardWithAvatar :enableAction="false" @close_order="closeOrder"
-            @cancel_order="cancelOrder" :patientContext="false" :showScheme="false" :title="`${data.patient.salutation ? data.patient.salutation : ''} ${data.patient.firstname ? data.patient.firstname : ''
+        <UtilsHeaderCardWithAvatar :nursingActions="true" :enableAction="false" @closeOrder="closeOrder"
+            @cancelOrder="cancelOrder" :patientContext="false" :showScheme="false" :title="`${data.patient.salutation ? data.patient.salutation : ''} ${data.patient.firstname ? data.patient.firstname : ''
             } ${data.patient.lastname ? data.patient.lastname : ''}`" :data="data.patient" :enable-action="true"
             :display-key="[
                 'uhid',
@@ -17,9 +17,9 @@
 
         <div class="bg-white my-3 p-3">
             <p class="text-16 text-grey mb-1">Instruction</p>
-            <ul class="pl-3">
-                <li class="text-14 p-0 mb-0">{{ data.description }}</li>
-            </ul>
+            <div class="text-14">
+                {{ data.description }}
+            </div>
             <div class="row px-3">
                 <div class="col-md-4 text-14 text-grey p-0">
                     <span>Ordered by: </span><span>{{ createdBy }}</span>
@@ -37,14 +37,11 @@
                 <!-- <NursingTabsTasks /> -->
 
                 <div class="p-3">
-                    <h3>Hello world</h3>
+                    <h3 class="p-5 text-center">Coming soon</h3>
                 </div>
             </UtilsCardTab>
         </UtilsBaseCardTab>
 
-        <!-- <pre>
-            {{ data }}
-        </pre> -->
         <NursingModalCancelOrder :editData="data" @refresh="filter(currentPage, currentFilter)" />
         <NursingModalCloseOrder :editData="data" @refresh="filter(currentPage, currentFilter)" />
     </div>
