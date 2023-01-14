@@ -30,11 +30,17 @@
                                 <b-icon icon="three-dots-vertical"></b-icon>
                             </template>
                             <template>
-                                <b-dropdown-item @click="closeTask" v-if="data.item.status === 'SCHEDULED'" class="text-capitalize">
-                                    Close task
+                                <b-dropdown-item @click="closeTask(data.item)" v-if="data.item.status === 'SCHEDULED'" class="text-capitalize">
+                                    Mark as done
                                 </b-dropdown-item>
-                                <b-dropdown-item v-else class="text-capitalize">
-                                    No options
+                                <b-dropdown-item @click="closeTask(data.item)" v-if="data.item.status === 'SCHEDULED'" class="text-capitalize">
+                                    Cancel task
+                                </b-dropdown-item>
+                                <b-dropdown-item disabled v-if="data.item.status === 'CLOSED' || data.item.status === 'OPEN'" class="text-capitalize">
+                                   <div class="text-grey"> Mark as done</div>
+                                </b-dropdown-item>
+                                <b-dropdown-item disabled v-if="data.item.status === 'CLOSED' || data.item.status === 'OPEN'" class="text-capitalize">
+                                    <div class="text-grey"> Cancel task</div>
                                 </b-dropdown-item>
                             </template>
                         </b-dropdown>
@@ -47,10 +53,10 @@
         <!-- <NursingTabsAddTasks :edit-data="editObj" :patient="patient" @refresh="pageChange(1)" :modalTitle="modalTitle" /> -->
         <NursingModalActionTask :data="data" :editData="editObj" :patient="patient" @refresh="pageChange(1)"
             :modalTitle="modalTitle" />
-        <NursingModalCloseTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
-        <NursingModalCancelTask :data="data" :editData="editData" @refresh="filter(currentPage, currentFilter)" />
+        <NursingModalCloseTask :data="data" :editData="editData" @refresh="pageChange(1)" />
+        <NursingModalCancelTask :data="data" :editData="editData" @refresh="pageChange(1)" />
         <NursingModalViewTask :data="data" :editData="editObj" :patient="patient"
-            @refresh="filter(currentPage, currentFilter)" />
+            />
     </div>
 </template>
   

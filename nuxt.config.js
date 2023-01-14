@@ -141,7 +141,7 @@ export default {
   primevue: {
     // theme: "blue-light",
     ripple: true,
-    components: ["Button", "Menu", "TabView", "TabPanel", "Accordion"],
+    components: ["Button", "Menu", "TabView", "TabPanel", "Accordion", "Panel"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

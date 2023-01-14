@@ -27,41 +27,65 @@
                         </ValidationProviderWrapper>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="w-100 p-2 border border-secondary rounded mx-3">
                         <p class="text-16 text-grey mb-1">Instruction</p>
-                        <ul class="pl-4">
-                            <li class="text-14 p-0 mb-0">{{ data.description }}</li>
-                        </ul>
+                        <div class="text-14">
+                            {{ data.description }}
+                        </div>
+
+                        <div class="col-md-12 pt-2">
+
+                            <div class="row justify-content-between text-14">
+
+                                <div>
+                                    <span class="text-grey">Ordered by: </span><span>{{ createdBy }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                   <div class="col-md-12 row">
-                    <div class="col-md-4 text-14">
-                        <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
-                    </div>
-                    <div class="col-md-4 text-14">
-                        <span class="text-grey">Ordered by: </span><span>{{ createdBy }}</span>
-                    </div>
-                   </div>
+                    <p class="text-16 text-grey ml-3 mb-0 pt-2">Task(s)</p>
 
-                    <div class="row w-100 p-1 mt-2 mx-2">
+
+
+                    <div class="row w-100 p-1 mx-2">
 
                         <div class="col-md-12 px-0" v-if="taskArray != 0">
-                            <p class="text-grey text-16 px-3 mb-2">Tasks</p>
 
-                            <div v-for="(task, index) in data.tasks" :key="index" class="border border-secondary rounded m-3 px-0">
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 text-grey mb-1 text-right">
-                                        <span>Scheduled date</span>
-                                        <span>{{ convertDate(task.scheduled_at) }}</span>
-                                    </p>
-                                </div>
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 mb-1 text-grey">
-                                        Nursing services(s)
-                                    </p>
-                                    <p class="text-14 mb-1">{{ convertServices(task.nursing_services) }}<span></span></p>
+                            <div v-for="(task, index) in data.tasks" :key="index"
+                                class="border border-secondary rounded m-3 px-0">
 
+                                <div class="w-100 py-2 px-3 border-bottom">
+
+                                    <div class="d-flex justify-content-between text-14">
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-grey">Date created: </span><span>{{
+                                                    convertDate(task.created_at)
+                                                }}</span>
+                                            </div>
+
+                                            <div class="">
+                                                <span class="text-grey">Created by: </span><span>{{
+                                                    convertUser(task.created_by)
+                                                }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="">
+                                                <span class="text-grey">Scheduled date: </span><span>{{
+                                                    convertDate(task.scheduled_at)
+                                                }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+
 
                                 <div class="col-md-12 mb-2">
                                     <p class="text-14 mb-1 text-grey">
@@ -69,15 +93,52 @@
                                     </p>
                                     <p class="text-14 mb-1"><span>{{ task.notes }}</span></p>
                                 </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <p class="text-14 mb-1 text-grey">
+                                        Disposition
+                                    </p>
+                                    <p class="text-14 mb-1"><span>{{ task.disposition }}</span></p>
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <p class="text-14 mb-1 text-grey">
+                                        Nursing services(s)
+                                    </p>
+                                    <p class="text-14 mb-1">{{ convertServices(task.nursing_services) }}<span></span>
+                                    </p>
+
+                                </div>
+
+                                <div class="w-100 py-2 px-3 border-top">
+
+                                    <div class="d-flex justify-content-between text-14">
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-grey">Performed by: </span><span>{{
+                                                    convertUser(task.closed_by)
+                                                }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="">
+                                                <span class="text-grey">Performed at: </span><span>{{
+                                                    convertDate(task.closed_at)
+                                                }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+
                         </div>
 
                         <div class="col-md-12 border border-secondary rounded" v-else>
                             <p class="text-center text-16 text-grey p-5">No tasks assigned yet</p>
                         </div>
                     </div>
-
-
                 </div>
 
 
@@ -89,7 +150,6 @@
 <script>
 import { DateTime } from 'luxon'
 import calcAge from '@/mixins/calcAge'
-import { te } from 'date-fns/locale'
 export default {
     props: {
         data: {
@@ -184,7 +244,7 @@ export default {
         },
 
         dob() {
-           if (this.patient.date_of_birth) {
+            if (this.patient.date_of_birth) {
                 let response = calcAge(this.patient.date_of_birth)
                 return `${this.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
             }
@@ -211,12 +271,24 @@ export default {
             }
         },
         convertDate(date) {
-            let x = DateTime.fromISO(date).toFormat('yyyy-LL-dd')
-            return x
+            if (date) {
+                let x = DateTime.fromISO(date).toFormat('yyyy-LL-dd, T')
+                return x
+            }
+            else {
+                return ''
+            }
         },
-        convertServices(service){
+        convertUser(user) {
+            console.log(user)
+            if (user)
+                return user.first_name + " " + user.last_name
+            else
+                return ''
+        },
+        convertServices(service) {
             let Arr = []
-            for(let x = 0; x < service.length; x++){
+            for (let x = 0; x < service.length; x++) {
                 Arr.push(service[x].name)
             }
             let text = Arr.join(', ')

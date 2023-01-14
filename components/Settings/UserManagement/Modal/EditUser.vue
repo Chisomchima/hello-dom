@@ -66,7 +66,7 @@
                     </div>
                   </template>
                 </PickList> -->
-              <v-select
+              <VSelect
                 class="style-chooser text-grey text-14"
                 placeholder="Options"
                 :options="access"
@@ -75,7 +75,7 @@
                 v-model="dataObject.menus"
                 label="title"
               >
-              </v-select>
+              </VSelect>
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">

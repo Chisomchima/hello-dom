@@ -40,7 +40,7 @@ export default {
                     route: '/dashboard/reports/finance/revenue',
                 },
                 {
-                    name: 'Payments',
+                    name: 'Collections report',
                     icon: 'fa fa-file',
                     route: '/dashboard/reports/finance/payments',
                 },
