@@ -33,7 +33,7 @@
       <UtilsCardTab title="Appointment">
         <h5>Coming Soon</h5>
       </UtilsCardTab>
-      <UtilsCardTab title="Document">
+      <UtilsCardTab title="Documents">
         <DashboardPatientDocument :data="data" />
       </UtilsCardTab>
       <UtilsCardTab title="Nursing Orders">

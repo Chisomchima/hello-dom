@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" id="closeTask" :cancelText="'Close'" :submitTitle="`Confirm`" title="Complete task" @ok="ok()" @hide="clear()"
+    <ModalWrapper size="lg" id="closeTask" :cancelText="'Close'" :submitTitle="`Mark as done`" title="Complete task" @ok="ok()" @show="getServices" @hide="clear()"
         :stacking="false">
         <ValidationObserver ref="form">
             <form>
@@ -7,9 +7,17 @@
                     <p class="text-16 mx-3">Please confirm that you want to mark this task as done</p>
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Disposition" :rules="['required']">
-                            <textarea id="" v-model="reason" class="form-control" name="" cols="30" rows="10">
+                            <textarea id="" v-model="data.disposition" class="form-control" name="" cols="30" rows="4">
                         </textarea>
                         </ValidationProviderWrapper>
+                    </div>
+
+                    <div class="col-md-12 mb-2">
+                        <ValidationProviderWrapper name="Nursing service(s)" :rules="['']">
+                                <VSelect v-model="data.nursing_services" :multiple="true" :options="services"
+                                    :reduce="(opt) => opt.id" label="name">
+                                </VSelect>
+                            </ValidationProviderWrapper>
                     </div>
                 </div>
             </form>
@@ -18,7 +26,6 @@
 </template>
   
 <script>
-import { DateTime } from 'luxon'
 export default {
     props: {
         editData: {
@@ -39,6 +46,10 @@ export default {
             products: [],
             stores: [],
             services: [],
+            data: {
+                disposition: '',
+                nursing_services: []
+            }
         }
     },
     watch: {
@@ -54,9 +65,9 @@ export default {
 
         async save() {
             try {
-                const data = await this.$api.nursing.closeNursingTask(this.$route.params.uid, this.editData.id, {disposition: this.reason})
+                const data = await this.$api.nursing.closeNursingTask(this.$route.params.uid, this.editData.id, this.data)
                 this.$emit('refresh')
-                this.$bvModal.hide('closeOrder')
+                this.$bvModal.hide('closeTask')
                 console.log(data)
             } catch (error) {
                 console.log(error)

@@ -25,4 +25,7 @@ export default axios => ({
     updateEncTemplate(id, body){
         return axios.$patch(`/encounters/templates/${id}/`, body)
     },
+    deleteEncTemplate(id){
+        return axios.$patch(`/encounters/templates/${id}/`, body)
+    }
 });

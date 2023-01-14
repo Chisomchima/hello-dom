@@ -34,11 +34,11 @@
                         </div>
                     </div>
 
-                    <p class="text-16 text-grey ml-3 mb-0 pt-2">Task(s)</p>
+                    <p class="text-16 text-grey ml-3 mb-0 pt-2">Task</p>
 
 
 
-                    <div class="row w-100 p-1 mt-2 mx-3 border border-secondary rounded">
+                    <div class="row w-100 mt-2 mx-3 border border-secondary rounded">
 
                         <div class="w-100 py-2 px-3 border-bottom">
 

@@ -170,10 +170,9 @@ export default {
     computed: {
         minDate() {
             let today = new Date()
-            today = today.toISOString()
-            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-            console.log(x)
-            return x
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            today = today.toISOString().slice(0, 16)
+            return today
         },
         name() {
             if (Object.keys(this.patient).length > 0) {

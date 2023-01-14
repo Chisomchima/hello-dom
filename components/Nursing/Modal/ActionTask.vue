@@ -32,22 +32,24 @@
                         <div class="text-14">
                             {{ data.description }}
                         </div>
+
+                        <!-- <div class="col-md-12 pt-2 px-3">
+
+                            <div class="d-flex text-14">
+
+                                <div class="col-md-4">
+                                    <span class="text-grey">Scheduled by: </span><span>{{ createdBy }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                                </div>
+                            </div>
+                        </div> -->
                     </div>
 
                     <p class="text-16 text-grey ml-3 mb-0 pt-2">Task</p>
 
-                    <div class="col-md-12 pt-2 px-3">
 
-                        <div class="d-flex text-14">
-
-                            <div class="col-md-4">
-                                <span class="text-grey">Scheduled by: </span><span>{{ createdBy }}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
-                            </div>
-                        </div>
-                    </div>
 
 
                     <div class="row w-100 p-1 mt-2 mx-3 border border-secondary rounded">
@@ -278,7 +280,7 @@ export default {
                     nursing_services: this.editData.nursing_services
                 })
                 this.$emit('refresh')
-                this.$bvModal.hide('nurseTask')
+                this.$bvModal.hide('actionTask')
                 console.log(data)
             } catch (error) {
                 console.log(error)

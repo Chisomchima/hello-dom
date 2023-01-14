@@ -11,6 +11,13 @@
                         </textarea>
                         </ValidationProviderWrapper>
                     </div>
+                    <!-- <div class="col-md-12 mb-2">
+                        <ValidationProviderWrapper name="Nursing service(s)" :rules="['']">
+                                <VSelect v-model="task.nursing_services" :multiple="true" :options="services"
+                                    :reduce="(opt) => opt.id" label="name">
+                                </VSelect>
+                            </ValidationProviderWrapper>
+                    </div> -->
                 </div>
             </form>
         </ValidationObserver>

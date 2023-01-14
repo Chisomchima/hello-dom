@@ -106,7 +106,7 @@
         <TabPanel>
           <template #header>
             <i class="far fa-file-alt"></i>
-            <span class="ml-2">Document</span>
+            <span class="ml-2">Documents</span>
           </template>
           <div v-if="activeIndex === 5">
             <DashboardPatientDocument :show="!true" :data="consultationData.patient" />
@@ -115,7 +115,7 @@
         <TabPanel>
           <template #header>
             <i class="fas fa-user-nurse"></i>
-            <span class="ml-2">Nursing tasks</span>
+            <span class="ml-2">Nursing Orders</span>
           </template>
           <div v-if="activeIndex === 6">
             <DashboardPatientTasks :data="consultationData.patient" />

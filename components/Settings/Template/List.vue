@@ -5,8 +5,8 @@
                 <BaseButton class="btn-outline-primary" @click="openModal">Add Template</BaseButton>
             </template>
             <template>
-                <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" @edit="edit($event)"
-                    @page-changed="pageChange($event, filter)">
+                <TableComponent @delete="deleteItem" :fields="fields" :pages="pages" :items="items" :busy="busy"
+                    @edit="edit($event)" @page-changed="pageChange($event, filter)">
                     <template #description="{ data }">
                         <div class="">
                             <span>{{ data.item.description }}</span>
@@ -87,6 +87,22 @@ export default {
             this.editObj = e
             this.modalTitle = 'Edit Template'
             this.$bvModal.show('addTemplate')
+        },
+        async deleteItem(item) {
+            console.log(item)
+            const result = await this.showConfirmMessageBox('Delete chart template ?')
+            try {
+                if (result) {
+                    let response = await this.$api.templates.deleteEncTemplate(item.id)
+                    this.$toast({
+                        type: 'success',
+                        text: `Deleted`,
+                    })
+                    this.pageChange(1, this.filters)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
     },
 }

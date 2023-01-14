@@ -32,22 +32,24 @@
                         <div class="text-14">
                             {{ data.description }}
                         </div>
+
+                        <div class="col-md-12 pt-2">
+
+                            <div class="row justify-content-between text-14">
+
+                                <div>
+                                    <span class="text-grey">Ordered by: </span><span>{{ createdBy }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <p class="text-16 text-grey ml-3 mb-0 pt-2">Task(s)</p>
 
-                    <div class="col-md-12 pt-2 px-3">
 
-                        <div class="row justify-content-between text-14 mx-3">
-
-                            <div>
-                                <span class="text-grey">Ordered by: </span><span>{{ createdBy }}</span>
-                            </div>
-                            <div>
-                                <span class="text-grey">Date created: </span><span>{{ dateCreated }}</span>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row w-100 p-1 mx-2">
 
@@ -84,17 +86,19 @@
                                 </div>
 
 
-                                <div class="col-md-12 mb-2">
-                                    <p class="text-14 mb-1 text-grey">
-                                        Disposition
-                                    </p>
-                                    <p class="text-14 mb-1"><span>{{ task.disposition }}</span></p>
-                                </div>
+
                                 <div class="col-md-12 mb-2">
                                     <p class="text-14 mb-1 text-grey">
                                         Notes
                                     </p>
                                     <p class="text-14 mb-1"><span>{{ task.notes }}</span></p>
+                                </div>
+
+                                <div class="col-md-12 mb-2">
+                                    <p class="text-14 mb-1 text-grey">
+                                        Disposition
+                                    </p>
+                                    <p class="text-14 mb-1"><span>{{ task.disposition }}</span></p>
                                 </div>
 
                                 <div class="col-md-12 mb-2">
@@ -105,6 +109,27 @@
                                     </p>
 
                                 </div>
+
+                                <div class="w-100 py-2 px-3 border-top">
+
+                                    <div class="d-flex justify-content-between text-14">
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-grey">Performed by: </span><span>{{
+                                                    convertUser(task.closed_by)
+                                                }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="">
+                                                <span class="text-grey">Performed at: </span><span>{{
+                                                    convertDate(task.closed_at)
+                                                }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -114,15 +139,6 @@
                             <p class="text-center text-16 text-grey p-5">No tasks assigned yet</p>
                         </div>
                     </div>
-                    <div class="d-flex mx-4 justify-content-between w-100 text-14">
-                        <div class="">
-                            <span class="text-grey">Performed by: </span><span>{{ convertUser(data.created_by) }}</span>
-                        </div>
-                        <div class="col-md-4">
-                            <span class="text-grey">Performed at: </span><span>{{ convertDate(data.closed_at) }}</span>
-                        </div>
-                    </div>
-
                 </div>
 
 
@@ -134,7 +150,6 @@
 <script>
 import { DateTime } from 'luxon'
 import calcAge from '@/mixins/calcAge'
-import { te } from 'date-fns/locale'
 export default {
     props: {
         data: {
@@ -260,7 +275,7 @@ export default {
                 let x = DateTime.fromISO(date).toFormat('yyyy-LL-dd, T')
                 return x
             }
-            else{
+            else {
                 return ''
             }
         },
