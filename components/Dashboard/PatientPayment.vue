@@ -298,7 +298,6 @@ export default {
         amount: '',
         dateFrom: '',
         dateTo: '',
-        payment_method: '',
       }
     ) {
       this.busy = true
