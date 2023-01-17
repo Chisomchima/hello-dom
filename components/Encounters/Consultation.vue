@@ -27,8 +27,8 @@
             <span class=" ml-2 text-14 p-tabview-title">{{ tab }}</span>
           </div>
         </template>
-        <b-tooltip variant="info" :delay="{ show: 1200, hide: 50 }" :placement="'top'" :target="`tooltip-target-${index}`" triggers="hover">
-            <span @click="removeTab(index)" class="text-danger point">
+        <b-tooltip variant="info" :delay="{ show: 600, hide: 50 }" :placement="'top'" :target="`tooltip-target-${index}`" triggers="hover">
+            <span @click="removeTab(index)" class="red point">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
                 viewBox="0 0 24 24">
                 <path fill="currentColor"
@@ -124,5 +124,8 @@ export default {
   max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
+}
+.red{
+  color: rgb(192, 21, 21)
 }
 </style>
