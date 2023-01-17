@@ -10,10 +10,10 @@
                     @page-changed="pageChange($event, filter)">
                     <template #status="{ data }">
                         <div v-if="data.item.status === 'OPEN'" class="">
-                            <span class="text-12 badge-success rounded text-center p-1 text-white">DONE</span>
+                            <span class="text-12 badge-danger rounded text-center p-1 text-white">OPEN</span>
                         </div>
                         <div v-if="data.item.status === 'SCHEDULED'" class="">
-                            <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                            <span class="text-12 badge-warning rounded text-center p-1 text-white">SCHEDULED</span>
                         </div>
                         <div v-if="data.item.status === 'CLOSED'" class="">
                             <span class="text-12 badge-success rounded text-center p-1 text-white">DONE</span>
@@ -37,10 +37,10 @@
                                     Cancel task
                                 </b-dropdown-item>
                                 <b-dropdown-item disabled v-if="data.item.status === 'CLOSED' || data.item.status === 'OPEN'" class="text-capitalize">
-                                   <div class="text-grey"> Mark as done</div>
+                                   <div> Mark as done</div>
                                 </b-dropdown-item>
                                 <b-dropdown-item disabled v-if="data.item.status === 'CLOSED' || data.item.status === 'OPEN'" class="text-capitalize">
-                                    <div class="text-grey"> Cancel task</div>
+                                    <div> Cancel task</div>
                                 </b-dropdown-item>
                             </template>
                         </b-dropdown>

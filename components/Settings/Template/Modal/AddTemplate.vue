@@ -60,11 +60,12 @@
                                                     d="M5 19h1.4l8.625-8.625l-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Zm-3.525-.725l-.7-.7l1.4 1.4Z" />
                                             </svg>
                                         </span>
-                                        <div class="text-16 px-1" v-if="!section.show">
+                                        <div class="text-16 px-1" v-show="!section.show">
                                             <p class="mb-0">{{ section.section }}</p>
                                         </div>
-                                        <div class="rounded w-100" v-else>
-                                            <input @keyup.enter="closeSection(index)" v-model="section.section"
+                                        <div class="rounded w-100" v-show="section.show">
+                                            <input ref="sectionheader" @blur="closeSection(index)"
+                                                @keyup.enter="closeSection(index)" v-model="section.section"
                                                 class="formhead2" type="text" />
                                         </div>
                                     </div>
@@ -84,15 +85,15 @@
                                 </div>
                                 <div @click="addColumn(index)"
                                     class="point d-flex align-items-center text-14 border rounded p-2 text-primary">
-                                    <div>
-                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                                <path fill="currentColor"
-                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                            </svg>
-                                            <span class="text-12">Add column</span>
-                                        </span>
-                                    </div>
+
+                                    <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                            <path fill="currentColor"
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                        </svg>
+                                    </span>
+                                    <span class="text-12 ml-1 mt-1">Add column</span>
+
                                 </div>
                             </div>
 
@@ -116,11 +117,12 @@
                                             </svg>
                                         </span>
                                         <div class="w-100 hk text-14">
-                                            <div class="text-underline" v-if="!col.show">
+                                            <div class="text-underline" v-show="!col.show">
                                                 {{ col.header }}
                                             </div>
-                                            <div v-else>
-                                                <input @keyup.enter="closeMode(index, innerIndex)" v-model="col.header"
+                                            <div v-show="col.show">
+                                                <input @blur="closeMode(index, innerIndex)"
+                                                    @keyup.enter="closeMode(index, innerIndex)" v-model="col.header"
                                                     :class="section.cols.length > 1 ? 'formhead' : 'formheadef w-25'"
                                                     type="text" />
                                             </div>
@@ -137,26 +139,29 @@
                                         </div>
                                     </template>
                                     <div class="w-100">
-
+                                        <div class="d-flex justify-content-end align-items-center mt-1">
+                                            <div>
+                                                <span class="text-primary point"
+                                                    @click.prevent="addField(index, innerIndex)">
+                                                    <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                                            <path fill="currentColor"
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                        </svg>
+                                                    </span>
+                                                    <span class="text-12">Add question</span>
+                                                </span>
+                                            </div>
+                                        </div>
                                         <div>
-                                            <!-- <label class="text-grey text-12">Name</label> -->
-                                            <input v-model="col.context" type="text" placeholder="Enter question"
-                                                class="form-control" />
-                                            <!-- <label class="text-grey text-12">Form field</label> -->
-                                            <!-- <v-select v-model="col.type" class="style-chooser text-grey text-14"
-                                                placeholder="Input type" :options="sectionType" label="label"
-                                                :opt="opt => opt.val">
-                                            </v-select> -->
-
-
                                             <div>
                                                 <div class="pt-3">
-                                                    <!-- <p class="text-14 text-center mb-2">Add options</p> -->
-
-
-
                                                     <div v-for="(option, optionIndex) in col.form_field"
                                                         :key="optionIndex">
+                                                        <div class="mb-2">
+                                                            <input v-model="option.context" type="text"
+                                                                placeholder="Enter question" class="form-control" />
+                                                        </div>
 
                                                         <div v-if="option.type === 'text'" class="w-100  mb-2">
                                                             <!-- Handle textfield -->
@@ -237,13 +242,36 @@
                                                                 </span>
                                                             </div>
                                                         </div>
+                                                        <div v-if="option.type === 'diagnosis' || option.type === 'lab_Order' || option.type === 'imaging' || option.type === 'prescription' || option.type === 'nursing'"
+                                                            class="w-100  mb-2">
+                                                            <!-- Handle Date -->
+                                                            <div class="w-100 d-flex align-items-center mb-2"
+                                                                v-for="(item, itemindex) in option.options"
+                                                                :key="itemindex">
+                                                                <div class="mr-2">
+                                                                    <button class="btn btn-success"><span
+                                                                            class="text-capitalize">{{
+                                                                                option.type.split('_').join(' ')
+                                                                            }}</span></button>
+                                                                </div>
+                                                                <span class="text-danger ml-2 point"
+                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                        height="20" preserveAspectRatio="xMidYMid meet"
+                                                                        viewBox="0 0 24 24">
+                                                                        <path fill="currentColor"
+                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
+                                                                    </svg>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                         <div v-if="option.type === 'dropdown'" class="w-100  mb-2">
                                                             <!-- Handle Dropdown -->
-                                                            <div class="w-100 mb-2">
+                                                            <!-- <div class="w-100 mb-2">
                                                                 <VSelect :multiple="true" placeholder="Select option"
                                                                     label="value" :options="option.options">
                                                                 </VSelect>
-                                                            </div>
+                                                            </div> -->
                                                             <div class="w-100 d-flex mb-2"
                                                                 v-for="(item, itemindex) in option.options"
                                                                 :key="itemindex">
@@ -263,7 +291,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div v-if="option.type !== 'dropdown' && option.type !== null"
+                                                        <div v-if="option.type !== 'dropdown' && option.type !== null && option.type !== 'diagnosis' && option.type !== 'lab_Order' && option.type !== 'imaging' && option.type !== 'prescription' && option.type !== 'nursing'"
                                                             class="d-flex justify-content-end mb-3">
                                                             <div @click="printOption(index, innerIndex, optionIndex)"
                                                                 class="text-primary point">
@@ -297,10 +325,27 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-
-                                                        <div class="w-100 d-flex justify-content-end">
-                                                            <b-dropdown text="Add form field" variant="outline-primary"
-                                                                class="m-2">
+                                                        <div class="w-100 d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-end align-items-center">
+                                                                <div>
+                                                                    <span class="point">
+                                                                        <span class="text-danger ml-1"
+                                                                            @click="deleteField(index, innerIndex, optionIndex, itemindex)">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="20" height="20"
+                                                                                preserveAspectRatio="xMidYMid meet"
+                                                                                viewBox="0 0 24 24">
+                                                                                <path fill="currentColor"
+                                                                                    d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <span class="text-12 text-danger">Delete
+                                                                            field</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <b-dropdown size="sm" text="Add form field"
+                                                                variant="outline-primary" class="m-2">
                                                                 <b-dropdown-item
                                                                     v-for="(form, formindex) in sectionType"
                                                                     :key="formindex"
@@ -309,38 +354,32 @@
                                                                     }}</b-dropdown-item>
                                                             </b-dropdown>
                                                         </div>
+
+                                                        <hr>
                                                     </div>
-
-
-
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- <div class="d-flex justify-content-end mt-2">
-
-                                        <div class="text-14 mt-1 mr-1" v-if="col.required">Required</div>
-                                        <div class="text-14" v-else></div>
-                                        <ValidationProviderWrapper name="" :rules="['']">
-                                            <b-form-checkbox size="lg" switch v-model="col.required">
-                                            </b-form-checkbox>
-                                        </ValidationProviderWrapper>
-                                    </div> -->
                                 </Panel>
                             </div>
 
 
                             <div class="d-flex col-md-12 justify-content-end mt-2 mr-3">
-
-                                <span class="point text-danger" @click="deleteSection(index)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                        <path fill="currentColor"
-                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                    </svg>
-                                </span>
+                                <div>
+                                    <span @click="deleteSection(index)">
+                                        <span class="point text-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                <path fill="currentColor"
+                                                    d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
+                                            </svg>
+                                        </span>
+                                        <span class="text-12 point text-danger">
+                                            Delete section
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -379,9 +418,9 @@ export default {
                         cols: [
                             {
                                 header: 'Title',
-                                context: '',
                                 form_field: [
                                     {
+                                        context: '',
                                         type: null,
                                         options: [
                                             {
@@ -422,7 +461,28 @@ export default {
             {
                 label: 'Dropdown',
                 val: 'dropdown'
-            }],
+            },
+            {
+                label: 'Diagnosis',
+                val: 'diagnosis'
+            },
+            {
+                label: 'Lab Order',
+                val: 'lab_Order'
+            },
+            {
+                label: 'Imaging',
+                val: 'imaging'
+            },
+            {
+                label: 'Prescription',
+                val: 'prescription'
+            },
+            {
+                label: 'Nursing',
+                val: 'nursing'
+            },
+            ],
             title: '',
             departments: []
         }
@@ -464,6 +524,24 @@ export default {
         },
         openSection(index) {
             this.dataObject.content[index].show = true
+            console.log(this.$refs.sectionheader[0])
+            this.$refs.sectionheader[0].focus()
+        },
+        addField(index, innerIndex) {
+            this.dataObject.content[index].cols[innerIndex].form_field.push(
+                {
+                    context: '',
+                    type: null,
+                    options: [
+                        {
+                            value: ''
+                        }
+                    ]
+                }
+            )
+        },
+        deleteField(index, innerIndex, optionIndex) {
+            this.dataObject.content[index].cols[innerIndex].form_field.splice(optionIndex, 1)
         },
         closeMode(index, innerIndex) {
             this.dataObject.content[index].cols[innerIndex].show = false
@@ -494,6 +572,7 @@ export default {
                     context: '',
                     form_field: [
                         {
+                            context: '',
                             type: null,
                             options: [
                                 {
@@ -518,6 +597,7 @@ export default {
                             context: '',
                             form_field: [
                                 {
+                                    context: '',
                                     type: null,
                                     options: [
                                         {
@@ -576,6 +656,7 @@ export default {
                                 context: '',
                                 form_field: [
                                     {
+                                        context: '',
                                         type: null,
                                         options: [
                                             {
@@ -612,6 +693,16 @@ export default {
     color: #495057;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
+}
+
+.p-panel .p-panel-content {
+    padding: 0rem 1rem 1rem;
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #495057;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top: 0 none;
 }
 
 .trouble {

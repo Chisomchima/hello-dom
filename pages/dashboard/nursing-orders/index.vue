@@ -28,13 +28,13 @@
             @close_order="closeOrder" @cancel_order="cancelOrder">
             <template #status="{ data }">
               <div v-if="data.item.status === 'OPEN'" class="">
-                <span class="text-12 badge-success rounded text-center p-1 text-white">OPEN</span>
+                <span class="text-12 badge-danger rounded text-center p-1 text-white">OPEN</span>
               </div>
               <div v-if="data.item.status === 'SCHEDULED'" class="">
-                <span class="text-12 badge-info rounded text-center p-1 text-white">SCHEDULED</span>
+                <span class="text-12 badge-warning rounded text-center p-1 text-white">SCHEDULED</span>
               </div>
               <div v-if="data.item.status === 'CLOSED'" class="">
-                <span class="text-12 badge-danger rounded text-center p-1 text-white">CLOSED</span>
+                <span class="text-12 badge-success rounded text-center p-1 text-white">CLOSED</span>
               </div>
             </template>
             <template #description="{ data }">

@@ -7,7 +7,7 @@
         <div class="class-name mr-1 text-capitalize">{{ title }}</div>
         <slot name="actions">
           <div v-if="nursingActions" class="col-md-4 d-flex justify-content-end px-0">
-            <button @click.prevent="$emit('closeOrder')" class="btn btn-outline-primary">Close</button>
+            <button @click.prevent="$emit('closeOrder')" class="btn btn-outline-danger">Close</button>
           </div>
           <div v-if="enableAction" class="actions-dropdown">
             <div class="dropdown">

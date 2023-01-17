@@ -1,10 +1,5 @@
 <template>
     <div>
-        <div class="d-flex justify-content-end">
-            <div class="mr-0">
-                <button class="btn btn-outline-primary" @click.prevent="$emit('newTab')">New chart</button>
-            </div>
-        </div>
         <TransitionWrapper>
             <EncountersPreviousReport :template="content" />
         </TransitionWrapper>
@@ -47,8 +42,6 @@ export default {
     },
     methods: {
         setFile(event, index) {
-            console.log(index)
-            console.log(event, this.template?.content[index ? index : 0])
             this.template.content[index ? index : 0].value = event.target.value
         }
     }

@@ -1,5 +1,5 @@
 <template>
-    <ModalWrapper size="lg" :cancelText="'Close'" :arrangement="false" id="viewpatientTask" title="View nursing order"
+    <ModalWrapper size="lg" :cancelText="'Close'" :arrangement="false" id="viewpatientTask" :title="`Order-${data.order_id}`"
         @ok="ok()" @show="getData()" @hide="clear()" :stacking="false">
         <ValidationObserver ref="form">
             <form>
@@ -47,16 +47,16 @@
                         </div>
                     </div>
 
-                    <p class="text-16 text-grey ml-3 mb-0 pt-2">Task(s)</p>
+                    <p class="text-16 ml-3 mb-0 pt-2">Task(s)</p>
 
 
 
-                    <div class="row w-100 p-1 mx-2">
+                    <div class="row w-100 mx-2">
 
                         <div class="col-md-12 px-0" v-if="taskArray != 0">
 
                             <div v-for="(task, index) in data.tasks" :key="index"
-                                class="border border-secondary rounded m-3 px-0">
+                                class="border border-secondary rounded mx-2 my-3 px-0">
 
                                 <div class="w-100 py-2 px-3 border-bottom">
 
