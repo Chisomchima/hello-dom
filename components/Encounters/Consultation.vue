@@ -2,16 +2,31 @@
   <div>
     <div>
       <div class="feel d-flex justify-content-end">
+
         <div>
           <div class="fix">
             <div class="text-primary">
-              <span class="point" @click="newTab">
+              <span v-if="!showOptions" class="point text-end" @click="showOptions = !showOptions">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                   viewBox="0 0 16 16">
                   <path fill="currentColor"
                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                 </svg>
               </span>
+              <span v-else class="point text-end" @click="showOptions = !showOptions">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                  <path fill="currentColor"
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z" />
+                </svg>
+              </span>
+            </div>
+
+            <div v-if="showOptions" class="options">
+              <v-select :dropdownShouldOpen="(noDrop, open) => {
+                return noDrop ? true : open;
+              }" style="height: 35px" v-model="template" class="style-chooser text-grey text-14"
+                placeholder="Templates" :options="presets" @option:selected="setTab" label="title">
+              </v-select>
             </div>
           </div>
         </div>
@@ -20,28 +35,28 @@
     <TabView :activeIndex="active">
       <TabPanel v-for="(tab, index) in tabs" :index="index">
         <template #header>
-          <div class="" v-if="tab === 'Notes'">
-            <span class="ml-2 text-14 p-tabview-title">{{ tab }}</span>
+          <div class="" v-if="tab.label === 'Notes'">
+            <span class="ml-2 text-14 p-tabview-title">{{ tab.label }}</span>
           </div>
           <div :id="`tooltip-target-${index}`" class="fold" v-else>
-            <span class=" ml-2 text-14 p-tabview-title">{{ tab }}</span>
+            <span class=" ml-2 text-14 p-tabview-title">{{ tab.label }}</span>
           </div>
         </template>
-        <b-tooltip variant="info" :delay="{ show: 600, hide: 50 }" :placement="'top'" :target="`tooltip-target-${index}`" triggers="hover">
-            <span @click="removeTab(index)" class="red point">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 24 24">
-                <path fill="currentColor"
-                  d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-              </svg>
-            </span>
-          </b-tooltip>
-        <div class="my-3" v-show="tab === 'Notes'">
+        <b-tooltip variant="light" :delay="{ show: 300, hide: 50 }" :placement="'righttop'"
+          :target="`tooltip-target-${index}`" triggers="hover">
+          <span @click="removeTab(index)" class="red point">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 24 24">
+              <path fill="currentColor" d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
+            </svg>
+          </span>
+        </b-tooltip>
+        <div @click="showOptions = false" class="my-3" v-show="tab.label === 'Notes'">
           <EncountersPreviousEncounter />
         </div>
 
-        <div class="my-3" v-show="tab !== 'Notes'">
-          <EncountersFile />
+        <div @click="showOptions = false" class="my-3" v-show="tab.label !== 'Notes'">
+          <EncountersFile :consultationData="consultationData" :data="tab.data" />
         </div>
       </TabPanel>
     </TabView>
@@ -60,14 +75,29 @@ export default {
   },
   data() {
     return {
-      tabs: ['Notes'],
-      active: 0
+      tabs: [{
+        label: 'Notes',
+        data: {}
+      }],
+      active: 0,
+      template: null,
+      selected: false,
+      showOptions: false,
+      presets: []
     };
   },
   watch: {
 
   },
-  mounted() { },
+  async created() {
+    let response = await this.$api.templates.getEncTemplates({ size: 1000 })
+    this.presets = response.results
+  },
+  computed: {
+    content() {
+      return this.template
+    }
+  },
   methods: {
     clearance() {
       this.$emit("clearance", true);
@@ -75,8 +105,13 @@ export default {
     refresh() {
       this.$emit("refreshMe", true);
     },
-    newTab() {
-      this.tabs.push('New')
+    setTab(e) {
+      this.tabs.push({
+        label: e.title,
+        data: e
+      })
+      this.showOptions = false,
+        this.template = null
       this.active = this.tabs.length - 1
     },
     removeTab(index) {
@@ -109,7 +144,17 @@ export default {
 .fix {
   position: relative;
   z-index: 100;
+  right: 0px;
   top: 13px;
+  width: 20px
+}
+
+.options {
+  position: relative;
+  z-index: 105;
+  top: 22px;
+  right: 220px;
+  width: 15rem
 }
 
 .lift {
@@ -125,7 +170,8 @@ export default {
   white-space: nowrap;
   overflow: hidden;
 }
-.red{
+
+.red {
   color: rgb(192, 21, 21)
 }
 </style>

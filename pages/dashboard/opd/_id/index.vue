@@ -3,35 +3,35 @@
     <div v-if="isLoading" class="skeleton mt-3">
       <SkeletonLoader />
     </div>
-    
-    <div class="bg-light text-12 border-radius mb-3" v-else>
-      <div class="d-flex justify-content-between align-items-center mb-2 bg-light">
+
+    <div class="text-12 border-radius mb-3" v-else>
+      <div class="d-flex justify-content-between align-items-center mb-2">
         <BackwardNavigation />
         <div>
           <BaseButton v-if="
-        consultationData.acknowledged_at != null &&
-        consultationData.status != 'DS'
-      " @click="signAndCloseEnc" class="btn-success btn-sm" :disabled="
-        consultationData
-          ? consultationData.bill.cleared_status === 'CLEARED'
-            ? false
-            : true
-          : ''
-      ">
+            consultationData.acknowledged_at != null &&
+            consultationData.status != 'DS'
+          " @click="signAndCloseEnc" class="btn-success btn-sm" :disabled="
+  consultationData
+    ? consultationData.bill.cleared_status === 'CLEARED'
+      ? false
+      : true
+    : ''
+">
             Sign
           </BaseButton>
           <BaseButton @click="acknowledgeEnc" v-if="
-              (consultationData.status === 'NS' ||
-                consultationData.status === 'New') &&
-              consultationData.acknowledged_at === null
-            " class="btn-success btn-sm" :disabled="
-              consultationData
-                ? consultationData.bill.cleared_status === 'CLEARED'
-                  ? false
-                  : true
-                : ''
-            ">
-               Acknowledge
+            (consultationData.status === 'NS' ||
+              consultationData.status === 'New') &&
+            consultationData.acknowledged_at === null
+          " class="btn-success btn-sm" :disabled="
+  consultationData
+    ? consultationData.bill.cleared_status === 'CLEARED'
+      ? false
+      : true
+    : ''
+">
+            Acknowledge
           </BaseButton>
         </div>
       </div>
@@ -59,17 +59,16 @@
 
         <TabPanel>
           <template #header>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity"
-              viewBox="0 0 16 16">
-              <path fill-rule="evenodd"
-                d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
-            </svg>
-            <span class="ml-2">Medical Records</span>
+            <i class="fas fa-heartbeat"></i>
+            <span class="ml-2">Vitals</span>
           </template>
           <div v-if="activeIndex === 1">
-            <EncountersMedicalRecord :consultationData="consultationData" />
+            <div>
+              <EncountersVitals :consultationData="consultationData" />
+            </div>
           </div>
         </TabPanel>
+
         <TabPanel>
           <template #header>
             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
@@ -79,9 +78,20 @@
               <path fill="currentColor"
                 d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
             </svg>
-            <span class="ml-2">Lab Orders</span>
+            <span class="ml-2">Medical Records</span>
           </template>
           <div v-if="activeIndex === 2">
+            <EncountersMedicalRecord :consultationData="consultationData" />
+          </div>
+        </TabPanel>
+
+        <TabPanel>
+          <template #header>
+
+            <i class="fas fa-vial"></i>
+            <span class="ml-2">Lab Orders</span>
+          </template>
+          <div v-if="activeIndex === 3">
             <EncountersLabOrders :patientData="consultationData.patient" />
           </div>
         </TabPanel>
@@ -90,7 +100,7 @@
             <i class="fas fa-x-ray"></i>
             <span class="ml-2">Imaging</span>
           </template>
-          <div v-if="activeIndex === 3">
+          <div v-if="activeIndex === 4">
             <DashboardPatientImaging :data="consultationData.patient" />
           </div>
         </TabPanel>
@@ -99,8 +109,8 @@
             <i class="fas fa-pills"></i>
             <span class="ml-2">Prescriptions</span>
           </template>
-          <div v-if="activeIndex === 4">
-            <DashboardPatientPrescription :show="false" :data="consultationData.patient" />
+          <div v-if="activeIndex === 5">
+            <DashboardPatientPrescription :show="true" :data="consultationData.patient" />
           </div>
         </TabPanel>
         <TabPanel>
@@ -108,7 +118,7 @@
             <i class="far fa-file-alt"></i>
             <span class="ml-2">Documents</span>
           </template>
-          <div v-if="activeIndex === 5">
+          <div v-if="activeIndex === 6">
             <DashboardPatientDocument :show="!true" :data="consultationData.patient" />
           </div>
         </TabPanel>
@@ -117,7 +127,7 @@
             <i class="fas fa-user-nurse"></i>
             <span class="ml-2">Nursing Orders</span>
           </template>
-          <div v-if="activeIndex === 6">
+          <div v-if="activeIndex === 7">
             <DashboardPatientTasks :data="consultationData.patient" />
           </div>
         </TabPanel>
@@ -190,6 +200,9 @@ export default {
           break;
         case 6:
           this.activeIndex = 6
+          break;
+        case 7:
+          this.activeIndex = 7
           break;
         default:
           this.activeIndex = 0

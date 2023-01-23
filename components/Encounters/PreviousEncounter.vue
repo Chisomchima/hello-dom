@@ -15,10 +15,6 @@ export default {
             presets: []
         }
     },
-    async created() {
-        let response = await this.$api.templates.getEncTemplates({ size: 1000 })
-        this.presets = response.results
-    },
     computed: {
         content() {
             if(this.template){
@@ -31,14 +27,7 @@ export default {
         
     },
     watch: {
-        template(val) {
-            if (val !== null) {
-                this.selected = true
-            }
-            else {
-                this.selected = false
-            }
-        }
+        
     },
     methods: {
         setFile(event, index) {

@@ -135,7 +135,7 @@ export default {
         this.$emit('refresh')
         
         this.$router.push({
-        name: 'dashboard-settings-finance-payer-id',
+        name: 'dashboard-configurations-finance-payer-id',
         params: {
           id: data.id,
         }})

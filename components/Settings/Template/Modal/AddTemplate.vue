@@ -149,7 +149,7 @@
                                                                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                                                         </svg>
                                                     </span>
-                                                    <span class="text-12">Add question</span>
+                                                    <span class="text-12">Add row</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -165,113 +165,58 @@
 
                                                         <div v-if="option.type === 'text'" class="w-100  mb-2">
                                                             <!-- Handle textfield -->
-                                                            <div class="w-100 d-flex mb-2"
-                                                                v-for="(item, itemindex) in option.options"
-                                                                :key="itemindex">
-                                                                <input v-model="item.value" type="text"
-                                                                    placeholder="Enter option" class="form-control" />
-                                                                <span class="text-danger ml-2 point"
-                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" preserveAspectRatio="xMidYMid meet"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path fill="currentColor"
-                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                                                    </svg>
-                                                                </span>
+                                                            <div class="w-100 d-flex mb-2">
+                                                                <input placeholder="Enter value"
+                                                                    v-model="option.options" type="text"
+                                                                    class="form-control" />
+
                                                             </div>
                                                         </div>
                                                         <div v-if="option.type === 'checkbox'" class="w-100  mb-2">
                                                             <!-- Handle checkbox -->
-                                                            <div class="w-100 d-flex mb-2"
-                                                                v-for="(item, itemindex) in option.options"
-                                                                :key="itemindex">
-                                                                <div class="mr-2">
-                                                                    <input v-model="item.value" type="checkbox"
+                                                            <div class="w-100 d-flex mb-2">
+                                                                <div class="ml-3">
+                                                                    <input v-model="option.options" type="checkbox"
                                                                         class="checkbox" />
                                                                 </div>
-                                                                <span class="text-danger ml-2 point"
-                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" preserveAspectRatio="xMidYMid meet"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path fill="currentColor"
-                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                                                    </svg>
-                                                                </span>
+
                                                             </div>
                                                         </div>
                                                         <div v-if="option.type === 'text-area'" class="w-100  mb-2">
                                                             <!-- Handle text-area -->
-                                                            <div class="w-100 d-flex mb-2"
-                                                                v-for="(item, itemindex) in option.options"
-                                                                :key="itemindex">
+                                                            <div class="w-100 d-flex mb-2">
                                                                 <div class="w-100">
-                                                                    <textarea id="" v-model="item.value"
+                                                                    <textarea id="" v-model="option.options"
                                                                         class="form-control" name="" cols="30"
                                                                         rows="1"></textarea>
                                                                 </div>
-                                                                <span class="text-danger ml-2 point"
-                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" preserveAspectRatio="xMidYMid meet"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path fill="currentColor"
-                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                                                    </svg>
-                                                                </span>
+
                                                             </div>
                                                         </div>
                                                         <div v-if="option.type === 'date'" class="w-100  mb-2">
                                                             <!-- Handle Date -->
-                                                            <div class="w-100 d-flex mb-2"
-                                                                v-for="(item, itemindex) in option.options"
-                                                                :key="itemindex">
+                                                            <div class="w-100 d-flex mb-2">
                                                                 <div class="w-100">
-                                                                    <input v-model="item.value" type="date"
+                                                                    <input v-model="option.options" type="date"
                                                                         class="form-control" />
                                                                 </div>
-                                                                <span class="text-danger ml-2 point"
-                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" preserveAspectRatio="xMidYMid meet"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path fill="currentColor"
-                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                                                    </svg>
-                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div v-if="option.type === 'diagnosis' || option.type === 'lab_Order' || option.type === 'imaging' || option.type === 'prescription' || option.type === 'nursing'"
                                                             class="w-100  mb-2">
                                                             <!-- Handle Date -->
-                                                            <div class="w-100 d-flex align-items-center mb-2"
-                                                                v-for="(item, itemindex) in option.options"
-                                                                :key="itemindex">
+                                                            <div class="w-100 d-flex align-items-center mb-2">
                                                                 <div class="mr-2">
                                                                     <button class="btn btn-success"><span
                                                                             class="text-capitalize">{{
                                                                                 option.type.split('_').join(' ')
                                                                             }}</span></button>
                                                                 </div>
-                                                                <span class="text-danger ml-2 point"
-                                                                    @click="deleteOption(index, innerIndex, optionIndex, itemindex)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" preserveAspectRatio="xMidYMid meet"
-                                                                        viewBox="0 0 24 24">
-                                                                        <path fill="currentColor"
-                                                                            d="M5 21V6H4V4h5V3h6v1h5v2h-1v15Zm2-2h10V6H7Zm2-2h2V8H9Zm4 0h2V8h-2ZM7 6v13Z" />
-                                                                    </svg>
-                                                                </span>
+
                                                             </div>
                                                         </div>
                                                         <div v-if="option.type === 'dropdown'" class="w-100  mb-2">
-                                                            <!-- Handle Dropdown -->
-                                                            <!-- <div class="w-100 mb-2">
-                                                                <VSelect :multiple="true" placeholder="Select option"
-                                                                    label="value" :options="option.options">
-                                                                </VSelect>
-                                                            </div> -->
+
                                                             <div class="w-100 d-flex mb-2"
                                                                 v-for="(item, itemindex) in option.options"
                                                                 :key="itemindex">
@@ -291,7 +236,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div v-if="option.type !== 'dropdown' && option.type !== null && option.type !== 'diagnosis' && option.type !== 'lab_Order' && option.type !== 'imaging' && option.type !== 'prescription' && option.type !== 'nursing'"
+                                                        <!-- <div v-if="option.type !== 'dropdown' && option.type !== null && option.type !== 'diagnosis' && option.type !== 'lab_Order' && option.type !== 'imaging' && option.type !== 'prescription' && option.type !== 'nursing'"
                                                             class="d-flex justify-content-end mb-3">
                                                             <div @click="printOption(index, innerIndex, optionIndex)"
                                                                 class="text-primary point">
@@ -307,7 +252,7 @@
                                                                     Add field
                                                                 </span>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                         <div v-if="option.type === 'dropdown'"
                                                             class="d-flex justify-content-end mb-3">
                                                             <div @click="printOption(index, innerIndex, optionIndex)"
@@ -560,9 +505,17 @@ export default {
             this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].options.splice(itemindex, 1)
         },
         setInputType(index, innerIndex, optionIndex, input) {
-            this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].options = [{
-                value: ''
-            }]
+            if (input.val === 'dropdown') {
+                this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].options = [{
+                    value: ''
+                }]
+            }
+            else if (input.val === 'checkbox') {
+                this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].options = false
+            }
+            else {
+                this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].options = ''
+            }
             this.dataObject.content[index].cols[innerIndex].form_field[optionIndex].type = input.val
         },
         addColumn(index) {

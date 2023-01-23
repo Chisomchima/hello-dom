@@ -82,7 +82,6 @@
                   @open="showModal"
                   :closeOnSelect="true"
                   :noDrop="true"
-                  @option:deselected="updateChild"
                 >
                 </VSelect>
               </ValidationProviderWrapper>
