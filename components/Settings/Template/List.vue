@@ -89,7 +89,6 @@ export default {
             this.$bvModal.show('addTemplate')
         },
         async deleteItem(item) {
-            console.log(item)
             const result = await this.showConfirmMessageBox('Delete chart template ?')
             try {
                 if (result) {

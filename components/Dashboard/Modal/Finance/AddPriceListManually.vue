@@ -128,10 +128,10 @@ export default {
       handler(newVal) {
         if (Object.keys(newVal).length > 0) {
           let data = { ...newVal }
-          console.log(data)
           this.pricelist.id = data.id
           this.pricelist.co_pay.value = data.co_pay.value
           this.pricelist.co_pay.type = data.co_pay.type
+          // this.pricelist.module = data.module
           this.pricelist.price_list = data.price_list
           this.pricelist.selling_price = data.selling_price
           this.pricelist.is_auth_req = data.is_auth_req
@@ -182,12 +182,12 @@ export default {
       }
     },
     async editpricelist() {
-      delete this.pricelist.id
+      // delete this.pricelist.id
       if (await this.$refs.form.validate()) {
         try {
           const data = await this.$api.finance_settings.editPricelistItem(
             this.pricelist,
-            this.pricelist.price_list
+            this.pricelist.id
           )
           this.$emit('refresh')
           this.$bvModal.hide('addPricelistManually')

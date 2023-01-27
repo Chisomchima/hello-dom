@@ -73,6 +73,7 @@
           :pages="pages"
           :busy="busy"
           :fields="fields"
+          @edit="editPricelistItem"
            :showBaseCount="trigger"
           :currentPage="currentPage"
           :totalRecords="totalRecords"
@@ -111,6 +112,14 @@
           :editData="modalData"
         />
       </div>
+
+      <div>
+        <DashboardModalFinanceAddPriceListManually
+          :title="newTitle"
+          :editData="editData"
+          @refresh="refreshMe"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -142,11 +151,12 @@ export default {
         post_auth_allowed: null,
       },
       fetchBy: null,
+      editData: {},
       queryString: '',
       pages: 1,
       totalRecords: 0,
       currentPage: 1,
-      newTitle: '',
+      newTitle: 'Edit pricelist',
       fields: [
         {
           key: 'name',
@@ -189,7 +199,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'edit',
+          key: 'actions',
           label: '',
           sortable: false,
         },
@@ -226,6 +236,11 @@ export default {
     },
     upload() {
       this.$bvModal.show('addPriceListBulk')
+    },
+
+    editPricelistItem(e) {
+     this.editData = e
+      this.$bvModal.show('addPricelistManually')
     },
 
     searchPricelist(e) {

@@ -16,7 +16,7 @@ export default axios => ({
         })
     },
     saveEncounter(body) {
-        return axios.$post('/encounters/encounter/',
+        return axios.$post('/encounters/',
             body
         )
     },
@@ -30,12 +30,12 @@ export default axios => ({
     },
 
     getEncounter(params) {
-        return axios.$get('/encounters/encounter/', {
+        return axios.$get('/encounters/', {
             params
         })
     },
     orderOnEncounter(body, id) {
-        return axios.$post(`/encounters/encounter/${id}/orders/`, body)
+        return axios.$post(`/encounters/${id}/orders/`, body)
     },
     getOrders(params, id) {
         return axios.$get(`/encounters/${id}/charts/orders/`, {
@@ -43,7 +43,16 @@ export default axios => ({
         })
     },
     acknowledgeEncounter(id) {
-        return axios.$patch(`encounters/encounter/${id}/acknowledge/`)
+        return axios.$patch(`encounters/${id}/acknowledge/`)
     },
+
+    saveChartTemplate(body, id){
+        return axios.$post(`/encounters/${id}/charts/`,
+            body
+        )
+    },
+    getEncountersChart(id){
+        return axios.$get(`/encounters/${id}/charts/`)
+    }
 
 });

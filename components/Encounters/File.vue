@@ -1,14 +1,7 @@
 <template>
     <div>
-        <div class="d-flex justify-content-end">
-            <div class="col-md-4 mb-2">
-                <v-select style="height: 35px" v-model="template" class="style-chooser text-grey text-14" placeholder="Templates"
-                    :options="presets" label="title">
-                </v-select>
-            </div>
-        </div>
         <TransitionWrapper>
-                <EncountersTemplate v-if="selected" @setfile="setFile"  :template="content" />
+            <EncountersTemplate v-if="flag" @routeTopage="link" :consultationData="consultationData" :template="data" />
             <div class="space" v-else>
                 <p class="text-center text-info">No template selected, select from the dropdown to chart.</p>
             </div>
@@ -18,35 +11,38 @@
 
 <script>
 export default {
-    data() { 
+    props: {
+        data: {
+            type: Object,
+            default: () => { },
+        },
+        consultationData: {
+            type: Object,
+            default: () => { },
+        },
+    },
+    data() {
         return {
-            template: null,
             selected: false,
-            presets: []
         }
     },
-    async created() {
-        let response = await this.$api.templates.getEncTemplates({ size: 1000 })
-        this.presets = response.results
-    },
+
     computed: {
-        content() {
-            return this.template
-        }
-    },
-    watch: {
-        template(val) {
-            if (val !== null) {
-                this.selected = true
+        flag(){
+            if(this.data !== null){
+                if(Object.keys(this.data).length > 0){
+                return true
             }
-            else {
-                this.selected = false
+            else{
+                return false
+            }
             }
         }
     },
+
     methods: {
-        setFile(event, index){
-            this.template.content[index ? index : 0].value = event.target.value
+        link(){
+            this.$emit('routeTopage')
         }
     }
 }
@@ -54,7 +50,7 @@ export default {
 </script>
 
 <style scoped>
-.space{
+.space {
     padding: 5rem;
 }
 </style>

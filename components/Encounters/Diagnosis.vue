@@ -299,15 +299,6 @@
           </button>
         </div> -->
 
-        <div class="col-md-6 d-none">
-          <Dropdown
-            width="500px"
-            optionLabel="brand"
-            placeholder="Select a Car"
-            :filter="true"
-            filterPlaceholder="Find Car"
-          />
-        </div>
       </div>
 
       <div class="p-5 text-center" v-else>

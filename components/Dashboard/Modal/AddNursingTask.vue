@@ -154,8 +154,6 @@ export default {
                 verdict = `${currentAge.year} years`
             console.log(verdict)
             this.dataObject.patient.age = currentAge
-            this.getProducts()
-            this.getStores()
             this.getStations()
         },
         async getPatientByUHID(uhid) {
@@ -169,27 +167,7 @@ export default {
             }
         },
 
-        getProducts() {
-            this.$api.inventory
-                .getProducts({ size: 1000 })
-                .then((res) => {
-                    this.products = res.results
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
-
-        getStores() {
-            this.$api.inventory
-                .getStores({ size: 1000, is_pharmacy: true })
-                .then((res) => {
-                    this.stores = res.results
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        },
+        
         getStations() {
             this.$api.nursing
                 .getStation({ size: 1000 })

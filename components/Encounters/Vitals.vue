@@ -1,7 +1,7 @@
 <template>
- <div>
+ <div class="py-3">
    <div v-if="buffering">
-        <div class="mt-3 mx-5">
+        <div class="my-5 mx-5">
           <b-skeleton-table
         :rows="3"
         :columns="3"
@@ -10,19 +10,11 @@
         </div>
     </div>
    <div v-else>
-    <div style="max-width: 95%; cursor: pointer" class="d-flex sleek justify-content-between">
+    <div style="cursor: pointer" class="d-flex sleek justify-content-between">
       <div>
-        <h4 class="pl-2 text-18 mb-0 text-grey">Vitals</h4>
+        <h4 class="text-18 mb-0 text-grey">Vitals</h4>
       </div>
       <div class="text-primary" @click.prevent="openForm" id="button-1" v-show="step">
-        <!-- <span
-          title="Tooltip directive content"
-          class="iconify"
-          data-icon="akar-icons:plus"
-          style="color: #28a745"
-          data-width="28"
-          data-height="24"
-        ></span> -->
 
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -48,11 +40,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <div v-if="hideVitalsForm" style="max-width: 98%" class="trans pl-5 row px-2">
-        <div class="d-flex align-items-center col-lg-12 col-md-12 col-sm-12 mt-2">
-          <div><input v-model="nurseFlag" style="width: 1rem; height: 1rem;" class="form-control" type="checkbox"></div>
-          <small class="text-info text-12 ml-2">Nurse seen</small>
-        </div>
+      <div v-if="hideVitalsForm" class="trans pl-5 row px-2">
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div>
             <small class="text-grey text-12">Time Taken</small>
@@ -149,12 +137,12 @@
       </div>
     </transition>
 
-    <div class="pt-3 transit" style="max-width: 93%">
-      <div v-if="itemsToShow.length > 0" class="table-fix">
+    <div class="pt-3 transit">
+      <div v-if="!hideVitalsForm" class="table-fix">
         <table-component :paginate="false" :busy="busy" :items="itemsToShow" :fields="fields">
         </table-component>
       </div>
-      <div class="p-5 text-center" v-else>
+      <div class="vitalsHeight text-center" v-if="itemsToShow.length == 0 && !hideVitalsForm">
         <div class="text-16 text-grey">
           No Vitals added yet, click the
           <span style="position: relative; top: -3px" class="text-primary mx-1">
@@ -220,7 +208,6 @@ export default {
 
       tempData: [],
       form: {},
-      time: "",
       hideVitalsForm: false,
       busy: false,
       isLoading: false,
@@ -257,8 +244,6 @@ export default {
     },
   },
   mounted() {
-    // this.getDateTime();
-    // this.getPatientRecords();
     this.getVitals();
   },
 
@@ -267,12 +252,11 @@ export default {
       try {
         this.buffering = true;
         let response = await this.$axios.$get(
-          `encounters/${this.$route.params.id}/charts/vitals/`
+          `/encounters/encounter/${this.$route.params.id}/vitals/`
         );
 
         this.itemsToShow = [];
-        let tempData = response.result;
-        console.log(tempData);
+        let tempData = response.results;
 
         for (const iterator of tempData) {
           let time = iterator.created_at;
@@ -333,21 +317,15 @@ export default {
 
       try {
         let response = await this.$axios.$post(
-          `encounters/${this.consultationData.id}/charts/`,
+          `/encounters/encounter/${this.consultationData.id}/vitals/`,
           {
-            chart: {
-              vitals: this.vitals,
-            },
+           value: this.vitals,
           }
         );
         this.$toast({
           type: 'success',
           text: 'Vitals added',
         })
-
-        if (this.nurseFlag) {
-          this.updateStatus();
-        }
         // this.$emit("clearance", true);
 
         this.hideVitalsForm = false;
@@ -467,5 +445,11 @@ export default {
 .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+.vitalsHeight{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 28vh;
 }
 </style>
