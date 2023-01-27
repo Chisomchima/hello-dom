@@ -1,7 +1,7 @@
 <template>
     <div>
         <TransitionWrapper>
-            <EncountersTemplate v-if="flag" @setfile="setFile" :consultationData="consultationData" :template="data" />
+            <EncountersTemplate v-if="flag" @routeTopage="link" :consultationData="consultationData" :template="data" />
             <div class="space" v-else>
                 <p class="text-center text-info">No template selected, select from the dropdown to chart.</p>
             </div>
@@ -41,8 +41,8 @@ export default {
     },
 
     methods: {
-        setFile(){
-            console.log('vghsdhehj')
+        link(){
+            this.$emit('routeTopage')
         }
     }
 }

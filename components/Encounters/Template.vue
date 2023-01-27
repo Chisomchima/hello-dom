@@ -1,348 +1,355 @@
 <template>
     <div>
+        <ValidationObserver ref="form">
+            <div class="py-3" v-for="(section, index) in template.content" :key="index">
+                <div>
+                    <h3 class="text-18 mb-3 text-underline">{{ section.section }}</h3>
+                </div>
 
-        <div class="py-3" v-for="(section, index) in template.content" :key="index">
-            <div>
-                <h3 class="text-18 mb-3 text-underline">{{ section.section }}</h3>
-            </div>
-
-            <div class="d-flex flex-wrap align-items-start">
-                <div :class="section.cols.length === 1 ? 'col-md-12 ' : section.cols.length === 2 ? 'col-md-6' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4' : ''"
-                    v-for="(col, colIndex) in section.cols" :key="colIndex">
-                    <h3 class="text-16 text-grey">{{ col.header }}</h3>
-                    <div class="">
-                        <div class="" v-for="(field, fieldIndex) in col.form_field" :key="fieldIndex">
-                            <p class="text-14 py-2">{{ field.context }}</p>
-                            <div class="" v-if="field.type === 'text'">
-                                <div class="">
-                                    <ValidationProviderWrapper name="" :rules="[]">
-                                        <input v-model="field.options" class="input-special" type="text">
-                                    </ValidationProviderWrapper>
-                                </div>
-                            </div>
-
-                            <div class="" v-if="field.type == 'dropdown'">
-                                <div class="py-2">
-                                    <ValidationProviderWrapper name="" :rules="[]">
-                                        <v-select v-model="field.selected" class="style-chooser text-grey text-14"
-                                            placeholder="Select" :reduce="(opt) => opt.value" :options="field.options"
-                                            label="value">
-                                        </v-select>
-                                    </ValidationProviderWrapper>
-                                </div>
-                            </div>
-
-                            <div v-if="field.type == 'date'">
-                                <div class="">
-                                    <ValidationProviderWrapper name="" :rules="[]">
-                                        <input v-model="field.options" class="form-control" type="date">
-                                    </ValidationProviderWrapper>
-                                </div>
-                            </div>
-
-                            <div v-if="field.type == 'text-area'">
-                                <div class="">
-                                    <ValidationProviderWrapper name="" :rules="[]">
-                                        <textarea v-model="field.options" rows="10" col="10"
-                                            class="form-control"></textarea>
-                                    </ValidationProviderWrapper>
-                                </div>
-                            </div>
-
-                            <div class="d-flex py-2" v-if="field.type == 'checkbox'">
-                                <div class="px-2">
-                                    <ValidationProviderWrapper name="" :rules="[]">
-                                        <b-form-checkbox v-model="field.options" size="lg" switch>
-                                        </b-form-checkbox>
-                                    </ValidationProviderWrapper>
-                                </div>
-                            </div>
-
-                            <!-- ORDERS -->
-
-                            <div class="py-2" v-if="field.type == 'diagnosis'">
-                                <div class="d-flex">
-
-                                    <button @click.prevent="openDiagnosis" class="btn btn-primary">
-                                        <span class="text-capitalize">
-                                            {{ `Add ${field.type}` }}
-                                        </span>
-                                    </button>
-                                    <div class="col-md-10 pr-0">
+                <div class="d-flex flex-wrap align-items-start">
+                    <div :class="section.cols.length === 1 ? 'col-md-12 ' : section.cols.length === 2 ? 'col-md-6' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4' : ''"
+                        v-for="(col, colIndex) in section.cols" :key="colIndex">
+                        <h3 class="text-16 text-grey">{{ col.header }}</h3>
+                        <div class="">
+                            <div class="" v-for="(field, fieldIndex) in col.form_field" :key="fieldIndex">
+                                <p class="text-14 py-2">{{ field.context }}</p>
+                                <div class="" v-if="field.type === 'text'">
+                                    <div class="">
                                         <ValidationProviderWrapper name="" :rules="[]">
-                                            <v-select class="style-chooser text-grey text-14" :no-drop="true"
-                                                :multiple="true" v-model="diagList" placeholder="Diagnosis list"
-                                                :options="[]" label="case">
+                                            <input v-model="field.options" class="input-special" type="text">
+                                        </ValidationProviderWrapper>
+                                    </div>
+                                </div>
+
+                                <div class="" v-if="field.type == 'dropdown'">
+                                    <div class="py-2">
+                                        <ValidationProviderWrapper name="" :rules="[]">
+                                            <v-select v-model="field.selected" class="style-chooser text-grey text-14"
+                                                placeholder="Select" :reduce="(opt) => opt.value"
+                                                :options="field.options" label="value">
                                             </v-select>
                                         </ValidationProviderWrapper>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="py-2" v-show="field.type == 'lab_Order'">
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Services Center" :rules="['required']">
-                                            <VSelect v-model="labObject.service_center" :options="lab_serviceCenters"
-                                                label="name"></VSelect>
+                                <div v-if="field.type == 'date'">
+                                    <div class="">
+                                        <ValidationProviderWrapper name="" :rules="[]">
+                                            <input v-model="field.options" class="form-control" type="date">
                                         </ValidationProviderWrapper>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Lab Panel" :rules="['required']">
-                                            <VSelect v-model="labObject.lab_panels" :multiple="true" label="name"
-                                                :options="labPanels"></VSelect>
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Stat" :rules="[]">
-                                            <input v-model="labObject.stat" id="" type="checkbox" name="" />
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Comment" :rules="[]">
-                                            <textarea v-model="labObject.comments" cols="30" rows="5"
+                                <div v-if="field.type == 'text-area'">
+                                    <div class="">
+                                        <ValidationProviderWrapper name="" :rules="[]">
+                                            <textarea v-model="field.options" rows="10" col="10"
                                                 class="form-control"></textarea>
                                         </ValidationProviderWrapper>
                                     </div>
                                 </div>
-                                <hr>
-                            </div>
 
-                            <div class="py-2" v-show="field.type == 'imaging'">
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Service Center" :rules="['required']">
-                                            <VSelect v-model="imagingObject.service_center" :reduce="(opt) => opt.id"
-                                                :options="service_centers" label="name">
-                                            </VSelect>
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Observations" :rules="['required']">
-                                            <VSelect v-model="imagingObject.img_obv" :multiple="true"
-                                                :options="observations" label="name">
-                                            </VSelect>
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
-                                        <div class="mb-1">
-                                            <ValidationProviderWrapper name="Diagnosis" :rules="['']">
-                                                <VSelect v-model="imagingObject.diagnosis" label="case" multiple
-                                                    taggable @open="showModal" :noDrop="true" :closeOnSelect="true">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Order Physician" :rules="[]">
-                                            <input v-model="imagingObject.ordering_physician" type="text"
-                                                class="form-control" />
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-6 mb-2">
-                                        <ValidationProviderWrapper name="Referral Facility" :rules="[]">
-                                            <input v-model="imagingObject.referral_facility" type="text"
-                                                class="form-control" />
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="stat" :rules="[]">
-                                            <input v-model="imagingObject.stat" id="" type="checkbox" name="" />
-                                        </ValidationProviderWrapper>
-                                    </div>
-
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Comments" :rules="['']">
-                                            <textarea v-model="imagingObject.comments" id="" class="form-control"
-                                                name="" cols="30" rows="5"></textarea>
+                                <div class="d-flex py-2" v-if="field.type == 'checkbox'">
+                                    <div class="px-2">
+                                        <ValidationProviderWrapper name="" :rules="[]">
+                                            <b-form-checkbox v-model="field.options" size="lg" switch>
+                                            </b-form-checkbox>
                                         </ValidationProviderWrapper>
                                     </div>
                                 </div>
-                                <hr>
-                            </div>
 
-                            <div class="py-2" v-show="field.type == 'prescription'">
-                                <div class="row">
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Store" :rules="['']">
-                                            <VSelect v-model="prescriptionObject.store" :options="stores"
-                                                :reduce="(opt) => opt.id" label="name">
-                                            </VSelect>
-                                        </ValidationProviderWrapper>
-                                    </div>
+                                <!-- ORDERS -->
 
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
-                                            <input v-model="prescriptionObject.prescribing_physician" type="text"
-                                                class="form-control" />
-                                        </ValidationProviderWrapper>
-                                    </div>
+                                <div class="py-2" v-if="field.type == 'diagnosis'">
+                                    <div class="d-flex">
 
-                                    <div class="col-md-12 d-flex ml-0 text-primary text-14">
-                                        <span class="point" @click="addDrug">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                                <path fill="currentColor"
-                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                            </svg>
-                                            Add
-                                        </span>
-                                    </div>
-
-                                    <div v-for="(drug, index) in prescriptionObject.details" :key="index"
-                                        class="row p-1 mt-2 mx-2 border border-secondary rounded">
-                                        <div class="
-                col-md-12
-                
-                d-flex
-                justify-content-end
-                ml-0
-                text-danger text-14
-              ">
-                                            <span class="point float" @click="deleteDrug(index)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                                    <path fill="currentColor"
-                                                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
-                                                </svg>
+                                        <button @click.prevent="openDiagnosis" class="btn btn-primary">
+                                            <span class="text-capitalize">
+                                                {{ `Add ${field.type}` }}
                                             </span>
+                                        </button>
+                                        <div class="col-md-10 pr-0">
+                                            <ValidationProviderWrapper name="" :rules="[]">
+                                                <v-select class="style-chooser text-grey text-14" :no-drop="true"
+                                                    :multiple="true" v-model="diagList" placeholder="Diagnosis list"
+                                                    :options="[]" label="case">
+                                                </v-select>
+                                            </ValidationProviderWrapper>
                                         </div>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <div v-if="field.type == 'lab_Order'" class="py-2" v-show="field.type == 'lab_Order'">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Services Center" :rules="['required']">
+                                                <VSelect v-model="labObject.service_center"
+                                                    :options="lab_serviceCenters" label="name"></VSelect>
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Lab Panel" :rules="['required']">
+                                                <VSelect v-model="labObject.lab_panels" :reduce="(opt) => opt.id"
+                                                    :multiple="true" label="name" :options="labPanels"></VSelect>
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Stat" :rules="[]">
+                                                <input v-model="labObject.stat" id="" type="checkbox" name="" />
+                                            </ValidationProviderWrapper>
+                                        </div>
+
                                         <div class="col-md-12 mb-2">
-                                            <ValidationProviderWrapper name="Medication" :rules="['required']">
-                                                <VSelect v-model="drug.generic_drug" :options="generic_drug"
+                                            <ValidationProviderWrapper name="Comment" :rules="[]">
+                                                <textarea v-model="labObject.comments" cols="30" rows="5"
+                                                    class="form-control"></textarea>
+                                            </ValidationProviderWrapper>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <div v-if="field.type == 'imaging'" class="py-2" v-show="field.type == 'imaging'">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Service Center" :rules="['required']">
+                                                <VSelect v-model="imagingObject.service_center"
+                                                    :reduce="(opt) => opt.id" :options="service_centers" label="name">
+                                                </VSelect>
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Observations" :rules="['required']">
+                                                <VSelect v-model="imagingObject.img_obv" :reduce="(opt) => opt.id"
+                                                    :multiple="true" :options="observations" label="name">
+                                                </VSelect>
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-12 mb-2">
+                                            <div class="mb-1">
+                                                <ValidationProviderWrapper name="Diagnosis" :rules="['']">
+                                                    <VSelect v-model="imagingObject.diagnosis" label="case" multiple
+                                                        taggable @open="showModal" :noDrop="true" :closeOnSelect="true">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Order Physician" :rules="[]">
+                                                <input v-model="imagingObject.ordering_physician" type="text"
+                                                    class="form-control" />
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <ValidationProviderWrapper name="Referral Facility" :rules="[]">
+                                                <input v-model="imagingObject.referral_facility" type="text"
+                                                    class="form-control" />
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-12 mb-2">
+                                            <ValidationProviderWrapper name="stat" :rules="[]">
+                                                <input v-model="imagingObject.stat" id="" type="checkbox" name="" />
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-12 mb-2">
+                                            <ValidationProviderWrapper name="Comments" :rules="['']">
+                                                <textarea v-model="imagingObject.comments" id="" class="form-control"
+                                                    name="" cols="30" rows="5"></textarea>
+                                            </ValidationProviderWrapper>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <div v-if="field.type == 'prescription'" class="py-2"
+                                    v-show="field.type == 'prescription'">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <ValidationProviderWrapper name="Store" :rules="['']">
+                                                <VSelect v-model="prescriptionObject.store" :options="stores"
                                                     :reduce="(opt) => opt.id" label="name">
                                                 </VSelect>
                                             </ValidationProviderWrapper>
                                         </div>
-                                        <!-- <div class="col-md-12 mb-2">
+
+                                        <div class="col-md-12 mb-2">
+                                            <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
+                                                <input v-model="prescriptionObject.prescribing_physician" type="text"
+                                                    class="form-control" />
+                                            </ValidationProviderWrapper>
+                                        </div>
+
+                                        <div class="col-md-12 d-flex ml-0 text-primary text-14">
+                                            <span class="point" @click="addDrug">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                                    <path fill="currentColor"
+                                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                </svg>
+                                                Add
+                                            </span>
+                                        </div>
+
+                                        <div v-for="(drug, index) in prescriptionObject.details" :key="index"
+                                            class="row p-1 mt-2 mx-2 border border-secondary rounded">
+                                            <div class="
+                                                col-md-12
+                                                d-flex
+                                                justify-content-end
+                                                ml-0
+                                                text-danger text-14
+                                                ">
+                                                <span class="point float" @click="deleteDrug(index)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                        <path fill="currentColor"
+                                                            d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <ValidationProviderWrapper name="Medication" :rules="['required']">
+                                                    <VSelect v-model="drug.generic_drug" :options="generic_drug"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <!-- <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="SIG" :rules="['']">
                 <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
               </ValidationProviderWrapper>
             </div> -->
 
-                                        <div class="col-md-3 mb-2">
-                                            <ValidationProviderWrapper name="Dose" :rules="['']">
-                                                <VSelect v-model="drug.dose" :options="doses" :reduce="(opt) => opt.id"
-                                                    label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <ValidationProviderWrapper name="Unit" :rules="['']">
-                                                <VSelect v-model="drug.unit" :options="units" :reduce="(opt) => opt.id"
-                                                    label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <ValidationProviderWrapper name="Frequency" :rules="['']">
-                                                <VSelect v-model="drug.frequency" :options="frequencies"
-                                                    :reduce="(opt) => opt.id" label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
+                                            <div class="col-md-3 mb-2">
+                                                <ValidationProviderWrapper name="Dose" :rules="['']">
+                                                    <VSelect v-model="drug.dose" :options="doses"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <ValidationProviderWrapper name="Unit" :rules="['']">
+                                                    <VSelect v-model="drug.unit" :options="units"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <ValidationProviderWrapper name="Frequency" :rules="['']">
+                                                    <VSelect v-model="drug.frequency" :options="frequencies"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
 
-                                        <div class="col-md-3 mb-2">
-                                            <ValidationProviderWrapper name="Duration" :rules="['required']">
-                                                <VSelect v-model="drug.duration" :options="durations" label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
+                                            <div class="col-md-3 mb-2">
+                                                <ValidationProviderWrapper name="Duration" :rules="['required']">
+                                                    <VSelect v-model="drug.duration" :options="durations" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
 
-                                        <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Direction" :rules="['required']">
-                                                <VSelect v-model="drug.direction" :options="directions" label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
+                                            <div class="col-md-6 mb-2">
+                                                <ValidationProviderWrapper name="Direction" :rules="['required']">
+                                                    <VSelect v-model="drug.direction" :options="directions"
+                                                        label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
 
-                                        <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Route" :rules="['']">
-                                                <VSelect v-model="drug.route" :options="routes"
-                                                    :reduce="(opt) => opt.id" label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                        <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Product" :rules="['']">
-                                                <VSelect v-model="drug.product" :options="products"
-                                                    :reduce="(opt) => opt.id" label="name">
-                                                </VSelect>
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                        <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
-                                                <input v-model="drug.dispense_quantity" type="number"
-                                                    class="form-control" />
-                                            </ValidationProviderWrapper>
-                                        </div>
-                                        <div v-if="drug.product" class="col-md-12 mb-2">
-                                            <div class="d-flex justify-content-end align-items-center">
-                                                <div class="col-md-6 text-14 text-info text-center">
-                                                    Bottle(s)
+                                            <div class="col-md-6 mb-2">
+                                                <ValidationProviderWrapper name="Route" :rules="['']">
+                                                    <VSelect v-model="drug.route" :options="routes"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <ValidationProviderWrapper name="Product" :rules="['']">
+                                                    <VSelect v-model="drug.product" :options="products"
+                                                        :reduce="(opt) => opt.id" label="name">
+                                                    </VSelect>
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
+                                                    <input v-model="drug.dispense_quantity" type="number"
+                                                        class="form-control" />
+                                                </ValidationProviderWrapper>
+                                            </div>
+                                            <div v-if="drug.product" class="col-md-12 mb-2">
+                                                <div class="d-flex justify-content-end align-items-center">
+                                                    <div class="col-md-6 text-14 text-info text-center">
+                                                        Bottle(s)
+                                                    </div>
                                                 </div>
+                                            </div>
+
+                                            <div class="col-md-12 mb-2">
+                                                <ValidationProviderWrapper name="Notes" :rules="['']">
+                                                    <textarea id="" v-model="drug.note" class="form-control" name=""
+                                                        cols="30" rows="2"></textarea>
+                                                </ValidationProviderWrapper>
                                             </div>
                                         </div>
 
+                                        <div
+                                            class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
+                                            <span class="point" @click="addDrug">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                                                    <path fill="currentColor"
+                                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                </svg>
+                                                Add
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <div v-if="field.type == 'nursing'" class="py-2" v-show="field.type == 'nursing'">
+                                    <div class="row">
                                         <div class="col-md-12 mb-2">
-                                            <ValidationProviderWrapper name="Notes" :rules="['']">
-                                                <textarea id="" v-model="drug.note" class="form-control" name=""
-                                                    cols="30" rows="2"></textarea>
+                                            <ValidationProviderWrapper name="Nursing station" :rules="['']">
+                                                <VSelect v-model="nursingObject.station" :options="stations"
+                                                    :reduce="(opt) => opt.id" label="name">
+                                                </VSelect>
+                                            </ValidationProviderWrapper>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <ValidationProviderWrapper name="Description" :rules="['required']">
+                                                <textarea id="" v-model="nursingObject.description" class="form-control"
+                                                    name="" cols="30" rows="4"></textarea>
                                             </ValidationProviderWrapper>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-12 d-flex justify-content-end ml-0 text-primary text-14 pt-2">
-                                        <span class="point" @click="addDrug">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
-                                                <path fill="currentColor"
-                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                            </svg>
-                                            Add
-                                        </span>
-                                    </div>
+                                    <hr>
                                 </div>
-                                <hr>
-                            </div>
-
-                            <div class="py-2" v-show="field.type == 'nursing'">
-                                <div class="row">
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Nursing station" :rules="['']">
-                                            <VSelect v-model="nursingObject.station" :options="stations"
-                                                :reduce="(opt) => opt.id" label="name">
-                                            </VSelect>
-                                        </ValidationProviderWrapper>
-                                    </div>
-                                    <div class="col-md-12 mb-2">
-                                        <ValidationProviderWrapper name="Description" :rules="['required']">
-                                            <textarea id="" v-model="nursingObject.description" class="form-control"
-                                                name="" cols="30" rows="4"></textarea>
-                                        </ValidationProviderWrapper>
-                                    </div>
-                                </div>
-                                <hr>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <hr>
             </div>
-            <hr>
-        </div>
+        </ValidationObserver>
 
         <div class="d-flex justify-content-end">
             <button @click.prevent="saveEncounter" class="btn btn-outline-primary btn-lg">Save chart</button>
         </div>
-
+        <div>
+            <button @click.prevent="showMe">Test</button>
+        </div>
         <div>
             <DashboardModalImagingDiagnosis @diagnosis="setImagingDiagnosis" @change="helloWorld"
                 :selectedDiagnosis="selected" />
@@ -447,19 +454,10 @@ export default {
             },
 
             orders: {
-                laboratory: {
-
-                },
-                imaging: {
-
-                },
-                prescription: {
-
-                },
-                nursing: {
-
-                },
-                diagnosis: []
+                laboratory: null,
+                imaging: null,
+                prescription: null,
+                nursing: null
             },
         }
     },
@@ -476,7 +474,7 @@ export default {
             }
         },
 
-        saveEncounter() {
+        async saveEncounter() {
             if (this.template.id || this.template.created_at || this.template.created_by || this.template.updated_at || this.template.updated_by) {
                 delete this.template.id
                 delete this.template.created_at
@@ -484,17 +482,27 @@ export default {
                 delete this.template.updated_at
                 delete this.template.updated_by
             }
+            let panel = this.labPanels
+            let observations = this.observations
 
-            let labObv = this.labObject.lab_panels
-            let imgObv = this.imagingObject.img_obv
+            //Helper functions to append copy to chart
 
-            //reduce to ID's
-
-            const formattedLab = labObv.map((el) => (el.id))
-            const formattedImg = imgObv.map((el) => (el.id))
-
-            this.labObject.lab_panels = formattedLab
-            this.imagingObject.img_obv = formattedImg
+            const tray = []
+            for (let x = 0; x < this.labObject.lab_panels.length; x++) {
+                for (let y = 0; y < panel.length; y++) {
+                    if (this.labObject.lab_panels[x] === panel[y].id) {
+                        tray.push(panel[y])
+                    }
+                }
+            }
+            const imgtray = []
+            for (let x = 0; x < this.imagingObject.img_obv.length; x++) {
+                for (let y = 0; y < observations.length; y++) {
+                    if (this.imagingObject.img_obv[x] === observations[y].id) {
+                        imgtray.push(observations[y])
+                    }
+                }
+            }
 
             //Append laborder object
 
@@ -514,10 +522,52 @@ export default {
             if (this.nursingObject.station !== null && this.nursingObject.description !== '')
                 this.orders.nursing = this.nursingObject
 
-            console.log(this.orders)
+            const appendOrders = this.orders
             this.template.orders = this.orders
 
+            for (let x = 0; x < this.template.content.length; x++) {
+                let temp = this.template.content[x]
 
+                for (let y = 0; y < temp.cols.length; y++) {
+                    let cols = temp.cols[y]
+
+                    for (let z = 0; z < cols.form_field.length; z++) {
+                        let option = cols.form_field[z]
+
+                        if (option.type === 'lab_Order' || option.type === 'imaging' || option.type === 'prescription' || option.type === 'nursing' || option.type === 'diagnosis') {
+
+                            this.template.content[x].cols[y].orders = appendOrders
+                            if (option.type === 'lab_order') {
+                                this.template.content[x].cols[y].orders.laboratory.lab_list = tray
+                            }
+                            if (option.type === 'imaging') {
+                                this.template.content[x].cols[y].orders.imaging.img_list = imgtray
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (await this.$refs.form.validate()) {
+                let response = this.$api.encounter.saveChartTemplate(this.template, this.consultationData.id)
+                if (response) {
+                    this.$emit('routeTopage')
+                    this.$toast({
+                        type: 'success',
+                        text: 'Chart saved',
+                    })
+                }
+            }
+            else {
+                this.$toast({
+                    type: 'info',
+                    text: 'Please complete form',
+                })
+            }
+
+        },
+        showMe() {
+            this.$emit('routeTopage')
         },
         helloWorld(e) {
             this.present = e
@@ -558,7 +608,8 @@ export default {
                 delete tempObj.diagnosis.selected
                 delete tempObj.diagnosis.confirmed
                 requestBody.push(tempObj)
-                this.orders.diagnosis = requestBody
+                this.template.diagnosis = requestBody
+                // this.orders.diagnosis = requestBody
             }
         },
 
@@ -632,10 +683,6 @@ export default {
                     }
                 }
             }
-
-
-
-
         },
         deleteDrug(e) {
             if (this.prescriptionObject.details.length !== 1) {
@@ -677,7 +724,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         async getLabServiceCenterandObv() {
             try {
@@ -700,7 +747,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getGenericDrugs() {
             this.$api.pharmacy
@@ -710,7 +757,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
 
         getDoses() {
@@ -721,7 +768,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getUnits() {
             this.$api.pharmacy
@@ -731,7 +778,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getFrequencies() {
             this.$api.pharmacy
@@ -741,7 +788,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getDurations() {
             this.$api.pharmacy
@@ -751,7 +798,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getDirections() {
             this.$api.pharmacy
@@ -761,7 +808,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getRoutes() {
             this.$api.pharmacy
@@ -771,7 +818,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getProducts() {
             this.$api.inventory
@@ -781,7 +828,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getStores() {
             this.$api.inventory
@@ -791,7 +838,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
         getStations() {
             this.$api.nursing
@@ -801,7 +848,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                })
+            })
         },
     }
 }

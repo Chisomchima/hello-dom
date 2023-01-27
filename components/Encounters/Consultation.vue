@@ -52,11 +52,11 @@
           </span>
         </b-tooltip>
         <div @click="showOptions = false" class="my-3" v-show="tab.label === 'Notes'">
-          <EncountersPreviousEncounter />
+          <EncountersPreviousEncounter :fetchRecord="fetchRecord" :consultationData="consultationData" />
         </div>
 
         <div @click="showOptions = false" class="my-3" v-show="tab.label !== 'Notes'">
-          <EncountersFile :consultationData="consultationData" :data="tab.data" />
+          <EncountersFile @routeTopage="gotoPageOne" :consultationData="consultationData" :data="tab.data" />
         </div>
       </TabPanel>
     </TabView>
@@ -81,6 +81,7 @@ export default {
       }],
       active: 0,
       template: null,
+      fetchRecord: false,
       selected: false,
       showOptions: false,
       presets: []
@@ -113,6 +114,13 @@ export default {
       this.showOptions = false,
         this.template = null
       this.active = this.tabs.length - 1
+    },
+    gotoPageOne() {
+      if (this.active === this.tabs.length - 1) {
+        this.active = 0
+        this.fetchRecord = true
+      }
+
     },
     removeTab(index) {
       this.active = index - 1
@@ -154,7 +162,8 @@ export default {
   z-index: 105;
   top: 22px;
   right: 220px;
-  width: 15rem
+  width: 15rem;
+  background-color: #ffffff;
 }
 
 .lift {

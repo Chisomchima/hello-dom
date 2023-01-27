@@ -179,11 +179,9 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.busy = true
+    // this.busy = true
     this.dataOBJS = this.options
-    if(this.options.length > 0){
       this.busy = false
-    }
   },
   data() {
     return {

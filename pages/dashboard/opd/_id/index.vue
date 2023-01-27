@@ -238,7 +238,7 @@ export default {
       try {
         this.isLoading = true
         let response = await this.$axios.$get(
-          `encounters/encounter/${this.$route.params.id}`
+          `encounters/${this.$route.params.id}/`
         )
         this.consultationData = response
         this.clinic = response.clinic.name
