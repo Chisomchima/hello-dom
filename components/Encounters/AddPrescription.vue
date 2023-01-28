@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Medication" :rules="['required']">
-                <VSelect v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -388,6 +388,16 @@ export default {
         this.$store.state.auth.user.first_name +
         ' ' +
         this.$store.state.auth.user.last_name
+    },
+    fetchOPtions(e, i){
+      this.$api.inventory
+        .getProducts({ size: 1500, generic_drug: e.id })
+        .then((res) => {
+          this.products = res.results
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     async getPatientByUHID(uhid) {
       try {

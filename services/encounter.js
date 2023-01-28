@@ -51,8 +51,11 @@ export default axios => ({
             body
         )
     },
-    getEncountersChart(id){
-        return axios.$get(`/encounters/${id}/charts/`)
+    getEncountersChart(id, params){
+        return axios.$get(`/encounters/${id}/charts/`, { params })
+    },
+    updateSingleChart(body, encID, id){
+        return axios.$put(`/encounters/${encID}/charts/${id}/`, body)
     }
 
 });

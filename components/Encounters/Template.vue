@@ -142,8 +142,7 @@
 
                                         <div class="col-md-6 mb-2">
                                             <ValidationProviderWrapper name="Order Physician" :rules="[]">
-                                                <input v-model="imagingObject.ordering_physician" type="text"
-                                                    class="form-control" />
+                                                <input :value="user" type="text" class="form-control" />
                                             </ValidationProviderWrapper>
                                         </div>
 
@@ -183,8 +182,7 @@
 
                                         <div class="col-md-12 mb-2">
                                             <ValidationProviderWrapper name="Prescribing Physician" :rules="[]">
-                                                <input v-model="prescriptionObject.prescribing_physician" type="text"
-                                                    class="form-control" />
+                                                <input :value="user" type="text" class="form-control" />
                                             </ValidationProviderWrapper>
                                         </div>
 
@@ -218,7 +216,7 @@
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <ValidationProviderWrapper name="Medication" :rules="['required']">
-                                                    <VSelect v-model="drug.generic_drug" :options="generic_drug"
+                                                    <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug"
                                                         :reduce="(opt) => opt.id" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
@@ -253,15 +251,16 @@
 
                                             <div class="col-md-3 mb-2">
                                                 <ValidationProviderWrapper name="Duration" :rules="['required']">
-                                                    <VSelect v-model="drug.duration" :options="durations" label="name">
+                                                    <VSelect :reduce="(opt) => opt.id" v-model="drug.duration"
+                                                        :options="durations" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
 
                                             <div class="col-md-6 mb-2">
                                                 <ValidationProviderWrapper name="Direction" :rules="['required']">
-                                                    <VSelect v-model="drug.direction" :options="directions"
-                                                        label="name">
+                                                    <VSelect :reduce="(opt) => opt.id" v-model="drug.direction"
+                                                        :options="directions" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
@@ -333,7 +332,6 @@
                                             </ValidationProviderWrapper>
                                         </div>
                                     </div>
-                                    <hr>
                                 </div>
                             </div>
                         </div>
@@ -347,9 +345,10 @@
         <div class="d-flex justify-content-end">
             <button @click.prevent="saveEncounter" class="btn btn-outline-primary btn-lg">Save chart</button>
         </div>
-        <div>
-            <button @click.prevent="showMe">Test</button>
-        </div>
+
+        <!-- <div>
+            <button @click="$emit('routeTopage')" class="btn btn-outline-primary">Test</button>
+        </div> -->
         <div>
             <DashboardModalImagingDiagnosis @diagnosis="setImagingDiagnosis" @change="helloWorld"
                 :selectedDiagnosis="selected" />
@@ -464,6 +463,14 @@ export default {
 
     mounted() {
         this.getData()
+        this.template.diagnosis = []
+    },
+    computed: {
+        user() {
+            return this.$store.state.auth.user.first_name +
+                ' ' +
+                this.$store.state.auth.user.last_name
+        }
     },
 
     methods: {
@@ -537,6 +544,7 @@ export default {
                         if (option.type === 'lab_Order' || option.type === 'imaging' || option.type === 'prescription' || option.type === 'nursing' || option.type === 'diagnosis') {
 
                             this.template.content[x].cols[y].orders = appendOrders
+                            // this.template.content[x].cols[y].orders.laboratory.lab_list = tray
                             if (option.type === 'lab_order') {
                                 this.template.content[x].cols[y].orders.laboratory.lab_list = tray
                             }
@@ -547,6 +555,8 @@ export default {
                     }
                 }
             }
+
+            // console.log(this.template)
 
             if (await this.$refs.form.validate()) {
                 let response = this.$api.encounter.saveChartTemplate(this.template, this.consultationData.id)
@@ -716,6 +726,16 @@ export default {
             let qty = Math.floor(product)
             console.log(qty)
         },
+        fetchOPtions(e, i) {
+            this.$api.inventory
+                .getProducts({ size: 1500, generic_drug: e.id })
+                .then((res) => {
+                    this.products = res.results
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         getServiceCenter() {
             this.$api.imaging
                 .getServiceCenter({ size: 1000 })
@@ -724,7 +744,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         async getLabServiceCenterandObv() {
             try {
@@ -747,17 +767,17 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getGenericDrugs() {
             this.$api.pharmacy
-                .getGeneric({ size: 1000 })
+                .getGeneric({ size: 1500 })
                 .then((res) => {
                     this.generic_drug = res.results
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
 
         getDoses() {
@@ -768,7 +788,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getUnits() {
             this.$api.pharmacy
@@ -778,7 +798,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getFrequencies() {
             this.$api.pharmacy
@@ -788,7 +808,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getDurations() {
             this.$api.pharmacy
@@ -798,7 +818,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getDirections() {
             this.$api.pharmacy
@@ -808,7 +828,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getRoutes() {
             this.$api.pharmacy
@@ -818,7 +838,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getProducts() {
             this.$api.inventory
@@ -828,7 +848,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getStores() {
             this.$api.inventory
@@ -838,7 +858,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
         getStations() {
             this.$api.nursing
@@ -848,7 +868,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-            })
+                })
         },
     }
 }
