@@ -52,7 +52,7 @@
           </span>
         </b-tooltip>
         <div @click="showOptions = false" class="my-3" v-show="tab.label === 'Notes'">
-          <EncountersPreviousEncounter :fetchRecord="fetchRecord" :consultationData="consultationData" />
+          <EncountersPreviousEncounter @reset="fetchRecord = false" :fetchRecord="fetchRecord" :consultationData="consultationData" />
         </div>
 
         <div @click="showOptions = false" class="my-3" v-show="tab.label !== 'Notes'">
@@ -117,6 +117,7 @@ export default {
     },
     gotoPageOne() {
       if (this.active === this.tabs.length - 1) {
+        console.log('Pass')
         this.active = 0
         this.fetchRecord = true
       }

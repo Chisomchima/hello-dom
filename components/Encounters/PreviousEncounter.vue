@@ -35,10 +35,10 @@
                 <div v-else>
                     <!-- {{ records }} -->
                     <div v-if="records.length > 0">
-                        <div class="p-3 radPI mb-3" v-for="(record, index) in records" :key="index">
+                        <div class="p-3 radPI mb-4" v-for="(record, index) in records" :key="index">
                             <div class="d-flex justify-content-between">
                                 <h3 class="text-lg">{{ record.chart.title }}</h3>
-                                <div>
+                                <div v-if="presentUser === record.created_by.id">
                                     <span v-if="!record.edit" class="point" @click="editRecord(index)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23"
                                             preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -52,22 +52,22 @@
                             </div>
                             <div v-for="(section, innerIndex) in record.chart.content" :key="innerIndex">
                                 <div>
-                                    <h3 class="text-18 mb-3 text-underline">{{ section.section }}</h3>
+                                    <h3 class="text-18 mb-2 text-underline">{{ section.section }}</h3>
                                 </div>
                                 <!-- input options -->
                                 <div class="d-flex flex-wrap align-items-center">
                                     <div :class="section.cols.length === 1 ? 'col-md-12 ' : section.cols.length === 2 ? 'col-md-6' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4' : ''"
                                         v-for="(col, colIndex) in section.cols" :key="colIndex">
-                                        <h3 class="text-16 text-grey">{{ col.header }}</h3>
+                                        <h3 class="text-16 mb-0">{{ col.header }}</h3>
                                         <div class="">
                                             <div class="" v-for="(field, fieldIndex) in col.form_field"
                                                 :key="fieldIndex">
                                                 <div class="" v-if="field.type === 'text'">
-                                                    <p v-if="!record.edit" class="text-18">
-                                                        <span class="text-underline">
+                                                    <p v-if="!record.edit" class="text-14">
+                                                        <span class="">
                                                             {{ field.context }}:
                                                         </span>
-                                                        <span class="text-16 ml-1 font-weight-bold">{{
+                                                        <span class="text-14 ml-1 ">{{
                                                             field.options
                                                         }}</span>
                                                     </p>
@@ -79,15 +79,15 @@
                                                                 type="text">
                                                         </ValidationProviderWrapper>
                                                     </div>
-                                                    <hr>
+
                                                 </div>
 
                                                 <div class="" v-if="field.type == 'dropdown'">
-                                                    <p v-if="!record.edit" class="text-18">
-                                                        <span class="text-underline">
+                                                    <p v-if="!record.edit" class="text-14">
+                                                        <span class="">
                                                             {{ field.context }}:
                                                         </span>
-                                                        <span class="text-16 ml-1 font-weight-bold">{{
+                                                        <span class="text-14 ml-1 ">{{
                                                             field.selected
                                                         }}</span>
                                                     </p>
@@ -103,16 +103,16 @@
                                                             </ValidationProviderWrapper>
                                                         </div>
                                                     </div>
-                                                    <hr>
+
                                                 </div>
 
                                                 <div v-if="field.type == 'date'">
                                                     <div class="">
-                                                        <p v-if="!record.edit" class="text-18">
-                                                            <span class="text-underline">
+                                                        <p v-if="!record.edit" class="text-14">
+                                                            <span class="">
                                                                 {{ field.context }}:
                                                             </span>
-                                                            <span class="text-16 ml-1 font-weight-bold">{{
+                                                            <span class="text-14 ml-1 ">{{
                                                                 field.options
                                                             }}</span>
                                                         </p>
@@ -124,17 +124,17 @@
                                                                 </ValidationProviderWrapper>
                                                             </div>
                                                         </div>
-                                                        <hr>
+
                                                     </div>
                                                 </div>
 
                                                 <div v-if="field.type == 'text-area'">
                                                     <div class="">
-                                                        <p v-if="!record.edit" class="text-18">
-                                                            <span class="text-underline">
+                                                        <p v-if="!record.edit" class="text-14">
+                                                            <span class="">
                                                                 {{ field.context }}:
                                                             </span>
-                                                            <span class="text-16 ml-1 font-weight-bold">{{
+                                                            <span class="text-14 ml-1 ">{{
                                                                 field.options
                                                             }}</span>
                                                         </p>
@@ -146,17 +146,17 @@
                                                                 </ValidationProviderWrapper>
                                                             </div>
                                                         </div>
-                                                        <hr>
+
                                                     </div>
                                                 </div>
 
                                                 <div class="d-flex py-2" v-if="field.type == 'checkbox'">
                                                     <div class="">
-                                                        <p v-if="!record.edit" class="text-18">
-                                                            <span class="text-underline">
+                                                        <p v-if="!record.edit" class="text-14">
+                                                            <span class="">
                                                                 {{ field.context }}:
                                                             </span>
-                                                            <span class="text-16 ml-1 font-weight-bold">{{
+                                                            <span class="text-14 ml-1 ">{{
                                                                 field.options
                                                             }}</span>
                                                         </p>
@@ -169,37 +169,37 @@
                                                                 </ValidationProviderWrapper>
                                                             </div>
                                                         </div>
-                                                        <hr>
+
                                                     </div>
                                                 </div>
 
                                                 <!-- ORDERS -->
 
-                                                <div class="py-2"
+                                                <div class="py-0 text-14"
                                                     v-if="field.type == 'diagnosis' && record.chart.diagnosis">
                                                     {{ field.context }}:
-                                                    <span class="text-16 ml-1 font-weight-bold">{{
+                                                    <span class="text-14 ml-1 ">{{
                                                         convertToDiagList(record.chart.diagnosis)
                                                     }}</span>
-                                                    <hr>
+
                                                 </div>
 
-                                                <div v-if="field.type == 'lab_Order' && col.orders.laboratory !== null"
-                                                    class="py-2">
+                                                <div v-if="field.type == 'lab_Order' && col.orders.laboratory !== null && col.orders.laboratory"
+                                                    class="py-0 text-14">
                                                     {{ field.context }}:
-                                                    <span class="text-16 ml-1 font-weight-bold">{{
-                                                        convertToImgList(col.orders.laboratory)
+                                                    <span class="text-14 ml-1 ">{{
+                                                        convertToLabList(record.chart.orders.laboratory)
                                                     }}</span>
-                                                    <hr>
+
                                                 </div>
 
-                                                <div v-if="field.type == 'imaging' && col.orders.imaging !== null"
-                                                    class="py-2">
+                                                <div v-if="field.type == 'imaging' && col.orders.imaging !== null && col.orders.imaging"
+                                                    class="py-0 text-14">
                                                     {{ field.context }}:
-                                                    <span class="text-16 ml-1 font-weight-bold">{{
-                                                        convertToImgList(col.orders.imaging)
+                                                    <span class="text-14 ml-1 ">{{
+                                                        convertToImgList(record.chart.orders.imaging)
                                                     }}</span>
-                                                    <hr>
+
                                                 </div>
 
                                                 <!-- <div v-if="field.type == 'prescription' && col.orders.prescription !== null" class="py-2">
@@ -208,20 +208,22 @@
                                                 </div> -->
 
                                                 <div v-if="field.type == 'nursing' && col.orders.imaging !== null"
-                                                    class="py-2">
+                                                    class="py-0 text-14">
 
-                                                    {{ field.context }}: <span class="text-16 ml-1 font-weight-bold">{{
+                                                    {{ field.context }}: <span class="text-14 ml-1 ">{{
                                                         col.orders.nursing ? col.orders.nursing.description : ''
                                                     }}</span>
-                                                    <hr>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                             </div>
                             <div v-if="record.edit" class="d-flex justify-content-end">
-                                <button class="btn btn-outline-primary">Save</button>
+                                <button @click.prevent="updateChart(record, index)"
+                                    class="btn btn-outline-primary">Save</button>
                             </div>
                         </div>
 
@@ -240,6 +242,7 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash'
 export default {
     props: {
         consultationData: {
@@ -255,39 +258,108 @@ export default {
         return {
             records: [],
             fetching: true,
+            identity: null,
+            currentPage: 1,
+            endOfScroll: null
         }
     },
     mounted() {
         this.getEncountersChart()
+        window.onscroll = () => {
+            let cond = (document.documentElement.scrollTop + window.innerHeight + 2) >= document.documentElement.offsetHeight 
+            if (cond && this.endOfScroll !== null) {
+                let page = this.currentPage + 1
+                let filter = {
+                    size: 1,
+                    page: page
+                }
+                try {
+                    let response = this.$api.encounter.getEncountersChart(this.consultationData.id, filter)
+                    let arr = Promise.resolve(response)
+                    arr.then((value) => {
+                        console.log(value)
+                        this.currentPage = value.current_page
+                        this.endOfScroll = value.next
+                        const formatted = value.results.map((el) => ({
+                            ...el,
+                            edit: false
+                        }))
+                        // console.log(formatted)
+                        for (let x = 0; x < formatted.length; x++) {
+                            this.records.push(formatted[x])
+                        }
+                    })
+                }
+                catch (error){
+                    
+                }
+
+            }
+            
+        }
     },
     computed: {
+        user() {
+            return this.$store.state.auth.user.first_name +
+                ' ' +
+                this.$store.state.auth.user.last_name
+        },
+        presentUser() {
+            return this.$store.state.auth.user.id
+        }
     },
     watch: {
         fetchRecord: {
             handler(newval) {
-                if (newval === true) {
-                    this.getEncountersChart()
-                }
+                this.getEncountersChart()
+                this.$emit('reset')
             }
         }
     },
     methods: {
-        async getEncountersChart() {
-            let response = await this.$api.encounter.getEncountersChart(this.consultationData.id)
-            console.log(response)
-            const formatted = response.results.map((el) => ({
-                ...el,
-                edit: false
-            }))
-            this.records = formatted
+        async getEncountersChart(
+            page = 1,
+            e = {
+                size: 1,
+                page: page
+            }
+        ) {
+
+            // this.endOfScroll = 'next'
+
+            let response = await this.$api.encounter.getEncountersChart(this.consultationData.id, e)
+            if (response) {
+                this.currentPage = response.current_page
+                this.endOfScroll = response.next
+                const formatted = response.results.map((el) => ({
+                    ...el,
+                    edit: false
+                }))
+                this.records = formatted
+            }
             this.fetching = false
         },
+
+        async updateChart(line, e) {
+            console.log(line)
+            // this.identity = line.created_by.id
+            let response = await this.$api.encounter.updateSingleChart(line.chart, this.consultationData.id, line.id)
+            if (response) {
+                this.records[e].edit = false
+                this.$toast({
+                    type: 'success',
+                    text: 'Updated',
+                })
+            }
+        },
         editRecord(e) {
+            const backup = cloneDeep(this.records[e].chart.content)
             this.records[e].edit = !this.records[e].edit
+            this.records[e].chart.content = backup
         },
         convertToImgList(img) {
-            let list = img.img_list.map((el) => el.name)
-
+            let list = img.img_obv_orders.map((el) => (el.img_obv.name))
+            console.log(list)
             let word = list.join(', ')
             return word
         },
@@ -297,8 +369,8 @@ export default {
             return word
         },
         convertToLabList(lab) {
-            let list = lab.lab_lis.map((el) => el.name)
-
+            let list = lab.lab_panel_orders.map((el) => el.panel.name)
+            console.log(list)
             let word = list.join(', ')
             return word
         }
@@ -314,7 +386,7 @@ export default {
 
 .radPI {
     border-radius: 10px;
-    box-shadow: 5px 4px 4px 0px #e8e8e8;
+    box-shadow: 4px 4px 3px 0px #e8e8e8;
     border: 1px solid #e7e8eb
 }
 
