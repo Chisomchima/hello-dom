@@ -37,7 +37,17 @@
                     <div v-if="records.length > 0">
                         <div class="p-3 radPI mb-4" v-for="(record, index) in records" :key="index">
                             <div class="d-flex justify-content-between">
-                                <h3 class="text-lg">{{ record.chart.title }}</h3>
+                                <div>
+                                    <h3 class="text-lg">{{ record.chart.title }}</h3>
+                                    <p class="text-14">Recorded by: {{
+                                        record.created_by ? (record.created_by.first_name
+                                            + " " + record.created_by.last_name) : ""
+                                    }}</p>
+                                    <p class="text-14 mb-2">Recorded at: {{
+                                        record.created_by ? convDate(record.created_at) :
+                                            ""
+                                    }}</p>
+                                </div>
                                 <div v-if="presentUser === record.created_by.id">
                                     <span v-if="!record.edit" class="point" @click="editRecord(index)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23"
@@ -55,8 +65,8 @@
                                     <h3 class="text-18 mb-2 text-underline">{{ section.section }}</h3>
                                 </div>
                                 <!-- input options -->
-                                <div class="d-flex flex-wrap align-items-center">
-                                    <div :class="section.cols.length === 1 ? 'col-md-12 ' : section.cols.length === 2 ? 'col-md-6' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4' : ''"
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <div :class="section.cols.length === 1  ? 'col-md-12 px-0' : section.cols.length === 2 ? 'col-md-6 px-0' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4 px-0' : ''"
                                         v-for="(col, colIndex) in section.cols" :key="colIndex">
                                         <h3 class="text-16 mb-0">{{ col.header }}</h3>
                                         <div class="">
@@ -72,7 +82,7 @@
                                                         }}</span>
                                                     </p>
 
-                                                    <div v-else class="">
+                                                    <div v-else class="mx-3">
                                                         <p class="text-14 py-2">{{ field.context }}</p>
                                                         <ValidationProviderWrapper name="" :rules="[]">
                                                             <input v-model="field.options" class="input-special"
@@ -92,8 +102,9 @@
                                                         }}</span>
                                                     </p>
 
-                                                    <div v-else class="">
+                                                    <div v-else class="mx-3">
                                                         <div class="py-2">
+                                                            <p class="text-14 py-2">{{ field.context }}</p>
                                                             <ValidationProviderWrapper name="" :rules="[]">
                                                                 <v-select v-model="field.selected"
                                                                     class="style-chooser text-grey text-14"
@@ -117,7 +128,8 @@
                                                             }}</span>
                                                         </p>
                                                         <div v-else>
-                                                            <div class="">
+                                                            <div class="py-2 mx-3">
+                                                                <p class="text-14 py-2">{{ field.context }}</p>
                                                                 <ValidationProviderWrapper name="" :rules="[]">
                                                                     <input v-model="field.options" class="form-control"
                                                                         type="date">
@@ -139,7 +151,8 @@
                                                             }}</span>
                                                         </p>
                                                         <div v-else>
-                                                            <div class="">
+                                                            <div class="py-2 mx-3">
+                                                                <p class="text-14 py-2">{{ field.context }}</p>
                                                                 <ValidationProviderWrapper name="" :rules="[]">
                                                                     <textarea v-model="field.options" rows="10" col="10"
                                                                         class="form-control"></textarea>
@@ -150,17 +163,22 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="d-flex py-2" v-if="field.type == 'checkbox'">
+                                                <div class="d-flex py-2 align-items-center"
+                                                    v-if="field.type == 'checkbox' && field.options">
                                                     <div class="">
                                                         <p v-if="!record.edit" class="text-14">
                                                             <span class="">
                                                                 {{ field.context }}:
                                                             </span>
-                                                            <span class="text-14 ml-1 ">{{
+                                                            <!-- <span class="text-14 ml-1 ">{{
                                                                 field.options
-                                                            }}</span>
+                                                            }}</span> -->
+                                                            <b-form-checkbox v-model="field.options" :disabled="true"
+                                                                size="lg" switch>
+                                                            </b-form-checkbox>
                                                         </p>
-                                                        <div class="d-flex py-2" v-else>
+                                                        <div class="d-flex py-2 align-items-center" v-else>
+                                                            <p class="text-14">{{ field.context }}</p>
                                                             <div class="px-2">
                                                                 <ValidationProviderWrapper name="" :rules="[]">
                                                                     <b-form-checkbox v-model="field.options" size="lg"
@@ -202,10 +220,18 @@
 
                                                 </div>
 
-                                                <!-- <div v-if="field.type == 'prescription' && col.orders.prescription !== null" class="py-2">
-
-                                                    <hr>
-                                                </div> -->
+                                                <div v-if="field.type == 'prescription' && col.orders.prescription !== null"
+                                                    class="py-2">
+                                                    <p class="text-14">{{ field.context }}:
+                                                    </p>
+                                                    <!-- <p v-for="(pres, index) in record.chart.orders.prescription.details" :key="index" class="text-14 ml-1 ">{{
+                                                        convertToPrescription(pres)
+                                                    }}</p> -->
+                                                    <div v-for="(pres, index) in record.chart.orders.prescription.details" :key="index" class="text-14">
+                                                        <p>{{ `${pres.generic_drug.name}(${pres.product.name})`}}</p>
+                                                        <p>{{ `${pres.unit.name}, ${pres.frequency.name} for ${pres.duration.name}`}}</p>
+                                                    </div>
+                                                </div>
 
                                                 <div v-if="field.type == 'nursing' && col.orders.imaging !== null"
                                                     class="py-0 text-14">
@@ -243,6 +269,8 @@
 
 <script>
 import { cloneDeep } from 'lodash'
+import { debounce } from 'lodash'
+import { DateTime } from 'luxon'
 export default {
     props: {
         consultationData: {
@@ -265,38 +293,42 @@ export default {
     },
     mounted() {
         this.getEncountersChart()
-        window.onscroll = () => {
-            let cond = (document.documentElement.scrollTop + window.innerHeight + 2) >= document.documentElement.offsetHeight 
-            if (cond && this.endOfScroll !== null) {
-                let page = this.currentPage + 1
-                let filter = {
-                    size: 1,
-                    page: page
-                }
-                try {
-                    let response = this.$api.encounter.getEncountersChart(this.consultationData.id, filter)
-                    let arr = Promise.resolve(response)
-                    arr.then((value) => {
-                        console.log(value)
-                        this.currentPage = value.current_page
-                        this.endOfScroll = value.next
-                        const formatted = value.results.map((el) => ({
-                            ...el,
-                            edit: false
-                        }))
-                        // console.log(formatted)
-                        for (let x = 0; x < formatted.length; x++) {
-                            this.records.push(formatted[x])
-                        }
-                    })
-                }
-                catch (error){
-                    
+        debounce(
+            window.onscroll = () => {
+                let cond = (document.documentElement.scrollTop + window.innerHeight + 2) >= document.documentElement.offsetHeight
+                if (cond && this.endOfScroll !== null) {
+                    let page = this.currentPage + 1
+                    let filter = {
+                        size: 1,
+                        page: page
+                    }
+                    try {
+                        let response = this.$api.encounter.getEncountersChart(this.consultationData.id, filter)
+                        let arr = Promise.resolve(response)
+                        arr.then((value) => {
+                            // console.log(value)
+                            this.currentPage = value.current_page
+                            this.endOfScroll = value.next
+                            const formatted = value.results.map((el) => ({
+                                ...el,
+                                edit: false
+                            }))
+                            // console.log(formatted)
+                            for (let x = 0; x < formatted.length; x++) {
+                                this.records.push(formatted[x])
+                            }
+
+                            // console.log(this.records.length, this.records)
+                        })
+                    }
+                    catch (error) {
+
+                    }
+
                 }
 
             }
-            
-        }
+        , 2000)
     },
     computed: {
         user() {
@@ -341,7 +373,7 @@ export default {
         },
 
         async updateChart(line, e) {
-            console.log(line)
+            // console.log(line)
             // this.identity = line.created_by.id
             let response = await this.$api.encounter.updateSingleChart(line.chart, this.consultationData.id, line.id)
             if (response) {
@@ -352,6 +384,11 @@ export default {
                 })
             }
         },
+        convDate(x) {
+            if (typeof (x) === 'string') {
+                return DateTime.fromISO(x).toFormat('yy-LL-dd, T')
+            }
+        },
         editRecord(e) {
             const backup = cloneDeep(this.records[e].chart.content)
             this.records[e].edit = !this.records[e].edit
@@ -359,7 +396,7 @@ export default {
         },
         convertToImgList(img) {
             let list = img.img_obv_orders.map((el) => (el.img_obv.name))
-            console.log(list)
+            // console.log(list)
             let word = list.join(', ')
             return word
         },
@@ -370,9 +407,15 @@ export default {
         },
         convertToLabList(lab) {
             let list = lab.lab_panel_orders.map((el) => el.panel.name)
-            console.log(list)
+            // console.log(list)
             let word = list.join(', ')
             return word
+        },
+        convertToPrescription(pres) {
+            // console.log({pres}, {index})
+            let line = `${pres.generic_drug.name}(${pres.product.name}) ${pres.unit.name}`
+
+            return line
         }
     }
 }

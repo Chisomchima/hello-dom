@@ -252,7 +252,7 @@ export default {
       try {
         this.buffering = true;
         let response = await this.$axios.$get(
-          `/encounters/encounter/${this.$route.params.id}/vitals/`
+          `/encounters/${this.$route.params.id}/vitals/`
         );
 
         this.itemsToShow = [];
@@ -296,7 +296,7 @@ export default {
       // let status = 'NS'
       try {
         let response = await this.$axios.$patch(
-          `/encounters/encounter/${this.$route.params.id}/`,
+          `/encounters/${this.$route.params.id}/`,
           { status: "NS" }
         );
       } catch (error) {
@@ -317,7 +317,7 @@ export default {
 
       try {
         let response = await this.$axios.$post(
-          `/encounters/encounter/${this.consultationData.id}/vitals/`,
+          `/encounters/${this.consultationData.id}/vitals/`,
           {
            value: this.vitals,
           }

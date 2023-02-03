@@ -557,6 +557,8 @@ export default {
     },
     setAuthCode(e) {
       this.authData.auth_code = e
+      console.log(this.authData.auth_code)
+      
       this.validateHMO()
     },
     async validateHMO() {

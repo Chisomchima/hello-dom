@@ -38,16 +38,16 @@
           class="px-2 text-14"
         >
           <span class="class-details-data_value text-truncate">
-            | {{ item.payer_scheme.name }}
+            {{ item.payer_scheme.name }}
           </span>
-          <span> ({{ item.payer_scheme.type }}) </span>
+          <span> ({{ item.payer_scheme.type }}) </span>|
         </li>
       </ul>
       <div class="text-14 ml-2" v-else>Nil</div>
     </div>
     <hr />
     <div>
-      <div class="col-md-6 mb-2">
+      <div class="col-md-12 mb-2">
         <ValidationProviderWrapper name="Auth Code" :rules="['required']">
           <input v-model="authCode" type="text" class="form-control" />
         </ValidationProviderWrapper>
@@ -79,6 +79,16 @@
         <template #is_reserved="{ data }">
           <span v-if="data.item.is_reserved" class="badge-warning p-1 rounded"
             >R</span
+          >
+        </template>
+        <template #description="{ data }">
+          <span v-if="data.item.description" class="p-1"
+            >{{ data.item.description }}</span
+          >
+        </template>
+        <template #bill_source="{ data }">
+          <span v-if="data.item.bill_source" class="p-1"
+            >{{ data.item.bill_source }}</span
           >
         </template>
       </TableComponent>
