@@ -216,8 +216,9 @@
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <ValidationProviderWrapper name="Medication" :rules="['required']">
-                                                    <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug"
-                                                        :reduce="(opt) => opt.id" label="name">
+                                                    <VSelect @option:selected="fetchOPtions($event, index)"
+                                                        @option:deselected="getGenericDrugs" v-model="drug.generic_drug"
+                                                        :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
@@ -229,8 +230,8 @@
 
                                             <div class="col-md-3 mb-2">
                                                 <ValidationProviderWrapper name="Dose" :rules="['']">
-                                                    <VSelect v-model="drug.dose" :options="doses"
-                                                        :reduce="(opt) => opt.id" label="name">
+                                                    <VSelect v-model="drug.dose" :options="doses" :reduce="(opt) => opt"
+                                                        label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
@@ -244,14 +245,14 @@
                                             <div class="col-md-3 mb-2">
                                                 <ValidationProviderWrapper name="Frequency" :rules="['']">
                                                     <VSelect v-model="drug.frequency" :options="frequencies"
-                                                        :reduce="(opt) => opt.id" label="name">
+                                                        :reduce="(opt) => opt" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <ValidationProviderWrapper name="Duration" :rules="['required']">
-                                                    <VSelect :reduce="(opt) => opt.id" v-model="drug.duration"
+                                                    <VSelect :reduce="(opt) => opt" v-model="drug.duration"
                                                         :options="durations" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
@@ -275,23 +276,24 @@
                                             <div class="col-md-6 mb-2">
                                                 <ValidationProviderWrapper name="Product" :rules="['']">
                                                     <VSelect v-model="drug.product" :options="products"
-                                                        :reduce="(opt) => opt.id" label="name">
+                                                        :reduce="(opt) => opt" label="name">
                                                     </VSelect>
                                                 </ValidationProviderWrapper>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <ValidationProviderWrapper name="Dispense quantity" :rules="[]">
-                                                    <input v-model="drug.dispense_quantity" type="number"
-                                                        class="form-control" />
+                                                    <input
+                                                        :value="productLogic(drug.dose, drug.frequency, drug.duration, drug.product)"
+                                                        type="number" class="form-control" />
                                                 </ValidationProviderWrapper>
                                             </div>
-                                            <div v-if="drug.product" class="col-md-12 mb-2">
+                                            <!-- <div v-if="drug.product" class="col-md-12 mb-2">
                                                 <div class="d-flex justify-content-end align-items-center">
                                                     <div class="col-md-6 text-14 text-info text-center">
                                                         Bottle(s)
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
                                             <div class="col-md-12 mb-2">
                                                 <ValidationProviderWrapper name="Notes" :rules="['']">
@@ -491,6 +493,21 @@ export default {
             }
             let panel = this.labPanels
             let observations = this.observations
+            let drug_lines = this.prescriptionObject
+
+            //Patch prescription lines
+
+            for(let z = 0; z < drug_lines.details.length; z++){
+                let temp_product = drug_lines.details[z].product.id
+                let temp_dose = drug_lines.details[z].dose.id
+                let temp_duration = drug_lines.details[z].duration.id
+                let temp_frequency = drug_lines.details[z].frequency.id
+
+                drug_lines.details[z].product = temp_product
+                drug_lines.details[z].dose = temp_dose
+                drug_lines.details[z].duration = temp_duration
+                drug_lines.details[z].frequency = temp_frequency
+            }
 
             //Helper functions to append copy to chart
 
@@ -680,7 +697,7 @@ export default {
                                 this.getRoutes()
                                 this.getProducts()
                                 this.getStores()
-                                this.productLogic()
+                                // this.productLogic()
                             }
                             if (option.type === 'nursing' && this.stations.length === 0) {
                                 this.getStations()
@@ -714,17 +731,23 @@ export default {
                 note: ''
             })
         },
-        productLogic() {
-            let dose_multiplier = 2
-            let frequency_multiplier = 2
-            let duration_multiplier = 2
-            let product_divider = 2
+        productLogic(dose, frequency, duration, product) {
+            let qty
+            if (dose, frequency, duration, product) {
+                let dose_multiplier = dose.multiplier
+                let frequency_multiplier = frequency.multiplier
+                let duration_multiplier = duration.multiplier
+                let product_divider = product.divider
 
-            let product =
-                (dose_multiplier * frequency_multiplier * duration_multiplier) /
-                product_divider
-            let qty = Math.floor(product)
-            console.log(qty)
+                let calc =
+                    (dose_multiplier * frequency_multiplier * duration_multiplier) /
+                    product_divider
+                qty = Math.floor(calc)
+                return qty
+            }
+            else{
+                return 1
+            }
         },
         fetchOPtions(e, i) {
             this.$api.inventory

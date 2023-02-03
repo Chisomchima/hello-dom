@@ -245,7 +245,7 @@ export default {
     async updateStatus() {
       try {
         let response = await this.$axios.$patch(
-          `/encounters/encounter/${this.encounterData.id}/`,
+          `/encounters/${this.encounterData.id}/`,
           { status: 'NS' }
         )
       } catch (error) {
@@ -264,11 +264,9 @@ export default {
 
       try {
         let response = await this.$axios.$post(
-          `encounters/${this.encounterData.id}/charts/`,
+          `/encounters/${this.encounterData.id}/vitals/`,
           {
-            chart: {
-              vitals: this.vitals,
-            },
+           value: this.vitals,
           }
         )
         this.$toast({
@@ -283,10 +281,10 @@ export default {
         this.$bvModal.hide('addvital')
         this.$emit('refresh', true)
       } catch (error) {
-        this.$toast({
-          type: 'error',
-          text: 'Unable to add vitals',
-        })
+        // this.$toast({
+        //   type: 'error',
+        //   text: 'Unable to add vitals',
+        // })
       } finally {
       }
     },
