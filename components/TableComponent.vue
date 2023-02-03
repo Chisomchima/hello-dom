@@ -119,6 +119,13 @@
           </div>
         </slot>
       </template>
+      <template #cell(time)="data">
+        <slot name="time" :data="data">
+          <div>
+            {{ formatDate(data.item.time) }}
+          </div>
+        </slot>
+      </template>
       <template #cell(acknowledged_at)="data">
         <slot name="acknowledged_at" :data="data">
           <div>
