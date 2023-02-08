@@ -497,16 +497,18 @@ export default {
 
             //Patch prescription lines
 
-            for(let z = 0; z < drug_lines.details.length; z++){
-                let temp_product = drug_lines.details[z].product.id
-                let temp_dose = drug_lines.details[z].dose.id
-                let temp_duration = drug_lines.details[z].duration.id
-                let temp_frequency = drug_lines.details[z].frequency.id
+            if (drug_lines.store !== null && drug_lines.details[0].generic_drug !== null) {
+                for (let z = 0; z < drug_lines.details.length; z++) {
+                    let temp_product = drug_lines.details[z].product.id
+                    let temp_dose = drug_lines.details[z].dose.id
+                    let temp_duration = drug_lines.details[z].duration.id
+                    let temp_frequency = drug_lines.details[z].frequency.id
 
-                drug_lines.details[z].product = temp_product
-                drug_lines.details[z].dose = temp_dose
-                drug_lines.details[z].duration = temp_duration
-                drug_lines.details[z].frequency = temp_frequency
+                    drug_lines.details[z].product = temp_product
+                    drug_lines.details[z].dose = temp_dose
+                    drug_lines.details[z].duration = temp_duration
+                    drug_lines.details[z].frequency = temp_frequency
+                }
             }
 
             //Helper functions to append copy to chart
@@ -745,7 +747,7 @@ export default {
                 qty = Math.floor(calc)
                 return qty
             }
-            else{
+            else {
                 return 1
             }
         },

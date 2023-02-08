@@ -159,7 +159,7 @@ export default {
         {
           key: 'date_of_birth',
           name: 'DOB',
-          rules: ['required'],
+          rules: [''],
           type: 'date',
           value: '',
           col: 'col-md-4',
