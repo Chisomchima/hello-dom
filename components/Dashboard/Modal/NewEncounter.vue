@@ -1,12 +1,5 @@
 <template>
-  <b-modal
-    id="Add-encounter"
-    title="Add Encounter"
-    centered
-    hide-footer
-    ref="encounterModal"
-    @hide="closeModal()"
-  >
+  <b-modal id="Add-encounter" title="Add Encounter" centered hide-footer ref="encounterModal" @hide="closeModal()">
     <ValidationObserver v-slot="{ validate }">
       <form class="mx-3">
         <div class="mt-4">
@@ -14,21 +7,11 @@
             <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6 w-100">
               <small class="text-grey text-12">UHID</small>
               <div class="d-flex align-items-center">
-                <input
-                  type="text"
-                  placeholder="UHID"
-                  class="form-control control ng-untouched ng-pristine ng-valid"
-                  v-model="test"
-                  v-debounce:1300ms.cancelonempty="searchPatient"
-                />
+                <input type="text" placeholder="UHID" class="form-control control ng-untouched ng-pristine ng-valid"
+                  v-model="test" v-debounce:1300ms.cancelonempty="searchPatient" />
                 <div class="mx-2" v-if="searchingPatient">
-                  <b-spinner
-                    label="loading"
-                    variant="primary"
-                    type="grow"
-                    style="width: 1.5rem; height: 1.5rem"
-                    class="text-center"
-                  >
+                  <b-spinner label="loading" variant="primary" type="grow" style="width: 1.5rem; height: 1.5rem"
+                    class="text-center">
                   </b-spinner>
                 </div>
               </div>
@@ -36,54 +19,29 @@
             <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
               <small class="text-grey text-12">Patient Details</small>
 
-              <input
-                type="text"
-                disabled
-                placeholder="Patient Details"
-                v-model="patientDetails"
-                class="form-control ng-untouched ng-pristine ng-valid"
-              />
+              <input type="text" disabled placeholder="Patient Details" v-model="patientDetails"
+                class="form-control ng-untouched ng-pristine ng-valid" />
             </div>
             <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6">
               <small class="text-grey text-12">D.o.B</small>
 
-              <input
-                type="text"
-                disabled
-                placeholder="D.O.B"
-                v-model="patientData.date_of_birth"
-                class="form-control ng-untouched ng-pristine ng-valid"
-              />
+              <input type="text" disabled placeholder="D.O.B" v-model="patientData.date_of_birth"
+                class="form-control ng-untouched ng-pristine ng-valid" />
             </div>
             <div class="mb-2 col-lg-6 px-0 pl-0 col-md-6 col-sm-6">
               <small class="text-grey text-12">Age (Y-M-D)</small>
               <div class="d-flex">
                 <div class="px-1">
-                  <input
-                    type="text"
-                    disabled
-                    placeholder="Year"
-                    v-model="age.year"
-                    class="form-control ng-untouched ng-pristine ng-valid"
-                  />
+                  <input type="text" :disabled="fill" placeholder="Year" v-model="age.year"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div class="px-1">
-                  <input
-                    type="text"
-                    disabled
-                    placeholder="Month"
-                    v-model="age.month"
-                    class="form-control ng-untouched ng-pristine ng-valid"
-                  />
+                  <input type="text" :disabled="fill" placeholder="Month" v-model="age.month"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div class="px-1">
-                  <input
-                    type="text"
-                    disabled
-                    placeholder="Day"
-                    v-model="age.day"
-                    class="form-control ng-untouched ng-pristine ng-valid"
-                  />
+                  <input type="text" :disabled="fill" placeholder="Day" v-model="age.day"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
               </div>
             </div>
@@ -91,35 +49,19 @@
             <div class="mb-2 col-lg-6 pr-2 pl-0 col-md-6 col-sm-6">
               <small class="text-grey text-12">Phone No.</small>
 
-              <input
-                type="text"
-                disabled
-                v-model="patientData.phone_number"
-                placeholder="Phone No."
-                class="form-control"
-              />
+              <input type="text" disabled v-model="patientData.phone_number" placeholder="Phone No."
+                class="form-control" />
             </div>
 
             <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
               <label class="form-control-label">Gender</label>
-              <input
-                type="text"
-                disabled
-                v-model="patientData.gender"
-                placeholder="Gender"
-                class="form-control"
-              />
+              <input type="text" disabled v-model="patientData.gender" placeholder="Gender" class="form-control" />
             </div>
 
             <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6">
               <label class="form-control-label">Clinic *</label>
               <validation-provider rules="required" v-slot="{ errors }">
-                <VSelect
-                  label="name"
-                  v-model="encounterData.clinic"
-                  class="text-14"
-                  :options="clinics"
-                >
+                <VSelect label="name" v-model="encounterData.clinic" class="text-14" :options="clinics">
                 </VSelect>
                 <span class="text-12" style="color: red">{{ errors[0] }}</span>
               </validation-provider>
@@ -128,25 +70,15 @@
             <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
               <small class="text-grey text-12">Encounter Type *</small>
               <validation-provider rules="required" v-slot="{ errors }">
-                <VSelect
-                  class="text-14"
-                  label="name"
-                  v-model="encounterData.encounter_type"
-                  :options="['Walk in']"
-                >
+                <VSelect class="text-14" label="name" v-model="encounterData.encounter_type" :options="['Walk in']">
                 </VSelect>
                 <span class="text-12" style="color: red">{{ errors[0] }}</span>
               </validation-provider>
             </div>
 
-            <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6">
+            <div class="mb-2 col-lg-12 pl-0 pr-2 col-md-12 col-sm-12">
               <label class="form-control-label">Provider</label>
-              <VSelect
-                class="text-14"
-                v-model="encounterData.provider"
-                label="providers"
-                :options="providers"
-              >
+              <VSelect class="text-14" v-model="encounterData.provider" label="providers" :options="providers">
                 <template #option="{ first_name, last_name }">
                   <div>
                     {{ first_name + ' ' + last_name }}
@@ -163,27 +95,15 @@
         </div>
 
         <div class="my-3 d-flex justify-content-center">
-          <button
-            @click.prevent="closeModal"
-            class="btn btn-light text-grey mr-5 text-14"
-            style="height: 38px; width: 5rem; text-align: center"
-          >
+          <button @click.prevent="closeModal" class="btn btn-light text-grey mr-5 text-14"
+            style="height: 38px; width: 5rem; text-align: center">
             Cancel
           </button>
 
-          <BaseButton
-            watchRequest
-            @click.prevent="startEncounter"
-            class="btn-primary"
-            >Create Encounter
+          <BaseButton watchRequest @click.prevent="startEncounter" class="btn-primary">Create Encounter
           </BaseButton>
         </div>
-        <div
-          type="button"
-          ref="runValidation"
-          id="runValidation"
-          @click="validate"
-        ></div>
+        <div type="button" ref="runValidation" id="runValidation" @click="validate"></div>
       </form>
     </ValidationObserver>
   </b-modal>
@@ -210,33 +130,24 @@ export default {
       },
       encounterData: {
         clinic: null,
-        status: '',
-        time_log: {},
-        nurseSeen: 0,
-        newCount: 0,
         provider: null,
         patient: {},
-        is_active: true,
-        encounter_type: '',
-        date_and_time: {
-          time: '',
-        },
+        encounter_type: null,
       },
     }
+  },
+  computed: {
+    fill() {
+      return this.patientData.date_of_birth ? true : false
+    },
   },
   methods: {
     closeModal() {
       this.encounterData = {
-        clinic: {},
-        status: '',
-        time_log: {},
+        clinic: null,
         provider: null,
         patient: {},
-        is_active: true,
-        encounter_type: '',
-        date_and_time: {
-          time: '',
-        },
+        encounter_type: null,
       }
       this.test = ''
       this.age.year = null
@@ -253,24 +164,12 @@ export default {
       this.patientData.date_of_birth = null
       this.patientData.phone_number = null
       this.clinic = null
-      this.encounterData = {
-        clinic: null,
-        status: '',
-        time_log: {},
-
-        provider: null,
-        patient: {},
-        is_active: true,
-        encounter_type: null,
-        date_and_time: {
-          time: '',
-        },
-      }
     },
     async startEncounter() {
       if (this.$refs.runValidation) {
         this.$refs.runValidation.click()
       }
+      this.encounterData.patient = this.patientData
       this.encounterData.patient.age = this.age
       if (this.encounterData.provider === null) {
         this.encounterData.provider = ''
@@ -279,7 +178,7 @@ export default {
         try {
           // this.isbusy = true;
           let response = await this.$axios.$post(
-            'encounters/encounter/',
+            'encounters/',
             this.encounterData
           )
           if (response.encounter_id) {
@@ -289,6 +188,7 @@ export default {
         } catch {
           // this.$toast.error(`Unable to create encounter`);
         } finally {
+          this.$bvModal.hide('Add-encounter')
           this.$emit('get-encounter')
           // this.isbusy = false;
         }
@@ -302,25 +202,21 @@ export default {
           `patient/patients/?uhid=${this.test}`
         )
 
-        console.log(response)
-        for (const iterator of response.results) {
-          this.patientDetails =
-            iterator.firstname + ' ' + iterator.lastname
-              ? iterator.firstname + ' ' + iterator.lastname
-              : 'No matching record'
-
-          this.patientData = iterator
-          this.calcAge(this.patientData.date_of_birth)
-        }
+        let searched = response.results[0]
         if (response.results < 1) {
           this.patientData = {}
-
           this.patientDetails = 'No matching records...'
-          ;(this.age.year = ''), (this.age.month = ''), (this.age.day = '')
+            ; (this.age.year = ''), (this.age.month = ''), (this.age.day = '')
           this.encounterData.patient = {}
         }
-        this.patientData.age = this.age
-        this.encounterData.patient = this.patientData
+        else {
+          this.patientDetails = searched.firstname + ' ' + searched.lastname
+          this.patientData = searched
+          this.calcAge(this.patientData.date_of_birth)
+          this.patientData.age = this.age
+          this.encounterData.patient = this.patientData
+        }
+
         // this.calcAge(this.patientData.date_of_birth);
         this.searchingPatient = false
       } catch (error) {
@@ -410,4 +306,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

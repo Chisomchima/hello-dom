@@ -5,11 +5,8 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Patient Records</div>
           <div>
-            <BaseButton
-              class="btn-primary btn-lg"
-              @click="$router.push('/dashboard/patient/add')"
-              >Create Patient</BaseButton
-            >
+            <BaseButton class="btn-primary btn-lg" @click="$router.push('/dashboard/patient/add')">Create Patient
+            </BaseButton>
           </div>
         </div>
       </div>
@@ -24,32 +21,18 @@
         </div>
       </div>
       <div class="col-md-12">
-        <UtilsFilterComponent
-          disable-pagination
-          :disable-visualization="true"
-          search-placeholder="Search"
-        >
-          <TableComponent
-            :fields="fields"
-            :pages="pages"
-            :items="items"
-            :busy="busy"
+        <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
+          <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
             :dropdown-item="['order_lab', 'order_encounter', 'order_imaging']"
-            @page-changed="filter($event, currentFilter)"
-            @row-clicked="goToProfile($event)"
-            @order_lab="goToLab($event)"
-            @order_encounter="showEncounterModal($event)"
-            @order_imaging="showImagingModal($event)"
-          />
+            @page-changed="filter($event, currentFilter)" @row-clicked="goToProfile($event)"
+            @order_lab="goToLab($event)" @order_encounter="showEncounterModal($event)"
+            @order_imaging="showImagingModal($event)" />
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddLabOrder :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddEncounter :age="age" :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddPatientImagingOrder
-      :data="modalData"
-      @refresh="pageChange()"
-    />
+    <DashboardModalAddLabOrder :age="age" :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddEncounter :age="age" @reset_age="age = { year: '', month: '', day: '',}" :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddPatientImagingOrder :age="age" :data="modalData" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -57,14 +40,14 @@
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
 export default {
-  mixins: [TableFunc,FilterLogic],
+  mixins: [TableFunc, FilterLogic],
   data() {
     return {
       genders: ['male', 'female'],
       modalData: {},
       busy: false,
       currentFilter: {},
-       age: {
+      age: {
         year: '',
         month: '',
         day: '',
@@ -128,7 +111,7 @@ export default {
         this.busy = false
       }
     },
-    pageChange() {},
+    pageChange() { },
     goToProfile(e) {
       this.$router.push({
         name: 'dashboard-patient-uuid',
@@ -139,11 +122,20 @@ export default {
     },
     goToLab(e) {
       this.modalData = e
+      if(e.date_of_birth)
+        this.calcAge(e.date_of_birth)
+      else{
+        this.age = {
+          year: '',
+          month: '',
+          day: '',
+        }
+      }
+      this.modalData.age = this.age
       this.$bvModal.show('modal')
-      console.log(e)
     },
 
-     calcAge(e) {
+    calcAge(e) {
       // **********calc year***********
       let presentDate = new Date().getFullYear()
 
@@ -162,8 +154,8 @@ export default {
 
       if (monthOfBirth < month) {
         this.age.year
-      } 
-      else if(monthOfBirth > month){
+      }
+      else if (monthOfBirth > month) {
         this.age.year++
       }
       else {
@@ -210,21 +202,41 @@ export default {
     },
 
     showEncounterModal(e) {
-      this.calcAge(e.date_of_birth)
-      this.modalData.age = this.age
+      if(e.date_of_birth !== null && e.date_of_birth !== ''){
+        this.calcAge(e.date_of_birth)
+      }
+      else {
+        this.age = {
+          year: '',
+          month: '',
+          day: '',
+        }
+      }
+        
       this.modalData = e
+      this.modalData.age = this.age
       this.$bvModal.show('add_encounters')
     },
 
     showImagingModal(e) {
-      
       this.modalData = e
+      if(e.date_of_birth)
+        this.calcAge(e.date_of_birth)
+      else{
+        this.age = {
+          year: '',
+          month: '',
+          day: '',
+        }
+      }
+      this.modalData.age = this.age
       this.$bvModal.show('add_imaging')
     },
   },
-   
+
 }
 </script>
 
 <style lang="scss" scoped>
+
 </style>

@@ -92,7 +92,7 @@
             <span class="ml-2">Lab Orders</span>
           </template>
           <div v-if="activeIndex === 3">
-            <EncountersLabOrders :patientData="consultationData.patient" />
+            <EncountersLabOrders :age="age" :patientData="consultationData.patient" />
           </div>
         </TabPanel>
         <TabPanel>
@@ -101,7 +101,7 @@
             <span class="ml-2">Imaging</span>
           </template>
           <div v-if="activeIndex === 4">
-            <DashboardPatientImaging :data="consultationData.patient" />
+            <DashboardPatientImaging :age="age" :data="consultationData.patient" />
           </div>
         </TabPanel>
         <TabPanel>
@@ -110,7 +110,7 @@
             <span class="ml-2">Prescriptions</span>
           </template>
           <div v-if="activeIndex === 5">
-            <DashboardPatientPrescription :show="true" :data="consultationData.patient" />
+            <DashboardPatientPrescription :age="age" :show="true" :data="consultationData.patient" />
           </div>
         </TabPanel>
         <TabPanel>
@@ -128,7 +128,7 @@
             <span class="ml-2">Nursing Orders</span>
           </template>
           <div v-if="activeIndex === 7">
-            <DashboardPatientTasks :data="consultationData.patient" />
+            <DashboardPatientTasks :age="age" :data="consultationData.patient" />
           </div>
         </TabPanel>
       </TabView>
@@ -251,7 +251,16 @@ export default {
 
         let z = new Date(time).toTimeString().substring(0, 5)
         this.encounter_time = y + ', ' + z
-        // this.calcAge(this.patientData.date_of_birth)
+        if (this.patientData.date_of_birth) {
+          this.calcAge(this.patientData.date_of_birth)
+        }
+        else {
+          this.age = {
+            year: '',
+            month: '',
+            day: ''
+          }
+        }
         this.isLoading = false
       } catch {
       } finally {
@@ -274,67 +283,67 @@ export default {
       return
     },
     calcAge(e) {
-      // **********calc year***********
-      let presentDate = new Date().getFullYear()
+      if (typeof (e) == 'string') {
+        // **********calc year***********
+        let presentDate = new Date().getFullYear()
+        let yearOfBirth = e.substring(0, 4)
+        let month = new Date().getMonth()
+        let monthOfBirth = parseInt(e.substring(5, 7))
 
-      let yearOfBirth = e.substring(0, 4)
-      let monthOfBirth = parseInt(e.substring(5, 7))
-      let month = new Date().getMonth()
+        let diff = presentDate - yearOfBirth
+        let x = parseInt(diff)
+        if (x === 0) {
+          this.age.year = 0
+          this.age.month = 0
+        } else {
+          this.age.year = x
+        }
 
-      let diff = presentDate - yearOfBirth
-      let x = parseInt(diff)
-      if (x === 0) {
-        this.age.year = 0
-        this.age.month = 0
-      } else {
-        this.age.year = x
-      }
-
-      if (monthOfBirth < month) {
-        this.age.year
-      } else if (monthOfBirth > month) {
-        this.age.year++
-      } else {
-        if (this.age.year === 0) {
+        if (monthOfBirth < month) {
           this.age.year
         } else {
-          this.age.year--
+          if (this.age.year === 0) {
+            this.age.year
+          } else {
+            this.age.year--
+          }
         }
+
+        // **************calc month***********
+        let tempMonth
+
+        // tempMonth = monthOfBirth - month
+        if (presentDate === yearOfBirth) {
+          // this.patient.age.month = 0
+        } else {
+          tempMonth = 12 - monthOfBirth
+        }
+
+        if (monthOfBirth <= month) {
+          this.age.month = month - monthOfBirth
+          // this.patient.age.month + 1;
+        } else if (month + 1 === monthOfBirth) {
+          this.age.month = 0
+        } else {
+          this.age.month = tempMonth + month
+          // this.patient.age.month + 1;
+        }
+
+        // **************calc day**************
+        let day = new Date().getDate()
+        let dayOfBirth = e.substring(8, 10)
+        // this.patient.age.day = new Date().getDate();
+
+        if (day > dayOfBirth) {
+          this.age.day = day - dayOfBirth
+        } else if (day === dayOfBirth) {
+          this.age.day = 0
+        } else {
+          this.age.day = day
+        }
+
+        // *********************************
       }
-
-      // **************calc month***********
-      let tempMonth
-      // tempMonth = monthOfBirth - month
-      if (presentDate === yearOfBirth) {
-        this.patient.age.month = 0
-      } else {
-        tempMonth = 12 - monthOfBirth
-      }
-
-      if (monthOfBirth <= month) {
-        this.age.month = month - monthOfBirth
-        // this.patient.age.month + 1;
-      } else if (month + 1 === monthOfBirth) {
-        this.age.month = 0
-      } else {
-        this.age.month = tempMonth + month
-        // this.patient.age.month + 1;
-      }
-
-      // **************calc day**************
-      let day = new Date().getDate()
-      let dayOfBirth = e.substring(8, 10)
-      // this.patient.age.day = new Date().getDate();
-
-      if (day > dayOfBirth) {
-        this.age.day = day - dayOfBirth
-      } else if (day === dayOfBirth) {
-        this.age.day = 0
-      } else {
-        this.age.day = day
-      }
-
-      // *********************************
     },
   },
 }

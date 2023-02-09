@@ -326,6 +326,7 @@ export default {
     },
     calcAge(e) {
       // **********calc year***********
+     if(e !== null){
       let presentDate = new Date().getFullYear()
       let yearOfBirth = e.substring(0, 4)
       let month = new Date().getMonth()
@@ -382,6 +383,7 @@ export default {
       } else {
         this.age.day = day
       }
+     }
 
       // *********************************
     },

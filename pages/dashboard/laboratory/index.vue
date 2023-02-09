@@ -4,7 +4,7 @@
       <h4>Lab worklist</h4>
       <div>
         <BaseButton
-          class="btn-outline-primary"
+          class="btn-primary"
           @click="$bvModal.show('labOrderPanel')"
           >New Lab Order
         </BaseButton>

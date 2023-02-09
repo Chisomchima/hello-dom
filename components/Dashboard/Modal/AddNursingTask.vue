@@ -17,13 +17,47 @@
                         </ValidationProviderWrapper>
                     </div>
                     <div class="col-md-6 mb-2">
-                        <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+                        <ValidationProviderWrapper name="D.O.B" :rules="['']">
                             <input :value="dob" type="text" class="form-control" readonly />
                         </ValidationProviderWrapper>
+                    </div>
+                    <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
+                        <small class="text-grey text-12">Age (Y-M-D)</small>
+                        <div class="d-flex">
+                            <div v-if="fill" class="px-1">
+                                <input type="text" disabled placeholder="Year" v-model="age.year"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                            <div v-if="!fill" class="px-1">
+                                <input type="number" placeholder="Year" v-model="formDate.year"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                            <div v-if="fill" class="px-1">
+                                <input type="text" disabled placeholder="Month" v-model="age.month"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                            <div v-if="!fill" class="px-1">
+                                <input type="number" placeholder="Month" v-model="formDate.month"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                            <div v-if="fill" class="px-1">
+                                <input type="text" disabled placeholder="Day" v-model="age.day"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                            <div v-if="!fill" class="px-1">
+                                <input type="number" placeholder="Day" v-model="formDate.day"
+                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-2">
                         <ValidationProviderWrapper name="Gender" :rules="['required']">
                             <input :value="gender" type="text" class="form-control" readonly />
+                        </ValidationProviderWrapper>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <ValidationProviderWrapper name="Email" :rules="[]">
+                            <input :value="email" type="text" class="form-control" readonly />
                         </ValidationProviderWrapper>
                     </div>
 
@@ -56,6 +90,10 @@ export default {
             require: false,
             default: () => ({}),
         },
+        age: {
+            type: Object,
+            required: true,
+        },
         role: {
             require: false,
         },
@@ -66,6 +104,11 @@ export default {
             stations: [],
             present: false,
             downloading: false,
+            formDate: {
+                year: '',
+                month: '',
+                day: ''
+            },
             dataObject: {
                 description: '',
                 patient: {},
@@ -87,6 +130,10 @@ export default {
             }
             return ''
         },
+
+        fill() {
+            return this.age.year ? true : false
+        },
         gender() {
             if (this.patient.gender) {
                 return this.patient.gender
@@ -95,12 +142,19 @@ export default {
         },
 
         dob() {
-            if (Object.keys(this.dataObject.patient).length > 0) {
-                let response = calcAge(this.patient.date_of_birth)
-                return `${this.dataObject.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
+            if (this.dataObject.patient) {
+                return this.dataObject.patient.date_of_birth
             }
             return ''
         },
+
+        // dob() {
+        //     if (Object.keys(this.dataObject.patient).length > 0) {
+        //         let response = calcAge(this.patient.date_of_birth)
+        //         return `${this.dataObject.patient.date_of_birth} (${response.year}Y-${response.month}M-${response.day}D)`
+        //     }
+        //     return ''
+        // },
 
         email() {
             if (this.patient.email) {
@@ -124,6 +178,13 @@ export default {
         },
 
         async save() {
+            let obj = this.dataObject.patient
+            if (!this.age.year) {
+                obj.age = this.formDate
+            }
+            else {
+                obj.age = this.age
+            }
             try {
                 const data = await this.$api.nursing.createNursingTask(this.dataObject)
                 this.$emit('refresh')
@@ -140,20 +201,15 @@ export default {
                 patient: {},
                 station: null,
             }
+            this.formDate = {
+                year: '',
+                month: '',
+                day: ''
+            }
             this.$emit('hide')
         },
         getData() {
             this.dataObject.patient = this.patient
-            let currentAge = calcAge(this.patient.date_of_birth)
-            let verdict = ''
-            if (currentAge.year === 0)
-                verdict = 'Less than a year'
-            else if (currentAge.year === 1)
-                verdict = '1 year'
-            else
-                verdict = `${currentAge.year} years`
-            console.log(verdict)
-            this.dataObject.patient.age = currentAge
             this.getStations()
         },
         async getPatientByUHID(uhid) {
@@ -167,7 +223,7 @@ export default {
             }
         },
 
-        
+
         getStations() {
             this.$api.nursing
                 .getStation({ size: 1000 })

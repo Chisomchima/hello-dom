@@ -32,13 +32,48 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+            <ValidationProviderWrapper name="D.O.B" :rules="['']">
               <input :value="dob" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
+          </div>
+
+          <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
+            <small class="text-grey text-12">Age (Y-M-D)</small>
+            <div class="d-flex">
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Year" v-model="age.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Year" v-model="formDate.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Month" v-model="age.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Month" v-model="formDate.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Day" v-model="age.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Day" v-model="formDate.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+            </div>
           </div>
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Gender" :rules="['required']">
               <input :value="gender" type="text" class="form-control" readonly />
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-6 mb-2">
+            <ValidationProviderWrapper name="Email" :rules="[]">
+              <input :value="email" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
 
@@ -86,7 +121,8 @@
             </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Medication" :rules="['required']">
-                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs"
+                  v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -127,7 +163,7 @@
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            
+
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Route" :rules="['']">
                 <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">
@@ -208,6 +244,16 @@ export default {
       routes: [],
       products: [],
       stores: [],
+      age: {
+        year: '',
+        month: '',
+        day: '',
+      },
+      formDate: {
+        year: '',
+        month: '',
+        day: ''
+      },
       dataObject: {
         details: [
           {
@@ -251,6 +297,10 @@ export default {
       return ''
     },
 
+    fill() {
+      return this.age.year ? true : false
+    },
+
     dob() {
       if (this.dataObject.patient) {
         return this.dataObject.patient.date_of_birth
@@ -270,8 +320,20 @@ export default {
       this.downloading = true
       const results = await this.getPatientByUHID(newVal)
       if (results) {
-        this.dataObject.patient = results
         this.downloading = false
+        this.dataObject.patient = results
+
+        if (results.date_of_birth !== null || results.date_of_birth !== '') {
+          this.calcAge(results.date_of_birth)
+          this.dataObject.patient.age = this.age
+        }
+        else {
+          this.dataObject.patient.age = {
+            year: '',
+            month: '',
+            day: '',
+          }
+        }
       } else {
         this.dataObject.patient = {}
         this.downloading = false
@@ -284,7 +346,7 @@ export default {
         this.save()
       }
     },
-    fetchOPtions(e, i){
+    fetchOPtions(e, i) {
       this.$api.inventory
         .getProducts({ size: 1500, generic_drug: e.id })
         .then((res) => {
@@ -311,6 +373,9 @@ export default {
       console.log(qty)
     },
     async save() {
+      if (this.dataObject.patient.date_of_birth == null || this.dataObject.patient.date_of_birth == '') {
+        this.dataObject.patient.age = this.formDate
+      }
       try {
         let prescribeDetails = this.dataObject.details
         let direction = []
@@ -400,6 +465,16 @@ export default {
         prescribing_physician: '',
         store: null,
         note: '',
+      }
+      this.age = {
+        year: '',
+        month: '',
+        day: ''
+      }
+      this.formDate = {
+        year: '',
+        month: '',
+        day: ''
       }
       this.uhid = ''
       this.$emit('hide')
@@ -520,6 +595,69 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    calcAge(e) {
+      if (typeof (e) == 'string') {
+        // **********calc year***********
+        let presentDate = new Date().getFullYear()
+        let yearOfBirth = e.substring(0, 4)
+        let month = new Date().getMonth()
+        let monthOfBirth = parseInt(e.substring(5, 7))
+
+        let diff = presentDate - yearOfBirth
+        let x = parseInt(diff)
+        if (x === 0) {
+          this.age.year = 0
+          this.age.month = 0
+        } else {
+          this.age.year = x
+        }
+
+        if (monthOfBirth < month) {
+          this.age.year
+        } else {
+          if (this.age.year === 0) {
+            this.age.year
+          } else {
+            this.age.year--
+          }
+        }
+
+        // **************calc month***********
+        let tempMonth
+
+        // tempMonth = monthOfBirth - month
+        if (presentDate === yearOfBirth) {
+          this.patient.age.month = 0
+        } else {
+          tempMonth = 12 - monthOfBirth
+        }
+
+        if (monthOfBirth <= month) {
+          this.age.month = month - monthOfBirth
+          // this.patient.age.month + 1;
+        } else if (month + 1 === monthOfBirth) {
+          this.age.month = 0
+        } else {
+          this.age.month = tempMonth + month
+          // this.patient.age.month + 1;
+        }
+
+        // **************calc day**************
+        let day = new Date().getDate()
+        let dayOfBirth = e.substring(8, 10)
+        // this.patient.age.day = new Date().getDate();
+
+        if (day > dayOfBirth) {
+          this.age.day = day - dayOfBirth
+        } else if (day === dayOfBirth) {
+          this.age.day = 0
+        } else {
+          this.age.day = day
+        }
+
+        // *********************************
+      }
     },
   },
 }

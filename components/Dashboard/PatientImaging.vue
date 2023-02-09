@@ -1,103 +1,51 @@
 <template>
   <div>
-    <UtilsFilterComponent
-      disable-pagination
-      :disableSearch="true"
-      :disable-visualization="true"
-      search-placeholder="Search"
-    >
-    <template #beforeActions>
-         <div>
-          <button
-            v-b-toggle.sidebar-backdrop3
-            class="btn btn-sm btn-outline-secondary"
-          >
+    <UtilsFilterComponent disable-pagination :disableSearch="true" :disable-visualization="true"
+      search-placeholder="Search">
+      <template #beforeActions>
+        <div>
+          <button v-b-toggle.sidebar-backdrop3 class="btn btn-sm btn-outline-secondary">
             <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 512 512"
-              >
-                <path
-                  fill="currentColor"
-                  d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 512 512">
+                <path fill="currentColor"
+                  d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z" />
               </svg>
             </span>
           </button>
-          <b-sidebar
-            id="sidebar-backdrop3"
-            title="Sidebar with backdrop"
-            :backdrop-variant="'dark'"
-            backdrop
-            shadow
-            right
-          >
+          <b-sidebar id="sidebar-backdrop3" title="Sidebar with backdrop" :backdrop-variant="'dark'" backdrop shadow
+            right>
             <div class="p-4">
               <div class="">
                 <!-- <p class="mb-0 text-20">Date range</p> -->
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Search</span>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Search by name"
-                    v-model="filter.name"
-                  />
+                  <input type="text" class="form-control" placeholder="Search by name" v-model="filter.name" />
                 </div>
               </div>
               <div class="">
                 <!-- <p class="mb-0 text-20">Date range</p> -->
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date from:</span>
-                  <input
-                    type="date"
-                    class="form-control"
-                    :max="maxDate"
-                    v-model="filter.dateFrom"
-                  />
+                  <input type="date" class="form-control" :max="maxDate" v-model="filter.dateFrom" />
                 </div>
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date to:</span>
-                  <input
-                    type="date"
-                    class="form-control"
-                    :min="minDate"
-                    v-model="filter.dateTo"
-                  />
+                  <input type="date" class="form-control" :min="minDate" v-model="filter.dateTo" />
                 </div>
               </div>
 
               <div class="col-md-12">
                 <span class="text-12 text-grey">Service centers</span>
-                <VSelect
-                  style="font-size: 13px"
-                  label="name"
-                  class=""
-                  v-model="filter.service_center"
-                  :placeholder="'Service centers'"
-                  :reduce="(option) => option.id"
-                  multiple
-                  taggable
-                  :options="filterSerice"
-                >
+                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.service_center"
+                  :placeholder="'Service centers'" :reduce="(option) => option.id" multiple taggable
+                  :options="filterSerice">
                 </VSelect>
               </div>
               <div class="col-md-12">
                 <span class="text-12 text-grey">Modality</span>
-                <VSelect
-                  style="font-size: 13px"
-                  label="name"
-                  class=""
-                  v-model="filter.modality"
-                  :placeholder="'Lab unit'"
-                  :reduce="(option) => option.id"
-                  multiple
-                  taggable
-                  :options="filterModality"
-                >
+                <VSelect style="font-size: 13px" label="name" class="" v-model="filter.modality"
+                  :placeholder="'Lab unit'" :reduce="(option) => option.id" multiple taggable :options="filterModality">
                 </VSelect>
               </div>
             </div>
@@ -105,36 +53,19 @@
         </div>
       </template>
       <template #besideFilterButton>
-        <BaseButton
-          class="btn-outline-primary"
-          @click="openImagingModal"
-          >New Imaging</BaseButton
-        >
+        <BaseButton class="btn-outline-primary" @click="openImagingModal">New Imaging</BaseButton>
       </template>
       <template>
-        <TableComponent
-          :fields="fields"
-          :pages="pages"
-          :items="items"
-          :busy="busy"
-          :dropdown-item="['print', 'email', 'cancel']"
-          @cancel="cancelImaging($event)"
-          @page-changed="pageChange"
-        >
+        <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
+          :dropdown-item="['print', 'email', 'cancel']" @cancel="cancelImaging($event)" @page-changed="pageChange">
           <template #status="{ data }">
             <template v-if="data.item.status === 'NEW'">
-              <button
-                :disabled="data.item.bill.cleared_status !== 'CLEARED'"
-                class="btn btn-outline-primary btn-sm"
-              >
+              <button :disabled="data.item.bill.cleared_status !== 'CLEARED'" class="btn btn-outline-primary btn-sm">
                 Capture
               </button>
             </template>
             <template v-if="data.item.status === 'CAPTURED'">
-              <button
-                :disabled="data.item.bill.cleared_status !== 'CLEARED'"
-                class="btn btn-outline-warning btn-sm"
-              >
+              <button :disabled="data.item.bill.cleared_status !== 'CLEARED'" class="btn btn-outline-warning btn-sm">
                 Report
               </button>
             </template>
@@ -189,10 +120,7 @@
         </TableComponent>
       </template>
     </UtilsFilterComponent>
-    <DashboardModalAddPatientImagingOrder
-      :data="patient"
-      @refresh="pageChange()"
-    />
+    <DashboardModalAddPatientImagingOrder :data="patient" :age="age" @refresh="pageChange()" />
   </div>
 </template>
 
@@ -217,6 +145,11 @@ export default {
         service_center: [],
         dateFrom: '',
         dateTo: '',
+      },
+      age: {
+        year: '',
+        month: '',
+        day: ''
       },
       patient: {},
       options: [],
@@ -301,8 +234,8 @@ export default {
     },
   },
   watch: {
-  
-     'filter.modality'() {
+
+    'filter.modality'() {
       if (this.filter.modality !== null) {
         this.pageChange(1, this.filter)
       }
@@ -316,7 +249,7 @@ export default {
     //   this.getLabOrders(1, this.filter)
     // },
     'filter.dateTo'() {
-      if(this.filter.dateFrom !== ''){
+      if (this.filter.dateFrom !== '') {
         this.pageChange(1, this.filter)
       }
     },
@@ -328,15 +261,15 @@ export default {
     },
   },
   methods: {
-    async pageChange(page = 1,  e = {
-        size: 10,
-        by: '',
-        entry: '',
-        dateFrom: '',
-        dateTo: '',
-      }) {
+    async pageChange(page = 1, e = {
+      size: 10,
+      by: '',
+      entry: '',
+      dateFrom: '',
+      dateTo: '',
+    }) {
 
-        const newFilterObject = {
+      const newFilterObject = {
         ...e,
         [e.by]: e.entry,
         page: page,
@@ -370,11 +303,21 @@ export default {
       }
     },
 
-    openImagingModal(){
+    openImagingModal() {
+      if(this.data.date_of_birth !== null && this.data.date_of_birth !== ''){
+        this.calcAge(this.data.date_of_birth)
+      }
+      else {
+        this.age = {
+          year: '',
+          month: '',
+          day: '',
+        }
+      }
       this.patient = this.data
       this.$bvModal.show('add_imaging')
     },
-     async getServiceCenter() {
+    async getServiceCenter() {
       try {
         const { results } = await this.$api.imaging.getServiceCenter({
           size: 1000,
@@ -394,7 +337,7 @@ export default {
         console.log(error)
       }
     },
-    
+
     async cancelImaging(e) {
       const result = await this.showDeleteMessageBox(
         'Do you want to cancel Imaging Order'
@@ -417,6 +360,72 @@ export default {
         return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
       }
       return ''
+    },
+
+     calcAge(e) {
+      // **********calc year***********
+      let presentDate = new Date().getFullYear()
+
+      let yearOfBirth = e.substring(0, 4)
+      let monthOfBirth = parseInt(e.substring(5, 7))
+      let month = new Date().getMonth()
+
+      let diff = presentDate - yearOfBirth
+      let x = parseInt(diff)
+      if (x === 0) {
+        this.age.year = 0
+        this.age.month = 0
+      } else {
+        this.age.year = x
+      }
+
+      if (monthOfBirth < month) {
+        this.age.year
+      }
+      else if (monthOfBirth > month) {
+        this.age.year++
+      }
+      else {
+        if (this.age.year === 0) {
+          this.age.year
+        } else {
+          this.age.year--
+        }
+      }
+
+      // **************calc month***********
+      let tempMonth
+      // tempMonth = monthOfBirth - month
+      if (presentDate === yearOfBirth) {
+        this.patient.age.month = 0
+      } else {
+        tempMonth = 12 - monthOfBirth
+      }
+
+      if (monthOfBirth <= month) {
+        this.age.month = month - monthOfBirth
+        // this.patient.age.month + 1;
+      } else if (month + 1 === monthOfBirth) {
+        this.age.month = 0
+      } else {
+        this.age.month = tempMonth + month
+        // this.patient.age.month + 1;
+      }
+
+      // **************calc day**************
+      let day = new Date().getDate()
+      let dayOfBirth = e.substring(8, 10)
+      // this.patient.age.day = new Date().getDate();
+
+      if (day > dayOfBirth) {
+        this.age.day = day - dayOfBirth
+      } else if (day === dayOfBirth) {
+        this.age.day = 0
+      } else {
+        this.age.day = day
+      }
+
+      // *********************************
     },
   },
 }
