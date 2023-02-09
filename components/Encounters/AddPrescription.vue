@@ -17,13 +17,48 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+            <ValidationProviderWrapper name="D.O.B" :rules="['']">
               <input :value="dob" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
+          </div>
+          <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
+            <small class="text-grey text-12">Age (Y-M-D)</small>
+            <div class="d-flex">
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Year" v-model="age.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Year" v-model="formDate.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Month" v-model="age.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Month" v-model="formDate.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Day" v-model="age.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Day" v-model="formDate.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+            </div>
           </div>
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Gender" :rules="['required']">
               <input :value="gender" type="text" class="form-control" readonly />
+            </ValidationProviderWrapper>
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <ValidationProviderWrapper name="Email" :rules="[]">
+              <input :value="email" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
 
@@ -71,7 +106,8 @@
             </div>
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Medication" :rules="['required']">
-                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs" v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs"
+                  v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -113,7 +149,7 @@
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
-            
+
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Route" :rules="['']">
                 <VSelect v-model="drug.route" :options="routes" :reduce="(opt) => opt.id" label="name">
@@ -172,6 +208,10 @@ export default {
       require: false,
       default: () => ({}),
     },
+    age: {
+      type: Object,
+      required: true,
+    },
     role: {
       require: false,
     },
@@ -190,6 +230,11 @@ export default {
       routes: [],
       products: [],
       stores: [],
+      formDate: {
+        year: '',
+        month: '',
+        day: ''
+      },
       dataObject: {
         details: [
           {
@@ -225,6 +270,9 @@ export default {
         )
       }
       return ''
+    },
+    fill() {
+      return this.age.year ? true : false
     },
     gender() {
       if (this.patient) {
@@ -277,6 +325,13 @@ export default {
     },
     async save() {
       try {
+        let obj = this.patient
+        if (!this.age.year) {
+          obj.age = this.formDate
+        }
+        else {
+          obj.age = this.age
+        }
         let prescribeDetails = this.dataObject.details
         let direction = []
         let duration = []
@@ -296,7 +351,7 @@ export default {
 
         const data = await this.$api.pharmacy.orderPrescription({
           store: this.dataObject.store,
-          patient: this.patient,
+          patient: obj,
           source: this.dataObject.source,
           prescribing_physician: this.dataObject.prescribing_physician,
           details: pocket,
@@ -371,6 +426,11 @@ export default {
         note: '',
       }
       this.uhid = ''
+      this.formDate = {
+        year: '',
+        month: '',
+        day: ''
+      }
       this.$emit('hide')
     },
     getData() {
@@ -389,7 +449,7 @@ export default {
         ' ' +
         this.$store.state.auth.user.last_name
     },
-    fetchOPtions(e, i){
+    fetchOPtions(e, i) {
       this.$api.inventory
         .getProducts({ size: 1500, generic_drug: e.id })
         .then((res) => {

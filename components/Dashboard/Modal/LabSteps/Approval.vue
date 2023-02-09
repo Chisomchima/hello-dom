@@ -17,6 +17,8 @@
         </div>
       </div>
 
+      <UtilsCollapse :title="'Comments'" :comments="audit_log" />
+
       <div>
         <div>
           <ValidationObserver ref="form">
@@ -304,6 +306,10 @@ export default {
     labOrderPanel: {
       type: Object,
       required: true,
+    },
+    audit_log: {
+      required: true,
+      default: () => ({})
     },
     manageInput: '',
   },

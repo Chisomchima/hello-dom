@@ -161,7 +161,7 @@ export default {
           name: 'DOB',
           rules: [''],
           type: 'date',
-          value: '',
+          value: null,
           col: 'col-md-4',
           show: true,
         },

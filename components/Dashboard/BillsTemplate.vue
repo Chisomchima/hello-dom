@@ -2458,10 +2458,14 @@
     },
     methods: {
       numberWithCommas(x) {
-        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        if(typeof(x) === 'string'){
+          return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        }
       },
       convDate(x) {
-        return DateTime.fromISO(x).toFormat('yy-LL-dd T')
+        if(typeof(x) === 'string'){
+          return DateTime.fromISO(x).toFormat('yy-LL-dd T')
+        }
       },
     },
   }

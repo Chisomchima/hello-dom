@@ -6,14 +6,14 @@
         <div>
           <div class="fix">
             <div class="text-primary">
-              <span v-if="!showOptions" class="point text-end" @click="showOptions = !showOptions">
+              <span v-if="!showOptions" class="point text-end" @click="startChart">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                   viewBox="0 0 16 16">
                   <path fill="currentColor"
                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                 </svg>
               </span>
-              <span v-else class="point text-end" @click="showOptions = !showOptions">
+              <span v-else class="point text-end" @click="startChart">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
                   <path fill="currentColor"
                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z" />
@@ -25,7 +25,9 @@
               <v-select :dropdownShouldOpen="(noDrop, open) => {
                 return noDrop ? true : open;
               }" style="height: 35px" v-model="template" class="style-chooser text-grey text-14"
-                placeholder="Templates" :options="presets" @option:selected="setTab" label="title">
+                placeholder="Templates" :options="presets" @option:selected="setTab" @search="(search, loading) => {
+                  searchTemplates(search, loading)
+                }" label="title">
               </v-select>
             </div>
           </div>
@@ -52,7 +54,8 @@
           </span>
         </b-tooltip>
         <div @click="showOptions = false" class="my-3" v-show="tab.label === 'Notes'">
-          <EncountersPreviousEncounter @reset="fetchRecord = false" :fetchRecord="fetchRecord" :consultationData="consultationData" />
+          <EncountersPreviousEncounter @reset="fetchRecord = false" :fetchRecord="fetchRecord"
+            :consultationData="consultationData" />
         </div>
 
         <div @click="showOptions = false" class="my-3" v-show="tab.label !== 'Notes'">
@@ -66,6 +69,7 @@
 </template>
 
 <script>
+import { debounce } from 'lodash'
 export default {
   props: {
     consultationData: {
@@ -84,22 +88,44 @@ export default {
       fetchRecord: false,
       selected: false,
       showOptions: false,
-      presets: []
+      presets: [],
+      filter: {
+        size: 1000,
+        title: '',
+        clinic: ''
+      }
     };
-  },
-  watch: {
-
-  },
-  async created() {
-    let response = await this.$api.templates.getEncTemplates({ size: 1000 })
-    this.presets = response.results
   },
   computed: {
     content() {
       return this.template
+    },
+    clinicID() {
+      return this.consultationData.clinic.id
     }
   },
   methods: {
+    async startChart() {
+      this.showOptions = !this.showOptions
+      if (this.showOptions == true) {
+        // this.filter.clinic = this.clinicID
+        let response = await this.$api.templates.getEncTemplates(this.filter)
+        this.presets = response.results
+      }
+    },
+    searchTemplates: debounce(async function (search, loading) {
+      loading(true)
+      this.filter.title = search
+      if(search === ''){
+        // this.filter.clinic = this.clinicID
+      }
+      else{
+        this.filter.clinic = ''
+      }
+      let response = await this.$api.templates.getEncTemplates(this.filter)
+      this.presets = response.results
+      return loading(false)
+    }, 1000),
     clearance() {
       this.$emit("clearance", true);
     },

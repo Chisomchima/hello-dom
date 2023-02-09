@@ -49,7 +49,7 @@
                 </div>
             </template> -->
             <template v-if="show" #besideFilterButton>
-                <BaseButton @click="$bvModal.show('nurseTask')" class="btn-outline-primary">Add Nursing Order
+                <BaseButton @click="createNursingOrder" class="btn-outline-primary">Add Nursing Order
                 </BaseButton>
             </template>
             <template>
@@ -70,17 +70,18 @@
                         <div class="">
                             <span>{{ data.item.description }}</span>
                         </div>
-                        
+
                     </template>
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
 
-        <DashboardModalAddNursingTask @refresh="pageChange(1, filter)" :patient="data" />
-        <div v-show="viewModal">``
-            <DashboardModalViewPatientTask  :data="taskLine" @hide="viewModal = false" :editData="taskLine" @refresh="pageChange(1, filter)" :patient="data" />
+        <DashboardModalAddNursingTask :age="age" @refresh="pageChange(1, filter)" :patient="data" />
+        <div v-show="viewModal">
+            <DashboardModalViewPatientTask :data="taskLine" @hide="viewModal = false" :editData="taskLine"
+                @refresh="pageChange(1, filter)" :patient="data" />
         </div>
-       
+
     </div>
 </template>
   
@@ -113,6 +114,11 @@ export default {
             editData: {},
             taskLine: {
 
+            },
+            age: {
+                year: '',
+                month: '',
+                day: ''
             },
             viewModal: false,
             patient: {},
@@ -241,6 +247,11 @@ export default {
                 this.busy = false
             }
         },
+
+        createNursingOrder() {
+            this.$bvModal.show('nurseTask')
+            this.calcAge(this.data.date_of_birth)
+        },
         viewDocument(e) {
             this.taskLine = e
             this.viewModal = true
@@ -259,6 +270,69 @@ export default {
                 return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_SHORT)
             }
             return ''
+        },
+        calcAge(e) {
+            if (typeof (e) == 'string') {
+                // **********calc year***********
+                let presentDate = new Date().getFullYear()
+                let yearOfBirth = e.substring(0, 4)
+                let month = new Date().getMonth()
+                let monthOfBirth = parseInt(e.substring(5, 7))
+
+                let diff = presentDate - yearOfBirth
+                let x = parseInt(diff)
+                if (x === 0) {
+                    this.age.year = 0
+                    this.age.month = 0
+                } else {
+                    this.age.year = x
+                }
+
+                if (monthOfBirth < month) {
+                    this.age.year
+                } else {
+                    if (this.age.year === 0) {
+                        this.age.year
+                    } else {
+                        this.age.year--
+                    }
+                }
+
+                // **************calc month***********
+                let tempMonth
+
+                // tempMonth = monthOfBirth - month
+                if (presentDate === yearOfBirth) {
+                    // this.patient.age.month = 0
+                } else {
+                    tempMonth = 12 - monthOfBirth
+                }
+
+                if (monthOfBirth <= month) {
+                    this.age.month = month - monthOfBirth
+                    // this.patient.age.month + 1;
+                } else if (month + 1 === monthOfBirth) {
+                    this.age.month = 0
+                } else {
+                    this.age.month = tempMonth + month
+                    // this.patient.age.month + 1;
+                }
+
+                // **************calc day**************
+                let day = new Date().getDate()
+                let dayOfBirth = e.substring(8, 10)
+                // this.patient.age.day = new Date().getDate();
+
+                if (day > dayOfBirth) {
+                    this.age.day = day - dayOfBirth
+                } else if (day === dayOfBirth) {
+                    this.age.day = 0
+                } else {
+                    this.age.day = day
+                }
+
+                // *********************************
+            }
         },
     },
 }

@@ -1,47 +1,56 @@
 <template>
-  <ModalWrapper
-    size="lg"
-    title="Add Imaging Order"
-    @ok="ok()"
-    @show="getData()"
-    @hide="clear()"
-    id="add_imaging"
-    :stacking="false"
-  >
+  <ModalWrapper size="lg" title="Add Imaging Order" @ok="ok()" @show="getData()" @hide="clear()" id="add_imaging"
+    :stacking="false">
     <ValidationObserver ref="form">
       <form>
         <div class="row">
-          <div class="col-md-12 mb-2">
+          <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['required']">
-              <input
-                v-model="dataObject.patient.uhid"
-                readonly
-                type="text"
-                class="form-control"
-              />
+              <input v-model="dataObject.patient.uhid" readonly type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Patient Name"
-              :rules="['required']"
-            >
+            <ValidationProviderWrapper name="Patient Name" :rules="['required']">
               <input :value="name" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="D.O.B" :rules="['required']">
+            <ValidationProviderWrapper name="D.O.B" :rules="['']">
               <input :value="dob" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
+          <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
+            <small class="text-grey text-12">Age (Y-M-D)</small>
+            <div class="d-flex">
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Year" v-model="age.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Year" v-model="formDate.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Month" v-model="age.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Month" v-model="formDate.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Day" v-model="age.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Day" v-model="formDate.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+            </div>
+          </div>
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Gender" :rules="['required']">
-              <input
-                :value="gender"
-                type="text"
-                class="form-control"
-                readonly
-              />
+              <input :value="gender" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
@@ -51,31 +60,16 @@
           </div>
 
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Service Center"
-              :rules="['required']"
-            >
-              <VSelect
-                v-model="dataObject.service_center"
-                :options="service_centers"
-                label="name"
-              >
+            <ValidationProviderWrapper name="Service Center" :rules="['required']">
+              <VSelect v-model="dataObject.service_center" :options="service_centers" label="name">
               </VSelect>
             </ValidationProviderWrapper>
           </div>
 
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper
-              name="Observations"
-              :rules="['required']"
-            >
-              <VSelect
-                v-model="dataObject.img_obv"
-                :multiple="true"
-                :options="observations"
-                :reduce="(opt) => opt.id"
-                label="name"
-              >
+            <ValidationProviderWrapper name="Observations" :rules="['required']">
+              <VSelect v-model="dataObject.img_obv" :multiple="true" :options="observations" :reduce="(opt) => opt.id"
+                label="name">
               </VSelect>
             </ValidationProviderWrapper>
           </div>
@@ -83,16 +77,8 @@
           <div class="col-md-12 mb-2">
             <div class="mb-1">
               <ValidationProviderWrapper name="Diagnosis" :rules="['']">
-                <VSelect
-                  v-model="dataObject.diagnosis"
-                  label="case"
-                  multiple
-                  taggable
-                  @open="showModal"
-                  :noDrop="true"
-                  :closeOnSelect="true"
-                  @option:deselected="updateChild"
-                >
+                <VSelect v-model="dataObject.diagnosis" label="case" multiple taggable @open="showModal" :noDrop="true"
+                  :closeOnSelect="true">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -118,21 +104,13 @@
 
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Order Physician" :rules="[]">
-              <input
-                v-model="dataObject.ordering_physician"
-                type="text"
-                class="form-control"
-              />
+              <input v-model="dataObject.ordering_physician" type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
 
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Referral Facility" :rules="[]">
-              <input
-                v-model="dataObject.referral_facility"
-                type="text"
-                class="form-control"
-              />
+              <input v-model="dataObject.referral_facility" type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
 
@@ -144,27 +122,15 @@
 
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Comments" :rules="['']">
-              <textarea
-                id=""
-                v-model="dataObject.comments"
-                class="form-control"
-                name=""
-                cols="30"
-                rows="10"
-              ></textarea>
+              <textarea id="" v-model="dataObject.comments" class="form-control" name="" cols="30" rows="10"></textarea>
             </ValidationProviderWrapper>
           </div>
         </div>
       </form>
     </ValidationObserver>
     <div>
-      <DashboardModalImagingDiagnosis
-        @page-changed="getICD10($event, searchParam)"
-        @diagnosis="setDiagnosis"
-        @refresh="getICD10(1, searchParam)"
-        @change="helloWorld"
-        :selectedDiagnosis="selected"
-      />
+      <DashboardModalImagingDiagnosis @page-changed="getICD10($event, searchParam)" @diagnosis="setDiagnosis"
+        @refresh="getICD10(1, searchParam)" @change="helloWorld" :selectedDiagnosis="selected" />
     </div>
   </ModalWrapper>
 </template>
@@ -178,6 +144,10 @@ export default {
       type: Object,
       require: false,
       default: () => ({}),
+    },
+    age: {
+      type: Object,
+      required: true,
     },
   },
   data() {
@@ -197,6 +167,11 @@ export default {
         patient: {},
         stat: false,
       },
+      formDate: {
+        year: '',
+        month: '',
+        day: ''
+      },
     }
   },
   computed: {
@@ -211,6 +186,9 @@ export default {
         )
       }
       return ''
+    },
+    fill() {
+      return this.age.year ? true : false
     },
     gender() {
       if (this.dataObject.patient) {
@@ -269,6 +247,14 @@ export default {
         delete diagnosis[x].selected
         delete diagnosis[x].confirmed
       }
+
+      let obj = this.dataObject.patient
+      if (!this.age.year) {
+        obj.age = this.formDate
+      }
+      else {
+        obj.age = this.age
+      }
       try {
         const data = await this.$api.imaging.saveOrder({
           img_obv: this.dataObject.img_obv,
@@ -306,6 +292,11 @@ export default {
         service_center: null,
         patient: {},
         stat: false,
+      }
+      this.formDate = {
+        year: '',
+        month: '',
+        day: ''
       }
       this.$emit('hide')
     },
@@ -350,4 +341,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

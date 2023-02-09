@@ -4,7 +4,7 @@
       <h4>Lab worklist</h4>
       <div>
         <BaseButton
-          class="btn-outline-primary"
+          class="btn-primary"
           @click="$bvModal.show('labOrderPanel')"
           >New Lab Order
         </BaseButton>
@@ -219,6 +219,7 @@
         :id="id"
         :status="status"
         :modal-title="modalTitle"
+        :audit_log="audit_log"
         @refresh="filter()"
       />
     </div>
@@ -228,6 +229,7 @@
         :id="id"
         :lab-order-panel="labOrderPanel"
         :manage-input="manageInput"
+        :audit_log="audit_log"
         @refresh="filter()"
       />
     </div>
@@ -237,6 +239,7 @@
         :id="id"
         :lab-order-panel="labOrderPanel"
         :status="status"
+        :audit_log="audit_log"
         @refresh="filter()"
       />
     </div>
@@ -244,12 +247,14 @@
     <div>
       <DashboardModalLabStepsCancel
         :lab-order-panel="labOrderPanel"
+        :audit_log="audit_log"
         @refresh="filter()"
       />
     </div>
     <div>
       <DashboardModalLabStepsComments
         :lab-order-panel="labOrderPanel"
+        :audit_log="audit_log"
       />
     </div>
 
@@ -268,6 +273,7 @@ export default {
       currentFilter: {},
       itemsToShow: [],
       downloading: false,
+      audit_log: {},
       labOrderPanel: {
         panel: {},
         status: '',
@@ -344,6 +350,7 @@ export default {
     },
     openInvestigation(e){
       this.$bvModal.show('comments')
+      this.audit_log = e.audit_log
       this.labOrderPanel = e
     },
     async mailReport(e) {
@@ -383,14 +390,14 @@ export default {
       }
     },
     openSpecimenTaken(e) {
-      console.log(e)
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Take Specimen'
       this.status = 'recieve specimen'
       this.id = e.id
+      this.audit_log = e.audit_log
     },
     openFillResult(e) {
-      console.log(e)
+      this.audit_log = e.audit_log
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Recieve Specimen'
       this.status = 'fill result'
@@ -440,6 +447,7 @@ export default {
       this.labOrderPanel.asn = e.asn
       this.labOrderPanel.id = e.id
       this.labOrderPanel.status = e.status
+      this.audit_log = e.audit_log
     },
     setStatusToApproved(e) {
       this.labOrderPanel = e
@@ -460,6 +468,7 @@ export default {
           this.manageInput = 'text'
         }
       }
+      this.audit_log = e.audit_log
     },
     async setStatusToAwaitingApproval() {
       try {
