@@ -2,6 +2,7 @@
     <div>
         <ModalWrapper size="md" id="takespecimen" :title="modalTitle" @clearForm="clear()" @hide="clear()"
             @ok="setStatusToSpecimenRecieved()">
+            <UtilsCollapse :title="'Comments'" :comments="audit_log" />
             <ValidationObserver ref="form">
                 <form>
                     <div>
@@ -20,7 +21,7 @@
 </template>
 
 <script>
-// import { DateTime } from 'luxon'
+
 export default {
     data() {
         return {
@@ -31,7 +32,11 @@ export default {
     props: {
         status: '',
         id: '',
-        modalTitle: ''
+        modalTitle: '',
+        audit_log: {
+            required: true,
+            default: () => ({})
+        }
     },
     methods: {
         async setStatusToSpecimenRecieved() {
