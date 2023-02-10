@@ -108,7 +108,7 @@ export default {
     async startChart() {
       this.showOptions = !this.showOptions
       if (this.showOptions == true) {
-        // this.filter.clinic = this.clinicID
+        this.filter.clinic = this.clinicID
         let response = await this.$api.templates.getEncTemplates(this.filter)
         this.presets = response.results
       }
@@ -116,11 +116,11 @@ export default {
     searchTemplates: debounce(async function (search, loading) {
       loading(true)
       this.filter.title = search
-      if(search === ''){
-        // this.filter.clinic = this.clinicID
+      if(search !== ''){
+        delete this.filter.clinic
       }
       else{
-        this.filter.clinic = ''
+        this.filter.clinic = this.clinicID
       }
       let response = await this.$api.templates.getEncTemplates(this.filter)
       this.presets = response.results
