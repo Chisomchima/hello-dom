@@ -25,7 +25,7 @@
               <v-select :dropdownShouldOpen="(noDrop, open) => {
                 return noDrop ? true : open;
               }" style="height: 35px" v-model="template" class="style-chooser text-grey text-14"
-                placeholder="Templates" :options="presets" @option:selected="setTab" @search="(search, loading) => {
+                placeholder="Type to search..." :options="presets" @option:selected="setTab" @search="(search, loading) => {
                   searchTemplates(search, loading)
                 }" label="title">
               </v-select>
