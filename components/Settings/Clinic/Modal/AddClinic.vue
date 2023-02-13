@@ -30,6 +30,21 @@
               </v-select>
                </ValidationProviderWrapper>
           </div>
+
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Templates" :rules="['']">
+              <v-select
+                class="style-chooser text-grey text-14"
+                placeholder="Templates"
+                :options="templates"
+                :multiple="true"
+                v-model="dataObject.templates"
+                :reduce="(opt) => opt.id"
+                label="title"
+              >
+              </v-select>
+               </ValidationProviderWrapper>
+          </div>
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Bill price" :rules="['required']">
               <!-- <input
@@ -98,16 +113,22 @@ export default {
         department: 0,
         name: '',
         is_active: true,
+        templates: []
       },
       title: '',
-      departments: []
+      departments: [],
+      templates: []
     }
   },
   async created() {
     const { results: departments } = await this.$api.facility.departments({
       size: 1000,
     })
+    const { results: templates } = await this.$api.templates.getEncTemplates({
+      size: 1000,
+    })
     this.departments = departments
+    this.templates = templates
   },
   watch: {
     editData: {
@@ -121,6 +142,7 @@ export default {
           }
           this.dataObject.name = newVal.name
           this.dataObject.is_active = newVal.is_active
+          this.dataObject.templates = newVal.templates
           // delete this.dataObject.bill_item_code
         }
       },
@@ -173,6 +195,7 @@ export default {
         department: 0,
         name: '',
         is_active: true,
+        templates: []
       }
     },
   },
