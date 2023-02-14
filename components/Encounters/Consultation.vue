@@ -59,7 +59,8 @@
         </div>
 
         <div @click="showOptions = false" class="my-3" v-show="tab.label !== 'Notes'">
-          <EncountersFile @routeTopage="gotoPageOne" :consultationData="consultationData" :data="tab.data" />
+          <EncountersFile :session="index" @routeTopage="gotoPageOne(index)" :consultationData="consultationData"
+            :data="tab.data" />
         </div>
       </TabPanel>
     </TabView>
@@ -116,10 +117,10 @@ export default {
     searchTemplates: debounce(async function (search, loading) {
       loading(true)
       this.filter.title = search
-      if(search !== ''){
+      if (search !== '') {
         delete this.filter.clinic
       }
-      else{
+      else {
         this.filter.clinic = this.clinicID
       }
       let response = await this.$api.templates.getEncTemplates(this.filter)
@@ -141,13 +142,14 @@ export default {
         this.template = null
       this.active = this.tabs.length - 1
     },
-    gotoPageOne() {
+    gotoPageOne(index) {
+      this.active = 0
+      if (this.active !== 0) {
+        this.tabs.splice(index, 1)
+      }
       if (this.active === this.tabs.length - 1) {
-        console.log('Pass')
-        this.active = 0
         this.fetchRecord = true
       }
-
     },
     removeTab(index) {
       this.active = index - 1

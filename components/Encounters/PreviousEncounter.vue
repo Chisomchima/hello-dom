@@ -38,7 +38,7 @@
                         <div class="p-3 radPI mb-4" v-for="(record, index) in records" :key="index">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h3 class="text-lg">{{ record.chart.title }}</h3>
+                                    <h3 class="text-18">{{ record.chart.title }}</h3>
                                     <p class="text-14">Recorded by: {{
                                         record.created_by ? (record.created_by.first_name
                                             + " " + record.created_by.last_name) : ""
@@ -62,13 +62,13 @@
                             </div>
                             <div v-for="(section, innerIndex) in record.chart.content" :key="innerIndex">
                                 <div>
-                                    <h3 class="text-18 mb-2 text-underline">{{ section.section }}</h3>
+                                    <h3 class="text-16 mb-2 text-bold">{{ section.section }}</h3>
                                 </div>
                                 <!-- input options -->
                                 <div class="d-flex flex-wrap align-items-start">
                                     <div :class="section.cols.length === 1 ? 'col-md-12 px-0' : section.cols.length === 2 ? 'col-md-6 px-0' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4 px-0' : ''"
                                         v-for="(col, colIndex) in section.cols" :key="colIndex">
-                                        <h3 class="text-16 mb-0">{{ col.header }}</h3>
+                                        <h3 class="text-14 mb-0">{{ col.header }}</h3>
                                         <div class="">
                                             <div class="" v-for="(field, fieldIndex) in col.form_field"
                                                 :key="fieldIndex">

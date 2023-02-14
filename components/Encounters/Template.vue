@@ -378,7 +378,11 @@ export default {
         consultationData: {
             type: Object,
             required: true
-        }
+        },
+        session: {
+            type: Number,
+            required: false
+        },
     },
     mixins: [TableFunc],
     data() {
@@ -580,7 +584,7 @@ export default {
             if (await this.$refs.form.validate()) {
                 let response = this.$api.encounter.saveChartTemplate(this.template, this.consultationData.id)
                 if (response) {
-                    this.$emit('routeTopage')
+                    this.$emit('routeTopage', this.session)
                     this.$toast({
                         type: 'success',
                         text: 'Chart saved',
