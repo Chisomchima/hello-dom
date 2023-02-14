@@ -143,13 +143,13 @@ export default {
       this.active = this.tabs.length - 1
     },
     gotoPageOne(index) {
-      this.active = 0
       if (this.active !== 0) {
         this.tabs.splice(index, 1)
       }
       if (this.active === this.tabs.length - 1) {
         this.fetchRecord = true
       }
+      this.active = 0
     },
     removeTab(index) {
       this.active = index - 1
