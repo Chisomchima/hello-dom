@@ -83,14 +83,14 @@
                                 <div v-if="field.type == 'lab_Order'" class="py-2" v-show="field.type == 'lab_Order'">
                                     <div class="row">
                                         <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Services Center" :rules="['required']">
+                                            <ValidationProviderWrapper name="Services Center" :rules="['']">
                                                 <VSelect v-model="labObject.service_center"
                                                     :options="lab_serviceCenters" label="name"></VSelect>
                                             </ValidationProviderWrapper>
                                         </div>
 
                                         <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Lab Panel" :rules="['required']">
+                                            <ValidationProviderWrapper name="Lab Panel" :rules="['']">
                                                 <VSelect v-model="labObject.lab_panels" :reduce="(opt) => opt.id"
                                                     :multiple="true" label="name" :options="labPanels"></VSelect>
                                             </ValidationProviderWrapper>
@@ -115,7 +115,7 @@
                                 <div v-if="field.type == 'imaging'" class="py-2" v-show="field.type == 'imaging'">
                                     <div class="row">
                                         <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Service Center" :rules="['required']">
+                                            <ValidationProviderWrapper name="Service Center" :rules="['']">
                                                 <VSelect v-model="imagingObject.service_center"
                                                     :reduce="(opt) => opt.id" :options="service_centers" label="name">
                                                 </VSelect>
@@ -123,7 +123,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-2">
-                                            <ValidationProviderWrapper name="Observations" :rules="['required']">
+                                            <ValidationProviderWrapper name="Observations" :rules="['']">
                                                 <VSelect v-model="imagingObject.img_obv" :reduce="(opt) => opt.id"
                                                     :multiple="true" :options="observations" label="name">
                                                 </VSelect>
@@ -564,10 +564,10 @@ export default {
 
                             this.template.content[x].cols[y].orders = appendOrders
                             // this.template.content[x].cols[y].orders.laboratory.lab_list = tray
-                            if (option.type === 'lab_order') {
+                            if (option.type === 'lab_order' && this.template.content[x].cols[y].orders.laboratory && tray.length > 0) {
                                 this.template.content[x].cols[y].orders.laboratory.lab_list = tray
                             }
-                            if (option.type === 'imaging') {
+                            if (option.type === 'imaging' && this.template.content[x].cols[y].orders.imaging && imgtray.length > 0) {
                                 this.template.content[x].cols[y].orders.imaging.img_list = imgtray
                             }
                         }

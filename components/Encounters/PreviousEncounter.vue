@@ -66,7 +66,7 @@
                                 </div>
                                 <!-- input options -->
                                 <div class="d-flex flex-wrap align-items-start">
-                                    <div :class="section.cols.length === 1  ? 'col-md-12 px-0' : section.cols.length === 2 ? 'col-md-6 px-0' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4 px-0' : ''"
+                                    <div :class="section.cols.length === 1 ? 'col-md-12 px-0' : section.cols.length === 2 ? 'col-md-6 px-0' : section.cols.length === 3 || section.cols.length > 3 ? 'col-md-4 px-0' : ''"
                                         v-for="(col, colIndex) in section.cols" :key="colIndex">
                                         <h3 class="text-16 mb-0">{{ col.header }}</h3>
                                         <div class="">
@@ -94,7 +94,7 @@
 
                                                 <div class="" v-if="field.type == 'dropdown'">
                                                     <p v-if="!record.edit" class="text-14">
-                                                        <span class="">
+                                                        <span v-if="field.context" class="">
                                                             {{ field.context }}:
                                                         </span>
                                                         <span class="text-14 ml-1 ">{{
@@ -120,7 +120,7 @@
                                                 <div v-if="field.type == 'date'">
                                                     <div class="">
                                                         <p v-if="!record.edit" class="text-14">
-                                                            <span class="">
+                                                            <span v-if="field.context" class="">
                                                                 {{ field.context }}:
                                                             </span>
                                                             <span class="text-14 ml-1 ">{{
@@ -143,7 +143,7 @@
                                                 <div v-if="field.type == 'text-area'">
                                                     <div class="">
                                                         <p v-if="!record.edit" class="text-14">
-                                                            <span class="">
+                                                            <span v-if="field.context" class="">
                                                                 {{ field.context }}:
                                                             </span>
                                                             <span class="text-14 ml-1 ">{{
@@ -167,7 +167,7 @@
                                                     v-if="field.type == 'checkbox' && field.options">
                                                     <div class="">
                                                         <p v-if="!record.edit" class="text-14">
-                                                            <span class="">
+                                                            <span v-if="field.context" class="">
                                                                 {{ field.context }}:
                                                             </span>
                                                             <!-- <span class="text-14 ml-1 ">{{
@@ -195,7 +195,7 @@
 
                                                 <div class="py-0 text-14"
                                                     v-if="field.type == 'diagnosis' && record.chart.diagnosis">
-                                                    {{ field.context }}:
+                                                    <span v-if="field.context"> {{ field.context }}:</span>
                                                     <span class="text-14 ml-1 ">{{
                                                         convertToDiagList(record.chart.diagnosis)
                                                     }}</span>
@@ -204,7 +204,10 @@
 
                                                 <div v-if="field.type == 'lab_Order' && col.orders.laboratory !== null && col.orders.laboratory"
                                                     class="py-0 text-14">
-                                                    {{ field.context }}:
+                                                    <span v-if="field.context">
+                                                        {{ field.context }}:
+                                                    </span>
+
                                                     <span class="text-14 ml-1 ">{{
                                                         convertToLabList(record.chart.orders.laboratory)
                                                     }}</span>
@@ -213,7 +216,9 @@
 
                                                 <div v-if="field.type == 'imaging' && col.orders.imaging !== null && col.orders.imaging"
                                                     class="py-0 text-14">
-                                                    {{ field.context }}:
+                                                    <span v-if="field.context">
+                                                        {{ field.context }}:
+                                                    </span>
                                                     <span class="text-14 ml-1 ">{{
                                                         convertToImgList(record.chart.orders.imaging)
                                                     }}</span>
@@ -222,14 +227,19 @@
 
                                                 <div v-if="field.type == 'prescription' && col.orders.prescription !== null"
                                                     class="py-2">
-                                                    <p class="text-14">{{ field.context }}:
+                                                    <p class="text-14">
+                                                        <span v-if="field.context">
+                                                            {{ field.context }}:
+                                                        </span>
                                                     </p>
                                                     <!-- <p v-for="(pres, index) in record.chart.orders.prescription.details" :key="index" class="text-14 ml-1 ">{{
                                                         convertToPrescription(pres)
                                                     }}</p> -->
-                                                    <div v-for="(pres, index) in record.chart.orders.prescription.details" :key="index" class="text-14">
+                                                    <div v-for="(pres, index) in record.chart.orders.prescription.details"
+                                                        :key="index" class="text-14">
                                                         <p>{{ `${pres.generic_drug.name}(${pres.product.name})`}}</p>
-                                                        <p>{{ `${pres.unit.name}, ${pres.frequency.name} for ${pres.duration.name}`}}</p>
+                                                        <p>{{ `${pres.unit.name}, ${pres.frequency.name} for
+                                                        ${pres.duration.name}`}}</p>
                                                     </div>
                                                 </div>
 
@@ -328,7 +338,7 @@ export default {
                 }
 
             }
-        , 2000)
+            , 2000)
     },
     computed: {
         user() {
