@@ -140,13 +140,13 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-2">
+                                        <!-- <div class="col-md-6 mb-2">
                                             <ValidationProviderWrapper name="Order Physician" :rules="[]">
                                                 <input :value="user" type="text" class="form-control" />
                                             </ValidationProviderWrapper>
-                                        </div>
+                                        </div> -->
 
-                                        <div class="col-md-6 mb-2">
+                                        <div class="col-md-12 mb-2">
                                             <ValidationProviderWrapper name="Referral Facility" :rules="[]">
                                                 <input v-model="imagingObject.referral_facility" type="text"
                                                     class="form-control" />
