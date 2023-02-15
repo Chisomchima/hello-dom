@@ -1,7 +1,7 @@
 <template>
     <div>
       <BackwardNavigation />
-      <div class="page-heading mb-4">Payments</div>
+      <div class="page-heading mb-4">Collections</div>
       <UtilsBaseCardTab>
         <UtilsCardTab title="Summary">
           <ReportsPaymentsSummary />

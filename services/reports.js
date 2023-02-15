@@ -20,12 +20,12 @@ export default axios => ({
         })
     },
     financeSummaryReport(params = {}) {
-        return axios.$get('/finance/revenue/summary', {
+        return axios.$get('/finance/reports/revenue/summary', {
             params
         })
     },
     financeDetailedReport(params = {}) {
-        return axios.$get('/finance/revenue/detailed', {
+        return axios.$get('/finance/reports/revenue/detailed', {
             params
         })
     },
