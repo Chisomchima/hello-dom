@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper
-    id="addRoute"
+    id="addProduct"
     :title="modalTitle"
     @ok="ok()"
     @hide="clear()"
@@ -78,7 +78,7 @@ export default {
       try {
         const data = await this.$api.pharmacy.createRoute(this.dataObject)
         this.$emit('refresh')
-        this.$bvModal.hide('addRoute')
+        this.$bvModal.hide('addProduct')
         console.log(data)
       } catch (error) {
         console.log(error)
@@ -91,7 +91,7 @@ export default {
           this.dataObject.id
         )
         this.$emit('refresh')
-        this.$bvModal.hide('addRoute')
+        this.$bvModal.hide('addProduct')
         console.log(data)
       } catch (error) {
         console.log(error)

@@ -213,6 +213,11 @@ export default {
           icon: 'fas fa-money-check-alt',
         },
         {
+          href: '/dashboard/inventory',
+          title: 'Inventory',
+          icon: 'fas fa-warehouse',
+        },
+        {
           href: '/dashboard/reports',
           title: 'Reports',
           icon: 'fas fa-file',

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BackwardNavigation />
     <div class="row">
       <div
         v-for="(card, index) in cards"
