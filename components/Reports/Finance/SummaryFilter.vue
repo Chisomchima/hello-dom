@@ -85,6 +85,7 @@ export default {
         bill_source: '',
         scheme: '',
         billed_to_type: '',
+        is_earned: true
       },
     }
   },

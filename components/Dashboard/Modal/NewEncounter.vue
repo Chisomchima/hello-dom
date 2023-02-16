@@ -28,23 +28,37 @@
               <input type="text" disabled placeholder="D.O.B" v-model="patientData.date_of_birth"
                 class="form-control ng-untouched ng-pristine ng-valid" />
             </div>
-            <div class="mb-2 col-lg-6 px-0 pl-0 col-md-6 col-sm-6">
-              <small class="text-grey text-12">Age (Y-M-D)</small>
-              <div class="d-flex">
-                <div class="px-1">
-                  <input type="text" :disabled="fill" placeholder="Year" v-model="age.year"
+            <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
+            <small class="text-grey text-12">Age (Y-M-D)</small>
+            <div class="d-flex">
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Year" v-model="age.year"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <ValidationProviderWrapper name="" :rules="['required']">
+                  <input type="number" placeholder="Year" v-model="formDate.year"
                     class="form-control ng-untouched ng-pristine ng-valid" />
-                </div>
-                <div class="px-1">
-                  <input type="text" :disabled="fill" placeholder="Month" v-model="age.month"
-                    class="form-control ng-untouched ng-pristine ng-valid" />
-                </div>
-                <div class="px-1">
-                  <input type="text" :disabled="fill" placeholder="Day" v-model="age.day"
-                    class="form-control ng-untouched ng-pristine ng-valid" />
-                </div>
+                </ValidationProviderWrapper>
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Month" v-model="age.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Month" v-model="formDate.month"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="fill" class="px-1">
+                <input type="text" disabled placeholder="Day" v-model="age.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
+              </div>
+              <div v-if="!fill" class="px-1">
+                <input type="number" placeholder="Day" v-model="formDate.day"
+                  class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
             </div>
+          </div>
 
             <div class="mb-2 col-lg-6 pr-2 pl-0 col-md-6 col-sm-6">
               <small class="text-grey text-12">Phone No.</small>
@@ -123,6 +137,11 @@ export default {
       clinics: [],
       patientData: {},
       test: '',
+      formDate: {
+        year: '',
+        month: '',
+        day: ''
+      },
       age: {
         year: '',
         month: '',
@@ -158,6 +177,11 @@ export default {
         month: null,
         day: null,
       }
+      this.formDate = {
+        year: '',
+        month: '',
+        day: ''
+      },
       this.patientDetails = 'Type UHID to search...'
       this.$bvModal.hide('Add-encounter')
       this.patientData.gender = null
@@ -170,7 +194,12 @@ export default {
         this.$refs.runValidation.click()
       }
       this.encounterData.patient = this.patientData
-      this.encounterData.patient.age = this.age
+      if(!this.patientData.date_of_birth){
+        this.encounterData.patient.age = this.formDate
+      }
+      else{
+        this.encounterData.patient.age = this.age
+      }
       if (this.encounterData.provider === null) {
         this.encounterData.provider = ''
       }

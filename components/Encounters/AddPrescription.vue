@@ -29,8 +29,10 @@
                   class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
               <div v-if="!fill" class="px-1">
-                <input type="number" placeholder="Year" v-model="formDate.year"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <ValidationProviderWrapper name="" :rules="['required']">
+                  <input type="number" placeholder="Year" v-model="formDate.year"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
+                </ValidationProviderWrapper>
               </div>
               <div v-if="fill" class="px-1">
                 <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -89,13 +91,13 @@
           <div v-for="(drug, index) in dataObject.details" :key="index"
             class="row p-1 mt-2 mx-2 border border-secondary rounded">
             <div class="
-                col-md-12
-                
-                d-flex
-                justify-content-end
-                ml-0
-                text-danger text-14
-              ">
+                  col-md-12
+                  
+                  d-flex
+                  justify-content-end
+                  ml-0
+                  text-danger text-14
+                ">
               <span class="point float" @click="deleteDrug(index)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet"
                   viewBox="0 0 24 24">
@@ -112,10 +114,10 @@
               </ValidationProviderWrapper>
             </div>
             <!-- <div class="col-md-12 mb-2">
-              <ValidationProviderWrapper name="SIG" :rules="['']">
-                <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
-              </ValidationProviderWrapper>
-            </div> -->
+                <ValidationProviderWrapper name="SIG" :rules="['']">
+                  <input :value="sigFormatter(drug.direction, drug.duration)" type="text" class="form-control" />
+                </ValidationProviderWrapper>
+              </div> -->
 
             <div class="col-md-3 mb-2">
               <ValidationProviderWrapper name="Dose" :rules="['']">
@@ -195,7 +197,7 @@
         </div>
       </form>
     </ValidationObserver>
-  </ModalWrapper>
+</ModalWrapper>
 </template>
 
 <script>

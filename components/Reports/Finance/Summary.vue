@@ -102,7 +102,7 @@ export default {
         }
         let download_string = new URLSearchParams(filter).toString()
         const response = await fetch(
-          `${process.env.BASE_URL}finance/revenue/summary?${download_string}`,
+          `${process.env.BASE_URL}finance/reports/revenue/summary?${download_string}`,
           {
             headers: {
               Authorization: `Token ${this.$store.state.auth.token}`,
