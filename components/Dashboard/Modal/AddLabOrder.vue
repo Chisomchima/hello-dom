@@ -30,8 +30,10 @@
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div v-if="!fill" class="px-1">
-                  <input type="number" placeholder="Year" v-model="formDate.year"
-                    class="form-control ng-untouched ng-pristine ng-valid" />
+                  <ValidationProviderWrapper name="" :rules="['required']">
+                    <input type="number" placeholder="Year" v-model="formDate.year"
+                      class="form-control ng-untouched ng-pristine ng-valid" />
+                  </ValidationProviderWrapper>
                 </div>
                 <div v-if="fill" class="px-1">
                   <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -42,11 +44,11 @@
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div v-if="fill" class="px-1">
-                  <input type="text" disabled  placeholder="Day" v-model="age.day"
+                  <input type="text" disabled placeholder="Day" v-model="age.day"
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div v-if="!fill" class="px-1">
-                  <input type="number"  placeholder="Day" v-model="formDate.day"
+                  <input type="number" placeholder="Day" v-model="formDate.day"
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
               </div>
@@ -92,7 +94,7 @@
         </form>
       </ValidationObserver>
     </ModalWrapper>
-  </div>
+</div>
 </template>
 
 <script>
@@ -126,7 +128,7 @@ export default {
     }
   },
   computed: {
-    fill(){
+    fill() {
       return this.age.year ? true : false
     }
   },
@@ -156,12 +158,12 @@ export default {
     async save() {
       if (await this.$refs.form.validate()) {
         let obj = this.currentData
-          if(!this.age.year){
-            obj.age = this.formDate
-          }
-          else{
-            obj.age = this.age
-          }
+        if (!this.age.year) {
+          obj.age = this.formDate
+        }
+        else {
+          obj.age = this.age
+        }
         const data = await this.$api.laboratory.saveLabOrder({
           service_center: this.serviceCenter,
           lab_panels: this.labPanel,
@@ -195,6 +197,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

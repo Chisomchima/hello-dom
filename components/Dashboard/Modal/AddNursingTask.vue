@@ -29,8 +29,10 @@
                                     class="form-control ng-untouched ng-pristine ng-valid" />
                             </div>
                             <div v-if="!fill" class="px-1">
-                                <input type="number" placeholder="Year" v-model="formDate.year"
-                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                                <ValidationProviderWrapper name="" :rules="['required']">
+                                    <input type="number" placeholder="Year" v-model="formDate.year"
+                                        class="form-control ng-untouched ng-pristine ng-valid" />
+                                </ValidationProviderWrapper>
                             </div>
                             <div v-if="fill" class="px-1">
                                 <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -77,7 +79,7 @@
                 </div>
             </form>
         </ValidationObserver>
-    </ModalWrapper>
+</ModalWrapper>
 </template>
   
 <script>

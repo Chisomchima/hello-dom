@@ -9,8 +9,8 @@
                             <div class="d-flex">
                                 <input v-model="uhid" type="text" class="form-control" />
                                 <div class="ml-2 mt-1">
-                                    <b-spinner style="width: 1.7rem; height: 1.7rem" v-if="downloading"
-                                        variant="primary" label="grow">
+                                    <b-spinner style="width: 1.7rem; height: 1.7rem" v-if="downloading" variant="primary"
+                                        label="grow">
                                     </b-spinner>
                                     <div class="text-info icon" v-if="false">
                                         <span @click="findPatient">
@@ -47,8 +47,10 @@
                                     class="form-control ng-untouched ng-pristine ng-valid" />
                             </div>
                             <div v-if="!fill" class="px-1">
-                                <input type="number" placeholder="Year" v-model="formDate.year"
-                                    class="form-control ng-untouched ng-pristine ng-valid" />
+                                <ValidationProviderWrapper name="" :rules="['required']">
+                                    <input type="number" placeholder="Year" v-model="formDate.year"
+                                        class="form-control ng-untouched ng-pristine ng-valid" />
+                                </ValidationProviderWrapper>
                             </div>
                             <div v-if="fill" class="px-1">
                                 <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -96,7 +98,7 @@
                 </div>
             </form>
         </ValidationObserver>
-    </ModalWrapper>
+</ModalWrapper>
 </template>
   
 <script>

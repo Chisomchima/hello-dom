@@ -26,8 +26,10 @@
                   class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
               <div v-if="!fill" class="px-1">
-                <input type="number" placeholder="Year" v-model="formDate.year"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <ValidationProviderWrapper name="" :rules="['required']">
+                  <input type="number" placeholder="Year" v-model="formDate.year"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
+                </ValidationProviderWrapper>
               </div>
               <div v-if="fill" class="px-1">
                 <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -115,7 +117,7 @@
       <DashboardModalImagingDiagnosis @page-changed="getICD10($event, searchParam)" @refresh="getICD10(1, searchParam)"
         @diagnosis="setDiagnosis" @change="helloWorld" :selectedDiagnosis="selected" />
     </div>
-  </ModalWrapper>
+</ModalWrapper>
 </template>
 
 <script>
@@ -149,7 +151,7 @@ export default {
         month: '',
         day: '',
       },
-      
+
       dataObject: {
         img_obv: [],
         diagnosis: [],
@@ -182,7 +184,7 @@ export default {
       return ''
     },
 
-    fill(){
+    fill() {
       return this.age.year ? true : false
     },
 
@@ -435,6 +437,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

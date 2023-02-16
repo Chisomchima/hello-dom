@@ -27,8 +27,10 @@
                   class="form-control ng-untouched ng-pristine ng-valid" />
               </div>
               <div v-if="!fill" class="px-1">
-                <input type="number" placeholder="Year" v-model="formDate.year"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <ValidationProviderWrapper name="" :rules="['required']">
+                  <input type="number" placeholder="Year" v-model="formDate.year"
+                    class="form-control ng-untouched ng-pristine ng-valid" />
+                </ValidationProviderWrapper>
               </div>
               <div v-if="fill" class="px-1">
                 <input type="text" disabled placeholder="Month" v-model="age.month"
@@ -83,23 +85,23 @@
               </ValidationProviderWrapper>
             </div>
             <!-- <div class="">
-              <span class="pointer text-primary ml-1 d-flex align-items-center">
-                <svg
-                  @click="$bvModal.show('diagnosisModal')"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  class="bi bi-plus-square-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
-                  />
-                </svg>
-                <span class="text-12 ml-2">Select diagnosis</span>
-              </span>
-            </div> -->
+                <span class="pointer text-primary ml-1 d-flex align-items-center">
+                  <svg
+                    @click="$bvModal.show('diagnosisModal')"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-plus-square-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+                    />
+                  </svg>
+                  <span class="text-12 ml-2">Select diagnosis</span>
+                </span>
+              </div> -->
           </div>
 
           <div class="col-md-6 mb-2">
@@ -132,7 +134,7 @@
       <DashboardModalImagingDiagnosis @page-changed="getICD10($event, searchParam)" @diagnosis="setDiagnosis"
         @refresh="getICD10(1, searchParam)" @change="helloWorld" :selectedDiagnosis="selected" />
     </div>
-  </ModalWrapper>
+</ModalWrapper>
 </template>
 
 <script>
@@ -340,6 +342,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
