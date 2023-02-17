@@ -18,42 +18,10 @@
     <div v-else>
     <div class="d-flex align-items-center justify-content-between">
       <h4 class="text-grey text-18 mb-0">Plan</h4>
-      <div @click="showComment" style="cursor: pointer" v-show="step" id="button-299">
-        <div class="text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-            class="bi bi-plus-square-fill" viewBox="0 0 16 16">
-            <path
-              d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
-          </svg>
-        </div>
-
-        <b-tooltip target="button-299" placement="bottom"> Add Plan </b-tooltip>
-      </div>
-      <div @click.prevent="closeForm" id="button-22" v-show="kink">
-        <div class="text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-dash-square"
-            viewBox="0 0 16 16">
-            <path
-              d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
-          </svg>
-        </div>
-
-        <b-tooltip target="button-22" placement="bottom">Close </b-tooltip>
-      </div>
+      
     </div>
 
     <br />
-    <div v-show="tag">
-      <textarea v-model="plan" class="p-3 form-control ng-untouched ng-pristine ng-valid" cols="40"
-        rows="10"></textarea>
-
-      <div style="height: 38px" class="w-100 mt-4 text-16 d-flex justify-content-end">
-
-        <BaseButton :disabled="consultationData.bill.cleared_status === 'CLEARED' ? false : true"
-          @click.prevent="addPlan" class="btn-primary">Save</BaseButton>
-      </div>
-    </div>
 
     <div class="pt-3" v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index" class="card text-14 px-3 pt-3 pb-1 mb-2 pt-2 shadow-sm">
@@ -75,16 +43,9 @@
       </div>
     </div>
 
-    <div class="p-5 text-center" v-else>
+    <div class="p-3 text-center" v-else>
       <div class="text-16 text-grey">
-        No Plan added yet, click the
-        <span style="position: relative; top: -3px" class="text-primary mx-1">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-plus-square-fill" viewBox="0 0 16 16">
-            <path
-              d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
-          </svg></span>
-        icon to add Plans
+        No Plan added.
       </div>
       <div class="text-primary my-3">
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="30" height="30"
@@ -113,7 +74,6 @@ export default {
       step: true,
       plan: "",
       form: {},
-      comments: [],
     };
   },
   watch: {
@@ -130,69 +90,16 @@ export default {
       type: Object,
       default: () => {},
     },
+    comments: {
+      type: Array,
+      default: () => [],
+    }
   },
   mounted() {
-    this.getPlan();
+    // this.getPlan();
   },
   methods: {
-    async getPlan() {
-      try {
-        this.busy = true;
-        let response = await this.$axios.$get(
-          `encounters/${this.$route.params.id}/charts/plan/`
-        );
-
-        this.form = response;
-        this.busy = false;
-        this.comments = response.result;
-      } catch {}
-      finally{
-        this.busy = false;
-      }
-    },
-    async addPlan() {
-      this.isLoading = true;
-      try {
-        let response = await this.$axios.$post(
-          `encounters/${this.consultationData.id}/charts/`,
-          {
-            chart: {
-              plan: this.plan,
-            },
-          }
-        );
-
-        this.tag = false;
-        this.kink = false;
-        this.step = true;
-        this.$toast({
-          type: 'success',
-          text: 'Plan added successfully',
-        })
-       
-        this.plan = "";
-      } catch (error) {
-        this.$toast({
-          type: 'error',
-          text: 'Unable to add plan',
-        })
-        
-      } finally {
-        this.getPlan();
-        this.isLoading = false;
-      }
-    },
-    showComment() {
-      this.tag = true;
-      this.kink = true;
-      this.step = false;
-    },
-    closeForm() {
-      this.tag = false;
-      this.kink = false;
-      this.step = true;
-      this.plan = "";
-    },
+   
   },
 };
 </script>

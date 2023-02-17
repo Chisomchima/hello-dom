@@ -1,25 +1,25 @@
 <template>
     <div v-if="consultationData">
         <div style="border-radius: 4px" class="
-          p-3
-          bg-white
-          d-flex
-          flex-wrap
-          align-items-center
-          justify-content-between
-          pt-3
-          mb-3
-          shadow-sm
-        ">
+                          p-3
+                          bg-white
+                          d-flex
+                          flex-wrap
+                          align-items-center
+                          justify-content-between
+                          pt-3
+                          mb-3
+                          shadow-sm
+                        ">
             <div class="col-md-7 px-0 text-grey text-14 col-sm-7 col-lg-7">
                 <div class="row px-0">
                     <div class="col-md-6 col-sm-6 col-lg-6">
                         <b>ENC-ID:</b>
                         {{
-        consultationData.encounter_id
-            ? consultationData.encounter_id
-            : 'nil'
-}}
+                            consultationData.encounter_id
+                            ? consultationData.encounter_id
+                            : 'nil'
+                        }}
                     </div>
 
                     <div class="col-md-6 col-sm-6 col-lg-6">
@@ -37,39 +37,38 @@
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6">
                         <b>Provider:</b>
-                        <span
-                            v-if="Object.values(consultationData.provider ? consultationData.provider : {}).length > 0">{{
-        consultationData.provider
-            ? consultationData.provider.first_name +
-            ' ' +
-            consultationData.provider.last_name
-            : ''
-}}</span>
+                        <span v-if="Object.values(consultationData.provider ? consultationData.provider : {}).length > 0">{{
+                            consultationData.provider
+                            ? consultationData.provider.first_name +
+                            ' ' +
+                            consultationData.provider.last_name
+                            : ''
+                        }}</span>
                     </div>
                 </div>
                 <div style="
-              height: 50px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              word-break: break-all;
-            " class="text-truncate col-md-12 px-0 pt-3 col-sm-12 col-lg-11">
+                              height: 50px;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              word-break: break-all;
+                            " class="text-truncate col-md-12 px-0 pt-3 col-sm-12 col-lg-11">
                     <b>Chief Complaint:</b> {{ consultationData.chief_complaint }}
                 </div>
                 <div v-if="consultationData.signed_date" class="col-md-12 col-sm-12">
                     <b>Signed by:</b>
                     {{
-        consultationData.provider.first_name +
-        ' ' +
-        consultationData.provider.last_name
-}}, {{ dateSigned }}
+                        consultationData.provider.first_name +
+                        ' ' +
+                        consultationData.provider.last_name
+                    }}, {{ dateSigned }}
                 </div>
             </div>
             <div v-if="consultationData" class="
-            d-flex
-            justify-content-between
-            col-md-5 col-sm-5 col-lg-5
-            align-items-center
-          ">
+                            d-flex
+                            justify-content-between
+                            col-md-5 col-sm-5 col-lg-5
+                            align-items-center
+                          ">
                 <div class="px-2">
                     <div class="px-2">
                         <p @click="gotoPatientProfile" class="text-14 mb-0 text-grey point signal">
@@ -80,25 +79,29 @@
                         <p class="text-14 mb-0 text-grey text-capitalize">
                             <b>Name:</b>
                             {{
-        consultationData.patient.firstname
-            ? consultationData.patient.firstname + ' ' + consultationData.patient.lastname
-            : 'nil'
-}}
+                                consultationData.patient.firstname
+                                ? consultationData.patient.firstname + ' ' + consultationData.patient.lastname
+                                : 'nil'
+                            }}
                         </p>
                     </div>
                     <div class="px-2">
                         <p class="text-14 mb-0 text-grey">
-                            <b>D.O.B:</b> {{ consultationData.patient.date_of_birth }}
+                            <b>D.O.B:</b> {{ consultationData.patient.date_of_birth }} <span
+                                v-if="consultationData.patient.age">({{
+                                    consultationData.patient.age.year }} 
+                                    <span v-if="consultationData.patient.age.year > 1">Yrs</span>
+                                     <span v-else>Yr</span>)</span>
                         </p>
                     </div>
-                    <div v-if="consultationData.age" class="px-2">
-                        <p class="text-14 mb-0 text-grey">
-                            <b>Age(Y-M-D):</b>
-                            {{ consultationData.patient.age.year ? consultationData.patient.age.year : '0' }} -
-                            {{ consultationData.patient.age.month ? consultationData.patient.age.month : '0' }} -
-                            {{ consultationData.patient.age.day ? consultationData.patient.age.day : '0' }}
-                        </p>
-                    </div>
+                    <!-- <div v-if="consultationData.patient.age" class="px-2">
+                                    <p class="text-14 mb-0 text-grey">
+                                        <b>Age (Y-M-D):</b>
+                                        {{ consultationData.patient.age.year ? consultationData.patient.age.year : '0' }} -
+                                        {{ consultationData.patient.age.month ? consultationData.patient.age.month : '0' }} -
+                                        {{ consultationData.patient.age.day ? consultationData.patient.age.day : '0' }}
+                                    </p>
+                                </div> -->
                     <div class="px-2">
                         <p class="text-14 mb-0 text-grey">
                             <b>Gender:</b>
@@ -123,35 +126,35 @@
                                 {{ consultationData.patient.salutation ? consultationData.patient.salutation : 'Mr.' }}
 
                                 {{
-        consultationData.patient.firstname
-            ? consultationData.patient.firstname +
-            ' ' +
-            consultationData.patient.middlename +
-            ' ' +
-            consultationData.patient.lastname
-            : 'Anonymous'
-}}
+                                    consultationData.patient.firstname
+                                    ? consultationData.patient.firstname +
+                                    ' ' +
+                                    consultationData.patient.middlename +
+                                    ' ' +
+                                    consultationData.patient.lastname
+                                    : 'Anonymous'
+                                }}
                                 <br />
                                 Gender: {{ consultationData.patient.gender ? consultationData.patient.gender : 'Male' }}
                                 <br />
                                 Phone No:
                                 {{
-        consultationData.patient.phone_number ? consultationData.patient.phone_number : 'nil'
-}}
+                                    consultationData.patient.phone_number ? consultationData.patient.phone_number : 'nil'
+                                }}
                                 <br />
                                 Nationality:
                                 {{
-        consultationData.patient.nationality
-            ? consultationData.patient.nationality
-            : 'Nigerian'
-}}
+                                    consultationData.patient.nationality
+                                    ? consultationData.patient.nationality
+                                    : 'Nigerian'
+                                }}
                                 <br />
                                 Marital Status:
                                 {{
-        consultationData.patient.marital_status
-            ? consultationData.patient.marital_status
-            : 'Single'
-}}
+                                    consultationData.patient.marital_status
+                                    ? consultationData.patient.marital_status
+                                    : 'Single'
+                                }}
                                 <br />
                                 Religion:
                                 {{ consultationData.patient.religion ? consultationData.patient.religion : 'nil' }}

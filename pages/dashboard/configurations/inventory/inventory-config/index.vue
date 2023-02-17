@@ -7,7 +7,7 @@
         <SettingsInventoryProductsList />
       </UtilsCardTab>
       <UtilsCardTab title="Store">
-        <!-- <SettingsPharmacyUnitsList /> -->
+        <SettingsInventoryStoreList />
       </UtilsCardTab>
       <UtilsCardTab title="Category">
         <SettingsInventoryCategoryList />

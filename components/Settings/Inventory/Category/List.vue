@@ -1,36 +1,22 @@
 <template>
   <div>
-    <UtilsFilterComponent
-      @search-input="searchMe($event)"
-      disable-visualization
-      disable-pagination
-    >
+    <UtilsFilterComponent @search-input="searchMe($event)" disable-visualization disable-pagination>
       <template #besideFilterButton>
-        <BaseButton
-          class="btn-outline-primary"
-          @click="openModal"
-          >Add Category</BaseButton
-        >
+        <BaseButton class="btn-outline-primary" @click="openModal">Add Category</BaseButton>
       </template>
       <template>
-        <TableComponent
-          :fields="fields"
-          :pages="pages"
-          :items="items"
-          :modalTitle="modalTitle"
-          :busy="busy"
-          @edit="edit($event)"
-          @delete="deleteItem($event)"
-        >
+        <TableComponent @page-changed="pageChange($event, filters)" :fields="fields" :pages="pages" :items="items" :modalTitle="modalTitle" :busy="busy"
+          @edit="edit($event)" @delete="deleteItem($event)">
+          <template #description="{ data }">
+            <div class="">
+              <span>{{ data.item.description }}</span>
+            </div>
+          </template>
         </TableComponent>
       </template>
     </UtilsFilterComponent>
-    <!-- <SettingsPharmacyDosesAddDoses
-      :edit-data="editObj"
-      @refresh="pageChange(1)"
-      :modalTitle="modalTitle"
-    /> -->
-  </div>
+    <SettingsInventoryCategoryAddCategory :edit-data="editObj" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+</div>
 </template>
 
 <script>
@@ -54,7 +40,7 @@ export default {
           key: 'name',
         },
         {
-          key: 'multiplier',
+          key: 'description',
         },
         {
           key: 'actions',
@@ -64,16 +50,17 @@ export default {
     }
   },
   async mounted() {
-    // await this.pageChange(1)
+    await this.pageChange(1)
   },
   methods: {
     searchMe(e) {
-    //   this.pageChange(1, this.filters)
+      this.filters.name = e
+      this.pageChange(1, this.filters)
     },
     async pageChange(page = 1, e = { name: '', size: 10 }) {
       try {
         this.busy = true
-        const data = await this.$api.pharmacy.getDoses({ page, ...e })
+        const data = await this.$api.inventory.getParents({ page, ...e })
         this.items = data.results
         this.pages = data.total_pages
         this.busy = false
@@ -83,20 +70,20 @@ export default {
         this.busy = false
       }
     },
-    openModal(){
-        this.modalTitle = 'Add Dosage'
-        this.$bvModal.show('addDose')
+    openModal() {
+      this.modalTitle = 'Add Category'
+      this.$bvModal.show('addCategory')
     },
     edit(e) {
       this.editObj = e
-      this.modalTitle = 'Edit Dosage'
-      this.$bvModal.show('addDose')
+      this.modalTitle = 'Edit Category'
+      this.$bvModal.show('addCategory')
     },
     async deleteItem(item) {
-      const result = await this.showConfirmMessageBox('Delete dosage ?')
+      const result = await this.showConfirmMessageBox('Delete category ?')
       try {
         if (result) {
-          let response = await this.$api.pharmacy.deleteDosage(item.id)
+          let response = await this.$api.inventory.deleteCategory(item.id)
           this.$toast({
             type: 'success',
             text: `Deleted`,
@@ -111,5 +98,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -60,16 +60,11 @@ export default function ({ $axios, $toast, store, redirect }) {
     }
 
     if (error.response && error.response.status === 404) {
-      $toast({
-        type: 'error',
-        text: error.response.data.message,
-      })
-    } else {
       // $toast({
       //   type: 'error',
-      //   text: 'Error Occurred',
+      //   text: error.response.data.message,
       // })
-
+    } else {
       return Promise.reject(error)
     }
 

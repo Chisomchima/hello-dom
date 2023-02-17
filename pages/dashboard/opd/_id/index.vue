@@ -40,6 +40,7 @@
       <TabView @tab-click="showMe" class="tabview-custom">
         <TabPanel class="dark-panel">
           <template #header>
+           <div style="width: 120px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-clipboard2-pulse" viewBox="0 0 16 16">
               <path
@@ -49,18 +50,19 @@
               <path
                 d="M9.979 5.356a.5.5 0 0 0-.968.04L7.92 10.49l-.94-3.135a.5.5 0 0 0-.926-.08L4.69 10H4.5a.5.5 0 0 0 0 1H5a.5.5 0 0 0 .447-.276l.936-1.873 1.138 3.793a.5.5 0 0 0 .968-.04L9.58 7.51l.94 3.135A.5.5 0 0 0 11 11h.5a.5.5 0 0 0 0-1h-.128L9.979 5.356Z" />
             </svg>
-            <span class="ml-2">Consultation</span>
+            <span class="ml-2 text-14">Consultation</span>
+           </div>
           </template>
-          <!-- <div v-if="activeIndex === 0">
-            <EncountersConsultation :consultationData="consultationData" @refreshMe="refreshMe" />
-          </div> -->
+          
           <EncountersConsultation :consultationData="consultationData" @refreshMe="refreshMe" />
         </TabPanel>
 
         <TabPanel>
           <template #header>
+           <div style="width: 80px;">
             <i class="fas fa-heartbeat"></i>
-            <span class="ml-2">Vitals</span>
+            <span class="ml-2 text-14">Vitals</span>
+           </div>
           </template>
           <div v-if="activeIndex === 1">
             <div>
@@ -71,16 +73,36 @@
 
         <TabPanel>
           <template #header>
-            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
-              preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
-              <path fill="currentColor"
-                d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3zm-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2z" />
-              <path fill="currentColor"
-                d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
-            </svg>
-            <span class="ml-2">Medical Records</span>
+            <div style="width: 130px;">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
+                preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                <path fill="currentColor"
+                  d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3zm-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2z" />
+                <path fill="currentColor"
+                  d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+              </svg>
+              <span class="ml-2 text-14">Legacy chart</span>
+            </div>
           </template>
+
           <div v-if="activeIndex === 2">
+            <EncountersLegacyChart :consultationData="consultationData" :legacy="consultationData.legacy_chart" />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <template #header>
+            <div style="width: 150px;">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
+                preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                <path fill="currentColor"
+                  d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3zm-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2z" />
+                <path fill="currentColor"
+                  d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+              </svg>
+              <span class="ml-2 text-14">Medical Records</span>
+            </div>
+          </template>
+          <div v-if="activeIndex === 3">
             <EncountersMedicalRecord :consultationData="consultationData" />
           </div>
         </TabPanel>
@@ -88,46 +110,60 @@
         <TabPanel>
           <template #header>
 
-            <i class="fas fa-vial"></i>
-            <span class="ml-2">Lab Orders</span>
+            <div style="width: 120px;">
+              <i class="fas fa-vial"></i>
+              <span class="ml-2 text-14">Lab Orders</span>
+            </div>
           </template>
-          <div v-if="activeIndex === 3">
+          <div v-if="activeIndex === 4">
             <EncountersLabOrders :age="age" :patientData="consultationData.patient" />
           </div>
         </TabPanel>
+
         <TabPanel>
           <template #header>
-            <i class="fas fa-x-ray"></i>
-            <span class="ml-2">Imaging</span>
+            <div style="width: 90px;">
+              <i class="fas fa-x-ray"></i>
+            <span class="ml-2 text-14">Imaging</span>
+            </div>
           </template>
-          <div v-if="activeIndex === 4">
+          <div v-if="activeIndex === 5">
             <DashboardPatientImaging :age="age" :data="consultationData.patient" />
           </div>
         </TabPanel>
+
         <TabPanel>
           <template #header>
-            <i class="fas fa-pills"></i>
-            <span class="ml-2">Prescriptions</span>
+            <div style="width: 120px;">
+              <i class="fas fa-pills"></i>
+            <span class="ml-2 text-14">Prescriptions</span>
+            </div>
           </template>
-          <div v-if="activeIndex === 5">
+          <div v-if="activeIndex === 6">
             <DashboardPatientPrescription :age="age" :show="true" :data="consultationData.patient" />
           </div>
         </TabPanel>
+
         <TabPanel>
           <template #header>
+           <div style="width: 110px;">
             <i class="far fa-file-alt"></i>
-            <span class="ml-2">Documents</span>
+            <span class="ml-2 text-14">Documents</span>
+           </div>
           </template>
-          <div v-if="activeIndex === 6">
+          <div v-if="activeIndex === 7">
             <DashboardPatientDocument :show="!true" :data="consultationData.patient" />
           </div>
         </TabPanel>
+
         <TabPanel>
           <template #header>
-            <i class="fas fa-user-nurse"></i>
-            <span class="ml-2">Nursing Orders</span>
+            <div style="width: 100px;">
+              <i class="fas fa-user-nurse"></i>
+              <span class="ml-2 text-14">Nursing</span>
+            </div>
           </template>
-          <div v-if="activeIndex === 7">
+          <div v-if="activeIndex === 8">
             <DashboardPatientTasks :age="age" :data="consultationData.patient" />
           </div>
         </TabPanel>
@@ -203,6 +239,9 @@ export default {
           break;
         case 7:
           this.activeIndex = 7
+          break;
+        case 8:
+          this.activeIndex = 8
           break;
         default:
           this.activeIndex = 0
@@ -370,10 +409,12 @@ export default {
   background: #ffffff;
   border-color: $COLOR_THREE !important;
   color: $COLOR_THREE;
+  // width: 150px
 }
 
 .p-tabview .p-tabview-nav .p-tabview-nav-content .p-tabview-nav-link .p-tabview-title {
   font-size: 14px !important;
+  width: 200px
 }
 
 li {
