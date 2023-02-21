@@ -10,14 +10,14 @@
                     </div>
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Parent" :rules="['']">
-                            <v-select class="style-chooser text-grey text-14" placeholder="Parent" :options="parents"
+                            <v-select class="style-chooser text-grey text-14" placeholder="" :options="parents"
                                 v-model="dataObject.parent" :reduce="(opt) => opt.id" label="name">
                             </v-select>
                         </ValidationProviderWrapper>
                     </div>
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Description" :rules="['']">
-                            <input v-model="dataObject.description" type="text" class="form-control" />
+                            <textarea rows="2" col="10" v-model="dataObject.description" type="text" class="form-control"></textarea>
                         </ValidationProviderWrapper>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ export default {
           route: '/dashboard/configurations/pharmacy/drug-administration/',
         },
         {
-          name: 'Generic Drug Config',
+          name: 'Drug dispense config',
           icon: 'fa fa-sliders',
           route: '/dashboard/configurations/pharmacy/drug-config/',
         },

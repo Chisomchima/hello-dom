@@ -1,7 +1,7 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">Generic Drug Configurations</div>
+    <div class="page-heading mb-4">Drug dispense configurations</div>
     <UtilsBaseCardTab>
       <UtilsCardTab title="Dose(s)">
         <SettingsPharmacyDosesList />

@@ -38,15 +38,8 @@
                         <div class="p-3 radPI mb-4" v-for="(record, index) in records" :key="index">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h3 class="text-18">{{ record.chart.title }}</h3>
-                                    <p class="text-14">Recorded by: {{
-                                        record.created_by ? (record.created_by.first_name
-                                            + " " + record.created_by.last_name) : ""
-                                    }}</p>
-                                    <p class="text-14 mb-2">Recorded at: {{
-                                        record.created_by ? convDate(record.created_at) :
-                                            ""
-                                    }}</p>
+                                    <h3 class="text-16 font-weight-bold">{{ record.chart.title }}</h3>
+
                                 </div>
                                 <div v-if="presentUser === record.created_by.id">
                                     <span v-if="!record.edit" class="point" @click="editRecord(index)">
@@ -56,13 +49,12 @@
                                                 d="M5 19h1.4l8.625-8.625l-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575q.837 0 1.412.575l1.4 1.4q.575.575.6 1.388q.025.812-.55 1.387ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6Zm-3.525-.725l-.7-.7l1.4 1.4Z" />
                                         </svg>
                                     </span>
-                                    <button v-else @click="editRecord(index)"
-                                        class="btn btn-outline-danger">Cancel</button>
+                                    <button v-else @click="editRecord(index)" class="btn btn-outline-danger">Cancel</button>
                                 </div>
                             </div>
                             <div v-for="(section, innerIndex) in record.chart.content" :key="innerIndex">
                                 <div>
-                                    <h3 class="text-16 mb-2 text-bold">{{ section.section }}</h3>
+                                    <h3 class="text-16 mb-2">{{ section.section }}</h3>
                                 </div>
                                 <!-- input options -->
                                 <div class="d-flex flex-wrap align-items-start">
@@ -70,8 +62,7 @@
                                         v-for="(col, colIndex) in section.cols" :key="colIndex">
                                         <h3 class="text-14 mb-0">{{ col.header }}</h3>
                                         <div class="">
-                                            <div class="" v-for="(field, fieldIndex) in col.form_field"
-                                                :key="fieldIndex">
+                                            <div class="" v-for="(field, fieldIndex) in col.form_field" :key="fieldIndex">
                                                 <div class="" v-if="field.type === 'text'">
                                                     <p v-if="!record.edit" class="text-14">
                                                         <span class="">
@@ -171,8 +162,8 @@
                                                                 {{ field.context }}:
                                                             </span>
                                                             <!-- <span class="text-14 ml-1 ">{{
-                                                                field.options
-                                                            }}</span> -->
+                                                                    field.options
+                                                                }}</span> -->
                                                             <b-form-checkbox v-model="field.options" :disabled="true"
                                                                 size="lg" switch>
                                                             </b-form-checkbox>
@@ -233,13 +224,13 @@
                                                         </span>
                                                     </p>
                                                     <!-- <p v-for="(pres, index) in record.chart.orders.prescription.details" :key="index" class="text-14 ml-1 ">{{
-                                                        convertToPrescription(pres)
-                                                    }}</p> -->
+                                                            convertToPrescription(pres)
+                                                        }}</p> -->
                                                     <div v-for="(pres, index) in record.chart.orders.prescription.details"
                                                         :key="index" class="text-14">
-                                                        <p>{{ `${pres.generic_drug.name}(${pres.product.name})`}}</p>
+                                                        <p>{{ `${pres.generic_drug.name}(${pres.product.name})` }}</p>
                                                         <p>{{ `${pres.unit.name}, ${pres.frequency.name} for
-                                                        ${pres.duration.name}`}}</p>
+                                                                                                                    ${pres.duration.name}` }}</p>
                                                     </div>
                                                 </div>
 
@@ -256,6 +247,18 @@
                                     </div>
                                 </div>
                                 <hr>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                               <div>
+                                <p class="text-14">Recorded by: {{
+                                    record.created_by ? (record.created_by.first_name
+                                        + " " + record.created_by.last_name) : ""
+                                }}</p>
+                                <p class="text-14 mb-2">Recorded at: {{
+                                    record.created_by ? convDate(record.created_at) :
+                                    ""
+                                }}</p>
+                               </div>
                             </div>
                             <div v-if="record.edit" class="d-flex justify-content-end">
                                 <button @click.prevent="updateChart(record, index)"

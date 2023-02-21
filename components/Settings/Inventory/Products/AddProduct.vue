@@ -3,33 +3,46 @@
     <ValidationObserver ref="form">
       <form>
         <div class="row">
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Name" :rules="['required']">
-              <input v-model="dataObject.name" type="text" class="form-control" />
-            </ValidationProviderWrapper>
+          <div class="col-md-12 mb-2 d-flex align-items-center">
+            <div class="col-md-10 px-0">
+              <ValidationProviderWrapper name="Name" :rules="['required']">
+                <input v-model="dataObject.name" type="text" class="form-control" />
+              </ValidationProviderWrapper>
+            </div>
+            <div class="col-md-2 px-0 ml-3">
+              <ValidationProviderWrapper name="Is drug" :rules="['']">
+                <b-form-checkbox v-model="dataObject.is_drug" size="lg" switch>
+                </b-form-checkbox>
+              </ValidationProviderWrapper>
+            </div>
           </div>
           <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Description" :rules="['']">
+              <textarea rows="2" col="10" v-model="dataObject.description" type="text" class="form-control"></textarea>
+            </ValidationProviderWrapper>
+          </div>
+          <div v-if="dataObject.is_drug" class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Generic drug" :rules="['']">
-              <v-select class="style-chooser text-grey text-14" placeholder="Generic drug" :options="generic_drug"
+              <v-select class="style-chooser text-grey text-14" placeholder="" :options="generic_drug"
                 v-model="dataObject.generic_drug" :reduce="(opt) => opt.id" label="name">
               </v-select>
             </ValidationProviderWrapper>
           </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Parent" :rules="['required']">
-              <v-select class="style-chooser text-grey text-14" placeholder="Parent" :options="parents"
-                v-model="dataObject.category" :reduce="(opt) => opt.id" label="name">
-              </v-select>
-            </ValidationProviderWrapper>
-          </div>
-          <div class="col-md-12 mb-2">
+          <div v-if="dataObject.is_drug" class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Divider" :rules="['required']">
               <input v-model="dataObject.divider" type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
-          <div class="col-md-12 mb-2">
+          <div v-if="dataObject.is_drug" class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Unit of measure" :rules="['required']">
               <input v-model="dataObject.uom" type="text" class="form-control" />
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Parent" :rules="['required']">
+              <v-select class="style-chooser text-grey text-14" placeholder="" :options="parents"
+                v-model="dataObject.category" :reduce="(opt) => opt.id" label="name">
+              </v-select>
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
@@ -43,15 +56,11 @@
             </ValidationProviderWrapper>
           </div>
 
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Description" :rules="['']">
-              <input v-model="dataObject.description" type="text" class="form-control" />
-            </ValidationProviderWrapper>
-          </div>
+
         </div>
       </form>
     </ValidationObserver>
-</ModalWrapper>
+  </ModalWrapper>
 </template>
 
 <script>
@@ -114,16 +123,6 @@ export default {
       },
       immediate: true,
       deep: true,
-    },
-    "dataObject.generic_drug": {
-      handler(newVal) {
-        if (newVal !== null) {
-          this.dataObject.is_drug = true
-        }
-        else {
-          this.dataObject.is_drug = false
-        }
-      }
     },
     modalTitle() {
       this.title = this.modalTitle

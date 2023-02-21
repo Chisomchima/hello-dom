@@ -12,6 +12,11 @@
                 <span>{{ data.item.description }}</span>
               </div>
             </template>
+            <template #type="{ data }">
+              <div class="">
+                <span>{{ data.item.type }}</span>
+              </div>
+            </template>
           </TableComponent>
         </template>
       </UtilsFilterComponent>
@@ -40,7 +45,7 @@
             key: 'name',
           },
           {
-            key: 'description',
+            key: 'type',
           },
           {
             key: 'actions',
