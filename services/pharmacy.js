@@ -147,4 +147,19 @@ export default axios => ({
         return axios.$patch(`/pharmacy/prescriptions/${id}/confirm/`)
     },
 
+    //Stores
+
+    getStores(params){
+        return axios.$get(`/pharmacy/stores/`, {params})
+    },
+    createStore(body){
+        return axios.$post(`/pharmacy/stores/`, body)
+    },
+    updateStore(body, id){
+        return axios.$patch(`/pharmacy/stores/${id}/`, body)
+    },
+    deleteStore(id){
+        return axios.$delete(`/pharmacy/stores/${id}/`)
+    },
+
 })

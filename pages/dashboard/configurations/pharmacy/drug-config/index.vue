@@ -1,8 +1,11 @@
 <template>
   <div>
     <BackwardNavigation />
-    <div class="page-heading mb-4">Drug dispense configurations</div>
+    <div class="page-heading mb-4">Drug Dispense Configurations</div>
     <UtilsBaseCardTab>
+      <UtilsCardTab title="Store(s)">
+        <SettingsPharmacyStoreList />
+      </UtilsCardTab>
       <UtilsCardTab title="Dose(s)">
         <SettingsPharmacyDosesList />
       </UtilsCardTab>
