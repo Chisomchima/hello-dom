@@ -6,11 +6,11 @@
       <UtilsCardTab title="Products">
         <SettingsInventoryProductsList />
       </UtilsCardTab>
-      <UtilsCardTab title="Store">
-        <SettingsInventoryStoreList />
-      </UtilsCardTab>
       <UtilsCardTab title="Category">
         <SettingsInventoryCategoryList />
+      </UtilsCardTab>
+      <UtilsCardTab title="Store">
+        <SettingsInventoryStoreList />
       </UtilsCardTab>
     </UtilsBaseCardTab>
 
