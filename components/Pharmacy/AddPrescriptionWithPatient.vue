@@ -124,7 +124,7 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Medication" :rules="['required']">
                 <VSelect @option:selected="fetchOPtions($event, index)" @option:deselected="getGenericDrugs"
-                  v-model="drug.generic_drug" :options="generic_drug" :reduce="(opt) => opt.id" label="name">
+                  v-model="drug.generic_drug" :options="generic_drug" label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -174,7 +174,7 @@
             </div>
             <div class="col-md-6 mb-2">
               <ValidationProviderWrapper name="Product" :rules="['']">
-                <VSelect v-model="drug.product" :options="products" :reduce="(opt) => opt.id" label="name">
+                <VSelect @option:selected="fetchGenericDrugs($event, index)" v-model="drug.product"  :options="products"  label="name">
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -272,6 +272,8 @@ export default {
             note: '',
           },
         ],
+        products: [],
+        generic_drug: [],
         patient: {},
         source: 'OPD',
         prescribing_physician: '',
@@ -352,7 +354,19 @@ export default {
       this.$api.inventory
         .getProducts({ size: 1500, generic_drug: e.id })
         .then((res) => {
-          this.products = res.results
+          let newVal = structuredClone(res.results)
+          this.products = newVal
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
+    fetchGenericDrugs(e, i){
+      this.$api.pharmacy
+        .getGeneric({ size: 1500,  })
+        .then((res) => {
+          this.generic_drug = res.results
         })
         .catch((err) => {
           console.log(err)
@@ -382,9 +396,14 @@ export default {
         let prescribeDetails = this.dataObject.details
         let direction = []
         let duration = []
+        let product = []
+        let generic_drug = []
+
         for (let x = 0; x < prescribeDetails.length; x++) {
           duration.push(prescribeDetails[x].duration.id)
+          product.push(prescribeDetails[x].product.id)
           direction.push(prescribeDetails[x].direction.id)
+          generic_drug.push(prescribeDetails[x].generic_drug.id)
         }
 
         //  console.log({direction}, {duration})
@@ -393,8 +412,9 @@ export default {
         for (let x = 0; x < prescribeDetails.length; x++) {
           pocket[x].direction = direction[x]
           pocket[x].duration = duration[x]
+          pocket[x].product = product[x]
+          pocket[x].generic_drug = generic_drug[x]
         }
-        console.log(pocket)
 
         const data = await this.$api.pharmacy.orderPrescription({
           store: this.dataObject.store,
@@ -425,6 +445,8 @@ export default {
       }
     },
     addDrug() {
+      this.getGenericDrugs()
+      this.getProducts()
       this.dataObject.details.push({
         generic_drug: null,
         product: '',
@@ -435,7 +457,7 @@ export default {
         direction: null,
         duration: null,
         dispense_quantity: 1,
-        status: '',
+        status: 'FULFILLED IN',
       })
     },
 
