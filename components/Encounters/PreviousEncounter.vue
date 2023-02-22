@@ -37,9 +37,9 @@
                     <div v-if="records.length > 0">
                         <div class="p-3 radPI mb-4" v-for="(record, index) in records" :key="index">
                             <div class="d-flex justify-content-between">
-                                <div>
-                                    <h3 class="text-16 font-weight-bold">{{ record.chart.title }}</h3>
-
+                                <div class="mb-3">
+                                    <h3 class="text-16 font-weight-bold text-underline">{{ record.chart.title }}</h3>
+                                    <!-- <hr> -->
                                 </div>
                                 <div v-if="presentUser === record.created_by.id">
                                     <span v-if="!record.edit" class="point" @click="editRecord(index)">

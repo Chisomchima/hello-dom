@@ -215,7 +215,7 @@
                                                 </span>
                                             </div>
                                             <div class="col-md-12 mb-2">
-                                                <ValidationProviderWrapper name="Medication" :rules="['required']">
+                                                <ValidationProviderWrapper name="Medication" :rules="['']">
                                                     <VSelect @option:selected="fetchOPtions($event, index)"
                                                         @option:deselected="getGenericDrugs" v-model="drug.generic_drug"
                                                         :options="generic_drug" :reduce="(opt) => opt.id" label="name">
@@ -251,7 +251,7 @@
                                             </div>
 
                                             <div class="col-md-3 mb-2">
-                                                <ValidationProviderWrapper name="Duration" :rules="['required']">
+                                                <ValidationProviderWrapper name="Duration" :rules="['']">
                                                     <VSelect :reduce="(opt) => opt" v-model="drug.duration"
                                                         :options="durations" label="name">
                                                     </VSelect>
@@ -259,7 +259,7 @@
                                             </div>
 
                                             <div class="col-md-6 mb-2">
-                                                <ValidationProviderWrapper name="Direction" :rules="['required']">
+                                                <ValidationProviderWrapper name="Direction" :rules="['']">
                                                     <VSelect :reduce="(opt) => opt.id" v-model="drug.direction"
                                                         :options="directions" label="name">
                                                     </VSelect>
@@ -328,7 +328,7 @@
                                             </ValidationProviderWrapper>
                                         </div>
                                         <div class="col-md-12 mb-2">
-                                            <ValidationProviderWrapper name="Description" :rules="['required']">
+                                            <ValidationProviderWrapper name="Description" :rules="['']">
                                                 <textarea id="" v-model="nursingObject.description" class="form-control"
                                                     name="" cols="30" rows="4"></textarea>
                                             </ValidationProviderWrapper>
