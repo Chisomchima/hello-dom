@@ -36,6 +36,9 @@
               <div v-if="data.item.status === 'CLOSED'" class="">
                 <span class="text-12 badge-success rounded text-center p-1 text-white">CLOSED</span>
               </div>
+              <div v-if="data.item.status === 'CANCELLED'" class="">
+                <span class="text-12 badge-secondary rounded text-center p-1 text-white">CANCELLED</span>
+              </div>
             </template>
             <template #description="{ data }">
               <div>
