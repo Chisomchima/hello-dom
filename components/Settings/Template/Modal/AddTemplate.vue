@@ -29,6 +29,12 @@
                             </span>
                         </div>
                         <div class="d-flex">
+                            <ValidationProviderWrapper name="Default" :rules="['']">
+                                <b-form-checkbox size="lg" switch v-model="dataObject.is_default">
+                                </b-form-checkbox>
+                            </ValidationProviderWrapper>
+                        </div>
+                        <div class="d-flex">
                             <ValidationProviderWrapper name="" :rules="['']">
                                 <b-form-checkbox size="lg" switch v-model="dataObject.is_active">
                                 </b-form-checkbox>
@@ -381,7 +387,8 @@ export default {
                         ]
                     }
                 ],
-                is_active: false
+                is_active: false,
+                "is_default": true
             },
             sectionType: [{
                 label: 'Text',
@@ -444,6 +451,7 @@ export default {
                     this.dataObject.description = newVal.description
                     this.dataObject.content = newVal.content
                     this.dataObject.is_private = newVal.is_private
+                    this.dataObject.is_default = newVal.is_default
                 }
             },
             immediate: true,
