@@ -63,8 +63,8 @@
    
 
     <NursingModalCreateTask @refresh="filter(currentPage, currentFilter)" />
-    <NursingModalCancelOrder :editData="editData" />
-    <NursingModalCloseOrder :editData="editData" />
+    <NursingModalCancelOrder @refresh="filter(currentPage, currentFilter)" :editData="editData" />
+    <NursingModalCloseOrder @refresh="filter(currentPage, currentFilter)" :editData="editData" />
   </div>
 </template>
   

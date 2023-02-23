@@ -3,7 +3,7 @@
     <BackwardNavigation />
     <div class="page-heading mb-4">Drug Dispense Configurations</div>
     <UtilsBaseCardTab>
-      <UtilsCardTab title="Store(s)">
+      <UtilsCardTab title="Pharmacy">
         <SettingsPharmacyStoreList />
       </UtilsCardTab>
       <UtilsCardTab title="Dose(s)">

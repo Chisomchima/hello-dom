@@ -2,7 +2,7 @@
     <div>
       <UtilsFilterComponent @search-input="searchMe($event)" disable-visualization disable-pagination>
         <template #besideFilterButton>
-          <BaseButton class="btn-outline-primary" @click="openModal">Add Store</BaseButton>
+          <BaseButton class="btn-outline-primary" @click="openModal">Add Pharmacy</BaseButton>
         </template>
         <template>
           <TableComponent @page-changed="pageChange($event, filters)" :fields="fields" :pages="pages" :items="items" :modalTitle="modalTitle" :busy="busy"
@@ -20,7 +20,7 @@
           </TableComponent>
         </template>
       </UtilsFilterComponent>
-      <SettingsInventoryStoreAddStore :edit-data="editObj" @refresh="pageChange(1)" :modalTitle="modalTitle" />
+      <SettingsPharmacyStoreAddStore :edit-data="editObj" @refresh="pageChange(1)" :modalTitle="modalTitle" />
   </div>
   </template>
   
@@ -45,7 +45,12 @@
             key: 'name',
           },
           {
-            key: 'type',
+            key: 'inv_store',
+            label: 'Inventory store'
+          },
+          {
+            key: 'description',
+            label: 'Description'
           },
           {
             key: 'actions',
@@ -88,7 +93,7 @@
         const result = await this.showConfirmMessageBox('Delete store ?')
         try {
           if (result) {
-            let response = await this.$api.inventory.deleteStore(item.id)
+            let response = await this.$api.pharmacy.deleteStore(item.id)
             this.$toast({
               type: 'success',
               text: `Deleted`,

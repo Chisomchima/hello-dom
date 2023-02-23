@@ -55,7 +55,7 @@ export default {
         async save() {
             try {
                 const data = await this.$api.nursing.cancelNursingOrder(this.editData.id, {disposition: this.reason})
-                // this.$emit('refresh')
+                this.$emit('refresh')
                 this.$bvModal.hide('cancelOrder')
                 console.log(data)
             } catch (error) {

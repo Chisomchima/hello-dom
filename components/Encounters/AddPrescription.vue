@@ -592,8 +592,8 @@ export default {
         })
     },
     getStores() {
-      this.$api.inventory
-        .getStores({ size: 1000, is_pharmacy: true })
+      this.$api.pharmacy
+        .getStores({ size: 1500 })
         .then((res) => {
           this.stores = res.results
         })

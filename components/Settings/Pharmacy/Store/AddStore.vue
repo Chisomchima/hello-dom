@@ -8,22 +8,18 @@
                             <input v-model="dataObject.name" type="text" class="form-control" />
                         </ValidationProviderWrapper>
                     </div>
+
                     <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Type" :rules="['required']">
-                            <v-select class="style-chooser text-grey text-14" placeholder="" :options="types"
-                                v-model="dataObject.type" label="name">
+                        <ValidationProviderWrapper name="Inventory store" :rules="['']">
+                            <v-select :reduce="(opt) => opt.id" class="style-chooser text-grey text-14" placeholder="" :options="types"
+                                v-model="dataObject.inv_store" label="name">
                             </v-select>
                         </ValidationProviderWrapper>
                     </div>
+
                     <div class="col-md-12 mb-2">
                         <ValidationProviderWrapper name="Description" :rules="['']">
                             <textarea rows="2" col="10" v-model="dataObject.description" type="text" class="form-control"></textarea>
-                        </ValidationProviderWrapper>
-                    </div>
-                    <div class="col-md-12 mb-2">
-                        <ValidationProviderWrapper name="Is pharmacy" :rules="['']">
-                            <b-form-checkbox v-model="dataObject.is_pharmacy" size="lg" switch>
-                            </b-form-checkbox>
                         </ValidationProviderWrapper>
                     </div>
                 </div>
@@ -49,24 +45,17 @@ export default {
     data() {
         return {
             dataObject: {
-                type: null,
+                inv_store: null,
                 name: "",
                 description: "",
-                is_pharmacy: false
             },
             title: '',
-            types: [
-                'CONSUMPTION',
-                'CUSTOMER',
-                'INVENTORY LOSS',
-                'STORE',
-                'SUPPLIER'
-            ],
+            types: []
         }
     },
     async created() {
-        const { results } = await this.$api.inventory.getParents({ size: 1000 })
-        // this.types = results
+        const { results } = await this.$api.inventory.getStores({ size: 1500, is_pharmacy: true })
+        this.types = results
     },
     watch: {
         editData: {
@@ -75,8 +64,7 @@ export default {
                     this.dataObject.id = newVal.id
                     this.dataObject.name = newVal.name
                     this.dataObject.description = newVal.description
-                    this.dataObject.is_pharmacy = newVal.is_pharmacy
-                    this.dataObject.type = newVal.type
+                    this.dataObject.inv_store = newVal.inv_store
                 }
             },
             immediate: true,
@@ -121,10 +109,9 @@ export default {
 
         clear() {
             this.dataObject = {
-                type: null,
+                inv_store: null,
                 name: "",
                 description: "",
-                is_pharmacy: false
             }
         },
     },
