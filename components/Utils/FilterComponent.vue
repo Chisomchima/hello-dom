@@ -24,14 +24,13 @@
                 v-for="(item, index) in dropDownOptions"
                 :key="index"
               >
-              
-                <div class="text-capitalize" @click="$emit('dropdown', item);">{{
-                  item
-                }}</div>
+                <div class="text-capitalize" @click="$emit('dropdown', item)">
+                  {{ item }}
+                </div>
               </b-dropdown-item>
             </b-dropdown>
           </div>
-         
+
           <slot name="beforeActions"></slot>
           <div
             class="
@@ -92,20 +91,53 @@
             mb-1 mb-md-0
           "
         >
-          <div v-if="!disableSearch" class="search-input mx-2">
+          <div
+            v-if="!disableSearch"
+            class="
+              search-input
+              m-3
+              d-flex
+              align-items-center
+              justify-content-end
+            "
+            style="width: 400px"
+          >
             <span
               class="iconify icon"
               data-inline="false"
               data-icon="carbon:search"
             ></span>
+            <v-select
+              v-if="hasCategory"
+              v-model="category"
+              class="w-75 mr-3 text-grey text-14 p-auto"
+              :options="categories"
+              :placeholder="
+                searchPlaceholder ? searchPlaceholder : 'Search by category'
+              "
+              multiple
+              taggable
+              label="search by category"
+              :reduce="(option) => option"
+            >
+            </v-select>
             <input
               type="text"
-              class="form-control w-100"
+              class="form-control w-50"
               :placeholder="
                 searchPlaceholder ? searchPlaceholder : ' Search by Name'
               "
               @input="searchDebounced($event.target.value)"
             />
+
+            <!-- <input
+                type="text"
+                class="form-control ml-3 w-100"
+                :placeholder="
+                  searchPlaceholder ? searchPlaceholder : ' Search by category'
+                "
+                @input="categorySearch($event.target.value)"
+              /> -->
           </div>
           <div>
             <slot name="besideFilterButton"></slot>
@@ -188,6 +220,14 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    hasCategory: {
+      type: Boolean,
+      default: false,
+    },
+    items: {
+      type: Array,
+      default: () => [],
+    },
     options: {
       type: Array,
       default: () => [25, 50, 100, 500],
@@ -230,8 +270,23 @@ export default Vue.extend({
     const visualization: visualize = this.visual
     return {
       visualization,
+      category: [],
+      categories: [],
     }
   },
+  watch: {
+      items(newVal){
+        const categories = newVal.map((el) => {
+          return el.category.name
+        })
+        this.categories = [...new Set(categories)]
+      },
+      category(newVal){
+        this.$emit('cat-search-input', newVal);
+        console.log(newVal, 'newval')
+      }
+  },
+ 
   methods: {
     searchDebounced: debounce(function (this: any, search: string) {
       this.$emit('search-input', search)
@@ -259,8 +314,7 @@ export default Vue.extend({
 
 <style>
 @media (max-width: 767px) {
-  .filter-wrapper {
-    width: 100% !important;
+  .form-control {
   }
 }
 </style>

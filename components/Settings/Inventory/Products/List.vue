@@ -1,14 +1,15 @@
 <template>
   <div>
     <UtilsFilterComponent
-      @search-input="searchMe($event)"
+      :hasCategory=true
       disable-visualization
       disable-pagination
+      @search-input="searchMe($event)"
+      @cat-search-input = "$event => searchCat($event)"
+      :items = 'items'
     >
       <template #besideFilterButton>
-        <BaseButton
-          class="btn-outline-primary"
-          @click="openModal"
+        <BaseButton class="btn-outline-primary" @click="openModal"
           >Add Product</BaseButton
         >
       </template>
@@ -31,6 +32,7 @@
       @refresh="pageChange(1)"
       :modalTitle="modalTitle"
     />
+    
   </div>
 </template>
 
@@ -48,13 +50,14 @@ export default {
       filters: {
         name: '',
         size: 10,
+        category: [],
       },
       modalTitle: 'Add Product',
       fields: [
-        {
-          key: 'created_at',
-          label: 'Date created'
-        },
+        // {
+        //   key: 'created_at',
+        //   label: 'Date created'
+        // },
         {
           key: 'code',
         },
@@ -63,10 +66,10 @@ export default {
         },
         {
           key: 'category.name',
-          label: 'Category'
+          label: 'Category',
         },
         {
-          key: 'uom',
+          key: 'UoM',
         },
         {
           key: 'actions',
@@ -81,9 +84,17 @@ export default {
   methods: {
     searchMe(e) {
       this.filters.name = e
-      this.pageChange(1, this.filters)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {category, ...others} = this.filters
+      this.pageChange(1, others)
     },
-    async pageChange(page = 1, e = { name: '', size: 10 }) {
+    searchCat(e) {
+      this.filters.category = e
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {name, ...others} = this.filters
+      this.pageChange(1, others)
+    },
+    async pageChange(page = 1, e = { name: '', category: [],size: 10 }) {
       try {
         this.busy = true
         const data = await this.$api.inventory.getProducts({ page, ...e })
@@ -96,9 +107,9 @@ export default {
         this.busy = false
       }
     },
-    openModal(){
-        this.modalTitle = 'Add Product'
-        this.$bvModal.show('addProduct')
+    openModal() {
+      this.modalTitle = 'Add Product'
+      this.$bvModal.show('addProduct')
     },
     edit(e) {
       this.editObj = e
@@ -109,7 +120,7 @@ export default {
       const result = await this.showConfirmMessageBox('Delete Product ?')
       try {
         if (result) {
-          let response = await this.$api.inventory.deleteProduct(item.id)
+          await this.$api.inventory.deleteProduct(item.id)
           this.$toast({
             type: 'success',
             text: `Deleted`,
@@ -124,5 +135,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

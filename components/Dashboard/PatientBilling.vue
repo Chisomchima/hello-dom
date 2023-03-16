@@ -585,6 +585,7 @@ export default {
         const patient = await this.$api.patient.getPatient(
           this.$route.params.uuid
         )
+        
         let billID = []
         const unClearedList = this.unClearedBill.filter(
           (item) =>
@@ -599,6 +600,7 @@ export default {
           patient: this.data.id,
           payments: info,
         })
+        console.log(response, 'patient payment')
         this.template = response
         this.$toast({
           type: 'success',

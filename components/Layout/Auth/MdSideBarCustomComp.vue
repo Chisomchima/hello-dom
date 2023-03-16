@@ -24,12 +24,12 @@ export default {
   },
   computed: {
     menu() {
-      let menus = this.$store.state.auth.user.menus
+      const menus = this.$store.state.auth?.user?.menus
       return menus
     },
   },
   mounted() {
-    if (this.menu[0].title !== 'Dashboard') {
+    if (this.menu !== 'undefined' && this.menu[0]?.title !== 'Dashboard') {
       this.$store.dispatch('auth/setupDashboard')
     }
   },

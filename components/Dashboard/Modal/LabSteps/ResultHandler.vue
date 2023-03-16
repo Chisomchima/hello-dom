@@ -12,6 +12,7 @@
       </div>
 
       <UtilsCollapse :title="'Comments'" :comments="audit_log" />
+     
       <ValidationObserver ref="form">
         <form>
           <div>
@@ -48,7 +49,7 @@
               <template #reference_range="{ data }">
                 <div class="p-2" v-for="(ref, index) in data.item.reference_range" :key="index">
                   <!-- {{ref.name}} -->
-                  <input type="text" :disabled="enabled" placeholder="Value" v-model="ref.name"
+                  <input type="text" placeholder="Value" v-model="ref.name"
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
               </template>
@@ -109,6 +110,7 @@ export default {
     },
     manageInput: '',
   },
+  
   methods: {
     async savePanelOrder() {
       this.commitPanel.obv = this.labOrderPanel.panel.obv
@@ -116,7 +118,7 @@ export default {
         try {
           this.confirmId = this.labOrderPanel.id
           this.isbusy = true
-          let response = await this.$axios.$put(
+          await this.$axios.$put(
             `laboratory/lab_panel_order/${this.labOrderPanel.id}/panel/`,
             this.commitPanel
           )

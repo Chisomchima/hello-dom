@@ -25,10 +25,16 @@
 export default {
     data() {
         return {
+            prevComment: '',
             comments: '',
             placeholder: 'Type a comment...'
         }
     },
+    // watch: {
+    //     audit_log(newVal){
+    //         console.log(newVal, 'newaudit')
+    //     }
+    // },
     props: {
         status: '',
         id: '',
