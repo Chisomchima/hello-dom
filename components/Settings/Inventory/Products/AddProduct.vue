@@ -16,16 +16,16 @@
               </ValidationProviderWrapper>
             </div>
           </div>
-          <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Description" :rules="['']">
-              <textarea rows="2" col="10" v-model="dataObject.description" type="text" class="form-control"></textarea>
-            </ValidationProviderWrapper>
-          </div>
           <div v-if="dataObject.is_drug" class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Generic drug" :rules="['']">
               <v-select class="style-chooser text-grey text-14" placeholder="" :options="generic_drug"
                 v-model="dataObject.generic_drug" :reduce="(opt) => opt.id" label="name">
               </v-select>
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Description" :rules="['']">
+              <textarea rows="2" col="10" v-model="dataObject.description" type="text" class="form-control"></textarea>
             </ValidationProviderWrapper>
           </div>
           <div v-if="dataObject.is_drug" class="col-md-12 mb-2">
@@ -39,7 +39,7 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Parent" :rules="['required']">
+            <ValidationProviderWrapper name="Product Category" :rules="['required']">
               <v-select class="style-chooser text-grey text-14" placeholder="" :options="parents"
                 v-model="dataObject.category" :reduce="(opt) => opt.id" label="name">
               </v-select>
@@ -51,12 +51,10 @@
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Bill price" :rules="['']">
+            <ValidationProviderWrapper name="Selling price" :rules="['']">
               <input v-model="dataObject.bill_price" type="text" class="form-control" />
             </ValidationProviderWrapper>
           </div>
-
-
         </div>
       </form>
     </ValidationObserver>
@@ -95,16 +93,6 @@ export default {
       generic_drug: []
     }
   },
-  async created() {
-    this.$api.pharmacy
-      .getGeneric({ size: 2000 })
-      .then((res) => {
-        this.generic_drug = res.results
-      })
-
-    const { results } = await this.$api.inventory.getParents({ size: 1000 })
-    this.parents = results
-  },
   watch: {
     editData: {
       handler(newVal) {
@@ -128,6 +116,16 @@ export default {
       this.title = this.modalTitle
     },
   },
+  async created() {
+    this.$api.pharmacy
+      .getGeneric({ size: 2000 })
+      .then((res) => {
+        this.generic_drug = res.results
+      })
+
+    const { results } = await this.$api.inventory.getParents({ size: 1000 })
+    this.parents = results
+  },
 
   methods: {
     async ok() {
@@ -141,7 +139,7 @@ export default {
     },
     async save() {
       try {
-        const data = await this.$api.inventory.createProduct(this.dataObject)
+        await this.$api.inventory.createProduct(this.dataObject)
         this.$emit('refresh')
         this.$bvModal.hide('addProduct')
       } catch (error) {
@@ -150,7 +148,7 @@ export default {
     },
     async edit() {
       try {
-        const data = await this.$api.inventory.editProduct(
+        await this.$api.inventory.editProduct(
           this.dataObject,
           this.dataObject.id
         )

@@ -41,6 +41,7 @@
             @page-changed="filter($event, currentFilter)"
           >
             <template #status="{ data }">
+              <!-- <pre>{{ data }}</pre> -->
               <div>
                 <div style="width: 9rem">
                   <span>
@@ -243,7 +244,14 @@
         @refresh="filter()"
       />
     </div>
-
+      <div>
+        <DashboardModalLabStepsSpecimenHandler
+        :id="id"
+        status="status"
+        :audit_log="audit_log"
+        @refresh="filter()"
+        />
+      </div>
     <div>
       <DashboardModalLabStepsCancel
         :lab-order-panel="labOrderPanel"
@@ -251,6 +259,7 @@
         @refresh="filter()"
       />
     </div>
+
     <div>
       <DashboardModalLabStepsComments
         :lab-order-panel="labOrderPanel"
@@ -356,7 +365,7 @@ export default {
     async mailReport(e) {
       try {
         this.downloading = true
-        const response = await this.$axios.$get(
+        await this.$axios.$get(
           `laboratory/lab_panel_order/${e.id}/reports/mail/`
         )
         this.$toast({
@@ -390,14 +399,16 @@ export default {
       }
     },
     openSpecimenTaken(e) {
+      console.log(e.log, 'event')
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Take Specimen'
       this.status = 'recieve specimen'
       this.id = e.id
-      this.audit_log = e.audit_log
+      this.audit_log = e
     },
     openFillResult(e) {
-      this.audit_log = e.audit_log
+      this.audit_log = e
+      console.log(this.audit_log, e.log, 'event')
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Recieve Specimen'
       this.status = 'fill result'
@@ -420,6 +431,7 @@ export default {
       }
     },
     openEditPanel(e) {
+      // console.log(e, 'event')
       this.$bvModal.show('fillresult')
 
       for (const iterator of e.panel.obv) {
@@ -447,7 +459,7 @@ export default {
       this.labOrderPanel.asn = e.asn
       this.labOrderPanel.id = e.id
       this.labOrderPanel.status = e.status
-      this.audit_log = e.audit_log
+      this.audit_log = e
     },
     setStatusToApproved(e) {
       this.labOrderPanel = e
@@ -472,7 +484,7 @@ export default {
     },
     async setStatusToAwaitingApproval() {
       try {
-        const response = await this.$axios.$patch(
+        await this.$axios.$patch(
           `laboratory/lab_panel_order/${this.id}/`,
           { status: 'awaiting approval' }
         )

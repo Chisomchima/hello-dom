@@ -2276,8 +2276,9 @@
           </p>
           <p style="margin: 0">Date: {{ transactionDate }}</p>
         </div>
+
         <p :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="margin: 0rem 0; font-size: 14px">
-          Invoice No: {{ reciept.invoice }}
+          Invoice No: {{ reciept.payment_code }}
           <br />
           Patient name:
           {{ data.firstname + ' ' + data.middlename + ' ' + data.lastname }}

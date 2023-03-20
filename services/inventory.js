@@ -56,7 +56,7 @@ export default axios => ({
         return axios.$post(`/inventory/products/`, body)
     },
     editProduct(body, id){
-        return axios.$patch(`/inventory/products/${id}`, body)
+        return axios.$patch(`/inventory/products/${id}/`, body)
     },
     deleteProduct(id){
         return axios.$delete(`/inventory/products/${id}/`)

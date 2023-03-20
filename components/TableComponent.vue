@@ -184,9 +184,9 @@
        <template #cell()="data">
         <span> {{ data.value }}</span>
       </template>
-
+      
       <template #cell(uom)="data">
-        <span name="uom"> {{ data.value }}</span>
+        <span name="uom"> {{ data.item.uom }}</span>
       </template>
       <template #cell(value.option)="data">
         <slot name="option" :data="data"></slot>
@@ -624,7 +624,7 @@ export default {
   },
   computed: {
     sortable_cols() {
-      console.log(this.fields)
+      // console.log(this.fields)
       return this.fields.map((f) => {
         const disabledOpacity = ['dots', 'status', 'actions', 'dots', 'dot']
         const notSortColumn = ['actions', 'download', 'liveClass', 'dots']

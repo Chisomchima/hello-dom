@@ -6,25 +6,25 @@
                     <p class="mb-0 text-14">{{ title }}</p>
                 </template>
                 <div v-if="Object.keys(comments).length > 0">
-                    <div v-if="comments.specimen_taken_at" class="shadow-sm rounded p-2 my-2">
+                    <div v-if="comments.log.specimen_taken_at" class="shadow-sm rounded p-2 my-2">
                         <p style="white-space: pre-line;" class="mb-2 text-14"><span class="text-grey">Collected specimen: </span>{{ comments.specimen_taken_comments }}</p>
                         <div class="d-flex justify-content-between">
-                            <small>{{ comments.specimen_taken_by }}</small>
-                            <small>{{ dateConv(comments.specimen_taken_at) }}</small>
+                            <small>{{ comments.log.specimen_taken_comments }}</small>
+                            <small>{{ dateConv(comments.log.specimen_taken_at) }}</small>
                         </div>
                     </div>
-                    <div v-if="comments.specimen_recieved_at" class="shadow-sm rounded p-2 my-2">
+                    <div v-if="comments.log.specimen_recieved_at" class="shadow-sm rounded p-2 my-2">
                         <p class="mb-2 text-14"><span class="text-grey">Recieved specimen: </span>{{ comments.specimen_recieved_comments }}</p>
                         <div class="d-flex justify-content-between">
-                            <small>{{ comments.specimen_recieved_by }}</small>
-                            <small>{{ dateConv(comments.specimen_recieved_at) }}</small>
+                            <small>{{ comments.log.specimen_recieved_comments }}</small>
+                            <small>{{ dateConv(comments.log.specimen_recieved_at) }}</small>
                         </div>
                     </div>
-                    <div v-if="comments.result_submitted_at" class="shadow-sm rounded p-2 my-2">
-                        <p class="mb-2 text-14"><span class="text-grey">Result submitted: </span>{{ comments.result_submitted_comments }}</p>
+                    <div v-if="comments.log.result_submitted_at" class="shadow-sm rounded p-2 my-2">
+                        <p class="mb-2 text-14"><span class="text-grey">Result submitted: </span>{{ comments.log.result_submitted_comments }}</p>
                         <div class="d-flex justify-content-between">
-                            <small>{{ comments.result_submitted_by }}</small>
-                            <small>{{ dateConv(comments.result_submitted_at) }}</small>
+                            <small>{{ comments.log.result_submitted_by }}</small>
+                            <small>{{ dateConv(comments.log.result_submitted_at) }}</small>
                         </div>
                     </div>
                 </div>
