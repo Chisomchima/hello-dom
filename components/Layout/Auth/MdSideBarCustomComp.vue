@@ -29,6 +29,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.menu, 'menu')
     if (this.menu !== 'undefined' && this.menu[0]?.title !== 'Dashboard') {
       this.$store.dispatch('auth/setupDashboard')
     }

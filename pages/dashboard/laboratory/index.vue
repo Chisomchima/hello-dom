@@ -5,7 +5,7 @@
       <div>
         <BaseButton
           class="btn-primary"
-          @click="$bvModal.show('labOrderPanel')"
+          @click="$bvModal.show('')"
           >New Lab Order
         </BaseButton>
       </div>

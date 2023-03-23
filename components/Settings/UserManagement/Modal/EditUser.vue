@@ -133,15 +133,15 @@ export default {
       choice: [],
       title: '',
       groups: [],
-      menuList: [],
      access: [
         {
+          id: 0,
           href: '/dashboard/patient',
           title: 'Patient Records',
           icon: 'fas fa-hospital-user',
         },
-
         {
+          id: 1,
           href: '/dashboard/opd',
           title: 'OPD',
           icon: 'fas fa-user-md',
@@ -153,8 +153,14 @@ export default {
             },
           ],
         },
-
         {
+          id: 2,
+          href: '/dashboard/pharmacy',
+          title: 'Pharmacy',
+          icon: 'fas fa-pills',
+        },
+        {
+          id: 3,
           href: '/dashboard/laboratory',
           title: 'Laboratory',
           icon: 'fas fa-vial',
@@ -167,6 +173,7 @@ export default {
           ],
         },
         {
+          id: 4,
           href: '/dashboard/imaging',
           title: 'Imaging',
           icon: 'fas fa-x-ray',
@@ -179,31 +186,13 @@ export default {
           ],
         },
         {
+          id: 5,
           href: '/dashboard/nursing-orders',
           title: 'Nursing station',
           icon: 'fas fa-user-nurse',
         },
         {
-          href: '/dashboard/pharmacy',
-          title: 'Pharmacy',
-          icon: 'fas fa-pills',
-        },
-        {
-          href: '/dashboard/cso',
-          title: 'Customer Service Officer',
-          icon: 'fas fa-list-ol',
-        },
-        {
-          href: '/dashboard/finance',
-          title: 'Finance',
-          icon: 'fas fa-money-check-alt',
-        },
-        {
-          href: '/dashboard/inventory',
-          title: 'Inventory',
-          icon: 'fas fa-warehouse',
-        },
-        {
+          id: 6,
           href: '/dashboard/reports',
           title: 'Reports',
           icon: 'fas fa-file',
@@ -236,6 +225,62 @@ export default {
           ],
         },
         {
+          id: 7,
+          href: '/dashboard/cso',
+          title: 'Customer Service Officer',
+          icon: 'fas fa-list-ol',
+        },
+        {
+          id: 8,
+          href: '/dashboard/finance',
+          title: 'Finance',
+          icon: 'fas fa-money-check-alt',
+        },
+        {
+          id: 9,
+          href: '/dashboard/inventory',
+          title: 'Inventory',
+          icon: 'fas fa-warehouse',
+          child: [
+            {
+              href: '/dashboard/inventory/purchases',
+              title: 'Purchases',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/receipt',
+              title: 'Receipts',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/sales',
+              title: 'Sales',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/transfers',
+              title: 'Transfers',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/inventory-adjustment',
+              title: 'Inventory Adjustments',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/vendors',
+              title: 'Vendors',
+              icon: 'fas fa-list-ul',
+            },
+            {
+              href: '/dashboard/inventory/vendors/products',
+              title: 'Products',
+              icon: 'fas fa-list-ul',
+            },
+          ],
+        },
+        {
+          id: 10,
           title: 'Configurations',
           href: '/dashboard/configurations',
           icon: 'fas fa-cog',
@@ -304,6 +349,7 @@ export default {
   watch: {
     editData: {
       handler(newVal) {
+        console.log(newVal, 'editData')
         if (Object.keys(newVal).length > 0) {
           this.dataObject.groups[1] = newVal.groups
           this.dataObject.id = newVal.id
@@ -313,7 +359,7 @@ export default {
           this.dataObject.email = newVal.email
           this.dataObject.menus = newVal.menus
 
-          let diff = this.checkDiffference(
+          const diff = this.checkDiffference(
             this.dataObject.groups[0],
             newVal.groups
           )
@@ -329,7 +375,7 @@ export default {
     },
   },
   async created() {
-    this.callForData()
+    await this.callForData()
   },
   methods: {
     async ok() {
@@ -338,31 +384,33 @@ export default {
       }
     },
     checkDiffference(yardstick, y) {
-      let diff = differenceBy(yardstick, y, 'name')
+      const diff = differenceBy(yardstick, y, 'name')
       return diff
     },
     async callForData() {
       try {
-        let groups = await this.$api.users.getGroups({ size: 1000 })
+        const groups = await this.$api.users.getGroups({ size: 1000 })
         console.log(groups.results)
         this.dataObject.groups[0] = groups.results
       } catch {}
     },
     async edit() {
+      const sortedArray = this.dataObject.menus.sort((a, b) => a.id - b.id)
       try {
-        let groups = this.dataObject.groups[1]
+        const groups = this.dataObject.groups[1]
         let groupsID = []
         if (groups.length > 0) {
           groupsID = groups.map((el) => el.id)
-        }
-        const data = await this.$api.users.updateUser(this.dataObject.id, {
+        } 
+        await this.$api.users.updateUser(this.dataObject.id, {
           first_name: this.dataObject.first_name,
           last_name: this.dataObject.last_name,
           username: this.dataObject.username,
           email: this.dataObject.email,
           groups: groupsID,
-          menus: this.dataObject.menus,
+          menus: sortedArray,
         })
+        
         this.$emit('refresh')
         this.$bvModal.hide('editUser')
       } catch (error) {

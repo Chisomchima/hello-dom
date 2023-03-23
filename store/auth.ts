@@ -26,6 +26,7 @@ export const mutations: MutationTree<RootState> = {
     },
     SET_DASHBOARD: (state) => {
         state.user?.menus.unshift({
+            id:0,
             href: '/dashboard',
             title: 'Dashboard',
             icon: 'fa fa-tv',
