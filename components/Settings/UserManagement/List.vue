@@ -251,7 +251,7 @@ export default {
       const result = await this.showConfirmMessageBox('Activate user ?')
       try {
         if (result) {
-          let response = await this.$api.users.activateUser(user.id)
+          await this.$api.users.activateUser(user.id)
           this.$toast({
             type: 'success',
             text: `User activated`,
@@ -273,8 +273,7 @@ export default {
       this.$bvModal.show('editUser')
     },
     toLowerCaseFunc(e) {
-        
-         let x = e = e.toLowerCase()
+         const x = e = e.toLowerCase()
         console.log(x)
         return x
     },

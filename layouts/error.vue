@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center bg-white p-5">
+  <div class=" container-fluid d-flex justify-content-center align-items-center bg-white w-100">
     <div class="mt-5">
       <div class="relativecontainer">
         <!-- <img src="~assets/img/networkerror.svg" alt="" class="img-fluid" /> -->
         <div v-if="error.statusCode === 404" class="text-center">
-          <img src="/error404.png" alt="" class="img-fluid w-75" />
+          <img src="~/assets/img/not-found.gif" alt="" class="img-fluid w-75" />
         </div>
         <div v-else class="text-center">
           <img src="/networkerror.svg" alt="" class="img-fluid w-75" />
@@ -43,6 +43,10 @@ export default {
 </script>
 
 <style scoped>
+
+.container-fluid {
+ height: 100vh;
+}
 .relativecontainer {
   position: relative;
   width: 100%;

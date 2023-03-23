@@ -6,8 +6,16 @@
       >
         <div class="class-name mr-1 text-capitalize">{{ title }}</div>
         <slot name="actions">
-          <div v-if="nursingActions" class="col-md-4 d-flex justify-content-end px-0">
-            <button @click.prevent="$emit('closeOrder')" class="btn btn-outline-danger">Close</button>
+          <div
+            v-if="nursingActions"
+            class="col-md-4 d-flex justify-content-end px-0"
+          >
+            <button
+              @click.prevent="$emit('closeOrder')"
+              class="btn btn-outline-danger"
+            >
+              Close
+            </button>
           </div>
           <div v-if="enableAction" class="actions-dropdown">
             <div class="dropdown">
@@ -25,13 +33,25 @@
                 class="dropdown-menu dropdown-menu-right"
                 aria-labelledby="dropdownMenuButton"
               >
-              <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('make_deposit')"
+                <a
+                  v-if="patientContext"
+                  class="dropdown-item"
+                  href="#"
+                  @click.prevent="$emit('make_deposit')"
                   >Make deposit</a
                 >
-                <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('edit')"
+                <a
+                  v-if="patientContext"
+                  class="dropdown-item"
+                  href="#"
+                  @click.prevent="$emit('edit')"
                   >Edit</a
                 >
-                <a v-if="patientContext" class="dropdown-item" href="#" @click.prevent="$emit('picture')"
+                <a
+                  v-if="patientContext"
+                  class="dropdown-item"
+                  href="#"
+                  @click.prevent="$emit('picture')"
                   >Upload picture</a
                 >
                 <a
@@ -42,7 +62,8 @@
                   @click.prevent="$emit(action)"
                   >{{ action.split('_').join(' ') }}</a
                 >
-                <a v-if="patientContext"
+                <a
+                  v-if="patientContext"
                   class="dropdown-item text-danger"
                   href="#"
                   @click.prevent="$emit('delete')"
@@ -73,31 +94,47 @@
                     class="class-details-data_value"
                     ><slot :name="name" :value="value">{{ value }}</slot>
                   </span>
-                  
+
                   <template v-else>
                     <span
-                     v-for="(val, index) in value"
+                      v-for="(val, index) in value"
                       :key="index"
                       class="class-details-data_value text-truncate"
                       ><slot :name="name" :value="val">{{ value }}</slot>
                     </span>
                   </template>
                 </div>
-               
-               
 
-               <div  class="col-sm-6 col-md-4 col-lg-6" v-if="data.payment_scheme != null && data.payment_scheme.length > 0 && showScheme">
-                <span class="class-details-data_label"> Payment scheme(s): {{data.payment_scheme ? data.payment_scheme[0].payer_scheme.name : ''}}</span>
-                  <span v-if="data.payment_scheme.length > 0" class="class-details-data_value text-truncate">
-                    <span @click="check" class="badge-info p-1 text-12 rounded point ml-2">more</span>
+                <div
+                  v-if="
+                    data.payment_scheme != null &&
+                    data.payment_scheme.length > 0 &&
+                    showScheme
+                  "
+                  class="col-sm-6 col-md-4 col-lg-6"
+                >
+                  <span class="class-details-data_label">
+                    Payment scheme(s):
+                    {{
+                      data.payment_scheme
+                        ? data.payment_scheme[0].payer_scheme.name
+                        : ''
+                    }}</span
+                  >
+                  <span
+                    v-if="data.payment_scheme.length > 0"
+                    class="class-details-data_value text-truncate"
+                  >
+                    <span
+                      @click="check"
+                      class="badge-info p-1 text-12 rounded point ml-2"
+                      >more</span
+                    >
                   </span>
                 </div>
-                
               </div>
-              
-             
             </div>
-            <div class="col-md-2">
+            <div v-if="isAvatar" class="col-md-2">
               <b-avatar
                 size="8rem"
                 :src="picture"
@@ -120,6 +157,10 @@ export default Vue.extend({
       type: String,
       default: 'col-xl-4',
       // add the col-xl-4 to your prop and then any extra css
+    },
+    isAvatar: {
+      type: Boolean,
+      default: true,
     },
     title: {
       type: String,
@@ -163,13 +204,12 @@ export default Vue.extend({
       return pick(this.data, this.displayKey)
     },
     picture(): String {
-      if(this.data.profile_picture){
+      if (this.data.profile_picture) {
         return this.data.profile_picture
-      }
-      else{
+      } else {
         return ''
       }
-    }
+    },
   },
   methods: {
     edit() {
@@ -178,9 +218,9 @@ export default Vue.extend({
     deleteIt() {
       this.$emit('delete')
     },
-    check(){
+    check() {
       this.$emit('payers')
-    }
+    },
   },
 })
 </script>

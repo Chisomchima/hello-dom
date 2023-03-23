@@ -63,7 +63,7 @@ export default {
      if(this.username !== '' && this.password !== ''){
       this.loading = true
        try {
-        let response = await this.$store.dispatch("auth/login", {
+        const response = await this.$store.dispatch("auth/login", {
           username: this.username,
           password: this.password,
         });

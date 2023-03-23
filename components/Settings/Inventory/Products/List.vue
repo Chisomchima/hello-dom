@@ -1,12 +1,12 @@
 <template>
   <div>
     <UtilsFilterComponent
-      :hasCategory=true
+      :has-category=true
       disable-visualization
       disable-pagination
+      :items = 'items'
       @search-input="searchMe($event)"
       @cat-search-input = "$event => searchCat($event)"
-      :items = 'items'
     >
       <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="openModal"
@@ -18,7 +18,7 @@
           :fields="fields"
           :pages="pages"
           :items="items"
-          :modalTitle="modalTitle"
+          :modal-title="modalTitle"
           :busy="busy"
           @page-changed="pageChange($event, filters)"
           @edit="edit($event)"
@@ -29,8 +29,8 @@
     </UtilsFilterComponent>
     <SettingsInventoryProductsAddProduct
       :edit-data="editObj"
+      :modal-title="modalTitle"
       @refresh="pageChange(1)"
-      :modalTitle="modalTitle"
     />
     
   </div>
@@ -69,6 +69,10 @@ export default {
           label: 'Category',
         },
         {
+          key: 'Quantity On Hand',
+          label: 'quantity_on_hand',
+        },
+        {
           key: 'UoM',
         },
         {
@@ -76,6 +80,16 @@ export default {
           label: '',
         },
       ],
+      items: [
+        {
+          code: 'NHIS-36-00-27',
+          name: 'Panadol',
+          category: 'Cytotoxics And Adjuvants',
+          quantity_on_hand: 2,
+          uom: 'ml',
+        },
+       
+      ]
     }
   },
   async mounted() {

@@ -87,6 +87,7 @@ export default {
     }
   },
   mounted() {
+    // console.log(this.data, 'data')
     function check(array) {
       return array.reduce(
         (r, a, i, { [i - 1]: b }) =>
