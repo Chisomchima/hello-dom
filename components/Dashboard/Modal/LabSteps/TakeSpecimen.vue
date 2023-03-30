@@ -1,12 +1,13 @@
 <template>
   <div>
     <ModalWrapper
-      size="md"
       id="takespecimen"
+      size="md"
       :title="modalTitle"
       @clearForm="clear()"
       @hide="clear()"
       @ok="setStatusToSpecimenRecieved()"
+      @close="clear()"
     >
       <ValidationObserver ref="form">
         <form>
@@ -33,21 +34,21 @@
 <script>
 // import { DateTime } from 'luxon'
 export default {
+  props: {
+    status: '',
+    id: '',
+    modalTitle: '',
+  },
   data() {
     return {
       comments: '',
       placeholder: 'Type a comment...',
     }
   },
-  props: {
-    status: '',
-    id: '',
-    modalTitle: '',
-  },
   methods: {
     async setStatusToSpecimenRecieved() {
       try {
-        let response = await this.$axios.$patch(
+        const response = await this.$axios.$patch(
           `laboratory/lab_panel_order/${this.id}/`,
           { status: this.status, comments: this.comments }
         )
@@ -61,6 +62,7 @@ export default {
     },
     clear() {
       this.comments = ''
+      this.$bvModal.hide('takespecimen')
     },
   },
 }

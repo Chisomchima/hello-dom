@@ -3,7 +3,7 @@
     <div class="text-20 d-flex justify-content-between align-items-center mb-3">
       <h4>Reciepts</h4>
       <div>
-        <BaseButton class="btn-primary" @click="$bvModal.show('id')"
+        <BaseButton class="btn-primary" @click="$router.push('/dashboard/inventory/receipt/add')"
           >Add Reciept
         </BaseButton>
       </div>
@@ -117,7 +117,7 @@
     </div>
 
     <div class="create_order">
-      <DashboardModalAddReceipt @refresh="filter()" />
+      <PagesDashboardInventoryReceiptAdd @refresh="filter()" />
     </div>
 
     <!-- ***********workflow********* -->
@@ -241,6 +241,13 @@ export default {
         
         this.$bvModal.show('modal')
     },
+    // async showItems(){
+    //   try {
+        
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
     save_file(e) {
       this.downloading = true
       fetch(

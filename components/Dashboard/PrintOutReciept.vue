@@ -4,9 +4,10 @@
       <h2 :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="margin: 0; text-align: center; font-size: 16px">
         {{ companyName }}
+        v-if='companyName'
       </h2>
       <!-- theme -->
-      <div :style="printLayout ? { width: '18rem' } : { width: '48rem' }" style="text-align: center; margin: 0.5rem 0">
+      <div :style="printLayout ? { width: '18rem' } : { width: '48rem' }" v-if="companyLogo" style="text-align: center; margin: 0.5rem 0">
         <!-- chem health -->
          <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -2384,6 +2385,7 @@ export default {
     },
   },
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
     transactionDate() {
       if (this.reciept.created_at) {
         return DateTime.fromISO(this.reciept.created_at).toFormat(
@@ -2396,6 +2398,12 @@ export default {
     },
     companyName() {
       return process.env.COMPANY_NAME
+    },
+    showCompanyName() {
+      return process.env.SHOW_RECEIPT_NAME
+    },
+    showCompanyLogo() {
+      return process.env.SHOW_RECEIPT_LOGO
     },
     logo() {
       return process.env.LOGO

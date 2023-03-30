@@ -6,6 +6,7 @@ export default axios => ({
             params
         });
     },
+    
     createProduct(body){
         return axios.$post(`/inventory/products/`, body)
     },
@@ -62,9 +63,27 @@ export default axios => ({
         return axios.$delete(`/inventory/products/${id}/`)
     },
 
+    //vendors
+    getVendors(params = {}){
+        return axios.$get(`/inventory/vendors/`, {
+            params
+        })
+    },
+
+
     //Store
     getStores(params = {}){
         return axios.$get(`/inventory/stores/`, {
+            params
+        })
+    },
+    getStoresVendor(params = {}){
+        return axios.$get(`/inventory/stores/?type=VENDOR`, {
+            params
+        })
+    },
+    getSourceVendor(params = {}){
+        return axios.$get(`/inventory/stores/?type=STORE`, {
             params
         })
     },
@@ -77,4 +96,8 @@ export default axios => ({
     deleteStore(id){
         return axios.$delete(`/inventory/stores/${id}/`)
     },
+    // stock movement
+    createMove (body){
+        return axios.$post(`/inventory/stock_movements/`, body)
+    }
 })
