@@ -219,7 +219,7 @@
       <DashboardModalLabStepsSpecimenHandler
         :id="id"
         :status="status"
-        :modal-title="modalTitle"
+        :modalTitle="modalTitle"
         :audit_log="audit_log"
         @refresh="filter()"
       />
@@ -228,6 +228,7 @@
     <div>
       <DashboardModalLabStepsResultHandler
         :id="id"
+        :modalTitle="modalTitle"
         :lab-order-panel="labOrderPanel"
         :manage-input="manageInput"
         :audit_log="audit_log"
@@ -244,7 +245,7 @@
         @refresh="filter()"
       />
     </div>
-      <div>
+      <div >
         <DashboardModalLabStepsSpecimenHandler
         :id="id"
         status="status"
@@ -383,7 +384,9 @@ export default {
       }
     },
     async filter(page, e) {
+      // this.$bvModal.hide("takespecimen");
       this.currentFilter = e
+     
       try {
         this.busy = true
         const data = await this.$api.laborder.getLabOrders({
@@ -400,19 +403,20 @@ export default {
     },
     openSpecimenTaken(e) {
       console.log(e.log, 'event')
-      this.$bvModal.show('takespecimen')
       this.modalTitle = 'Take Specimen'
       this.status = 'recieve specimen'
       this.id = e.id
       this.audit_log = e
+      this.$bvModal.show('takespecimen')
     },
     openFillResult(e) {
       this.audit_log = e
       console.log(this.audit_log, e.log, 'event')
-      this.$bvModal.show('takespecimen')
       this.modalTitle = 'Recieve Specimen'
       this.status = 'fill result'
       this.id = e.id
+      this.show = true
+      this.$bvModal.show('takespecimen')
 
       for (const iterator of e.panel.obv) {
         if (iterator.type.name === 'Options') {

@@ -28,8 +28,7 @@
       <b-pagination
         small
         v-model="page"
-        :items="products"
-        :total-rows="totalItems"
+        :total-rows="totalRows"
         :current-page="1"
         :per-page="20"
         @change="handlePageChange"
@@ -79,7 +78,7 @@ export default {
       isLoading: false,
       page: 1,
       count: 0,
-      totalItems: 0,
+      totalRows: 0,
       pageSize: 20,
     }
   },

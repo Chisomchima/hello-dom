@@ -320,7 +320,7 @@
       },
       openSpecimenTaken(e) {
         console.log(e.log, 'event')
-        this.$bvModal.show('takespecimen')
+        // this.$bvModal.show('takespecimen')
         this.modalTitle = 'Take Specimen'
         this.status = 'recieve specimen'
         this.id = e.id
@@ -329,7 +329,7 @@
       openFillResult(e) {
         this.audit_log = e
         console.log(this.audit_log, e.log, 'event')
-        this.$bvModal.show('takespecimen')
+        // this.$bvModal.show('takespecimen')
         this.modalTitle = 'Recieve Specimen'
         this.status = 'fill result'
         this.id = e.id
