@@ -7,18 +7,30 @@
     @show="getData()"
     @hide="$bvModal.hide('id')"
   >
+    <ValidationProviderWrapper name="Search" :rules="['']">
+      <!-- <VSelect
+                    v-model="product.product"
+                    :options="products"
+                    label="name"
+                    @option:selected="fetchGenericDrugs($event, index)"
+                  >
+                  </VSelect> -->
+      <input v-model="searchinput" type="text" name="" class="form-control" />
+    </ValidationProviderWrapper>
 
-    <div class="w-100 mt-3 bg-white px-3">
+    <div class="w-100 mt-3 bg-white px-3 shadow-sm p-2">
       <div v-for="(option, i) in products" :key="i" class="search-options">
-        <div class="option w-100" >
+        <div class="option w-100">
           {{ option.name }}
         </div>
       </div>
       <!-- <span class="view-more" @click="$bvModal.show('id')">view more</span> -->
       <b-pagination
-      size="sm"
+        small
         v-model="page"
+        :items="products"
         :total-rows="totalItems"
+        :current-page="1"
         :per-page="20"
         @change="handlePageChange"
       ></b-pagination>
@@ -27,12 +39,12 @@
       v-if="isLoading"
       class="d-flex align-items-center justify-content-center mt-3"
     >
-      <b-spinner
+    </div>
+    <b-spinner
         style="width: 3rem; height: 3rem"
         label="Large Spinner"
         variant="primary"
       ></b-spinner>
-    </div>
   </ModalWrapper>
 </template>
 
@@ -58,30 +70,30 @@ export default {
     },
     picked: {
       required: true,
-    }
+    },
   },
   data() {
     return {
+      searchinput:'',
       products: [],
       isLoading: false,
-      page:1,
-      count:0,
-      totalItems:0,
+      page: 1,
+      count: 0,
+      totalItems: 0,
       pageSize: 20,
     }
   },
-async mounted(){
-await this.getData()
-},
+  async mounted() {
+    await this.getData()
+  },
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
         this.save()
       }
     },
-    handlePageChange() {
-      this.page++
-      this.totalItems = this.pageSize * this.page
+    handlePageChange(value) {
+      this.page = value
     },
     // pickProd(param) {
     //   this.search = param
@@ -108,15 +120,13 @@ await this.getData()
     async getData() {
       this.isLoading = true
       try {
-        
         const { results } = await this.$api.inventory.getProducts({
           search: this.search,
-            size: this.pageSize,
-            page: this.page,
-
+          size: this.pageSize,
+          page: this.page,
         })
         this.totalItems = results.length
-        console.log(results,'results')
+        console.log(results, 'results')
         this.products = results
         this.isLoading = false
       } catch (err) {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-white p-5 shadow-sm ">
     <ValidationObserver ref="form">
       <form>
         <div class="col-md-12 mb-2">
@@ -191,7 +191,7 @@
             </div>
           </b-tab>
         </b-tabs>
-        <button class="btn btn-primary px-4 py-2" type="button" @click="create">
+        <button class="btn btn-primary px-4 py-2 mt-4" type="button" @click="create">
           Create
         </button>
       </form>
@@ -317,6 +317,7 @@ export default {
       try {
         const data = await this.$api.inventory.getVendors()
         this.vendors = data.results
+        console.log(this.vendors, 'vendors')
       } catch (err) {
         console.log(err)
       }

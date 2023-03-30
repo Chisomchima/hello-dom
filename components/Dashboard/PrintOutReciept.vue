@@ -2277,7 +2277,7 @@ c-31 27 -51 31 -61 15z" />
         <p style="margin: 0">Date: {{ transactionDate }}</p>
       </div>
       <p :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="margin: 0rem 0; font-size: 14px">
-        Invoice No: {{ reciept.invoice }}
+        Reciept No: {{ reciept.invoice }}
         <br />
         Patient name:
         {{ data.firstname + ' ' + data.middlename + ' ' + data.lastname }}
