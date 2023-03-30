@@ -119,7 +119,7 @@
                   v-if="makeVisible && !picked"
                   class="w-100 mt-3 bg-white px-3"
                 >
-                <div class="clear mb-2">X</div>
+                  <div class="clear mb-2">X</div>
                   <div
                     v-for="(option, i) in products"
                     :key="i"
@@ -127,15 +127,13 @@
                   >
                     <div
                       class="option w-100"
-                      @pick="pickNewProd(option.name, index)"
-                      @click="pickProd(option.name, index)"
+                      @pick="pickNewProd(option.name, option.id, index)"
+                      @click="pickProd(option.name, option.id, index)"
                     >
                       {{ option.name }}
                     </div>
                   </div>
-                  <span class="view-more" @click=" show()"
-                    >view more</span
-                  >
+                  <span class="view-more" @click="show()">view more</span>
                 </div>
               </div>
               <div class="col-md-6 mb-2">
@@ -201,7 +199,7 @@
 
     <div>
       <DashboardModalAddReceipt
-        :products="products"
+        :search="search"
         :makeVisible="makeVisible"
         :picked="picked"
       />
@@ -231,6 +229,7 @@ export default {
   data() {
     return {
       date: '',
+      searchId: '',
       search: [],
       refetch: false,
       placholder: [],
@@ -244,7 +243,7 @@ export default {
       receiptData: {
         source_location: '',
         destination_location: '',
-        vendor: '',
+        vendor: null,
         products: [],
         type: 'RECEIPTS',
         schedule_date: this.date,
@@ -293,9 +292,9 @@ export default {
     },
   },
   methods: {
-    show(){
-        this.$bvModal.show('id')
-        this.makeVisible =false
+    show() {
+      this.$bvModal.show('id')
+      this.makeVisible = false
     },
     addProduct() {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -309,10 +308,10 @@ export default {
     async create(e) {
       e.preventDefault()
       console.log(this.receiptData, 'reciept')
-         const {results } = await this.$api.inventory.createMove({
-            ...this.receiptData
-         })
-         console.log(results)
+      const { results } = await this.$api.inventory.createMove({
+        ...this.receiptData,
+      })
+      console.log(results)
     },
     async fetchVendors() {
       try {
@@ -322,10 +321,10 @@ export default {
         console.log(err)
       }
     },
-    pickProd(param, i) {
+    pickProd(param, id, i) {
       //   this.placholder.push(param)
       this.search[i] = param
-      this.receiptData.products[i].product = param
+      this.receiptData.products[i].product = id
       console.log(this.search[i], this.products, 'search')
       this.picked = true
       //   this.products = []
@@ -389,7 +388,7 @@ textarea.form-control {
   text-decoration: underline;
   cursor: pointer;
 }
-.clear{
-    color:rgb(235, 219, 219);
+.clear {
+  color: rgb(235, 219, 219);
 }
 </style>

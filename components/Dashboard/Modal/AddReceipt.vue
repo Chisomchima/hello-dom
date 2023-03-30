@@ -7,13 +7,21 @@
     @show="getData()"
     @hide="$bvModal.hide('id')"
   >
-    <div v-if="makeVisible && !picked" class="w-100 mt-3 bg-white px-3">
+
+    <div class="w-100 mt-3 bg-white px-3">
       <div v-for="(option, i) in products" :key="i" class="search-options">
-        <div class="option w-100" @click="$emit('pick')" >
+        <div class="option w-100" >
           {{ option.name }}
         </div>
       </div>
-      <span class="view-more" @click="$bvModal.show('id')">view more</span>
+      <!-- <span class="view-more" @click="$bvModal.show('id')">view more</span> -->
+      <b-pagination
+      size="sm"
+        v-model="page"
+        :total-rows="totalItems"
+        :per-page="20"
+        @change="handlePageChange"
+      ></b-pagination>
     </div>
     <div
       v-if="isLoading"
@@ -31,6 +39,9 @@
 <script>
 export default {
   props: {
+    search: {
+      required: true,
+    },
     isReciept: {
       type: Boolean,
       default: true,
@@ -53,14 +64,24 @@ export default {
     return {
       products: [],
       isLoading: false,
+      page:1,
+      count:0,
+      totalItems:0,
+      pageSize: 20,
     }
   },
-
+async mounted(){
+await this.getData()
+},
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
         this.save()
       }
+    },
+    handlePageChange() {
+      this.page++
+      this.totalItems = this.pageSize * this.page
     },
     // pickProd(param) {
     //   this.search = param
@@ -85,12 +106,19 @@ export default {
     },
 
     async getData() {
+      this.isLoading = true
       try {
-        this.isLoading = true
+        
         const { results } = await this.$api.inventory.getProducts({
-          size: 1000,
+          search: this.search,
+            size: this.pageSize,
+            page: this.page,
+
         })
+        this.totalItems = results.length
+        console.log(results,'results')
         this.products = results
+        this.isLoading = false
       } catch (err) {
         this.isLoading = false
         console.log(err)
