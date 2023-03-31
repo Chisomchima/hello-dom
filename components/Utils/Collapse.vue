@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="shadow-sm rounded p-2 my-3" v-else>
+                <div v-else class="shadow-sm rounded p-2 my-3">
                     <p class="mb-0 text-16 text-center">No comments recorded.</p>
                 </div>
             </AccordionTab>

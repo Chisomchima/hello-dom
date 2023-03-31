@@ -5,8 +5,10 @@
       :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
       id="text"
       class="ticket"
+     
     >
       <h2
+      v-if='companyName'
         :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
         style="
           margin: 0rem;
@@ -21,7 +23,7 @@
       <!-- theme -->
       <div
         :style="printLayout ? { width: '18rem' } : { width: '48rem' }"
-        style="text-align: center; margin: 0.5rem 0"
+        style="text-align: center; margin: 0.5rem 0" v-if="companyLogo" 
       >
       <!-- Chem Health -->
          <svg
@@ -4762,6 +4764,15 @@ export default {
     },
     companyName() {
       return process.env.COMPANY_NAME
+    },
+    showCompanyName() {
+      return process.env.SHOW_RECEIPT_NAME
+    },
+    showCompanyLogo() {
+      return process.env.SHOW_RECEIPT_LOGO
+    },
+    logo() {
+      return process.env.LOGO
     },
     tel() {
       return process.env.TEL

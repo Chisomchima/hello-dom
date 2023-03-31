@@ -400,7 +400,6 @@ export default {
       }
     },
     openSpecimenTaken(e) {
-      console.log(e.log, 'event')
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Take Specimen'
       this.status = 'recieve specimen'
@@ -409,7 +408,6 @@ export default {
     },
     openFillResult(e) {
       this.audit_log = e
-      console.log(this.audit_log, e.log, 'event')
       this.$bvModal.show('takespecimen')
       this.modalTitle = 'Recieve Specimen'
       this.status = 'fill result'
@@ -463,8 +461,10 @@ export default {
       this.audit_log = e
     },
     setStatusToApproved(e) {
+      console.log(e)
       this.labOrderPanel = e
       this.id = e.id
+      this.audit_log = e.log
       this.$bvModal.show('Edit-laborder')
       for (const iterator of e.panel.obv) {
         if (iterator.type.name === 'Options') {
@@ -481,7 +481,7 @@ export default {
           this.manageInput = 'text'
         }
       }
-      this.audit_log = e.audit_log
+     
     },
     async setStatusToAwaitingApproval() {
       try {

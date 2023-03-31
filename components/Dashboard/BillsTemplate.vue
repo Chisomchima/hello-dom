@@ -1,14 +1,13 @@
 <template>
     <div>
       <div :style="printLayout ? { width: '20rem' } : { width: '48rem' }" id="bills" class="ticket ">
-        <h2 :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
+        <h2  v-if='!companyName' :style="printLayout ? { width: '20rem' } : { width: '48rem' }"
           style="margin: 0; text-align: center; font-size: 16px">
           {{ companyName }}
         </h2>
         <!-- theme -->
-        <div :style="printLayout ? { width: '18rem' } : { width: '48rem' }" style="text-align: center; margin: 0.5rem 0">
+        <div :style="printLayout ? { width: '21rem' } : { width: '51rem' }" style="text-align: center; margin: 1rem 0" v-if="!companyLogo">
   
-          <!-- chem health -->
          <svg
             xmlns="http://www.w3.org/2000/svg"
             version="1.0"
@@ -2249,7 +2248,8 @@
           </svg> -->
         </div>
         <h3 :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="
-            margin: 0;
+            margin-top: 5;
+            margin-bottom: 5;
             padding: 0;
             text-align: center;
             font-size: 20px;
@@ -2257,7 +2257,7 @@
           ">
           Reciept
         </h3>
-        <b style="margin: 0">
+        <b style="margin: 10">
           <p :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="margin: 0rem">
             {{ address }}
             <br />
@@ -2278,12 +2278,12 @@
         </div>
 
         <p :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="margin: 0rem 0; font-size: 14px">
-          Invoice No: {{ reciept.payment_code }}
+          Receipt No: {{ reciept.payment_code }}
           <br />
           Patient name:
           {{ data.firstname + ' ' + data.middlename + ' ' + data.lastname }}
           <br />
-          UHID:<span>{{ data.uhid }}</span> 
+          UHID:<span>{{ data.uhid }}</span>
         </p>
 
         <h3 :style="printLayout ? { width: '20rem' } : { width: '48rem' }" style="font-size: 1.2rem; margin: 0.3rem">
@@ -2450,6 +2450,12 @@
       companyName() {
         return process.env.COMPANY_NAME
       },
+      showCompanyName() {
+      return process.env.SHOW_RECEIPT_NAME
+    },
+    showCompanyLogo() {
+      return process.env.SHOW_RECEIPT_LOGO
+    },
       logo() {
         return process.env.LOGO
       },

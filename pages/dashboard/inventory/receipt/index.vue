@@ -395,6 +395,7 @@ export default {
     setStatusToApproved(e) {
       this.labOrderPanel = e
       this.id = e.id
+      this.audit_log = e.audit_log
       this.$bvModal.show('Edit-laborder')
       for (const iterator of e.panel.obv) {
         if (iterator.type.name === 'Options') {
@@ -411,7 +412,7 @@ export default {
           this.manageInput = 'text'
         }
       }
-      this.audit_log = e.audit_log
+      
     },
     async setStatusToAwaitingApproval() {
       try {

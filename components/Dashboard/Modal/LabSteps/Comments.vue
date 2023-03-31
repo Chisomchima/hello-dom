@@ -1,7 +1,7 @@
 <template>
   <div>
-    <ModalWrapper size="md" id="comments" title="Investigation Details" :submitTitle="`Ok`" 
-      :arrangement="false" :cancelText="'Close'">
+    <ModalWrapper id="comments" size="md" title="Investigation Details" :submit-title="`Ok`" 
+      :arrangement="false" :cancel-text="'Close'">
       <UtilsCollapse :title="'Comments'" :comments="audit_log" />
     </ModalWrapper>
   </div>
@@ -10,11 +10,6 @@
 <script>
 import { DateTime } from 'luxon'
 export default {
-  data() {
-    return {
-      comments: '',
-    }
-  },
   props: {
     status: '',
     labOrderPanel: {
@@ -26,17 +21,22 @@ export default {
       default: () => ({})
     }
   },
+  data() {
+    return {
+      comments: '',
+    }
+  },
   computed: {
     recievedDate() {
-      if (this.labOrderPanel.audit_log.specimen_recieved_at) {
-        return DateTime.fromISO(this.labOrderPanel.audit_log.specimen_recieved_at).toFormat(
+      if (this.labOrderPanel.log.specimen_recieved_at) {
+        return DateTime.fromISO(this.labOrderPanel.log.specimen_recieved_at).toFormat(
           'yyyy-LL-dd T'
         )
       }
     },
     takenDate() {
-      if (this.labOrderPanel.audit_log.specimen_taken_at) {
-        return DateTime.fromISO(this.labOrderPanel.audit_log.specimen_taken_at).toFormat(
+      if (this.labOrderPanel.log.specimen_taken_at) {
+        return DateTime.fromISO(this.labOrderPanel.log.specimen_taken_at).toFormat(
           'yyyy-LL-dd T'
         )
       }

@@ -196,7 +196,7 @@ export default {
                     if (this.recipientEmail) {
                         this.currentData.email = this.recipientEmail
                     }
-                    const data = await this.$api.laboratory.saveLabOrder({
+                    await this.$api.laboratory.saveLabOrder({
                         service_center: this.serviceCenter,
                         lab_panels: this.lapPanel,
                         patient: this.currentData,
