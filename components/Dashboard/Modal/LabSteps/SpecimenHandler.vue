@@ -1,10 +1,9 @@
 <template>
-  <div>
+  <div v-if="modalTitle">
     <ModalWrapper
       id="takespecimen"
       :title="modalTitle"
       size="md"
-      :no-stacking="false"
       :stacking="false"
       @hide="$bvModal.hide('takespecimen')"
       @ok="setStatusToSpecimenRecieved()"
@@ -67,12 +66,12 @@ export default {
   methods: {
     async setStatusToSpecimenRecieved() {
       try {
-        const response = await this.$axios.$patch(
+        await this.$axios.$patch(
           `laboratory/lab_panel_order/${this.id}/`,
           { status: this.status, comments: this.comments }
         )
         this.$emit('refresh')
-        // this.$bvModal.hide("takespecimen");
+        this.$bvModal.hide("takespecimen");
       } catch {
         this.$toast({
           type: 'error',

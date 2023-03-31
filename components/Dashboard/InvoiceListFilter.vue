@@ -5,7 +5,7 @@
         <div class="mb-2">
           <label class="form-control-label">Destination Location</label>
           <VSelect
-            v-model="filters.clinic"
+            v-model="filters.destination"
             label="name"
             :options="clinics"
             :reduce="(opt) => opt.id"
@@ -36,6 +36,7 @@
                 style="margin: 0"
                 >{{ label }} ({{ newCount }})</span
               >
+              
               <span
                 v-else-if="label === 'Open'"
                 class="text-14 badge-info rounded text-center p-1 text-white"
@@ -55,6 +56,7 @@
                 {{ label }}
               </span>
             </template>
+            
             <template #selected-option="{ label }">
               <span
                 v-if="label === 'New'"
@@ -114,7 +116,7 @@
         <div class="mb-2">
           <label class="form-control-label">Destination Location</label>
           <VSelect
-            v-model="filters.clinic"
+            v-model="filters.destination"
             label="name"
             :options="clinics"
             :reduce="(opt) => opt.id"
@@ -127,7 +129,7 @@
         <div class="mb-2">
           <label class="form-control-label">Source Location</label>
           <VSelect
-            v-model="filters.clinic"
+            v-model="filters.source"
             label="name"
             :options="clinics"
             :reduce="(opt) => opt.id"
@@ -272,11 +274,11 @@ export default {
         { name: 'signed_date_after', label: 'Signed date' },
       ],
       statuses: [
-        { label: 'Draft', value: 'NS' },
-        { label: 'Open', value: 'New' },
-        { label: 'Done', value: 'DS' },
-        { label: 'Cancelled', value: 'DS' },
-        { label: 'Back Order', value: 'DS' },
+        { label: 'Draft', value: 'DT' },
+        { label: 'Open', value: 'OP' },
+        { label: 'Done', value: 'DN' },
+        { label: 'Cancelled', value: 'CN' },
+        { label: 'Back Order', value: 'BO' },
       ],
       departments: [],
       clinics: [],
@@ -285,11 +287,13 @@ export default {
       nurseSeen: 0,
 
       filters: {
-        by: '',
-        entry: '',
-        department: [],
-        clinic: [],
-        provider: [],
+        // by: '',
+        // entry: '',
+        // department: [],
+        // clinic: [],
+        // provider: [],
+        destination: '',
+        source:'',
         status: '',
         date_before: '',
         date_after: '',

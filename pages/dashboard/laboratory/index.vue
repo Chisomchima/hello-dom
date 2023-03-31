@@ -228,6 +228,7 @@
     <div>
       <DashboardModalLabStepsResultHandler
         :id="id"
+        :status="status"
         :lab-order-panel="labOrderPanel"
         :manage-input="manageInput"
         :audit_log="audit_log"

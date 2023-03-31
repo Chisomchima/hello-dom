@@ -9,11 +9,11 @@
       </div>
     </div>
 
-    <!-- <div class="card">
+    <div class="card">
       <div class="card-body">
         <DashboardInvoiceListFilter  @filter="filter(1, $event)" />
       </div>
-    </div> -->
+    </div>
 
     <div class="mt-3">
       <UtilsFilterComponent
