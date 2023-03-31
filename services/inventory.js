@@ -99,5 +99,8 @@ export default axios => ({
     // stock movement
     createMove (body){
         return axios.$post(`/inventory/stock_movements/`, body)
+    },
+    getStockMove(param){
+        return axios.$get(`/inventory/stock_movements/`, param)
     }
 })

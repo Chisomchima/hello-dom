@@ -121,8 +121,6 @@ export default {
       try {
         const { results } = await this.$api.inventory.getProducts({
           search: this.search,
-          size: this.pageSize,
-          page: this.page,
         })
         this.totalItems = results.length
         console.log(results, 'results')

@@ -9,11 +9,11 @@
       </div>
     </div>
 
-    <div class="card">
+    <!-- <div class="card">
       <div class="card-body">
         <DashboardInvoiceListFilter  @filter="filter(1, $event)" />
       </div>
-    </div>
+    </div> -->
 
     <div class="mt-3">
       <UtilsFilterComponent
@@ -116,9 +116,9 @@
       </UtilsFilterComponent>
     </div>
 
-    <div class="create_order">
-      <PagesDashboardInventoryReceiptAdd @refresh="filter()" />
-    </div>
+    <!-- <div class="create_order">
+      <PagesDashboardInventoryReceiptAdd  @refresh="filter()" />
+    </div> -->
 
     <!-- ***********workflow********* -->
     
@@ -131,75 +131,76 @@
 import { DateTime } from 'luxon'
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
+import axios from '~/plugins/axios'
 export default {
   mixins: [TableFunc, FilterLogic],
   data() {
     return {
       currentFilter: {},
       itemsToShow: [
-        {
-          move_id: 'WH/IN/0001',
-          scheduled_date: "3/01/2023",
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Draft',
-        },
-        {
-          move_id: 'WH/IN/0002',
-          scheduled_date: 'Tomorrow',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Cancelled',
-        },
-        {
-          move_id: 'WH/IN/0003',
-          scheduled_date: 'Yesterday',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Done',
-        },
-        {
-          move_id: 'WH/IN/0004',
-          scheduled_date: 'Tomorrow',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Open',
-        },
-        {
-          move_id: 'WH/IN/0005',
-          scheduled_date: '3/01/2023',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Back Order',
-        },
-        {
-          move_id: 'WH/IN/0006',
-          scheduled_date: '3/04/2023',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Draft',
-        },
-        {
-          move_id: 'WH/IN/0007',
-          scheduled_date: '5/06/2023',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Done',
-        },
-        {
-          move_id: 'WH/IN/0008',
-          scheduled_date: '4/07/2023',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Cancelled',
-        },
-        {
-          move_id: 'WH/IN/0009',
-          scheduled_date: 'Tomorrow',
-          destination_location: 'Appa, Lagos',
-          vendor: 'KK and Sons Limited',
-          status: 'Back Order',
-        },
+        // {
+        //   move_id: 'WH/IN/0001',
+        //   scheduled_date: "3/01/2023",
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Draft',
+        // },
+        // {
+        //   move_id: 'WH/IN/0002',
+        //   scheduled_date: 'Tomorrow',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Cancelled',
+        // },
+        // {
+        //   move_id: 'WH/IN/0003',
+        //   scheduled_date: 'Yesterday',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Done',
+        // },
+        // {
+        //   move_id: 'WH/IN/0004',
+        //   scheduled_date: 'Tomorrow',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Open',
+        // },
+        // {
+        //   move_id: 'WH/IN/0005',
+        //   scheduled_date: '3/01/2023',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Back Order',
+        // },
+        // {
+        //   move_id: 'WH/IN/0006',
+        //   scheduled_date: '3/04/2023',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Draft',
+        // },
+        // {
+        //   move_id: 'WH/IN/0007',
+        //   scheduled_date: '5/06/2023',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Done',
+        // },
+        // {
+        //   move_id: 'WH/IN/0008',
+        //   scheduled_date: '4/07/2023',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Cancelled',
+        // },
+        // {
+        //   move_id: 'WH/IN/0009',
+        //   scheduled_date: 'Tomorrow',
+        //   destination_location: 'Appa, Lagos',
+        //   vendor: 'KK and Sons Limited',
+        //   status: 'Back Order',
+        // },
       ],
       downloading: false,
       audit_log: {},
@@ -216,7 +217,7 @@ export default {
       fields: [
         { key: 'move_id', label: 'Move Id', sortable: true },
         {
-          key: 'scheduled_date',
+          key: 'schedule_date',
           label: 'Scheduled Date',
           sortable: true,
         //   formatter: (value) => {
@@ -225,14 +226,14 @@ export default {
         //     )
         //   },
         },
-        { key: 'destination_location', label: 'Location', sortable: true },
-        { key: 'vendor', label: 'Vendor', sortable: true },
+        { key: 'destination_location.name', label: 'Location', sortable: true },
+        { key: 'vendor.name', label: 'Vendor', sortable: true },
         { key: 'status', label: 'Status', sortable: true },
       ],
     }
   },
-  mounted() {
-    
+ mounted() {
+  this.getStockMove()
   },
 
   methods: {
@@ -297,8 +298,23 @@ export default {
         this.downloading = false
       }
     },
+    async getStockMove(){
+      console.log('hello')
+      try {
+        this.busy = true
+        const data = await this.$api.inventory.getStockMove()
+        this.itemsToShow = data.results
+        console.log(data, 'itemstoshow')
+        this.pages = data.total_pages
+      } catch (error) {
+        console.log(error, 'error')
+      } finally {
+        this.busy = false
+      }
+    },
     async filter(page, e) {
       this.currentFilter = e
+      
       try {
         this.busy = true
         const data = await axios.$get('inventory/stock_movements/', {
