@@ -150,6 +150,8 @@ export default {
     APP_NAME_LONG: process.env.APP_NAME_LONG || "HEHEH",
     APP_NAME_SHORT: process.env.APP_NAME_SHORT || "Hello",
     db_type: process.env.db_type,
+    proxyHeaders: false,
+    credentials: false
   },
 
   env: {

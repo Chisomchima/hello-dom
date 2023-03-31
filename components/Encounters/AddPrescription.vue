@@ -478,28 +478,7 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    }, fetchOPtions(e, i) {
-      this.$api.inventory
-        .getProducts({ size: 1500, generic_drug: e.id })
-        .then((res) => {
-          let newVal = structuredClone(res.results)
-          this.products = newVal
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-
-    fetchGenericDrugs(e, i){
-      this.$api.pharmacy
-        .getGeneric({ size: 1500,  })
-        .then((res) => {
-          this.generic_drug = res.results
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
+    }, 
     async getPatientByUHID(uhid) {
       try {
         if (uhid.length > 0) {

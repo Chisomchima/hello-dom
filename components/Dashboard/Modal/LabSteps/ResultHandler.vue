@@ -1,7 +1,16 @@
 <template>
   <div>
-    <ModalWrapper size="lg" id="fillresult" title="Fill result" :notScrollable="false" :submitTitle="'Submit'"
-      @clearForm="clear()" @hide="clear()" @ok="savePanelOrder()">
+    <ModalWrapper
+      size="lg"
+      id="fillresult"
+      title="Fill result"
+      :stacking="false"
+      :notScrollable="false"
+      :submitTitle="'Submit'"
+      @clearForm="clear()"
+      @hide="clear()"
+      @ok="savePanelOrder()"
+    >
       <div class="text-capitalize text-18 text-grey">
         <div class="text-center text-underline">
           {{ labOrderPanel.panel.name }}
@@ -12,52 +21,85 @@
       </div>
 
       <UtilsCollapse :title="'Comments'" :comments="audit_log" />
-     
+
       <ValidationObserver ref="form">
         <form>
           <div>
-            <TableComponent :items="labOrderPanel.panel.obv" :perPage="1000" :fields="fields" :paginate="false">
+            <TableComponent
+              :items="labOrderPanel.panel.obv"
+              :perPage="1000"
+              :fields="fields"
+              :paginate="false"
+            >
               <template #value="{ data }">
-                <div v-if="
-                  data.item.type.name === 'Text'
-                ">
+                <div v-if="data.item.type.name === 'Text'">
                   <ValidationProviderWrapper :rules="['required']">
                     <div class="p-2">
-                      <input type="text" placeholder="Value" v-model="data.item.value"
-                        class="form-control ng-untouched ng-pristine ng-valid" />
+                      <input
+                        type="text"
+                        placeholder="Value"
+                        v-model="data.item.value"
+                        class="form-control ng-untouched ng-pristine ng-valid"
+                      />
                     </div>
                   </ValidationProviderWrapper>
                 </div>
-                <div v-if="
-                data.item.type.name === 'Integer' ||
-                data.item.type.name === 'Float'">
+                <div
+                  v-if="
+                    data.item.type.name === 'Integer' ||
+                    data.item.type.name === 'Float'
+                  "
+                >
                   <ValidationProviderWrapper :rules="['required']">
                     <div class="p-2">
-                      <input type="number" placeholder="Value" v-model="data.item.value"
-                        class="form-control ng-untouched ng-pristine ng-valid" />
+                      <input
+                        type="number"
+                        placeholder="Value"
+                        v-model="data.item.value"
+                        class="form-control ng-untouched ng-pristine ng-valid"
+                      />
                     </div>
                   </ValidationProviderWrapper>
                 </div>
 
                 <div v-if="data.item.type.name === 'Options'">
                   <ValidationProviderWrapper :rules="[]">
-                    <v-select class="width text-14" placeholder="Select option" label="name" v-model="data.item.value"
-                      :options="data.item.type.values" :reduce="(option) => option.name"></v-select>
+                    <v-select
+                      class="width text-14"
+                      placeholder="Select option"
+                      label="name"
+                      v-model="data.item.value"
+                      :options="data.item.type.values"
+                      :reduce="(option) => option.name"
+                    ></v-select>
                   </ValidationProviderWrapper>
                 </div>
               </template>
               <template #reference_range="{ data }">
-                <div class="p-2" v-for="(ref, index) in data.item.reference_range" :key="index">
+                <div
+                  class="p-2"
+                  v-for="(ref, index) in data.item.reference_range"
+                  :key="index"
+                >
                   <!-- {{ref.name}} -->
-                  <input type="text" placeholder="Value" v-model="ref.name"
-                    class="form-control ng-untouched ng-pristine ng-valid" />
+                  <input
+                    type="text"
+                    placeholder="Value"
+                    v-model="ref.name"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
                 </div>
               </template>
             </TableComponent>
 
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Comment" :rules="[]">
-                <textarea v-model="commitPanel.comments" cols="20" rows="5" class="form-control"></textarea>
+                <textarea
+                  v-model="commitPanel.comments"
+                  cols="20"
+                  rows="5"
+                  class="form-control"
+                ></textarea>
               </ValidationProviderWrapper>
             </div>
           </div>
@@ -65,7 +107,10 @@
       </ValidationObserver>
     </ModalWrapper>
     <div>
-      <DashboardModalLabStepsConfirmation :id="confirmId" @refresh="refreshme" />
+      <DashboardModalLabStepsConfirmation
+        :id="confirmId"
+        @refresh="refreshme"
+      />
     </div>
   </div>
 </template>
@@ -102,15 +147,13 @@ export default {
     id: '',
     labOrderPanel: {
       type: Object,
-      required: true,
     },
     audit_log: {
-      required: true,
-      default: () => ({})
+      default: () => ({}),
     },
     manageInput: '',
   },
-  
+
   methods: {
     async savePanelOrder() {
       this.commitPanel.obv = this.labOrderPanel.panel.obv
@@ -141,7 +184,8 @@ export default {
       this.$emit('refresh')
     },
     clear() {
-      // this.comments = ''
+      this.comments = ''
+      this.$bvModal.hide('fillresult')
     },
   },
 }
