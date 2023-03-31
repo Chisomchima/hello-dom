@@ -5,7 +5,7 @@
       :title="modalTitle"
       size="md"
       :stacking="false"
-      @hide="$bvModal.hide('takespecimen')"
+      @hide="close()"
       @ok="setStatusToSpecimenRecieved()"
     >
     
@@ -64,6 +64,11 @@ export default {
     }
   },
   methods: {
+    close(){
+      this.comments = ''
+      this.$bvModal.hide('takespecimen')
+    },
+
     async setStatusToSpecimenRecieved() {
       try {
         await this.$axios.$patch(

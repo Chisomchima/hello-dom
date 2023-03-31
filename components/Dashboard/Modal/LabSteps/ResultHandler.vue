@@ -170,6 +170,7 @@ export default {
             type: 'success',
             text: 'Results updated',
           })
+          this.$bvModal.hide('fillresult')
           this.$bvModal.show('confirm')
           this.$emit('refresh')
         } catch {
@@ -184,7 +185,7 @@ export default {
       this.$emit('refresh')
     },
     clear() {
-      this.comments = ''
+      this.commitPanel.comments = ''
       this.$bvModal.hide('fillresult')
     },
   },

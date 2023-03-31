@@ -17,7 +17,8 @@
         </div>
       </div>
 
-      <UtilsCollapse :title="'Comments'" :comments="audit_log" />
+      <UtilsApprovalCollapse :title="'Comments'" :comments="audit_log" />
+      <!-- <pre>{{ audit_log }}</pre> -->
 
       <div>
         <div>
