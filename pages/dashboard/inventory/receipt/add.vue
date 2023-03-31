@@ -309,7 +309,6 @@ export default {
       handler(newVal) {
         newVal.map((el,i)=>{
         this.receiptData.products[i].quantity = el
-        return
        })
       },
       deep: true,
