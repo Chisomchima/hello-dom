@@ -1,12 +1,12 @@
 <template>
   <div>
     <UtilsFilterComponent
-      :has-category=true
+      :has-category="true"
       disable-visualization
       disable-pagination
-      :items = 'items'
+      :items="items"
       @search-input="searchMe($event)"
-      @cat-search-input = "$event => searchCat($event)"
+      @cat-search-input="($event) => searchCat($event)"
     >
       <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="openModal"
@@ -32,7 +32,6 @@
       :modal-title="modalTitle"
       @refresh="pageChange(1)"
     />
-    
   </div>
 </template>
 
@@ -40,7 +39,12 @@
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 export default {
   mixins: [TableFunc],
-  props: {},
+  props: {
+    isProduct: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       editObj: {
@@ -54,10 +58,6 @@ export default {
       },
       modalTitle: 'Add Product',
       fields: [
-        // {
-        //   key: 'created_at',
-        //   label: 'Date created'
-        // },
         {
           key: 'code',
         },
@@ -67,10 +67,6 @@ export default {
         {
           key: 'category.name',
           label: 'Category',
-        },
-        {
-          key: 'Quantity On Hand',
-          label: 'quantity_on_hand',
         },
         {
           key: 'UoM',
@@ -88,27 +84,34 @@ export default {
           quantity_on_hand: 2,
           uom: 'ml',
         },
-       
-      ]
+      ],
     }
   },
   async mounted() {
     await this.pageChange(1)
+    if (this.isProduct === true) {
+      console.log(this.isProduct)
+      this.fields.splice(2, 0, {
+      key: 'Quantity On Hand',
+      label: 'quantity_on_hand',
+    })
+    }
+  
   },
   methods: {
     searchMe(e) {
       this.filters.name = e
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {category, ...others} = this.filters
+      const { category, ...others } = this.filters
       this.pageChange(1, others)
     },
     searchCat(e) {
       this.filters.category = e
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {name, ...others} = this.filters
+      const { name, ...others } = this.filters
       this.pageChange(1, others)
     },
-    async pageChange(page = 1, e = { name: '', category: [],size: 10 }) {
+    async pageChange(page = 1, e = { name: '', category: [], size: 10 }) {
       try {
         this.busy = true
         const data = await this.$api.inventory.getProducts({ page, ...e })

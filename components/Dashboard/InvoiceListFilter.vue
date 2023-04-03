@@ -7,7 +7,7 @@
           <VSelect
             v-model="filters.destination"
             label="name"
-            :options="clinics"
+            :options="destination_location"
             :reduce="(opt) => opt.id"
             :multiple="true"
           >
@@ -28,26 +28,26 @@
                 v-if="label === 'Draft'"
                 class="text-14 badge-warning rounded text-center p-1 text-white"
                 style="margin: 0"
-                >{{ label }} ({{ newCount }})</span
+                >{{ label }}</span
               >
               <span
                 v-if="label === 'Done'"
                 class="text-14 badge-success rounded text-center p-1 text-white"
                 style="margin: 0"
-                >{{ label }} ({{ newCount }})</span
+                >{{ label }}</span
               >
               
-              <span
+              <!-- <span
                 v-else-if="label === 'Open'"
                 class="text-14 badge-info rounded text-center p-1 text-white"
               >
-                {{ label }} ({{ nurseSeen }})
-              </span>
+                {{ label }}
+              </span> -->
               <span
-                v-else-if="label === 'Back Order'"
+                v-else-if="label === 'Approved'"
                 class="text-14 badge-primary rounded text-center p-1 text-white"
               >
-                {{ label }} ({{ nurseSeen }})
+                {{ label }}
               </span>
               <span
                 v-else-if="label === 'Cancelled'"
@@ -57,33 +57,6 @@
               </span>
             </template>
             
-            <template #selected-option="{ label }">
-              <span
-                v-if="label === 'New'"
-                class="
-                  text-14
-                  badge-warning
-                  rounded
-                  text-center
-                  px-1
-                  text-white
-                "
-                style="margin: 0"
-                >{{ label }}</span
-              >
-              <span
-                v-else-if="label === 'Nurse Seen'"
-                class="text-14 badge-info rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-              <span
-                v-else-if="label === 'Doctor Seen'"
-                class="text-14 badge-danger rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-            </template>
           </VSelect>
         </div>
       </div>
@@ -152,56 +125,30 @@
                 v-if="label === 'Draft'"
                 class="text-14 badge-warning rounded text-center p-1 text-white"
                 style="margin: 0"
-                >{{ label }} ({{ newCount }})</span
+                >{{ label }}</span
               >
+              <!-- ({{ newCount }}) -->
               <span
                 v-if="label === 'Done'"
                 class="text-14 badge-success rounded text-center p-1 text-white"
                 style="margin: 0"
-                >{{ label }} ({{ newCount }})</span
+                >{{ label }}</span
               >
               <span
                 v-else-if="label === 'Open'"
                 class="text-14 badge-info rounded text-center p-1 text-white"
               >
-                {{ label }} ({{ nurseSeen }})
+                {{ label }}
               </span>
               <span
                 v-else-if="label === 'Back Order'"
                 class="text-14 badge-primary rounded text-center p-1 text-white"
               >
-                {{ label }} ({{ nurseSeen }})
+                {{ label }}
               </span>
               <span
                 v-else-if="label === 'Cancelled'"
                 class="text-14 badge-danger rounded text-center p-1 text-white"
-              >
-                {{ label }}
-              </span>
-            </template>
-            <template #selected-option="{ label }">
-              <span
-                v-if="label === 'New'"
-                class="
-                  text-14
-                  badge-warning
-                  rounded
-                  text-center
-                  px-1
-                  text-white
-                "
-                style="margin: 0"
-                >{{ label }}</span
-              >
-              <span
-                v-else-if="label === 'Nurse Seen'"
-                class="text-14 badge-info rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-              <span
-                v-else-if="label === 'Doctor Seen'"
-                class="text-14 badge-danger rounded text-center px-1 text-white"
               >
                 {{ label }}
               </span>
@@ -266,7 +213,6 @@ export default {
   },
   data() {
     return {
-      genders: ['Male', 'Female'],
       parameter: [
         { name: 'patient_name', label: 'Name' },
         { name: 'patient_uhid', label: 'UHID' },
@@ -275,13 +221,14 @@ export default {
       ],
       statuses: [
         { label: 'Draft', value: 'DT' },
-        { label: 'Open', value: 'OP' },
-        { label: 'Done', value: 'DN' },
         { label: 'Cancelled', value: 'CN' },
-        { label: 'Back Order', value: 'BO' },
+        // { label: 'Open', value: 'OP' },
+        { label: 'Approved', value: 'BO' },
+        { label: 'Done', value: 'DN' },
       ],
       departments: [],
       clinics: [],
+      destination_location: [],
       providers: [],
       newCount: 0,
       nurseSeen: 0,
@@ -292,8 +239,8 @@ export default {
         // department: [],
         // clinic: [],
         // provider: [],
-        destination: '',
-        source:'',
+        destination_location: '',
+        source_location:'',
         status: '',
         date_before: '',
         date_after: '',
@@ -338,6 +285,7 @@ export default {
     this.$api.encounter.nurseSeenCount().then((res) => {
       this.nurseSeen = res.count
     })
+    this.fetchStore()
   },
   methods: {
     clear() {
@@ -352,22 +300,19 @@ export default {
         date_after: '',
       }
     },
-    applyFilter(newVal) {
-      const newFilterObject = {
-        ...newVal,
+
+    async fetchStore() {
+      try {
+        const data = await this.$api.inventory.getSourceVendor()
+        console.log(data, 'store')
+        this.destination_location = data.results
+      } catch (err) {
+        console.log(err)
       }
+    },
+    applyFilter(newVal) {
       if (newVal.date_before && newVal.date_after) {
-        if (newVal.by.length > 0) {
-          const newFilterObject = {
-            ...newVal,
-            [newVal.by]: newVal.entry,
-            worklist: true,
-          }
-          // console.log(newFilterObject)
-          this.$emit('filter', newFilterObject)
-        } else {
-          this.$emit('filter', newVal)
-        }
+        this.$emit('filter', newVal)
       } else {
         this.$toast({
           type: 'info',

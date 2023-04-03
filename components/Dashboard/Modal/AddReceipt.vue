@@ -2,10 +2,12 @@
   <ModalWrapper
     id="id"
     size="lg"
+    submitTitle="Select"
     title="View More Products"
     :stacking="false"
     @show="getData()"
     @hide="$bvModal.hide('id')"
+    @ok="ok()"
   >
     <div class="container mt-3 mb-5">
       <b-row class="mb-3">
@@ -32,8 +34,13 @@
             :filter="filter"
           >
             <template #cell(select)="data">
-              <b-form-checkbox :id="'checkbox' + data.index" v-model="data.item.index" checked="checked">
-                </b-form-checkbox>
+              <!-- <pre>{{ data }}</pre> -->
+              <b-form-checkbox
+                :disabled="enabled"
+                @change="selection(data.item.id, $event, data.item.name)"
+              >
+              </b-form-checkbox>
+              <!-- <pre>{{ checked }}</pre> -->
             </template>
           </b-table>
           <b-pagination
@@ -41,11 +48,15 @@
             :total-rows="rows"
             :per-page="perPage"
             aria-controls="my-table"
+            align="right"
+            pills
+            size="sm"
+            class="my-0"
           ></b-pagination>
         </b-col>
       </b-row>
 
-      <b-row>
+      <!-- <b-row>
         <b-col>
           <b-spinner
             style="width: 3rem; height: 3rem"
@@ -53,14 +64,13 @@
             variant="primary"
           ></b-spinner>
         </b-col>
-      </b-row>
+      </b-row> -->
     </div>
 
-    <!-- <div
+    <div
       v-if="isLoading"
       class="d-flex align-items-center justify-content-center mt-3"
-    >
-    </div> -->
+    ></div>
   </ModalWrapper>
 </template>
 
@@ -75,12 +85,30 @@ export default {
   data() {
     return {
       products: [],
+      prodId: '',
+      productName: '',
+      enabled: false,
+      checked: false,
+      value: null,
       isLoading: false,
       filter: '',
-      perPage: 3,
+      perPage: 7,
       currentPage: 1,
 
-      fields: ['name', 'generic_drug.name', 'select'],
+      fields: [
+        {
+          key: 'name',
+          label: 'name',
+        },
+        {
+          key: 'generic_drug.name',
+          label: 'Generic Drug',
+        },
+        {
+          key: 'select',
+          label: 'select',
+        },
+      ],
     }
   },
   computed: {
@@ -92,11 +120,25 @@ export default {
     await this.getData()
   },
   methods: {
-    async ok() {
-      if (await this.$refs.form.validate()) {
-        this.save()
+    ok() {
+      const obj = {
+        name: this.productName,
+        id: this.prodId
+      }
+      // if (await this.$refs.form.validate()) {
+      this.$emit('getId', obj)
+      this.$bvModal.hide('id')
+      // }
+    },
+    selection(id, check, name) {
+      if (check) {
+        this.checked = check
+        this.prodId = id
+        this.productName = name
+        // this.enabled = true
       }
     },
+
     closeModal() {
       this.$bvModal.hide('id')
     },
@@ -107,7 +149,6 @@ export default {
         const { results } = await this.$api.inventory.getProducts({
           search: this.search,
         })
-        console.log(results, 'results')
         this.products = results
         this.isLoading = false
       } catch (err) {
