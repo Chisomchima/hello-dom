@@ -4,7 +4,7 @@
       <div class="page-heading mb-4">Products</div>
       <UtilsBaseCardTab>
         <UtilsCardTab title="Products">
-          <SettingsInventoryProductsList />
+          <SettingsInventoryProductsList  :is-product="isProduct" />
         </UtilsCardTab>
         <!-- <UtilsCardTab title="Category">
           <SettingsInventoryCategoryList />
@@ -36,7 +36,13 @@
   </template>
   
   <script>
-  export default {}
+  export default {
+    data(){
+      return {
+        isProduct: true
+      }
+    }
+  }
   </script>
   
   <style lang="scss" scoped>

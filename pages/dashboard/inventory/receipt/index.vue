@@ -11,7 +11,7 @@
 
     <div class="card">
       <div class="card-body">
-        <DashboardInvoiceListFilter  @filter="filter(1, $event)" />
+        <DashboardInvoiceListFilter  @filter="filter($event)" />
       </div>
     </div>
 
@@ -34,7 +34,7 @@
             :items="itemsToShow"
             :busy="busy"
             :dropdown-item="['cancel']"
-            @row-clicked="openInvestigation"
+            @row-clicked="$router.push('/dashboard/inventory/receipt/update')"
             @cancel="cancelRequestModal($event)"
             @page-changed="filter($event, currentFilter)"
           >
@@ -43,7 +43,7 @@
               <div>
                 <div style="width: 9rem">
                   <span
-                    v-if="data.item.status === 'Draft'"
+                    v-if="data.item.status === 'DRAFT'"
                     class="
                       text-14
                       badge-warning
@@ -57,7 +57,7 @@
                     >{{ data.item.status }}</span
                   >
                   <span
-                    v-if="data.item.status === 'Done'"
+                    v-if="data.item.status === 'DONE'"
                     class="
                       text-14
                       badge-success
@@ -70,7 +70,7 @@
                     >{{ data.item.status }}</span
                   >
                   <span
-                    v-else-if="data.item.status === 'Open'"
+                    v-else-if="data.item.status === 'OPEN'"
                     class="
                       text-14
                       badge-info
@@ -83,7 +83,7 @@
                     {{ data.item.status }}
                   </span>
                   <span
-                    v-else-if="data.item.status === 'Back Order'"
+                    v-else-if="data.item.status === 'APPROVED'"
                     class="
                       text-14
                       badge-primary
@@ -96,7 +96,7 @@
                     {{ data.item.status }}
                   </span>
                   <span
-                    v-else-if="data.item.status === 'Cancelled'"
+                    v-else-if="data.item.status === 'CANCELLED'"
                     class="
                       text-14
                       badge-danger
@@ -137,71 +137,7 @@ export default {
   data() {
     return {
       currentFilter: {},
-      itemsToShow: [
-        // {
-        //   move_id: 'WH/IN/0001',
-        //   scheduled_date: "3/01/2023",
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Draft',
-        // },
-        // {
-        //   move_id: 'WH/IN/0002',
-        //   scheduled_date: 'Tomorrow',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Cancelled',
-        // },
-        // {
-        //   move_id: 'WH/IN/0003',
-        //   scheduled_date: 'Yesterday',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Done',
-        // },
-        // {
-        //   move_id: 'WH/IN/0004',
-        //   scheduled_date: 'Tomorrow',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Open',
-        // },
-        // {
-        //   move_id: 'WH/IN/0005',
-        //   scheduled_date: '3/01/2023',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Back Order',
-        // },
-        // {
-        //   move_id: 'WH/IN/0006',
-        //   scheduled_date: '3/04/2023',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Draft',
-        // },
-        // {
-        //   move_id: 'WH/IN/0007',
-        //   scheduled_date: '5/06/2023',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Done',
-        // },
-        // {
-        //   move_id: 'WH/IN/0008',
-        //   scheduled_date: '4/07/2023',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Cancelled',
-        // },
-        // {
-        //   move_id: 'WH/IN/0009',
-        //   scheduled_date: 'Tomorrow',
-        //   destination_location: 'Appa, Lagos',
-        //   vendor: 'KK and Sons Limited',
-        //   status: 'Back Order',
-        // },
-      ],
+      itemsToShow: [],
       downloading: false,
       audit_log: {},
       labOrderPanel: {

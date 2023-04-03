@@ -2,48 +2,75 @@
   <ModalWrapper
     id="id"
     size="lg"
+    submitTitle="Select"
     title="View More Products"
     :stacking="false"
     @show="getData()"
     @hide="$bvModal.hide('id')"
+    @ok="ok()"
   >
-    <ValidationProviderWrapper name="Search" :rules="['']">
-      <!-- <VSelect
-                    v-model="product.product"
-                    :options="products"
-                    label="name"
-                    @option:selected="fetchGenericDrugs($event, index)"
-                  >
-                  </VSelect> -->
-      <input v-model="searchinput" type="text" name="" class="form-control" />
-    </ValidationProviderWrapper>
+    <div class="container mt-3 mb-5">
+      <b-row class="mb-3">
+        <b-col md="3">
+          <b-form-input
+            id="filterInput"
+            v-model="filter"
+            type="search"
+            placeholder="Type to Search"
+          ></b-form-input>
+        </b-col>
+      </b-row>
 
-    <div class="w-100 mt-3 bg-white px-3 shadow-sm p-2">
-      <div v-for="(option, i) in products" :key="i" class="search-options">
-        <div class="option w-100">
-          {{ option.name }}
-        </div>
-      </div>
-      <!-- <span class="view-more" @click="$bvModal.show('id')">view more</span> -->
-      <b-pagination
-        small
-        v-model="page"
-        :total-rows="totalRows"
-        :current-page="1"
-        :per-page="20"
-        @change="handlePageChange"
-      ></b-pagination>
+      <b-row>
+        <b-col>
+          <b-table
+            striped
+            hover
+            outlined
+            :items="products"
+            :fields="fields"
+            :current-page="currentPage"
+            :per-page="perPage"
+            :filter="filter"
+          >
+            <template #cell(select)="data">
+              <!-- <pre>{{ data }}</pre> -->
+              <b-form-checkbox
+                :disabled="enabled"
+                @change="selection(data.item.id, $event, data.item.name)"
+              >
+              </b-form-checkbox>
+              <!-- <pre>{{ checked }}</pre> -->
+            </template>
+          </b-table>
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="my-table"
+            align="right"
+            pills
+            size="sm"
+            class="my-0"
+          ></b-pagination>
+        </b-col>
+      </b-row>
+
+      <!-- <b-row>
+        <b-col>
+          <b-spinner
+            style="width: 3rem; height: 3rem"
+            label="Large Spinner"
+            variant="primary"
+          ></b-spinner>
+        </b-col>
+      </b-row> -->
     </div>
+
     <div
       v-if="isLoading"
       class="d-flex align-items-center justify-content-center mt-3"
-    >
-    </div>
-    <b-spinner
-        style="width: 3rem; height: 3rem"
-        label="Large Spinner"
-        variant="primary"
-      ></b-spinner>
+    ></div>
   </ModalWrapper>
 </template>
 
@@ -52,66 +79,66 @@ export default {
   props: {
     search: {
       required: true,
-    },
-    isReciept: {
-      type: Boolean,
-      default: true,
-      require: false,
-    },
-    role: {
-      require: false,
-    },
-    // products:{
-    //   required: true,
-    // },
-    makeVisible: {
-      required: true,
-    },
-    picked: {
-      required: true,
+      type: String,
     },
   },
   data() {
     return {
-      searchinput:'',
       products: [],
+      prodId: '',
+      productName: '',
+      enabled: false,
+      checked: false,
+      value: null,
       isLoading: false,
-      page: 1,
-      count: 0,
-      totalRows: 0,
-      pageSize: 20,
+      filter: '',
+      perPage: 7,
+      currentPage: 1,
+
+      fields: [
+        {
+          key: 'name',
+          label: 'name',
+        },
+        {
+          key: 'generic_drug.name',
+          label: 'Generic Drug',
+        },
+        {
+          key: 'select',
+          label: 'select',
+        },
+      ],
     }
+  },
+  computed: {
+    rows() {
+      return this.products.length
+    },
   },
   async mounted() {
     await this.getData()
   },
   methods: {
-    async ok() {
-      if (await this.$refs.form.validate()) {
-        this.save()
+    ok() {
+      const obj = {
+        name: this.productName,
+        id: this.prodId
+      }
+      // if (await this.$refs.form.validate()) {
+      this.$emit('getId', obj)
+      this.$bvModal.hide('id')
+      // }
+    },
+    selection(id, check, name) {
+      if (check) {
+        this.checked = check
+        this.prodId = id
+        this.productName = name
+        // this.enabled = true
       }
     },
-    handlePageChange(value) {
-      this.page = value
-    },
-    // pickProd(param) {
-    //   this.search = param
-    //   this.products = []
-    //   this.makeVisible = false
-    //   this.refetch = true
-    //   this.$bvModal.hide('id')
-    // },
 
-    // pickProd(param, i) {
-    // //   this.placholder.push(param)
-    // this.search[i]= param
-
-    //   console.log(this.search[i], this.products, 'search')
-    //   this.picked=true
-    // //   this.products = []
-    //   this.makeVisible = false
-    // //   this.refetch = true
-    // },
     closeModal() {
       this.$bvModal.hide('id')
     },
@@ -122,8 +149,6 @@ export default {
         const { results } = await this.$api.inventory.getProducts({
           search: this.search,
         })
-        this.totalItems = results.length
-        console.log(results, 'results')
         this.products = results
         this.isLoading = false
       } catch (err) {

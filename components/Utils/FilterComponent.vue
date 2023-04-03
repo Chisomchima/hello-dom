@@ -118,7 +118,6 @@
               multiple
               taggable
               label="search by category"
-              :reduce="(option) => option"
             >
             </v-select>
             <input
@@ -277,7 +276,7 @@ export default Vue.extend({
   watch: {
       items(newVal){
         const categories = newVal.map((el) => {
-          return el.category.name
+          return el.category.id
         })
         this.categories = [...new Set(categories)]
       },

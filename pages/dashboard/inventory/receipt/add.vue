@@ -2,6 +2,7 @@
   <div>
     <BackwardNavigation />
     <div class="bg-white p-5 shadow-sm">
+      <h4>Add Reciept</h4>
       <ValidationObserver ref="form">
         <form>
           <div class="col-md-12 mb-2">
@@ -27,18 +28,6 @@
               </VSelect>
             </ValidationProviderWrapper>
           </div>
-
-          <!-- <div v-if="!isReciept" class="col-md-12 mb-2">
-          <ValidationProviderWrapper name="Source Location*" :rules="['']">
-            <VSelect
-              v-model="dataObject.store"
-              :options="stores"
-              :reduce="(opt) => opt.id"
-              label="name"
-            >
-            </VSelect>
-          </ValidationProviderWrapper>
-        </div> -->
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Scheduled Date" :rules="['']">
               <label class="form-control-label"> Scheduled Date</label>
@@ -53,24 +42,6 @@
 
           <b-tabs content-class="mt-2 p-3" class="mt-4 p-4 shadow">
             <b-tab title="Products" active>
-              <!-- <div class="col-md-12 d-flex ml-0 text-primary text-14">
-                <span class="point" @click="addProduct()">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    preserveAspectRatio="xMidYMid meet"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
-                    />
-                  </svg>
-                  Add Products
-                </span>
-              </div> -->
-
               <div
                 v-for="(prod, index) in receiptData.products"
                 :key="index"
@@ -100,53 +71,13 @@
                     </svg>
                   </span>
                 </div>
+                <!-- product stack -->
 
-                <div class="col-md-6 mb-2">
-                  <ValidationProviderWrapper name="Product" :rules="['']">
-                    <!-- <VSelect
-                    v-model="product.product"
-                    :options="products"
-                    label="name"
-                    @option:selected="fetchGenericDrugs($event, index)"
-                  >
-                  </VSelect> -->
-                    <input
-                      v-model="search[index]"
-                      type="text"
-                      name=""
-                      class="form-control"
-                    />
-                  </ValidationProviderWrapper>
-                  <div
-                    v-if="makeVisible && !picked"
-                    class="w-100 mt-3 border px-3"
-                  >
-                    <div class="clear mb-2">X</div>
-                    <div
-                      v-for="(option, i) in products"
-                      :key="i"
-                      class="search-options"
-                    >
-                      <div
-                        class="option w-100"
-                        @pick="pickNewProd(option.name, option.id, index)"
-                        @click="pickProd(option.name, option.id, index)"
-                      >
-                        {{ option.name }}
-                      </div>
-                    </div>
-                    <span class="view-more" @click="show()">view more</span>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-2">
-                  <ValidationProviderWrapper name="Quantity" :rules="[]">
-                    <input
-                      v-model="quantity[index]"
-                      type="number"
-                      class="form-control"
-                    />
-                  </ValidationProviderWrapper>
-                </div>
+                <DashboardInventoryProductStack
+                  @quantity="prod.quantity = $event"
+                  @prodId="prod.product = $event"
+                  @getId="prod.product = $event"
+                />
               </div>
               <div
                 class="
@@ -211,22 +142,12 @@
           </div>
         </form>
       </ValidationObserver>
-
-      <div>
-        <DashboardModalAddReceipt
-          :search="search"
-          :makeVisible="makeVisible"
-          :picked="picked"
-        />
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { data } from 'browserslist'
 import { debounce } from 'lodash'
-
 export default {
   props: {
     editData: {
@@ -246,15 +167,10 @@ export default {
   data() {
     return {
       date: '',
-      searchId: '',
-      search: [],
-      quantity:[],
-      refetch: false,
+      search: '',
+      quantity: '',
       placholder: [],
-      makeVisible: false,
-      picked: false,
-      downloading: false,
-      product: { product: this.search, quantity: this.quantity },
+      product: { product: '', quantity: 0 },
       products: [],
       stores: [],
       vendors: [],
@@ -274,54 +190,40 @@ export default {
     await this.fetchVendors()
     await this.fetchStore()
     this.addProduct()
-    this.debouncedFetch = debounce((newValue) => {
-      console.log(newValue, 'newval')
-      try {
-        newValue.map(async (el) => {
-          this.makeVisible = true
-          const { results } = await this.$api.inventory.getProducts({
-            search: el,
-            size: 10,
-          })
-          console.log(results, 'results')
-          this.picked = false
-          this.products = results
-        })
-      } catch (err) {
-        this.makeVisible = false
-      }
-
-      // call fetch API to get results
+    this.debouncedprod = debounce((newVal, oldVal) => {
+      // this.product = newVal
+       this.products =[oldVal, newVal]
+       console.log(this.products)
     }, 1000)
   },
   // eslint-disable-next-line vue/order-in-components
   watch: {
-    search: {
-      handler(...args) {
-        // if (!this.refetch) {
-        this.debouncedFetch(...args)
-        this.refetch = true
-        // }
-      },
-      deep: true,
-    },
-    quantity: {
-      handler(newVal) {
-        newVal.map((el,i)=>{
-        this.receiptData.products[i].quantity = el
-       })
-      },
-      deep: true,
-    },
     date(newVal) {
       this.receiptData.schedule_date = newVal
     },
+    search(newVal) {
+      this.product.product = newVal
+    },
+    quantity(newVal) {
+      this.product.quantity = Number(newVal)
+    },
+    product: {
+      handler(...args){
+        this.debouncedprod(...args)
+      },
+      deep: true,
+    }
   },
   methods: {
-    show() {
-      this.$bvModal.show('id')
-      this.makeVisible = false
+    updateQuantity(e) {
+      this.product.quantity = e
+      console.log(this.product)
     },
+    updateId(e) {
+      this.product.product = e
+      console.log(this.product)
+    },
+   
     cancel() {
       this.$router.push('/dashboard/inventory/receipt')
       this.receiptData = {
@@ -335,7 +237,8 @@ export default {
     },
     addProduct() {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.receiptData.products.push(this.product)
+      // console.log(this.product)
+      this.receiptData.products.push({product:'' , quantity:''})
     },
     deleteProduct(e) {
       if (this.receiptData.products.length !== 1) {
@@ -343,12 +246,20 @@ export default {
       }
     },
     async create(e) {
-      e.preventDefault()
+      try{
+         e.preventDefault()
       console.log(this.receiptData, 'reciept')
       const { results } = await this.$api.inventory.createMove({
         ...this.receiptData,
       })
       console.log(results)
+      this.$toast({
+          type: 'success',
+          text: "sucessfully added receipt"
+        })
+      }catch(err){
+        console.log(err)
+      }
     },
     async fetchVendors() {
       try {
@@ -356,28 +267,12 @@ export default {
         this.vendors = data.results
         console.log(this.vendors, 'vendors')
       } catch (err) {
+        this.$toast({
+          type: 'error',
+          text: err.message,
+        })
         console.log(err)
       }
-    },
-    pickProd(param, id, i) {
-      //   this.placholder.push(param)
-      this.search[i] = param
-      this.receiptData.products[i].product = id
-      console.log(this.search[i], this.products, 'search')
-      this.picked = true
-      //   this.products = []
-      this.makeVisible = false
-      //   this.refetch = true
-    },
-    pickNewProd(param, i) {
-      //   this.placholder.push(param)
-      this.search[i] = param
-      
-      console.log(this.search[i], this.products, 'search')
-      this.picked = true
-      //   this.products = []
-      this.makeVisible = false
-      //   this.refetch = true
     },
 
     async fetchStore() {
