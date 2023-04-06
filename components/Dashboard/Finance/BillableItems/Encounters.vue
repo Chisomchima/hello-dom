@@ -146,7 +146,7 @@ export default {
       ],
       filter: {
         size: 10,
-        module: 'ENCOUNTERS',
+        module: 'Encounter',
         desciption: '',
       },
     }
@@ -177,7 +177,7 @@ export default {
       this.filter.size = e
       this.getBillableItems(this.currentPage, this.filter)
     },
-    async getBillableItems(page = 1, e = { size: 10, module: 'ENCOUNTERS' }) {
+    async getBillableItems(page = 1, e = { size: 10, module: 'Encounter' }) {
       this.busy = true
       this.filter = e
 

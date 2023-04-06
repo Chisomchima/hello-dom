@@ -132,7 +132,7 @@ export default {
       ],
       filter: {
         size: 10,
-        module: 'IMAGING',
+        module: 'Imaging',
         desciption: ''
       },
     }
@@ -167,7 +167,7 @@ export default {
       this.filter.size = e
       this.getSchemes(this.currentPage, this.filter)
     },
-    async getSchemes(page = 1, e = { size: 10, module: 'IMAGING' }) {
+    async getSchemes(page = 1, e = { size: 10, module: 'Imaging' }) {
       this.busy = true
       this.filter = e
 

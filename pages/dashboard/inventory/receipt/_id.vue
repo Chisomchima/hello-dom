@@ -1,0 +1,356 @@
+<template>
+  <div>
+    <BackwardNavigation />
+    <div class="bg-white p-5 shadow-sm">
+      <h4>Update Reciept</h4>
+      <ValidationObserver ref="form">
+        <form>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Vendor" :rules="['']">
+              <VSelect
+                v-model="receiptData.vendor"
+                :options="vendors"
+                :reduce="(opt) => opt.id"
+                label="name"
+              >
+              </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Recieving Store*" :rules="['required']">
+              <VSelect
+                v-model="receiptData.destination_location"
+                :options="stores"
+                :reduce="(opt) => opt.id"
+                label="name"
+              >
+              </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Scheduled Date" :rules="['required']">
+              <label class="form-control-label"> Scheduled Date</label>
+              <input
+                v-model="date"
+                type="date"
+                name="date"
+                class="form-control"
+              />
+            </ValidationProviderWrapper>
+          </div>
+
+          <b-tabs content-class="mt-2 p-3" class="mt-4 p-4 shadow">
+            <b-tab title="Products" active>
+              <div
+                v-for="(prod, index) in receiptData.products"
+                :key="index"
+                class="row p-1 mt-2 mx-2 border border-secondary rounded"
+              >
+                <div
+                  class="
+                    col-md-12
+                    d-flex
+                    justify-content-end
+                    ml-0
+                    text-danger text-14
+                  "
+                >
+                  <span class="point float" @click="deleteProduct(index)">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm4.3 14.3a.996.996 0 0 1-1.41 0L12 13.41L9.11 16.3a.996.996 0 1 1-1.41-1.41L10.59 12L7.7 9.11A.996.996 0 1 1 9.11 7.7L12 10.59l2.89-2.89a.996.996 0 1 1 1.41 1.41L13.41 12l2.89 2.89c.38.38.38 1.02 0 1.41z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <!-- product stack -->
+                <!-- <pre>{{ prod }}</pre> -->
+                <DashboardInventoryProductStack
+                  @quantity="prod.quantity = $event"
+                  @prodId="prod.product = $event"
+                  @getId="prod.product = $event"
+                />
+              </div>
+              <div
+                class="
+                  col-md-12
+                  d-flex
+                  justify-content-end
+                  ml-0
+                  text-primary text-14
+                  pt-2
+                "
+              >
+                <span class="point" @click="addProduct()">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
+                    />
+                  </svg>
+                  Add
+                </span>
+              </div>
+            </b-tab>
+            <b-tab title="Additional Info">
+              <div class="col-md-12 mb-2">
+                <ValidationProviderWrapper
+                  name="Additional Information"
+                  :rules="['']"
+                >
+                  <div class="d-flex">
+                    <textarea
+                      readonly
+                      value="value"
+                      type="text"
+                      class="form-control"
+                    />
+                  </div>
+                </ValidationProviderWrapper>
+              </div>
+            </b-tab>
+          </b-tabs>
+          <div>
+            <button
+              class="btn btn-primary px-4 py-2 mt-4"
+              type="button"
+              @click="update"
+            >
+              Update
+            </button>
+            <button
+              class="btn btn-warning px-4 py-2 mt-4"
+              type="button"
+              @click="cancel"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </ValidationObserver>
+    </div>
+  </div>
+</template>
+
+<script>
+import { debounce } from 'lodash'
+
+export default {
+  name: 'update',
+  props: {
+    editData: {
+      type: Object,
+      require: false,
+      default: () => ({}),
+    },
+    isReciept: {
+      type: Boolean,
+      default: true,
+      require: false,
+    },
+    role: {
+      require: false,
+    },
+    param: {
+      type: Object,
+    },
+  },
+  data() {
+    return {
+      isUpdate: '',
+      date: '',
+      search: '',
+      quantity: '',
+      placholder: [],
+      product: { product: '', quantity: 0 },
+      products: [],
+      stores: [],
+      vendors: [],
+      receiptData: {
+        source_location: '',
+        destination_location: '',
+        vendor: null,
+        products: [],
+        type: 'RECEIPTS',
+        schedule_date: this.date,
+      },
+    }
+  },
+  computed: {},
+  async mounted() {
+    console.log(this.$route.params.id)
+    this.getMove(this.$route.params.id)
+    this.tabs = this.$children
+    await this.fetchVendors()
+    await this.fetchStore()
+    this.addProduct()
+    this.debouncedprod = debounce((newVal, oldVal) => {
+      // this.product = newVal
+      this.products = [oldVal, newVal]
+      console.log(this.products)
+    }, 1000)
+  },
+  // eslint-disable-next-line vue/order-in-components
+  watch: {
+    date(newVal) {
+      this.receiptData.schedule_date = newVal
+    },
+    search(newVal) {
+      this.product.product = newVal
+    },
+    quantity(newVal) {
+      this.product.quantity = Number(newVal)
+    },
+    product: {
+      handler(...args) {
+        this.debouncedprod(...args)
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    updateQuantity(e) {
+      this.product.quantity = e
+      console.log(this.product)
+    },
+    updateId(e) {
+      this.product.product = e
+      console.log(this.product)
+    },
+
+    cancel() {
+      this.$router.push('/dashboard/inventory/receipt')
+      this.receiptData = {
+        source_location: '',
+        destination_location: '',
+        vendor: null,
+        products: [],
+        type: '',
+        schedule_date: '',
+      }
+    },
+    addProduct() {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // console.log(this.product)
+      this.receiptData.products.push({ product: '', quantity: '' })
+    },
+    deleteProduct(e) {
+      if (this.receiptData.products.length !== 1) {
+        this.receiptData.products.splice(e, 1)
+      }
+    },
+    async getMove(id) {
+      try {
+        const data = await this.$api.inventory.getSingleMove(id)
+        this.receiptData.source_location = data.source_location.name
+        this.receiptData.destination_location = data.destination_location.name
+        this.receiptData.vendor = data.vendor
+        this.receiptData.products = data.lines
+        this.date = data.schedule_date
+        this.receiptData.schedule_date = data.schedule_date
+      } catch (err) {
+        this.$toast({
+          type: 'error',
+          text: err.message,
+        })
+      }
+    },
+    async update(e) {
+        console.log(e)
+      try {
+        console.log(this.receiptData, 'reciept')
+        const { results } = await this.$api.inventory.updateMove({
+          ...this.receiptData,
+        })
+        console.log(results)
+        this.$toast({
+          type: 'success',
+          text: 'sucessfully updated receipt',
+        })
+      } catch (err) {
+        console.log(err)
+        this.$toast({
+          type: 'error',
+          text: `${err}`,
+        })
+      }
+    },
+    async fetchVendors() {
+      try {
+        const data = await this.$api.inventory.getVendors()
+        this.vendors = data.results
+        console.log(this.vendors, 'vendors')
+      } catch (err) {
+        this.$toast({
+          type: 'error',
+          text: err.message,
+        })
+        console.log(err)
+      }
+    },
+
+    async fetchStore() {
+      try {
+        const data = await this.$api.inventory.getSourceVendor()
+        console.log(data, 'store')
+        this.stores = data.results
+      } catch (err) {
+        console.log(err)
+      }
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+textarea.form-control {
+  min-height: 50px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.float {
+  position: relative;
+  top: -3px;
+  right: -17px;
+}
+
+.shrink {
+  height: 2px;
+}
+.search-options {
+  width: 100%;
+  height: auto;
+}
+
+.option {
+  color: grey;
+}
+.option:hover {
+  cursor: pointer;
+  background-color: rgb(227, 243, 238);
+}
+.view-more {
+  color: rgb(102, 102, 203);
+  margin-top: 20px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.clear {
+  color: rgb(235, 219, 219);
+}
+</style>

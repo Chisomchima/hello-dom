@@ -2,27 +2,27 @@
   <div>
     <div>
       <UtilsFilterComponent
+        :disable-visualization="true"
         @search-input="searchPricelist"
         @view-by="getSome($event)"
-        :disableVisualization="true"
       >
         <template #besideFilterButton>
-          <button @click="openModal" class="btn btn-outline-primary">
+          <button class="btn btn-outline-primary" @click="openModal">
             Add Pricelist
           </button>
         </template>
 
         <TableComponent
-          @row-clicked="gotoPricelistItem($event)"
-          @page-changed="getPriceList($event, filter)"
-          :perPage="filter.size"
+          :per-page="filter.size"
           :items="items"
           :pages="pages"
           :busy="busy"
           :fields="fields"
-          :showBaseCount="trigger"
-          :currentPage="currentPage"
-          :totalRecords="totalRecords"
+          :show-base-count="trigger"
+          :current-page="currentPage"
+          :total-records="totalRecords"
+          @row-clicked="gotoPricelistItem($event)"
+          @page-changed="getPriceList($event, filter)"
         >
           <template #description="{ data }">
             <div class="text-capitalize">
@@ -30,7 +30,7 @@
             </div>
           </template>
           <template #edit="{ data }">
-            <button @click.prevent="edit(data.item)" class="text-start btn">
+            <button class="text-start btn" @click.prevent="edit(data.item)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
@@ -55,7 +55,7 @@
       </UtilsFilterComponent>
       <div>
         <DashboardModalFinanceAddPriceList
-          :editData="modalData"
+          :edit-data="modalData"
           :title="newTitle"
           @refresh="refreshMe"
         />
@@ -65,8 +65,9 @@
 </template>
 
 <script>
-import TableCompFun from '~/mixins/TableCompFun'
+import { DateTime } from 'luxon'
 import { debounce } from 'lodash'
+import TableCompFun from '~/mixins/TableCompFun'
 export default {
   mixins: [TableCompFun],
   data() {
@@ -94,6 +95,21 @@ export default {
           sortable: true,
         },
         {
+          key: 'updated_at',
+          label: 'Last Modified',
+          sortable: true,
+          formatter: (value) => {
+            return DateTime.fromISO(value).toLocaleString(
+              DateTime.DATETIME_SHORT
+            )
+          },
+        },
+        {
+          key: 'updated_by.username',
+          label: 'Last Modified By',
+          sortable: true,
+        },
+        {
           key: 'edit',
           label: '',
           sortable: false,
@@ -105,8 +121,12 @@ export default {
       },
     }
   },
-  mounted() {
-    this.getPriceList()
+  computed: {
+    trigger() {
+      if (this.items.length != 0) {
+        return true
+      }
+    },
   },
   watch: {
     'filter.fetchBy'() {
@@ -115,12 +135,8 @@ export default {
       }
     },
   },
-  computed: {
-    trigger() {
-      if (this.items.length != 0) {
-        return true
-      }
-    },
+  mounted() {
+    this.getPriceList()
   },
   methods: {
     openModal() {
@@ -150,12 +166,13 @@ export default {
 
       this.currentPage = page
       try {
-        let response = await this.$api.finance_settings.getPriceList({
+        const response = await this.$api.finance_settings.getPriceList({
           ...e,
-          page: page,
+          page,
         })
 
         this.items = response.results
+        console.log(this.items, 'pricelist')
         this.pages = response.total_pages
         this.totalRecords = response.total_count
         this.currentPage = response.current_page

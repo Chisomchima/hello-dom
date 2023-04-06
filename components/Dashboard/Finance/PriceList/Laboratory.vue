@@ -206,7 +206,7 @@ export default {
       ],
       filter: {
         size: 10,
-        module: 'LABORATORY',
+        module: 'Laboratory',
         name: '',
         price_list: this.$route.params.id,
       },
@@ -253,7 +253,7 @@ export default {
     },
     async getPriceListItems(
       page = 1,
-      e = { size: 10, name: '', module: 'LABORATORY', price_list: this.$route.params.id, }
+      e = { size: 10, name: '', module: 'Laboratory', price_list: this.$route.params.id, }
     ) {
       this.filter = e
 
@@ -285,7 +285,7 @@ export default {
     async save_file() {
       this.downloading = true
       const response = await fetch(
-        `${process.env.BASE_URL}finance/price_lists/${this.$route.params.id}/price_list_items/spreadsheet_download/?module=LABORATORY`,
+        `${process.env.BASE_URL}finance/price_lists/${this.$route.params.id}/price_list_items/spreadsheet_download/?module=Laboratory`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,

@@ -207,7 +207,7 @@ export default {
       ],
       filter: {
         size: 10,
-        module: 'IMAGING',
+        module: 'Imaging',
         name: '',
         price_list: this.$route.params.id,
       },
@@ -253,7 +253,7 @@ export default {
     },
     async getPriceListItems(
       page = 1,
-      e = { size: 10, name: '', module: 'IMAGING', price_list: this.$route.params.id, }
+      e = { size: 10, name: '', module: 'Imaging', price_list: this.$route.params.id, }
     ) {
       this.filter = e
 
@@ -285,7 +285,7 @@ export default {
     async save_file() {
       this.downloading = true
       const response = await fetch(
-        `${process.env.BASE_URL}finance/price_lists/${this.$route.params.id}/price_list_items/spreadsheet_download/?module=IMAGING`,
+        `${process.env.BASE_URL}finance/price_lists/${this.$route.params.id}/price_list_items/spreadsheet_download/?module=Imaging`,
         {
           headers: {
             Authorization: `Token ${this.$store.state.auth.token}`,

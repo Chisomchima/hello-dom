@@ -13,7 +13,7 @@
       >
         <div class="d-flex">
           <div v-if="dropdownFilter" class="pr-3">
-            <b-dropdown no-caret id="dropdown-1" class="rounded-0">
+            <b-dropdown id="dropdown-1" no-caret class="rounded-0">
               <template #button-content>
                 <div class="col-md-2 text-14">Filter</div>
               </template>
@@ -107,19 +107,20 @@
               data-inline="false"
               data-icon="carbon:search"
             ></span>
-            <v-select
+            <VSelect
               v-if="hasCategory"
               v-model="category"
               class="w-75 mr-3 text-grey text-14 p-auto"
               :options="categories"
+              :reduce="(op) => op.id"
+              :get-option-label="(op) => op.name"
               :placeholder="
                 searchPlaceholder ? searchPlaceholder : 'Search by category'
               "
               multiple
-              taggable
-              label="search by category"
+              label="name"
             >
-            </v-select>
+            </VSelect>
             <input
               type="text"
               class="form-control w-50"
@@ -274,18 +275,29 @@ export default Vue.extend({
     }
   },
   watch: {
-      items(newVal){
-        const categories = newVal.map((el) => {
-          return el.category.id
-        })
-        this.categories = [...new Set(categories)]
-      },
-      category(newVal){
-        this.$emit('cat-search-input', newVal);
-        console.log(newVal, 'newval')
-      }
+    category(newVal) {
+      this.$emit('cat-search-input', newVal)
+      // console.log(newVal, 'newval')
+    },
+    items(newval) {
+      console.log(newval, 'items')
+      // if (newval.length > 0) {
+      const category = newval.map((el) => el.category)
+      const uniqueArray = category.reduce((accumulator, currentValue) => {
+        const duplicate = accumulator.find(
+          (obj) => obj.id === currentValue.id && obj.name === currentValue.name
+        )
+        if (!duplicate) {
+          accumulator.push(currentValue)
+        }
+        return accumulator
+      }, [])
+      // console.log(uniqueArray,'unique')
+      this.categories = uniqueArray
+      // }
+      // this.categories = []
+    },
   },
- 
   methods: {
     searchDebounced: debounce(function (this: any, search: string) {
       this.$emit('search-input', search)

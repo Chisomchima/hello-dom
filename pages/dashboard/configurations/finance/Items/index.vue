@@ -35,7 +35,6 @@
             <div v-if="activeIndex === 1">
               <DashboardFinanceBillableItemsEncounters />
             </div>
-            
           </TabPanel>
           <TabPanel class="dark-panel">
             <template #header>
@@ -61,6 +60,14 @@
               <DashboardFinanceBillableItemsNursing />
             </div>
           </TabPanel>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Inventory</span>
+            </template>
+            <div v-if="activeIndex === 5">
+              <DashboardFinanceBillableItemsInventory />
+            </div>
+          </TabPanel>
         </TabView>
       </UtilsCardTab>
     </UtilsBaseCardTab>
@@ -72,7 +79,7 @@ export default {
   data() {
     return {
       data: null,
-      activeIndex: 0
+      activeIndex: 0,
     }
   },
 
@@ -81,24 +88,27 @@ export default {
       switch (e.index) {
         case 0:
           this.activeIndex = 0
-          break;
+          break
         case 1:
           this.activeIndex = 1
-          break;
+          break
         case 2:
           this.activeIndex = 2
-          break;
+          break
         case 3:
           this.activeIndex = 3
-          break;
+          break
         case 4:
           this.activeIndex = 4
-          break;
+          break
+        case 5:
+          this.activeIndex = 5
+          break
         default:
           this.activeIndex = 0
       }
     },
-  }
+  },
 }
 </script>
 

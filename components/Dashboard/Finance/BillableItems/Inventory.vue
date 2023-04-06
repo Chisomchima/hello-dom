@@ -133,7 +133,7 @@
         ],
         filter: {
           size: 10,
-          module: 'Nursing',
+          module: 'Inventory',
           desciption: '',
         },
       }
@@ -168,7 +168,7 @@
         this.filter.size = e
         this.getSchemes(this.currentPage, this.filter)
       },
-      async getSchemes(page = 1, e = { size: 10, module: 'Nursing' }) {
+      async getSchemes(page = 1, e = { size: 10, module:'Inventory' }) {
         this.busy = true
         this.filter = e
   
@@ -177,7 +177,7 @@
         try {
           const response = await this.$api.finance_settings.getBillableItems({
             ...e,
-            page
+            page,
           })
   
           this.items = response.results

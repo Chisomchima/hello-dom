@@ -133,7 +133,7 @@ export default {
       ],
       filter: {
         size: 10,
-        module: 'LABORATORY',
+        module: 'Laboratory',
         desciption: '',
       },
     }
@@ -168,7 +168,7 @@ export default {
       this.filter.size = e
       this.getSchemes(this.currentPage, this.filter)
     },
-    async getSchemes(page = 1, e = { size: 10, module: 'LABORATORY' }) {
+    async getSchemes(page = 1, e = { size: 10, module: 'Laboratory' }) {
       this.busy = true
       this.filter = e
 

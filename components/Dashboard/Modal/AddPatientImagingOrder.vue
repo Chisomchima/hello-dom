@@ -1,16 +1,31 @@
 <template>
-  <ModalWrapper size="lg" title="Add Imaging Order" @ok="ok()" @show="getData()" @hide="clear()" id="add_imaging"
-    :stacking="false">
+  <ModalWrapper
+    size="lg"
+    title="Add Imaging Order"
+    @ok="ok()"
+    @show="getData()"
+    @hide="clear()"
+    id="add_imaging"
+    :stacking="false"
+  >
     <ValidationObserver ref="form">
       <form>
         <div class="row">
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="UHID" :rules="['required']">
-              <input v-model="dataObject.patient.uhid" readonly type="text" class="form-control" />
+              <input
+                v-model="dataObject.patient.uhid"
+                readonly
+                type="text"
+                class="form-control"
+              />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="Patient Name" :rules="['required']">
+            <ValidationProviderWrapper
+              name="Patient Name"
+              :rules="['required']"
+            >
               <input :value="name" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
@@ -23,36 +38,68 @@
             <small class="text-grey text-12">Age (Y-M-D)</small>
             <div class="d-flex">
               <div v-if="fill" class="px-1">
-                <input type="text" disabled placeholder="Year" v-model="age.year"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Year"
+                  v-model="age.year"
+                  class="form-control ng-untouched ng-pristine ng-valid"
+                />
               </div>
               <div v-if="!fill" class="px-1">
                 <ValidationProviderWrapper name="" :rules="['required']">
-                  <input type="number" placeholder="Year" v-model="formDate.year"
-                    class="form-control ng-untouched ng-pristine ng-valid" />
+                  <input
+                    type="number"
+                    placeholder="Year"
+                    v-model="formDate.year"
+                    class="form-control ng-untouched ng-pristine ng-valid"
+                  />
                 </ValidationProviderWrapper>
               </div>
               <div v-if="fill" class="px-1">
-                <input type="text" disabled placeholder="Month" v-model="age.month"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Month"
+                  v-model="age.month"
+                  class="form-control ng-untouched ng-pristine ng-valid"
+                />
               </div>
               <div v-if="!fill" class="px-1">
-                <input type="number" placeholder="Month" v-model="formDate.month"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <input
+                  type="number"
+                  placeholder="Month"
+                  v-model="formDate.month"
+                  class="form-control ng-untouched ng-pristine ng-valid"
+                />
               </div>
               <div v-if="fill" class="px-1">
-                <input type="text" disabled placeholder="Day" v-model="age.day"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Day"
+                  v-model="age.day"
+                  class="form-control ng-untouched ng-pristine ng-valid"
+                />
               </div>
               <div v-if="!fill" class="px-1">
-                <input type="number" placeholder="Day" v-model="formDate.day"
-                  class="form-control ng-untouched ng-pristine ng-valid" />
+                <input
+                  type="number"
+                  placeholder="Day"
+                  v-model="formDate.day"
+                  class="form-control ng-untouched ng-pristine ng-valid"
+                />
               </div>
             </div>
           </div>
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Gender" :rules="['required']">
-              <input :value="gender" type="text" class="form-control" readonly />
+              <input
+                :value="gender"
+                type="text"
+                class="form-control"
+                readonly
+              />
             </ValidationProviderWrapper>
           </div>
           <div class="col-md-6 mb-2">
@@ -60,18 +107,44 @@
               <input :value="email" type="text" class="form-control" readonly />
             </ValidationProviderWrapper>
           </div>
-
-          <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="Service Center" :rules="['required']">
-              <VSelect v-model="dataObject.service_center" :options="service_centers" label="name">
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Scheme" :rules="['']">
+              <VSelect
+              class="scheme"
+                v-model="scheme"
+                :options="schemes"
+                :reduce="(op) => op.payer_scheme.id"
+                :getOptionLabel="(op) => op.payer_scheme.name"
+                label="name"
+              >
               </VSelect>
             </ValidationProviderWrapper>
           </div>
-
           <div class="col-md-6 mb-2">
-            <ValidationProviderWrapper name="Observations" :rules="['required']">
-              <VSelect v-model="dataObject.img_obv" :multiple="true" :options="observations" :reduce="(opt) => opt.id"
-                label="name">
+            <ValidationProviderWrapper
+              name="Service Center"
+              :rules="['required']"
+            >
+              <VSelect
+                v-model="dataObject.service_center"
+                :options="service_centers"
+                label="name"
+              >
+              </VSelect>
+            </ValidationProviderWrapper>
+          </div>
+          <div class="col-md-6 mb-2">
+            <ValidationProviderWrapper
+              name="Observations"
+              :rules="['required']"
+            >
+              <VSelect
+                v-model="dataObject.img_obv"
+                :multiple="true"
+                :options="observations"
+                :reduce="(opt) => opt.id"
+                label="name"
+              >
               </VSelect>
             </ValidationProviderWrapper>
           </div>
@@ -79,8 +152,15 @@
           <div class="col-md-12 mb-2">
             <div class="mb-1">
               <ValidationProviderWrapper name="Diagnosis" :rules="['']">
-                <VSelect v-model="dataObject.diagnosis" label="case" multiple taggable @open="showModal" :noDrop="true"
-                  :closeOnSelect="true">
+                <VSelect
+                  v-model="dataObject.diagnosis"
+                  label="case"
+                  multiple
+                  taggable
+                  @open="showModal"
+                  :noDrop="true"
+                  :closeOnSelect="true"
+                >
                 </VSelect>
               </ValidationProviderWrapper>
             </div>
@@ -106,13 +186,21 @@
 
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Order Physician" :rules="[]">
-              <input v-model="dataObject.ordering_physician" type="text" class="form-control" />
+              <input
+                v-model="dataObject.ordering_physician"
+                type="text"
+                class="form-control"
+              />
             </ValidationProviderWrapper>
           </div>
 
           <div class="col-md-6 mb-2">
             <ValidationProviderWrapper name="Referral Facility" :rules="[]">
-              <input v-model="dataObject.referral_facility" type="text" class="form-control" />
+              <input
+                v-model="dataObject.referral_facility"
+                type="text"
+                class="form-control"
+              />
             </ValidationProviderWrapper>
           </div>
 
@@ -124,17 +212,33 @@
 
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Comments" :rules="['']">
-              <textarea id="" v-model="dataObject.comments" class="form-control" name="" cols="30" rows="10"></textarea>
+              <textarea
+                id=""
+                v-model="dataObject.comments"
+                class="form-control"
+                name=""
+                cols="30"
+                rows="10"
+              ></textarea>
             </ValidationProviderWrapper>
           </div>
         </div>
       </form>
+       <div class="col-md-12 my-2">
+          <span class="text-grey">Out of pocket Expenditure: </span>
+          <span class="">NGN {{ counter }}</span>
+        </div>
     </ValidationObserver>
     <div>
-      <DashboardModalImagingDiagnosis @page-changed="getICD10($event, searchParam)" @diagnosis="setDiagnosis"
-        @refresh="getICD10(1, searchParam)" @change="helloWorld" :selectedDiagnosis="selected" />
+      <DashboardModalImagingDiagnosis
+        @page-changed="getICD10($event, searchParam)"
+        @diagnosis="setDiagnosis"
+        @refresh="getICD10(1, searchParam)"
+        @change="helloWorld"
+        :selectedDiagnosis="selected"
+      />
     </div>
-</ModalWrapper>
+  </ModalWrapper>
 </template>
 
 <script>
@@ -154,6 +258,11 @@ export default {
   },
   data() {
     return {
+      counter: 0,
+      singleLabPanel: '',
+      selectedLabPanelPrices: [],
+      selectedLabPanel: [],
+      scheme: '',
       uhid: '',
       selected: [],
       present: false,
@@ -172,7 +281,7 @@ export default {
       formDate: {
         year: '',
         month: '',
-        day: ''
+        day: '',
       },
     }
   },
@@ -188,6 +297,9 @@ export default {
         )
       }
       return ''
+    },
+    schemes() {
+      return this.data.payment_scheme
     },
     fill() {
       return this.age.year ? true : false
@@ -225,11 +337,53 @@ export default {
         this.selected = newVal
       },
     },
+    'dataObject.img_obv': {
+      async handler(newIds, oldIds) {
+       const addedPanels = this.observations.filter(
+        (panel) => newIds.includes(panel.id) && !oldIds.includes(panel.id)
+      )
+      const removedPanels = this.observations.filter(
+        (panel) => oldIds.includes(panel.id) && !newIds.includes(panel.id)
+      )
+
+      for (const panel of addedPanels) {
+        this.singleLabPanel = panel.bill_item_code
+        const price = await this.getPrice()
+        this.selectedLabPanel.push(panel)
+        this.selectedLabPanelPrices.push(price)
+        this.counter += price
+        console.log(this.counter)
+      }
+      // Remove the prices of the removed panels from the selected prices array and the counter variable
+      for (const panelId of removedPanels) {
+        const priceIndex = this.selectedLabPanel.findIndex(
+          (panel) => panel.bill_item_code === panelId.bill_item_code
+        )
+        if (priceIndex !== -1) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-expressions
+          this.selectedLabPanel.splice(priceIndex, 1)[0]
+          const price = this.selectedLabPanelPrices.splice(priceIndex, 1)[0]
+          this.counter -= price
+        }
+      }
+      },
+    }
   },
   methods: {
     async ok() {
       if (await this.$refs.form.validate()) {
         await this.save()
+      }
+    },
+     async getPrice() {
+      try {
+        const res = await this.$api.laboratory.getPrice({
+          itemCode: this.singleLabPanel,
+          patientId: this.dataObject.patient.id,
+        })
+        return res.amount
+      } catch (err) {
+        console.log(err)
       }
     },
     helloWorld(e) {
@@ -253,12 +407,12 @@ export default {
       let obj = this.dataObject.patient
       if (!this.age.year) {
         obj.age = this.formDate
-      }
-      else {
+      } else {
         obj.age = this.age
       }
       try {
         const data = await this.$api.imaging.saveOrder({
+          payment_scheme: this.scheme,
           img_obv: this.dataObject.img_obv,
           diagnosis: diagnosis,
           ordering_physician: this.dataObject.ordering_physician,
@@ -298,7 +452,7 @@ export default {
       this.formDate = {
         year: '',
         month: '',
-        day: ''
+        day: '',
       }
       this.$emit('hide')
     },
@@ -342,4 +496,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.scheme {
+  background-color: #e9edf1;
+}
+</style>

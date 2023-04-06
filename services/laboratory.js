@@ -29,6 +29,12 @@ export default axios => ({
             params
         })
     },
+    getPrice(params) {
+        const {itemCode, patientId} = params
+        return axios.$get(
+          `/finance/billable_items/${itemCode}/patients/${patientId}/price/`
+        )
+      },
 
     // ***********settings****************
     deleteSpecimen(id){

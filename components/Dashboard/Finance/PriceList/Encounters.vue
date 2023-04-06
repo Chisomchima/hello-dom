@@ -255,7 +255,7 @@ export default {
       e = {
         size: 10,
         name: '',
-        module: 'ENCOUNTERS',
+        module: 'Encounter',
         price_list: this.$route.params.id,
       }
     ) {

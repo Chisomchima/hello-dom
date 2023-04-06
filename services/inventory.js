@@ -100,6 +100,13 @@ export default axios => ({
     createMove (body){
         return axios.$post(`/inventory/stock_movements/`, body)
     },
+    updateMove (body){
+        const {id, ...otherDetails} = body
+        return axios.$put(`/inventory/stock_movements/${id}`, otherDetails)
+    },
+    getSingleMove(id){
+        return axios.$get(`/inventory/stock_movements/${id}/`)
+    },
     getStockMove(param){
         return axios.$get(`/inventory/stock_movements/`, param)
     }

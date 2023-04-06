@@ -3,7 +3,9 @@
     <div class="text-20 d-flex justify-content-between align-items-center mb-3">
       <h4>Reciepts</h4>
       <div>
-        <BaseButton class="btn-primary" @click="$router.push('/dashboard/inventory/receipt/add')"
+        <BaseButton
+          class="btn-primary"
+          @click="$router.push('/dashboard/inventory/receipt/add')"
           >Add Reciept
         </BaseButton>
       </div>
@@ -11,7 +13,7 @@
 
     <div class="card">
       <div class="card-body">
-        <DashboardInvoiceListFilter  @filter="filter($event)" />
+        <DashboardInvoiceListFilter @filter="filter($event)" />
       </div>
     </div>
 
@@ -34,7 +36,7 @@
             :items="itemsToShow"
             :busy="busy"
             :dropdown-item="['cancel']"
-            @row-clicked="$router.push('/dashboard/inventory/receipt/update')"
+            @row-clicked="updateMove($event)"
             @cancel="cancelRequestModal($event)"
             @page-changed="filter($event, currentFilter)"
           >
@@ -121,7 +123,6 @@
     </div> -->
 
     <!-- ***********workflow********* -->
-    
 
     <!-- ********************************* -->
   </div>
@@ -129,6 +130,7 @@
 
 <script>
 import { DateTime } from 'luxon'
+import { mapActions } from 'vuex'
 import TableFunc from '~/mixins/TableCompFun'
 import FilterLogic from '~/mixins/routeFiltersMixin'
 import axios from '~/plugins/axios'
@@ -156,11 +158,11 @@ export default {
           key: 'schedule_date',
           label: 'Scheduled Date',
           sortable: true,
-        //   formatter: (value) => {
-        //     return DateTime.fromISO(value).toLocaleString(
-        //       DateTime.DATETIME_SHORT
-        //     )
-        //   },
+          //   formatter: (value) => {
+          //     return DateTime.fromISO(value).toLocaleString(
+          //       DateTime.DATETIME_SHORT
+          //     )
+          //   },
         },
         { key: 'destination_location.name', label: 'Location', sortable: true },
         { key: 'vendor.name', label: 'Vendor', sortable: true },
@@ -168,23 +170,21 @@ export default {
       ],
     }
   },
- mounted() {
-  this.getStockMove()
+  mounted() {
+    this.getStockMove()
   },
 
   methods: {
+    // ...mapActions( ["setMove"]),
     openModal(e) {
-        console.log(e,this.$bvModal, 'event')
-        
-        this.$bvModal.show('modal')
+      console.log(e, this.$bvModal, 'event')
+
+      this.$bvModal.show('modal')
     },
-    // async showItems(){
-    //   try {
-        
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
+    updateMove(e) {
+      console.log(e)
+      this.$router.push(`/dashboard/inventory/receipt/${e.id}`)
+    },
     save_file(e) {
       this.downloading = true
       fetch(
@@ -234,7 +234,7 @@ export default {
         this.downloading = false
       }
     },
-    async getStockMove(){
+    async getStockMove() {
       console.log('hello')
       try {
         this.busy = true
@@ -250,7 +250,7 @@ export default {
     },
     async filter(page, e) {
       this.currentFilter = e
-      
+
       try {
         this.busy = true
         const data = await axios.$get('inventory/stock_movements/', {
@@ -348,7 +348,6 @@ export default {
           this.manageInput = 'text'
         }
       }
-      
     },
     async setStatusToAwaitingApproval() {
       try {

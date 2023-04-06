@@ -30,6 +30,16 @@
             <DashboardFinancePriceListImaging />
           </keep-alive>
         </UtilsCardTab>
+        <UtilsCardTab title="Nursing">
+          <keep-alive>
+            <DashboardFinancePriceListNursing />
+          </keep-alive>
+        </UtilsCardTab>
+        <UtilsCardTab title="Inventory">
+          <keep-alive>
+            <DashboardFinancePriceListInventory />
+          </keep-alive>
+        </UtilsCardTab>
       </UtilsBaseCardTab>
     </div>
   </div>
@@ -39,10 +49,6 @@
 import TableCompFun from '~/mixins/TableCompFun'
 export default {
   mixins: [TableCompFun],
-  data() {
-    return {
-    }
-  },
   async asyncData({ $api, route }) {
     try {
       const data = await $api.finance_settings.viewPricelist(route.params.id)
@@ -51,6 +57,10 @@ export default {
       }
     } catch (error) {
       console.log(error)
+    }
+  },
+  data() {
+    return {
     }
   },
   watch: {

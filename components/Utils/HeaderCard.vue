@@ -51,7 +51,7 @@
             <div
               v-for="(value, name) in filterData"
               :key="value"
-              class="col-sm-6 col-md-4 col-lg-6 mb-2"
+              class="col-sm-12 col-md-12 col-lg-12"
               :class="extraClasses"
             >
               <span class="class-details-data_label text-capitalize"
@@ -73,12 +73,20 @@
             </div>
           </div>
         </slot>
+     <hr/>
+     <div class="col-sm-12 col-md-12 col-lg-12 mt-2 d-flex align-items-center justify-content-end">
+              <small class="text-capitalize text-grey mr-1">Last Updated:</small>
+              <small class="mr-5">{{ dateUpdated }}</small>
+              <small class="text-capitalize text-grey mr-1">Last Updated By:</small>
+              <small class="">{{ data.updated_by.username }}</small>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { DateTime } from 'luxon'
 import Vue, { PropType } from 'vue'
 import { pick } from 'lodash'
 export default Vue.extend({
@@ -104,6 +112,7 @@ export default Vue.extend({
       type: Object,
       default: () => ({}),
     },
+    // eslint-disable-next-line vue/require-default-prop
     displayKey: {
       type: Array as PropType<string[]>,
       required: false,
@@ -113,6 +122,9 @@ export default Vue.extend({
     filterData(): Object {
       return pick(this.data, this.displayKey)
     },
+    dateUpdated(){
+      return DateTime.fromISO(this.data.updated_at).toFormat('yyyy LLL dd')
+    }
   },
   methods: {
     edit() {
@@ -125,4 +137,7 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+
+</style>
