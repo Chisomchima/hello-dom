@@ -259,14 +259,16 @@ export default {
       }
       // Remove the prices of the removed panels from the selected prices array and the counter variable
       for (const panelId of removedPanels) {
-      const priceIndex = this.selectedLabPanel.findIndex(panel => panel.bill_item_code === panelId.bill_item_code);
-      if (priceIndex !== -1) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-expressions
-        this.selectedLabPanel.splice(priceIndex, 1)[0];
-        const price = this.selectedLabPanelPrices.splice(priceIndex, 1)[0];
-        this.counter -= price;
+        const priceIndex = this.selectedLabPanel.findIndex(
+          (panel) => panel.bill_item_code === panelId.bill_item_code
+        )
+        if (priceIndex !== -1) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-expressions
+          this.selectedLabPanel.splice(priceIndex, 1)[0]
+          const price = this.selectedLabPanelPrices.splice(priceIndex, 1)[0]
+          this.counter -= price
+        }
       }
-    }
     },
   },
   methods: {

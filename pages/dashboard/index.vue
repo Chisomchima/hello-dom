@@ -48,6 +48,7 @@
 
 <script>
 export default {
+ 
   data() {
     return {
       // cards: [
@@ -215,7 +216,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.tiles, 'tiles')
+    // console.log(this.tiles, 'tiles')
     if (this.tiles[0].title !== 'Dashboard') {
       this.$store.dispatch('auth/setupDashboard')
     }

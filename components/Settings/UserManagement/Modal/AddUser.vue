@@ -74,12 +74,12 @@
                   </template>
                 </PickList> -->
                 <v-select
+                  v-model="dataObject.menus"
                   class="style-chooser text-grey text-14"
                   placeholder="Options"
                   :options="access"
                   multiple
                   taggable
-                  v-model="dataObject.menus"
                   label="title"
                 >
                 </v-select>
@@ -88,10 +88,10 @@
             <div class="col-md-12 mb-2">
               <ValidationProviderWrapper name="Groups" :rules="['required']">
                 <PickList
-                  :metaKeySelection="control"
                   v-model="dataObject.groups"
-                  listStyle="height:200px"
-                  dataKey="id"
+                  :meta-key-selection="control"
+                  list-style="height:200px"
+                  data-key="id"
                 >
                   <template #sourceheader
                     ><span class="text-14">Available</span></template
@@ -315,15 +315,6 @@ export default {
       ],
     }
   },
-  async created() {
-    let groups = await this.$api.users.getGroups({ size: 1000 })
-    this.dataObject.groups[0] = groups.results
-  },
-  mounted() {
-    // let permissions = this.$api.users.getPermissions({ size: 1000 })
-    // let access = this.access
-    // this.dataObject.menus = access
-  },
   watch: {
     editData: {
       handler(newVal) {
@@ -338,6 +329,15 @@ export default {
       this.title = this.modalTitle
     },
   },
+  async created() {
+    const groups = await this.$api.users.getGroups({ size: 1000 })
+    this.dataObject.groups[0] = groups.results
+  },
+  mounted() {
+    // let permissions = this.$api.users.getPermissions({ size: 1000 })
+    // let access = this.access
+    // this.dataObject.menus = access
+  },
 
   methods: {
     async ok() {
@@ -347,7 +347,7 @@ export default {
     },
     async save() {
       try {
-        let groups = this.dataObject.groups[1]
+        const groups = this.dataObject.groups[1]
         let groupsID = []
         if (groups.length > 0) {
           groupsID = groups.map((el) => el.id)

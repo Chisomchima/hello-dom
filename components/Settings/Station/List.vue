@@ -85,7 +85,7 @@ export default {
             const result = await this.showConfirmMessageBox('Delete nursing station ?')
             try {
                 if (result) {
-                    let response = await this.$api.nursing.deleteStation(item.id)
+                    await this.$api.nursing.deleteStation(item.id)
                     this.$toast({
                         type: 'success',
                         text: `Deleted`,

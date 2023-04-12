@@ -192,7 +192,7 @@ export default {
           icon: 'fas fa-user-nurse',
         },
         {
-          id: 6,
+          id: 7,
           href: '/dashboard/reports',
           title: 'Reports',
           icon: 'fas fa-file',
@@ -225,19 +225,19 @@ export default {
           ],
         },
         {
-          id: 7,
+          id: 8,
           href: '/dashboard/cso',
           title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
         },
         {
-          id: 8,
+          id: 9,
           href: '/dashboard/finance',
           title: 'Finance',
           icon: 'fas fa-money-check-alt',
         },
         {
-          id: 9,
+          id: 10,
           href: '/dashboard/inventory',
           title: 'Inventory',
           icon: 'fas fa-warehouse',
@@ -280,7 +280,7 @@ export default {
           ],
         },
         {
-          id: 10,
+          id: 11,
           title: 'Configurations',
           href: '/dashboard/configurations',
           icon: 'fas fa-cog',
@@ -342,6 +342,12 @@ export default {
               title: 'OPD Configurations',
             },
           ],
+        },
+        {
+          id: 12,
+          href: '/dashboard/medical-reports',
+          title: 'Medical Reports',
+          icon: 'fas fa-list-ul',
         },
       ],
     }

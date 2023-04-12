@@ -5,13 +5,13 @@
     </div>
 
     <UtilsFilterComponent
+      :disable-search="true"
+      disable-visualization
       @uncleared="getUnclearedBill"
       @cleared="getClearedBill"
       @all="getAllBills"
       @search-input="searchBills"
       @view-by="getSome($event)"
-      :disableSearch="true"
-      disable-visualization
     >
       <!-- ['uncleared', 'cleared', 'all'] -->
       <template #beforeActions>
@@ -49,15 +49,15 @@
               </div>
               <div class="col-md-12 d-flex align-items-center mb-2 text-14">
                 <p
+                  v-for="(option, index) in clearedStatus"
+                  :key="index"
                   :class="
                     option.selected
                       ? 'text-info border border-info'
                       : 'text-secondary border'
                   "
-                  @click="fetchBills(option.value, option.selected, index)"
                   class="point mb-0 p-2 mr-2 rounded-sm text-capitalize"
-                  v-for="(option, index) in clearedStatus"
-                  :key="index"
+                  @click="fetchBills(option.value, option.selected, index)"
                 >
                   {{ option.label }}
                 </p>
@@ -67,10 +67,10 @@
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Search</span>
                   <input
+                    v-model="filter.amount"
                     type="text"
                     class="form-control"
                     placeholder="Search"
-                    v-model="filter.amount"
                   />
                 </div>
               </div>
@@ -79,19 +79,19 @@
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date from:</span>
                   <input
+                    v-model="filter.dateFrom"
                     type="date"
                     class="form-control"
                     :max="maxDate"
-                    v-model="filter.dateFrom"
                   />
                 </div>
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date to:</span>
                   <input
+                    v-model="filter.dateTo"
                     type="date"
                     class="form-control"
                     :min="minDate"
-                    v-model="filter.dateTo"
                   />
                 </div>
               </div>
@@ -119,14 +119,14 @@
       <template>
         <TableComponent
           :fields="fields"
-          :perPage="filter.size"
+          :per-page="filter.size"
           :pages="pages"
           :items="items"
           :busy="busy"
+          :show-base-count="trigger"
+          :current-page="currentPage"
+          :total-records="totalRecords"
           @page-changed="pageChange($event, filter)"
-          :showBaseCount="trigger"
-          :currentPage="currentPage"
-          :totalRecords="totalRecords"
         >
           <template #clear="{ data }">
             <label class="exercise-option-check blue-check">
@@ -160,8 +160,8 @@
                   >Unreserve</b-dropdown-item
                 >
                 <b-dropdown-item
-                  class="text-capitalize"
                   v-if="data.item.is_reserved === false"
+                  class="text-capitalize"
                   >Reserve</b-dropdown-item
                 >
                 <b-dropdown-item class="text-capitalize"
@@ -219,15 +219,15 @@
       :goods="unClearedBill"
       :total="total"
       :reserved="reserved"
-      :nameData="data"
-      :totalPaid="totalPaid"
-      :showPayments="showPayments"
+      :name-data="data"
+      :total-paid="totalPaid"
+      :show-payments="showPayments"
       @clear="setState"
       @ok="payment($event)"
       @removedItem="deleteGoods($event)"
     />
     <DashboardModalAuthorizeBillModal
-      :nameData="data"
+      :name-data="data"
       :total="total"
       :goods="unClearedBill"
       @authCode="setAuthCode"
@@ -238,8 +238,7 @@
 
 <script>
 import { DateTime } from 'luxon'
-import { debounce } from 'lodash'
-import { remove } from 'lodash'
+import { debounce , remove } from 'lodash'
 import TableFunc from '~/mixins/TableCompFun' // Table component mixins
 
 export default {
@@ -370,14 +369,14 @@ export default {
     maxDate() {
       let today = new Date()
       today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
       console.log(x)
       return x
     },
     minDate() {
       let today = new Date()
       today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
       console.log(x)
       return x
     },
@@ -404,7 +403,7 @@ export default {
       this.pageChange(1, this.filter)
     },
     fetchBills(e, selected, index) {
-      let arr = this.clearedStatus
+      const arr = this.clearedStatus
       for (let x = 0; x < arr.length; x++) {
         this.clearedStatus[x].selected = false
       }
@@ -469,11 +468,11 @@ export default {
       }
     },
     async unReserveBill(e) {
-      let tempID = e.id
-      let temp = e
+      const tempID = e.id
+      const temp = e
       delete temp.id
       try {
-        let response = await this.$api.finance.unReserveBill(temp, tempID)
+        const response = await this.$api.finance.unReserveBill(temp, tempID)
         this.pageChange(this.currentPage, this.filter)
         this.$toast({
           type: 'success',
@@ -484,11 +483,11 @@ export default {
       }
     },
     async reserveBill(e) {
-      let tempID = e.id
-      let temp = e
+      const tempID = e.id
+      const temp = e
       delete temp.id
       try {
-        let response = await this.$api.finance.reserveBill(temp, tempID)
+        const response = await this.$api.finance.reserveBill(temp, tempID)
         this.pageChange(this.currentPage, this.filter)
         this.$toast({
           type: 'success',
@@ -568,7 +567,7 @@ export default {
       }
       this.authData.bills = billID
       try {
-        let response = await this.$api.finance.auhtorizeHMO(this.authData)
+        const response = await this.$api.finance.auhtorizeHMO(this.authData)
         this.$nuxt.refresh()
         this.$emit('reload_tabs')
         this.$bvModal.hide('authorize')
@@ -595,7 +594,7 @@ export default {
         if (unClearedList.length > 0) {
           billID = unClearedList.map((item) => item.id)
         }
-        let response = await this.$api.finance.makePayment({
+        const response = await this.$api.finance.makePayment({
           bills: billID,
           patient: this.data.id,
           payments: info,
