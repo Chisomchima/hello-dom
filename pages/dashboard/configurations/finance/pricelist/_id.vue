@@ -30,6 +30,11 @@
             <DashboardFinancePriceListImaging />
           </keep-alive>
         </UtilsCardTab>
+        <UtilsCardTab title="Medical Report">
+          <keep-alive>
+            <DashboardFinancePriceListMedicalReport />
+          </keep-alive>
+        </UtilsCardTab>
         <UtilsCardTab title="Nursing">
           <keep-alive>
             <DashboardFinancePriceListNursing />

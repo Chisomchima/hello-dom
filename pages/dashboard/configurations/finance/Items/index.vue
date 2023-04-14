@@ -54,9 +54,17 @@
           </TabPanel>
           <TabPanel class="dark-panel">
             <template #header>
-              <span class="ml-2">Nursing</span>
+              <span class="ml-2">Medical Report</span>
             </template>
             <div v-if="activeIndex === 4">
+              <DashboardFinanceBillableItemsMedicalReport/>
+            </div>
+          </TabPanel>
+          <TabPanel class="dark-panel">
+            <template #header>
+              <span class="ml-2">Nursing</span>
+            </template>
+            <div v-if="activeIndex === 5">
               <DashboardFinanceBillableItemsNursing />
             </div>
           </TabPanel>
@@ -64,7 +72,7 @@
             <template #header>
               <span class="ml-2">Inventory</span>
             </template>
-            <div v-if="activeIndex === 5">
+            <div v-if="activeIndex === 6">
               <DashboardFinanceBillableItemsInventory />
             </div>
           </TabPanel>
@@ -103,6 +111,9 @@ export default {
           break
         case 5:
           this.activeIndex = 5
+          break
+        case 6:
+          this.activeIndex = 6
           break
         default:
           this.activeIndex = 0
