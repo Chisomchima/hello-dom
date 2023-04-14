@@ -33,6 +33,7 @@
     <DashboardModalAddLabOrder :age="age" :data="modalData" @refresh="pageChange()" />
     <DashboardModalAddEncounter :age="age" @reset_age="age = { year: '', month: '', day: '',}" :data="modalData" @refresh="pageChange()" />
     <DashboardModalAddPatientImagingOrder :age="age" :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddMedicalReportOrder :age="age" :data="modalData" @refresh="pageChange()" />
   </div>
 </template>
 

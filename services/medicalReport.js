@@ -19,4 +19,28 @@ export default axios => ({
     deleteMedicalRecord(id) {
         return axios.$delete(`/medical-packages/${id}/`)
     },
+    getParents(params = {}){
+        return axios.$get(`/medical-packages/category/`, { params });
+    },
+    deleteCategory(id){
+        return axios.$delete(`/medical-packages/category/${id}/`)
+    },
+    editParent(body, id){
+        return axios.$patch(`/medical-packages/category/${id}/`, body)
+    },
+    createParent(body){
+        return axios.$post(`/medical-packages/category/`, body)
+    },
+    createServiceCenter(body){
+        return axios.$post(`/medical-packages/service-center/`, body)
+    },
+    editServiceCenter(body, id){
+        return axios.$patch(`/medical-packages/service-center/${id}/`, body)
+    },
+    deleteServiceCenter(id){
+        return axios.$delete(`/medical-packages/service-center/${id}/`)
+    },
+    getServiceCenters(params = {}){
+        return axios.$get(`/medical-packages/service-center/`, { params });
+    },
 })

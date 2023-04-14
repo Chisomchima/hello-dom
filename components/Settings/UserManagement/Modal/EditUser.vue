@@ -85,8 +85,12 @@
                 listStyle="height:300px"
                 dataKey="id"
               >
-                <template #sourceheader><span class="text-14">Available</span></template>
-                  <template #targetheader><span class="text-14">Selected</span></template>
+                <template #sourceheader
+                  ><span class="text-14">Available</span></template
+                >
+                <template #targetheader
+                  ><span class="text-14">Selected</span></template
+                >
                 <template #item="data">
                   <div class="product-list-action">
                     <span class="mb-2 text-gray text-10 p-1">{{
@@ -133,15 +137,15 @@ export default {
       choice: [],
       title: '',
       groups: [],
-     access: [
+      access: [
         {
-          id: 0,
+          id: 10,
           href: '/dashboard/patient',
           title: 'Patient Records',
           icon: 'fas fa-hospital-user',
         },
         {
-          id: 1,
+          id: 20,
           href: '/dashboard/opd',
           title: 'OPD',
           icon: 'fas fa-user-md',
@@ -154,13 +158,13 @@ export default {
           ],
         },
         {
-          id: 2,
+          id: 30,
           href: '/dashboard/pharmacy',
           title: 'Pharmacy',
           icon: 'fas fa-pills',
         },
         {
-          id: 3,
+          id: 40,
           href: '/dashboard/laboratory',
           title: 'Laboratory',
           icon: 'fas fa-vial',
@@ -173,7 +177,7 @@ export default {
           ],
         },
         {
-          id: 4,
+          id: 50,
           href: '/dashboard/imaging',
           title: 'Imaging',
           icon: 'fas fa-x-ray',
@@ -186,13 +190,19 @@ export default {
           ],
         },
         {
-          id: 5,
+          id: 52,
+          href: '/dashboard/medical-reports',
+          title: 'Medical Reports',
+          icon: 'fas fa-list-ul',
+        },
+        {
+          id: 60,
           href: '/dashboard/nursing-orders',
           title: 'Nursing station',
           icon: 'fas fa-user-nurse',
         },
         {
-          id: 7,
+          id: 70,
           href: '/dashboard/reports',
           title: 'Reports',
           icon: 'fas fa-file',
@@ -225,19 +235,19 @@ export default {
           ],
         },
         {
-          id: 8,
+          id: 80,
           href: '/dashboard/cso',
           title: 'Customer Service Officer',
           icon: 'fas fa-list-ol',
         },
         {
-          id: 9,
+          id: 90,
           href: '/dashboard/finance',
           title: 'Finance',
           icon: 'fas fa-money-check-alt',
         },
         {
-          id: 10,
+          id: 100,
           href: '/dashboard/inventory',
           title: 'Inventory',
           icon: 'fas fa-warehouse',
@@ -280,7 +290,7 @@ export default {
           ],
         },
         {
-          id: 11,
+          id: 110,
           title: 'Configurations',
           href: '/dashboard/configurations',
           icon: 'fas fa-cog',
@@ -343,12 +353,6 @@ export default {
             },
           ],
         },
-        {
-          id: 12,
-          href: '/dashboard/medical-reports',
-          title: 'Medical Reports',
-          icon: 'fas fa-list-ul',
-        },
       ],
     }
   },
@@ -407,7 +411,7 @@ export default {
         let groupsID = []
         if (groups.length > 0) {
           groupsID = groups.map((el) => el.id)
-        } 
+        }
         await this.$api.users.updateUser(this.dataObject.id, {
           first_name: this.dataObject.first_name,
           last_name: this.dataObject.last_name,
@@ -416,7 +420,7 @@ export default {
           groups: groupsID,
           menus: sortedArray,
         })
-        
+
         this.$emit('refresh')
         this.$bvModal.hide('editUser')
       } catch (error) {
@@ -436,5 +440,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

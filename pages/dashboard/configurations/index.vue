@@ -1,6 +1,6 @@
 <template>
   <div>
-  <h3 class="page-heading">Configurations</h3>
+    <h3 class="page-heading">Configurations</h3>
     <div class="row">
       <div
         v-for="(card, index) in cards"
@@ -8,7 +8,15 @@
         class="col-md-4 col-12 col-sm-6"
       >
         <div
-          class="card card-stats mb-4 mb-xl-0 shadow-sm p-3 card-hover pointer my-3"
+          class="
+            card card-stats
+            mb-4 mb-xl-0
+            shadow-sm
+            p-3
+            card-hover
+            pointer
+            my-3
+          "
           @click="goToRoute(card.route)"
         >
           <div class="card-body">
@@ -83,6 +91,11 @@ export default {
           name: 'Nursing',
           icon: 'fa fa-cogs',
           route: '/dashboard/configurations/nursing',
+        },
+        {
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/medical-reports/',
+          name: 'Medical Reports',
         },
       ],
     }

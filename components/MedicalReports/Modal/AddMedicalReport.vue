@@ -31,6 +31,18 @@
           </div>
 
           <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Category" :rules="['required']">
+              <VSelect
+                v-model="dataObject.category"
+                :multiple="false"
+                :reduce="(opt) => opt.id"
+                :options="categories"
+                label="name"
+              ></VSelect>
+            </ValidationProviderWrapper>
+          </div>
+
+          <div class="col-md-12 mb-2">
             <ValidationProviderWrapper
               name="Imaging Observation"
               :rules="['required']"
@@ -46,9 +58,9 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Bill Price" :rules="['required']">
+            <ValidationProviderWrapper name="Cost Price" :rules="['required']">
               <input
-                v-model="dataObject.bill_price"
+                v-model="dataObject.cost_price"
                 type="number"
                 class="form-control"
               />
@@ -56,9 +68,12 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Cost Price" :rules="['required']">
+            <ValidationProviderWrapper
+              name="Selling Price"
+              :rules="['required']"
+            >
               <input
-                v-model="dataObject.cost_price"
+                v-model="dataObject.bill_price"
                 type="number"
                 class="form-control"
               />
@@ -92,10 +107,12 @@ export default {
         imaging_obvs: [],
         bill_price: '',
         cost_price: '',
+        category: '',
       },
       title: '',
       Observations: [],
       labPanels: [],
+      categories: [],
     }
   },
   watch: {
@@ -121,8 +138,11 @@ export default {
     const labPanel = await this.$api.medicalReport.getLabPanel({
       size: 1000,
     })
+    const categories = await this.$api.medicalReport.getParents({
+      size: 1000,
+    })
     this.labPanels = labPanel.results
-    console.log(labPanel, 'imaging')
+    this.categories = categories.results
     this.Observations = results
   },
 
@@ -150,12 +170,26 @@ export default {
       }
     },
     async edit() {
-      console.log(this.dataObject.id, 'id')
+      console.log(this.dataObject, 'id')
+      // const imgObv = this.dataObject.imaging_obvs.map((el) => el.id)
+      // const labpanels = this.dataObject.lab_panels.map((el) => el.id)
+      // const categories = this.dataObject.category.id
+      // const { category, ...others } = this.dataObject
       try {
         if (this.dataObject.id) {
-          await this.$api.medicalReport.editMedicalRecord(
-            this.dataObject.id,
-            this.dataObject
+          // console.log({
+          //   // imaging_obvs: imgObv,
+          //   // lab_panels: labpanels,
+          //   category: categories,
+          //   ...others,
+          // }, 'chisom')
+          await this.$api.medicalReport.editMedicalRecord(this.dataObject.id, this.dataObject
+          // {
+          //   // imaging_obvs: imgObv,
+          //   // lab_panels: labpanels,
+          //   category: categories,
+          //   ...others,
+          // }
           )
         }
         this.$emit('refresh')
@@ -166,8 +200,7 @@ export default {
     },
 
     clear() {
-      this.dataObject = {
-      }
+      this.dataObject = {}
     },
   },
 }

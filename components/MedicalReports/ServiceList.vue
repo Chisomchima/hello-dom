@@ -19,6 +19,7 @@
           :busy="busy"
           @edit="edit($event)"
           @delete="deleteItem"
+          @row-clicked="onRowClicked($event)"
           @page-changed="pageChange($event, filter)"
         >
           <!-- <template #bill_item_code="{ data }">
@@ -34,6 +35,9 @@
       :modal-title="modalTitle"
       @refresh="pageChange(1)"
     />
+    <MedicalReportsModalViewMedicalReport
+     :details="details"
+    />
   </div>
 </template>
 
@@ -45,6 +49,7 @@ export default {
   props: {},
   data() {
     return {
+      details: {},
       editObj: {
         // name: '',
         // description: '',
@@ -65,8 +70,12 @@ export default {
           label: 'Name',
         },
         {
+          key: 'cost_price',
+          label: 'Cost Price',
+        },
+        {
           key: 'bill_price',
-          label: 'Price',
+          label: 'Selling Price',
         },
         {
           key: 'created_at',
@@ -74,6 +83,21 @@ export default {
             return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
           },
           label: 'Created At',
+        },
+        {
+          key: 'created_by.email',
+          label: 'Created by',
+        },
+        {
+          key: 'updated_at',
+          formatter: (value) => {
+            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+          },
+          label: 'Updated At',
+        },
+        {
+          key: 'updated_by.email',
+          label: 'Updated By',
         },
         {
           key: 'actions',
@@ -113,6 +137,10 @@ export default {
       this.editObj = e
       this.modalTitle = 'Edit Medical Report'
       this.$bvModal.show('addMedicalReport')
+    },
+    onRowClicked(e){
+      console.log(e)
+      this.details = e
     },
     async deleteItem(item) {
       const result = await this.showConfirmMessageBox(

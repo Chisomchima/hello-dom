@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UtilsFilterComponent disable-pagination :disableSearch="true" :disable-visualization="true"
+        <UtilsFilterComponent disable-pagination :disable-search="true" :disable-visualization="true"
             search-placeholder="Search">
             <!-- <template #beforeActions>
                 <div>
@@ -54,7 +54,7 @@
                 </div>
             </template> -->
             <template v-if="show" #besideFilterButton>
-                <BaseButton @click="addPrescription" class="btn-outline-primary">New Prescription
+                <BaseButton class="btn-outline-primary" @click="addPrescription">New Prescription
                 </BaseButton>
             </template>
             <template>
@@ -64,7 +64,7 @@
             </template>
         </UtilsFilterComponent>
         <EncountersAddPrescription :age="age" :patient="data" @refresh="pageChange()" />
-        <DashboardViewPatientPrescription :dataObject="modaldata" />
+        <DashboardViewPatientPrescription :data-object="modaldata" />
     </div>
 </template>
   
@@ -164,26 +164,26 @@ export default {
             ],
         }
     },
-    async mounted() {
-        await this.pageChange(1)
-        this.getServiceCenter()
-        this.getModality()
-    },
     computed: {
         maxDate() {
             let today = new Date()
             today = today.toISOString()
-            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+            const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
             console.log(x)
             return x
         },
         minDate() {
             let today = new Date()
             today = today.toISOString()
-            let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+            const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
             console.log(x)
             return x
         },
+    },
+    async mounted() {
+        await this.pageChange(1)
+        this.getServiceCenter()
+        this.getModality()
     },
     watch: {
 
@@ -221,7 +221,7 @@ export default {
 
             const newFilterObject = {
                 ...e,
-                page: page,
+                page,
                 patient_uhid: this.data.uhid,
             }
             this.currentFilter = e
@@ -323,13 +323,13 @@ export default {
         calcAge(e) {
             // **********calc year***********
             if (e !== null || e !== '') {
-                let presentDate = new Date().getFullYear()
-                let yearOfBirth = e.substring(0, 4)
-                let month = new Date().getMonth()
-                let monthOfBirth = parseInt(e.substring(5, 7))
+                const presentDate = new Date().getFullYear()
+                const yearOfBirth = e.substring(0, 4)
+                const month = new Date().getMonth()
+                const monthOfBirth = parseInt(e.substring(5, 7))
 
-                let diff = presentDate - yearOfBirth
-                let x = parseInt(diff)
+                const diff = presentDate - yearOfBirth
+                const x = parseInt(diff)
                 if (x === 0) {
                     this.age.year = 0
                     this.age.month = 0
@@ -339,13 +339,11 @@ export default {
 
                 if (monthOfBirth < month) {
                     this.age.year
-                } else {
-                    if (this.age.year === 0) {
+                } else if (this.age.year === 0) {
                         this.age.year
                     } else {
                         this.age.year--
                     }
-                }
 
                 // **************calc month***********
                 let tempMonth
@@ -368,8 +366,8 @@ export default {
                 }
 
                 // **************calc day**************
-                let day = new Date().getDate()
-                let dayOfBirth = e.substring(8, 10)
+                const day = new Date().getDate()
+                const dayOfBirth = e.substring(8, 10)
                 // this.patient.age.day = new Date().getDate();
 
                 if (day > dayOfBirth) {
