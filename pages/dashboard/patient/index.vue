@@ -23,8 +23,9 @@
       <div class="col-md-12">
         <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
           <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
-            :dropdown-item="['order_lab', 'order_encounter', 'order_imaging']"
+            :dropdown-item="['order_lab', 'order_encounter', 'order_imaging', 'order_Medical_Report']"
             @page-changed="filter($event, currentFilter)" @row-clicked="goToProfile($event)"
+            @order_Medical_Report="showMedicalReport($event)"
             @order_lab="goToLab($event)" @order_encounter="showEncounterModal($event)"
             @order_imaging="showImagingModal($event)" />
         </UtilsFilterComponent>
@@ -233,7 +234,24 @@ export default {
       this.modalData.age = this.age
       this.$bvModal.show('add_imaging')
     },
+
+    showMedicalReport(e){
+    console.log(e, 'medical')
+    this.modalData = e
+      if(e.date_of_birth)
+        this.calcAge(e.date_of_birth)
+      else{
+        this.age = {
+          year: '',
+          month: '',
+          day: '',
+        }
+      }
+      this.modalData.age = this.age
+      this.$bvModal.show('add_medical_report')
+  }
   },
+
 
 }
 </script>

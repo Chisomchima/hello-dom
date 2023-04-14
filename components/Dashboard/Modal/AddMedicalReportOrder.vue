@@ -5,7 +5,7 @@
       @ok="ok()"
       @show="getData()"
       @hide="clear()"
-      id="add_imaging"
+      id="add_medical_report"
       :stacking="false"
     >
       <ValidationObserver ref="form">
@@ -427,7 +427,7 @@
             text: 'Imaging Order Successful',
           })
           this.$emit('refresh')
-          this.$bvModal.hide('add_imaging')
+          this.$bvModal.hide('add_medical_report')
           console.log(data)
         } catch (error) {
           console.log(error)
