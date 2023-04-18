@@ -5,7 +5,10 @@
         <div class="d-flex justify-content-between">
           <div class="page-heading mb-4">Patient Records</div>
           <div>
-            <BaseButton class="btn-primary btn-lg" @click="$router.push('/dashboard/patient/add')">Create Patient
+            <BaseButton
+              class="btn-primary btn-lg"
+              @click="$router.push('/dashboard/patient/add')"
+              >Create Patient
             </BaseButton>
           </div>
         </div>
@@ -21,20 +24,53 @@
         </div>
       </div>
       <div class="col-md-12">
-        <UtilsFilterComponent disable-pagination :disable-visualization="true" search-placeholder="Search">
-          <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy"
-            :dropdown-item="['order_lab', 'order_encounter', 'order_imaging', 'order_Medical_Report']"
-            @page-changed="filter($event, currentFilter)" @row-clicked="goToProfile($event)"
+        <UtilsFilterComponent
+          disable-pagination
+          :disable-visualization="true"
+          search-placeholder="Search"
+        >
+          <TableComponent
+            :fields="fields"
+            :pages="pages"
+            :items="items"
+            :busy="busy"
+            :dropdown-item="[
+              'order_lab',
+              'order_encounter',
+              'order_imaging',
+              'order_Medical_Report',
+            ]"
+            @page-changed="filter($event, currentFilter)"
+            @row-clicked="goToProfile($event)"
             @order_Medical_Report="showMedicalReport($event)"
-            @order_lab="goToLab($event)" @order_encounter="showEncounterModal($event)"
-            @order_imaging="showImagingModal($event)" />
+            @order_lab="goToLab($event)"
+            @order_encounter="showEncounterModal($event)"
+            @order_imaging="showImagingModal($event)"
+          />
         </UtilsFilterComponent>
       </div>
     </div>
-    <DashboardModalAddLabOrder :age="age" :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddEncounter :age="age" @reset_age="age = { year: '', month: '', day: '',}" :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddPatientImagingOrder :age="age" :data="modalData" @refresh="pageChange()" />
-    <DashboardModalAddMedicalReportOrder :age="age" :data="modalData" @refresh="pageChange()" />
+    <DashboardModalAddLabOrder
+      :age="age"
+      :data="modalData"
+      @refresh="pageChange()"
+    />
+    <DashboardModalAddEncounter
+      :age="age"
+      @reset_age="age = { year: '', month: '', day: '' }"
+      :data="modalData"
+      @refresh="pageChange()"
+    />
+    <DashboardModalAddPatientImagingOrder
+      :age="age"
+      :data="modalData"
+      @refresh="pageChange()"
+    />
+    <DashboardModalAddMedicalReportOrder
+      :age="age"
+      :data="modalData"
+      @refresh="pageChange()"
+    />
   </div>
 </template>
 
@@ -113,7 +149,7 @@ export default {
         this.busy = false
       }
     },
-    pageChange() { },
+    pageChange() {},
     goToProfile(e) {
       this.$router.push({
         name: 'dashboard-patient-uuid',
@@ -124,9 +160,8 @@ export default {
     },
     goToLab(e) {
       this.modalData = e
-      if(e.date_of_birth)
-        this.calcAge(e.date_of_birth)
-      else{
+      if (e.date_of_birth) this.calcAge(e.date_of_birth)
+      else {
         this.age = {
           year: '',
           month: '',
@@ -156,11 +191,9 @@ export default {
 
       if (monthOfBirth < month) {
         this.age.year
-      }
-      else if (monthOfBirth > month) {
+      } else if (monthOfBirth > month) {
         this.age.year++
-      }
-      else {
+      } else {
         if (this.age.year === 0) {
           this.age.year
         } else {
@@ -204,17 +237,16 @@ export default {
     },
 
     showEncounterModal(e) {
-      if(e.date_of_birth !== null && e.date_of_birth !== ''){
+      if (e.date_of_birth !== null && e.date_of_birth !== '') {
         this.calcAge(e.date_of_birth)
-      }
-      else {
+      } else {
         this.age = {
           year: '',
           month: '',
           day: '',
         }
       }
-        
+
       this.modalData = e
       this.modalData.age = this.age
       this.$bvModal.show('add_encounters')
@@ -222,9 +254,8 @@ export default {
 
     showImagingModal(e) {
       this.modalData = e
-      if(e.date_of_birth)
-        this.calcAge(e.date_of_birth)
-      else{
+      if (e.date_of_birth) this.calcAge(e.date_of_birth)
+      else {
         this.age = {
           year: '',
           month: '',
@@ -235,12 +266,11 @@ export default {
       this.$bvModal.show('add_imaging')
     },
 
-    showMedicalReport(e){
-    console.log(e, 'medical')
-    this.modalData = e
-      if(e.date_of_birth)
-        this.calcAge(e.date_of_birth)
-      else{
+    showMedicalReport(e) {
+      console.log(e, 'medical')
+      this.modalData = e
+      if (e.date_of_birth) this.calcAge(e.date_of_birth)
+      else {
         this.age = {
           year: '',
           month: '',
@@ -249,13 +279,9 @@ export default {
       }
       this.modalData.age = this.age
       this.$bvModal.show('add_medical_report')
-  }
+    },
   },
-
-
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

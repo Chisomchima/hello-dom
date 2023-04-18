@@ -72,22 +72,38 @@ export default {
         {
           key: 'cost_price',
           label: 'Cost Price',
+          formatter: (value) => {
+            return value
+              ? value.toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'NGN',
+                })
+              : ''
+          },
         },
         {
           key: 'bill_price',
           label: 'Selling Price',
-        },
-        {
-          key: 'created_at',
           formatter: (value) => {
-            return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+            return value
+              ? value.toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'NGN',
+                })
+              : ''
           },
-          label: 'Created At',
         },
-        {
-          key: 'created_by.email',
-          label: 'Created by',
-        },
+        // {
+        //   key: 'created_at',
+        //   formatter: (value) => {
+        //     return DateTime.fromISO(value).toFormat('yyyy-LL-dd T')
+        //   },
+        //   label: 'Created At',
+        // },
+        // {
+        //   key: 'created_by.email',
+        //   label: 'Created by',
+        // },
         {
           key: 'updated_at',
           formatter: (value) => {

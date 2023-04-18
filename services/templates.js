@@ -13,6 +13,20 @@ export default axios => ({
     deleteTemplate(id) {
         return axios.$delete(`/pharmacy/templates/${id}/`)
     },
+    getCoreTemplates(params = {}) {
+        return axios.$get("/core/templates/", {
+            params
+        });
+    },
+    createCoreTemplate(body) {
+        return axios.$post(`/core/templates/`, body);
+    },
+    updateCoreTemplate(id, body) {
+        return axios.$patch(`/core/templates/${id}/`, body)
+    },
+    deleteCoreTemplate(id) {
+        return axios.$delete(`/core/templates/${id}/`)
+    },
 
     createEncTemplate(body){
         return axios.$post(`/encounters/templates/`, body)

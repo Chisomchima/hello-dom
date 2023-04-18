@@ -43,4 +43,16 @@ export default axios => ({
     getServiceCenters(params = {}){
         return axios.$get(`/medical-packages/service-center/`, { params });
     },
+    createOrder(body){
+        return axios.$post(`/medical-packages/orders/`, body)
+    },
+    editOrder(body, id){
+        return axios.$patch(`/medical-packages/orders/${id}/`, body)
+    },
+    deleteOrder(id){
+        return axios.$delete(`/medical-packages/service-center/${id}/`)
+    },
+    getOrder(params = {}){
+        return axios.$get(`/medical-packages/orders/`, { params });
+    },
 })

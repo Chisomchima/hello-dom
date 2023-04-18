@@ -191,7 +191,7 @@ export default {
         },
         {
           id: 52,
-          href: '/dashboard/medical-reports',
+          href: '/dashboard/medical-reports/m-report',
           title: 'Medical Reports',
           icon: 'fas fa-list-ul',
         },

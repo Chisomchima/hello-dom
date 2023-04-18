@@ -19,24 +19,24 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Lab Panels" :rules="['required']">
-              <VSelect
-                v-model="dataObject.lab_panels"
-                :multiple="true"
-                :reduce="(opt) => opt.id"
-                :options="labPanels"
-                label="name"
-              ></VSelect>
-            </ValidationProviderWrapper>
-          </div>
-
-          <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Category" :rules="['required']">
               <VSelect
                 v-model="dataObject.category"
                 :multiple="false"
                 :reduce="(opt) => opt.id"
                 :options="categories"
+                label="name"
+              ></VSelect>
+            </ValidationProviderWrapper>
+          </div>
+          
+          <div class="col-md-12 mb-2">
+            <ValidationProviderWrapper name="Lab Panels" :rules="['required']">
+              <VSelect
+                v-model="dataObject.lab_panels"
+                :multiple="true"
+                :reduce="(opt) => opt.id"
+                :options="labPanels"
                 label="name"
               ></VSelect>
             </ValidationProviderWrapper>

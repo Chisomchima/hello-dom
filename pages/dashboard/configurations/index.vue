@@ -97,6 +97,16 @@ export default {
           route: '/dashboard/configurations/medical-reports/',
           name: 'Medical Reports',
         },
+        {
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/template/',
+          name: 'Templates',
+        },
+        {
+          icon: 'fa fa-cogs',
+          route: '/dashboard/configurations/forms/',
+          name: 'Forms',
+        },
       ],
     }
   },
