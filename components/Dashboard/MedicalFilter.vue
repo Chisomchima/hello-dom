@@ -183,7 +183,7 @@ export default {
 
       filters: {
         by: '',
-        service_center: '',
+        service_center: [],
         status: '',
         date_before: '',
         date_after: '',
@@ -248,6 +248,7 @@ export default {
       this.providers = providers
       const { results: serviceCenters } = await this.$api.medicalReport.getServiceCenters({ size: 1000 })
       this.serviceCenters = serviceCenters
+      
     } catch (error) {
       console.log(error)
     }
@@ -284,7 +285,6 @@ export default {
         const newFilterObject = {
           ...newVal,
           [newVal.by]: newVal.entry,
-          worklist: true,
         }
         // console.log(newFilterObject)
         this.filterFunc(newFilterObject)
