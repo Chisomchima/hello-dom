@@ -10,6 +10,20 @@ export default axios => ({
     getLabPanel(params) {
         return axios.$get('/laboratory/lab_panel/', params)
     },
+    getLabOrder(id, params){
+        return axios.$get(`/laboratory/lab_panel_order/?lab_order=${id}`
+        , {
+            params
+        }
+        )
+    },
+    getImgingOrder(id, params){
+        return axios.$get(`/imaging/imaging_observation_order/?imaging_order=${id}`
+        , {
+            params
+        }
+        )
+    },
     createMedicalRecord(params) {
         return axios.$post('/medical-packages/', params)
     },

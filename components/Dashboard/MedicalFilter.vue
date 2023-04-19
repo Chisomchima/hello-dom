@@ -197,14 +197,6 @@ export default {
       }, 500),
       deep: true,
     },
-
-    // 'filters.provider': {
-    //   handler: debounce(function () {
-    //     this.filterFunc(this.filters)
-    //   }, 500),
-    //   deep: true,
-    // },
-
   
 
     'filters.status': {
@@ -232,7 +224,7 @@ export default {
           const newFilterObject = {
             ...newVal,
             [newVal.by]: newVal.entry,
-            worklist: true,
+            
           }
           this.$emit('filter', newFilterObject)
         } else {
@@ -256,10 +248,6 @@ export default {
       this.providers = providers
       const { results: serviceCenters } = await this.$api.medicalReport.getServiceCenters({ size: 1000 })
       this.serviceCenters = serviceCenters
-      // const { results: departments } = await this.$api.facility.departments({
-      //   size: 1000,
-      // })
-      // this.departments = departments
     } catch (error) {
       console.log(error)
     }
@@ -284,12 +272,10 @@ export default {
     clear() {
       this.filters = {
         by: '',
-        entry: '',
-        department: [],
-        clinic: [],
-        provider: [],
+        service_center: '',
         status: '',
-        encounter_id: '',
+        date_before: '',
+        date_after: '',
       }
       this.applyFilter(this.filters)
     },

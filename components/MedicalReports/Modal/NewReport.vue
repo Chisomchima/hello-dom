@@ -155,23 +155,31 @@
               <small class="text-grey text-12">Package *</small>
               <validation-provider v-slot="{ errors }" rules="required">
                 <VSelect
-                  v-model="encounterData.encounter_type"
+                  v-model="encounterData.package"
                   class="text-14"
                   label="name"
-                  :options="['Walk in']"
+                  :options="packages"
+                  :reduce="(opt) => opt.id"
                 >
                 </VSelect>
                 <span class="text-12" style="color: red">{{ errors[0] }}</span>
               </validation-provider>
             </div>
 
-            <div class="mb-2 col-lg-12 pl-0 pr-2 col-md-12 col-sm-12">
-              <label class="form-control-label">Payment Scheme</label>
-              <input
-                v-model="encounterData.payment_scheme"
-                type="number"
-                class="form-control ng-untouched ng-pristine ng-valid"
-              />
+            <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
+              <small class="text-grey text-12">Payment Scheme*</small>
+              <validation-provider v-slot="{ errors }" rules="required">
+                <VSelect
+                  v-model="encounterData.payment_scheme"
+                  class="text-14"
+                  label="name"
+                  :options="payment_schemes"
+                  :reduce="(opt) => opt.payer_scheme.id"
+                  :get-option-label="(op) => op.payer_scheme.name"
+                >
+                </VSelect>
+                <span class="text-12" style="color: red">{{ errors[0] }}</span>
+              </validation-provider>
             </div>
           </div>
         </div>
@@ -189,7 +197,7 @@
             watch-request
             class="btn-primary"
             @click.prevent="CreateRecord"
-            >Create Encounter
+            >Create Medical Record
           </BaseButton>
         </div>
         <div
@@ -211,6 +219,7 @@ export default {
       patientDetails: 'Type UHID to search...',
       searchingPatient: false,
       providers: [],
+      payment_schemes: [],
       departments: [],
       genders: [],
       busy: false,
@@ -228,6 +237,7 @@ export default {
         month: '',
         day: '',
       },
+      packages: [],
       encounterData: {
         //   clinic: null,
         //   provider: null,
@@ -243,6 +253,9 @@ export default {
     fill() {
       return !!this.patientData.date_of_birth
     },
+    schemes() {
+      return this.data.payment_scheme
+    },
   },
   async created() {
     this.providers = await this.$api.core.providers({ size: 1000 })
@@ -252,7 +265,11 @@ export default {
     const serviceCenter = await this.$api.medicalReport.getServiceCenters({
       size: 1000,
     })
-    console.log(this.genders)
+
+    const getPackages = await this.$api.medicalReport.getMedicalRecords({
+      size: 1000,
+    })
+    this.packages = getPackages.results
     this.servicCenters = serviceCenter.results
     // for (const iterator of await clinics.results) {
     //   this.departments.push(iterator.Department)
@@ -278,8 +295,8 @@ export default {
         year: null,
         month: null,
         day: null,
-      };
-      (this.formDate = {
+      }
+      ;(this.formDate = {
         year: '',
         month: '',
         day: '',
@@ -338,8 +355,10 @@ export default {
           ;(this.age.year = ''), (this.age.month = ''), (this.age.day = '')
           this.encounterData.patient = {}
         } else {
+          console.log(searched, 'searched')
           this.patientDetails = searched.firstname + ' ' + searched.lastname
           this.patientData = searched
+          this.payment_schemes = searched.payment_scheme
           this.calcAge(this.patientData.date_of_birth)
           this.patientData.age = this.age
           this.encounterData.patient = this.patientData

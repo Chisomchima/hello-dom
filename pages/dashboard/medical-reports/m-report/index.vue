@@ -18,8 +18,6 @@
       <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
-            <!-- <DashboardEncounterFilters @filter="filter(1, $event)" /> -->
-            <!-- <MedicalReportsModalMedicalFilter @filter="filter(1, $event)"/> -->
             <DashboardMedicalFilter @filter="filter(1, $event)"/>
           </div>
         </div>
@@ -87,7 +85,6 @@ export default {
   },
   methods: {
     async filter(page, e) {
-      console.log('hi', e)
       this.currentFilter = e
       this.busy = true
       try {
@@ -95,22 +92,14 @@ export default {
         this.items = data.results
         this.pages = data.total_pages
         this.busy = false
-        console.log(data, 'medical')
       } catch (error) {
         this.busy = false
-        console.log(error)
       } finally {
         this.busy = false
       }
     },
     ViewData(e) {
-      console.log(e)
-      // {
-      //     name: 'dashboard-medical-reports-id',
-      //     params: {
-      //       id: e.id,
-      //     },
-      //   }
+ 
       if (e.bill.cleared_status === 'CLEARED') {
         this.$router.push(`/dashboard/medical-reports/m-report/${e.id}/`)
       }

@@ -130,9 +130,10 @@
             </div>
           </template>
           <div v-if="activeIndex === 0">
-            <EncountersLabOrders
+            <MedicalReportsLabOrders
               :age="age"
               :patient-data="consultationData.patient"
+              :data="consultationData"
             />
           </div>
         </TabPanel>
@@ -145,9 +146,10 @@
             </div>
           </template>
           <div v-if="activeIndex === 1">
-            <DashboardPatientImaging
+            <MedicalReportsImagingOrder
               :age="age"
               :data="consultationData.patient"
+              :dataObj="consultationData"
             />
           </div>
         </TabPanel>
