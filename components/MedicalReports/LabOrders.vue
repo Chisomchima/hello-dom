@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div class="pt-3">
+    <!-- <div>
       <b-modal id="Add-laborder" ref="orderModal" size="lg" title="Add Lab Order" centered hide-footer
         :no-close-on-backdrop="true" @hide="closeModal()">
         <ValidationObserver v-slot="{ validate }">
@@ -136,62 +136,14 @@
           </form>
         </ValidationObserver>
       </b-modal>
-    </div>
-    <UtilsFilterComponent disable-pagination :disable-search="true" :disable-visualization="true"
-      search-placeholder="Search">
-      <template #besideFilterButton>
+    </div> -->
+    <!-- <UtilsFilterComponent disable-pagination :disable-search="true" :disable-visualization="true"
+      search-placeholder="Search"> -->
+      <!-- <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="newLabOrders">New Lab Order</BaseButton>
-      </template>
+      </template> -->
 
-      <template #beforeActions>
-        <div>
-          <button v-b-toggle.sidebar-backdrop class="btn btn-sm btn-outline-secondary">
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 512 512">
-                <path fill="currentColor"
-                  d="M96 197.333h320v32H96zm72 101.334h176v32H168zM216 400h80v32h-80zM48 96h416v32H48z" />
-              </svg>
-            </span>
-          </button>
-          <b-sidebar id="sidebar-backdrop" title="Sidebar with backdrop" :backdrop-variant="'dark'" backdrop shadow right>
-            <div class="p-4">
-              <div class="">
-                <!-- <p class="mb-0 text-20">Date range</p> -->
-                <div class="col-md-12">
-                  <span class="text-12 text-grey">Search</span>
-                  <input v-model="filter.name" type="text" class="form-control" placeholder="Search by name" />
-                </div>
-              </div>
-              <div class="">
-                <!-- <p class="mb-0 text-20">Date range</p> -->
-                <div class="col-md-12">
-                  <span class="text-12 text-grey">Date from:</span>
-                  <input v-model="filter.dateFrom" type="date" class="form-control" :max="maxDate" />
-                </div>
-                <div class="col-md-12">
-                  <span class="text-12 text-grey">Date to:</span>
-                  <input v-model="filter.dateTo" type="date" class="form-control" :min="minDate" />
-                </div>
-              </div>
-
-              <div class="col-md-12">
-                <span class="text-12 text-grey">Service centers</span>
-                <VSelect v-model="filter.service_center" style="font-size: 13px" label="name" class="width"
-                  :placeholder="'Service centers'" :reduce="(option) => option.id" multiple taggable
-                  :options="filterSerice">
-                </VSelect>
-              </div>
-              <div class="col-md-12">
-                <span class="text-12 text-grey">Lab unit</span>
-                <VSelect v-model="filter.lab_unit" style="font-size: 13px" label="name" class="width"
-                  :placeholder="'Lab unit'" :reduce="(option) => option.id" multiple taggable :options="filterLabUnit">
-                </VSelect>
-              </div>
-            </div>
-          </b-sidebar>
-        </div>
-      </template>
+    
       <b-overlay variant="light" spinner-variant="primary" spinner-type="grow" :show="downloading" rounded="sm">
         <table-component :paginate="true" :busy="busy" :pages="pages" :items="itemsToShow" :current-page="currentPage"
           :fields="fields" @page-changed="getLabOrders($event)">
