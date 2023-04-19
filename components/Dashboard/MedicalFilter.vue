@@ -17,10 +17,10 @@
         <div class="mb-2">
           <label class="form-control-label">Category</label>
           <VSelect
-            v-model="filters.department"
-            :multiple="true"
+            v-model="filters.category"
+            :multiple="false"
             :reduce="(opt) => opt.id"
-            :options="departments"
+            :options="categories"
             label="name"
           ></VSelect>
         </div>
@@ -180,13 +180,14 @@ export default {
       providers: [],
       newCount: 0,
       nurseSeen: 0,
-
+      categories:[],
       filters: {
         by: '',
         service_center: [],
         status: '',
         date_before: '',
         date_after: '',
+        category: '',
       },
     }
   },
@@ -254,12 +255,10 @@ export default {
     }
   },
   mounted() {
-    this.$api.encounter.newEncountersCount().then((res) => {
-      this.newCount = res.count
+    this.$api.medicalReport.getParents().then((res) => {
+      this.categories = res.results
     })
-    this.$api.encounter.nurseSeenCount().then((res) => {
-      this.nurseSeen = res.count
-    })
+ 
     let day = new Date().toISOString().split('T')[0]
     this.filters.date_before = day
     function getPreviousDay(date = new Date()) {
