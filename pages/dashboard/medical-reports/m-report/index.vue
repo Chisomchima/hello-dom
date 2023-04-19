@@ -18,7 +18,7 @@
       <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-body">
-            <DashboardMedicalFilter @filter="filter(1, $event)"/>
+            <DashboardMedicalFilter @filter="filter(1, $event)" />
           </div>
         </div>
       </div>
@@ -33,9 +33,10 @@
             :pages="pages"
             :items="items"
             :busy="busy"
-            :dropdown-item="['nurse_vital']"
+            :dropdown-item="['cancel']"
             @page-changed="filter($event, currentFilter)"
             @row-clicked="ViewData"
+            @cancel="cancel($event)"
           >
           </TableComponent>
         </UtilsFilterComponent>
@@ -55,26 +56,35 @@ export default {
       items: [],
       fields: [
         {
-          key: 'code',
-          label: 'Code',
+          key: 'package.bill_item_code',
+          label: 'Order Number',
           sortable: true,
         },
         {
-          key: 'patient',
-          label: 'Patient',
+          key: 'package.name',
+          label: 'Medical Report',
           sortable: true,
-          formatter: (val) => {
-            return (
-              (val.salutation ? val.salutation : '') +
-              ' ' +
-              val.firstname +
-              ' ' +
-              val.lastname
-            )
-          },
         },
-
+        {
+          key: 'service_center.name',
+          label: 'Service Center',
+          sortable: true,
+        },
+        {
+          key: 'category.name',
+          label: 'Category',
+          sortable: true,
+        },
+        {
+          key: 'reported_by.email',
+          label: 'Reported By',
+          sortable: true,
+        },
         { key: 'status', label: 'Status', sortable: true },
+        {
+          label: '',
+          key: 'dots',
+        },
       ],
       currentFilter: {},
       busy: false,
@@ -89,6 +99,7 @@ export default {
       this.busy = true
       try {
         const data = await this.$api.medicalReport.getOrder({ ...e, page })
+        console.log(data, 'data')
         this.items = data.results
         this.pages = data.total_pages
         this.busy = false
@@ -99,15 +110,13 @@ export default {
       }
     },
     ViewData(e) {
- 
       if (e.bill.cleared_status === 'CLEARED') {
         this.$router.push(`/dashboard/medical-reports/m-report/${e.id}/`)
-      }
-      else {
+      } else {
         this.$toast({
           type: 'info',
-          text: 'Bill not cleared'
-        });
+          text: 'Bill not cleared',
+        })
       }
 
       // if (e.status === 'NS') {

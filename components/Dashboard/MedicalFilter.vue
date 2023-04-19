@@ -3,18 +3,6 @@
     <div class="row">
       <div class="col-md-6">
         <div class="mb-2">
-          <label class="form-control-label">Category</label>
-          <VSelect
-            v-model="filters.department"
-            :multiple="true"
-            :reduce="(opt) => opt.id"
-            :options="departments"
-            label="name"
-          ></VSelect>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="mb-2">
           <label class="form-control-label">Service Center</label>
           <VSelect
             v-model="filters.service_center"
@@ -22,6 +10,18 @@
             :options="serviceCenters"
             :reduce="(opt) => opt.id"
             :multiple="true"
+          ></VSelect>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-2">
+          <label class="form-control-label">Category</label>
+          <VSelect
+            v-model="filters.department"
+            :multiple="true"
+            :reduce="(opt) => opt.id"
+            :options="departments"
+            label="name"
           ></VSelect>
         </div>
       </div>
@@ -170,7 +170,7 @@ export default {
       genders: ['Male', 'Female'],
       statuses: [
         { label: 'Cancelled', value: 'CANCELLED' },
-        { label: 'Closed', value: 'CLOSED' },
+        // { label: 'Closed', value: 'CLOSED' },
         { label: 'In Progress', value: 'IN PROGRESS' },
         { label: 'New', value: 'NEW' },
         { label: 'Reported', value: 'REPORTED' },

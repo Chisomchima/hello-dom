@@ -4,23 +4,23 @@
       <SkeletonLoader />
     </div>
 
-    <div class="text-12 border-radius mb-3" v-else>
+    <div v-else class="text-12 border-radius mb-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <BackwardNavigation />
         <div>
           <BaseButton v-if="
             consultationData.acknowledged_at != null &&
             consultationData.status != 'DS'
-          " @click="signAndCloseEnc" class="btn-success btn-sm" :disabled="
+          " class="btn-success btn-sm" :disabled="
   consultationData
     ? consultationData.bill.cleared_status === 'CLEARED'
       ? false
       : true
     : ''
-">
+" @click="signAndCloseEnc">
             Sign
           </BaseButton>
-          <BaseButton @click="acknowledgeEnc" v-if="
+          <BaseButton v-if="
             (consultationData.status === 'NS' ||
               consultationData.status === 'New') &&
             consultationData.acknowledged_at === null
@@ -30,14 +30,14 @@
       ? false
       : true
     : ''
-">
+" @click="acknowledgeEnc">
             Acknowledge
           </BaseButton>
         </div>
       </div>
       <DashboardModalDoctorSign @refresh="showSignature" />
-      <EncountersHeaderCard :consultationData="consultationData" />
-      <TabView @tab-click="showMe" class="tabview-custom">
+      <EncountersHeaderCard :consultation-data="consultationData" />
+      <TabView class="tabview-custom" @tab-click="showMe">
         <TabPanel class="dark-panel">
           <template #header>
            <div style="width: 120px;">
@@ -54,7 +54,7 @@
            </div>
           </template>
           
-          <EncountersConsultation :consultationData="consultationData" @refreshMe="refreshMe" />
+          <EncountersConsultation :consultation-data="consultationData" @refreshMe="refreshMe" />
         </TabPanel>
 
         <TabPanel>
@@ -66,7 +66,7 @@
           </template>
           <div v-if="activeIndex === 1">
             <div>
-              <EncountersVitals :consultationData="consultationData" />
+              <EncountersVitals :consultation-data="consultationData" />
             </div>
           </div>
         </TabPanel>
@@ -86,7 +86,7 @@
           </template>
 
           <div v-if="activeIndex === 2">
-            <EncountersLegacyChart :consultationData="consultationData" :legacy="consultationData.legacy_chart" />
+            <EncountersLegacyChart :consultation-data="consultationData" :legacy="consultationData.legacy_chart" />
           </div>
         </TabPanel>
         <TabPanel>
@@ -103,7 +103,7 @@
             </div>
           </template>
           <div v-if="activeIndex === 3">
-            <EncountersMedicalRecord :consultationData="consultationData" />
+            <EncountersMedicalRecord :consultation-data="consultationData" />
           </div>
         </TabPanel>
 
@@ -116,7 +116,7 @@
             </div>
           </template>
           <div v-if="activeIndex === 4">
-            <EncountersLabOrders :age="age" :patientData="consultationData.patient" />
+            <EncountersLabOrders :age="age" :patient-data="consultationData.patient" />
           </div>
         </TabPanel>
 
@@ -176,8 +176,8 @@
 import { DateTime } from 'luxon'
 import modalMsgBox from '~/mixins/modalMsgBox'
 export default {
-  layout: 'dashboard',
   mixins: [modalMsgBox],
+  layout: 'dashboard',
   data() {
     return {
       items: [],
@@ -195,9 +195,6 @@ export default {
       },
     }
   },
-  created() {
-    this.getPatientRecord()
-  },
   computed: {
     dateSigned() {
       return DateTime.fromISO(this.consultationData.signed_date).toLocaleString(
@@ -205,6 +202,9 @@ export default {
       )
     },
 
+  },
+  created() {
+    this.getPatientRecord()
   },
   methods: {
     showSignature() {
@@ -254,7 +254,7 @@ export default {
       )
       try {
         if (result) {
-          let response = await this.$api.encounter.acknowledgeEncounter(
+          const response = await this.$api.encounter.acknowledgeEncounter(
             this.consultationData.id
           )
           if (response) {
@@ -276,7 +276,7 @@ export default {
     async getPatientRecord() {
       try {
         this.isLoading = true
-        let response = await this.$axios.$get(
+        const response = await this.$axios.$get(
           `encounters/${this.$route.params.id}/`
         )
         this.consultationData = response
@@ -285,10 +285,10 @@ export default {
           ? response.clinic.Department.name
           : 'nil'
         this.patientData = response.patient
-        let time = this.consultationData.encounter_datetime
-        let y = new Date(time).toLocaleDateString()
+        const time = this.consultationData.encounter_datetime
+        const y = new Date(time).toLocaleDateString()
 
-        let z = new Date(time).toTimeString().substring(0, 5)
+        const z = new Date(time).toTimeString().substring(0, 5)
         this.encounter_time = y + ', ' + z
         if (this.patientData.date_of_birth) {
           this.calcAge(this.patientData.date_of_birth)
@@ -310,7 +310,7 @@ export default {
     async updateStatus() {
       this.consultationData.status = 'NS'
       try {
-        let response = await this.$axios.$put(
+        const response = await this.$axios.$put(
           `encounters/encounter/${this.consultationData.id}/`,
           this.consultationData
         )
@@ -319,18 +319,18 @@ export default {
       }
     },
     convDate(x) {
-      return
+      
     },
     calcAge(e) {
-      if (typeof (e) == 'string') {
+      if (typeof (e) === 'string') {
         // **********calc year***********
-        let presentDate = new Date().getFullYear()
-        let yearOfBirth = e.substring(0, 4)
-        let month = new Date().getMonth()
-        let monthOfBirth = parseInt(e.substring(5, 7))
+        const presentDate = new Date().getFullYear()
+        const yearOfBirth = e.substring(0, 4)
+        const month = new Date().getMonth()
+        const monthOfBirth = parseInt(e.substring(5, 7))
 
-        let diff = presentDate - yearOfBirth
-        let x = parseInt(diff)
+        const diff = presentDate - yearOfBirth
+        const x = parseInt(diff)
         if (x === 0) {
           this.age.year = 0
           this.age.month = 0
@@ -340,13 +340,11 @@ export default {
 
         if (monthOfBirth < month) {
           this.age.year
-        } else {
-          if (this.age.year === 0) {
+        } else if (this.age.year === 0) {
             this.age.year
           } else {
             this.age.year--
           }
-        }
 
         // **************calc month***********
         let tempMonth
@@ -369,8 +367,8 @@ export default {
         }
 
         // **************calc day**************
-        let day = new Date().getDate()
-        let dayOfBirth = e.substring(8, 10)
+        const day = new Date().getDate()
+        const dayOfBirth = e.substring(8, 10)
         // this.patient.age.day = new Date().getDate();
 
         if (day > dayOfBirth) {

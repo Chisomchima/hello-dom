@@ -19,8 +19,12 @@
       <div class="col-md-7 px-0 text-grey text-14 col-sm-7 col-lg-7">
         <div class="row px-0">
           <div class="col-md-6 col-sm-6 col-lg-6">
-            <b>MDRT-ID:</b>
-            {{ consultationData.bill ? consultationData.bill : 'nil' }}
+            <b>Service Center:</b>
+            {{
+              consultationData.service_center.name
+                ? consultationData.service_center.name
+                : 'nil'
+            }}
           </div>
           <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Service Center:</b>
@@ -30,25 +34,8 @@
                 : 'nil'
             }}
           </div>
-
-          <div class="col-md-6 col-sm-6 col-lg-6">
-            <b>Lab Service Center:</b>
-            {{
-              consultationData.lab_service_center.name
-                ? consultationData.lab_service_center.name
-                : 'nil'
-            }}
-          </div>
         </div>
         <div class="row px-0">
-          <div class="col-md-6 col-sm-6 col-lg-6">
-            <b>Imaging Service Center:</b>
-            {{
-              consultationData.img_service_center.name
-                ? consultationData.img_service_center.name
-                : 'nil'
-            }}
-          </div>
           <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Created At:</b> {{ dateCreated }}
           </div>
@@ -65,7 +52,16 @@
                 ? consultationData.updated_by.email
                 : 'nil'}}
           </div>
-
+          <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Reported By:</b> {{ consultationData.reported_by
+                ? consultationData.reported_by.email
+                : 'nil'}}
+          </div>
+          <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Cancelled By:</b> {{ consultationData.cancelled_by
+                ? consultationData.cancelled_by.email
+                : 'nil'}}
+          </div>
           <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Status:</b> {{ consultationData.status
                 ? consultationData.status
@@ -94,8 +90,8 @@
         <div class="px-2">
           <div class="px-2">
             <p
-              @click="gotoPatientProfile"
               class="text-14 mb-0 text-grey point signal"
+              @click="gotoPatientProfile"
             >
               <b>UHID:</b>
               {{
@@ -125,14 +121,6 @@
               >
             </p>
           </div>
-          <!-- <div v-if="consultationData.patient.age" class="px-2">
-                                    <p class="text-14 mb-0 text-grey">
-                                        <b>Age (Y-M-D):</b>
-                                        {{ consultationData.patient.age.year ? consultationData.patient.age.year : '0' }} -
-                                        {{ consultationData.patient.age.month ? consultationData.patient.age.month : '0' }} -
-                                        {{ consultationData.patient.age.day ? consultationData.patient.age.day : '0' }}
-                                    </p>
-                                </div> -->
           <div class="px-2">
             <p class="text-14 mb-0 text-grey">
               <b>Gender:</b>
@@ -246,16 +234,6 @@ export default {
       required: true,
     },
   },
-  methods: {
-    gotoPatientProfile() {
-      this.$router.push({
-        name: 'dashboard-patient-uuid',
-        params: {
-          uuid: this.consultationData.patient.id,
-        },
-      })
-    },
-  },
   computed: {
     dateCreated() {
       return DateTime.fromISO(this.consultationData?.created_at).toLocaleString(
@@ -266,6 +244,17 @@ export default {
       return DateTime.fromISO(this.consultationData?.updated_at).toLocaleString(
         DateTime.DATETIME_SHORT
       )
+    },
+  },
+  
+  methods: {
+    gotoPatientProfile() {
+      this.$router.push({
+        name: 'dashboard-patient-uuid',
+        params: {
+          uuid: this.consultationData.patient.id,
+        },
+      })
     },
   },
 }

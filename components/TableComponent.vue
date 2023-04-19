@@ -41,7 +41,7 @@
           ></b-skeleton-table>
         </div>
       </template>
-      <template  #cell()="data">
+      <template #cell()="data">
         <span v-b-tooltip.hover :title="data">{{ data }}</span>
       </template>
 
@@ -181,10 +181,10 @@
           {{ data.value }}
         </slot>
       </template>
-       <template #cell()="data">
+      <template #cell()="data">
         <span> {{ data.value }}</span>
       </template>
-      
+
       <template #cell(uom)="data">
         <span name="uom"> {{ data.item.uom }}</span>
       </template>
@@ -239,7 +239,6 @@
       </template>
       <template #cell(value.laboratory)="item">
         <slot name="value.laboratory" :data="item"> </slot>
-        
       </template>
       <template #cell(value.imaging)="item">
         <slot name="value.imaging" :data="item"></slot>
@@ -278,7 +277,6 @@
       <template #cell(password_recover_date)="item">
         <slot name="password_recover_date" :data="item"></slot>
       </template>
-     
 
       <template #cell(submissions)="data">
         <slot name="submissions" :data="data">{{ data.value }}</slot>
@@ -316,15 +314,38 @@
             >{{ data.item.status }}</span
           >
           <span
+            v-if="data.item.status === 'NEW'"
+            class="text-14 badge-warning rounded text-center p-1 text-white"
+            style="margin: 0"
+            >{{ data.item.status }}</span
+          >
+          <span
             v-else-if="data.item.status === 'NS'"
             class="text-14 badge-info rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
           </span>
-
+          <span
+            v-else-if="data.item.status === 'IN PROGRESS'"
+            class="text-14 badge-info rounded text-center p-1 text-white"
+          >
+            {{ data.item.status }}
+          </span>
           <span
             v-else-if="data.item.status === 'DRAFT'"
             class="text-12 badge-danger rounded text-center p-1 text-white"
+          >
+            {{ data.item.status }}
+          </span>
+          <span
+            v-else-if="data.item.status === 'CANCELLED'"
+            class="text-12 badge-success rounded text-center p-1 text-white"
+          >
+            {{ data.item.status }}
+          </span>
+          <span
+            v-else-if="data.item.status === 'REPORTED'"
+            class="text-12 badge-success rounded text-center p-1 text-white"
           >
             {{ data.item.status }}
           </span>
@@ -338,7 +359,7 @@
             v-else-if="data.item.status === 'PARTIAL_PAY' || 'PARTIALLY_PAID'"
             class="text-12 badge-warning rounded text-center p-1 text-white"
           >
-          PARTIALLY PAID
+            PARTIALLY PAID
           </span>
           <span
             v-else-if="data.item.status === 'OPEN'"
@@ -381,7 +402,7 @@
       <template #cell(panel)="item">
         <slot name="panel" :data="item"></slot>
       </template>
-      
+
       <template #cell(cancel)="item">
         <slot name="cancel" :data="item"></slot>
       </template>
@@ -447,7 +468,7 @@
             :key="field.key"
             :style="{ width: '8.5rem' }"
           />
-          
+
           <col
             v-else-if="field.key === 'value.option'"
             :key="field.key"
@@ -703,23 +724,22 @@ export default {
     },
 
     formatDate(x) {
-      if(x != null){
+      if (x != null) {
         return DateTime.fromISO(x).toFormat('yyyy-LL-dd T')
-      }
-      else {
-        return ""
+      } else {
+        return ''
       }
     },
 
     disabledTableRowMethod(item, type) {
       if (!item || type !== 'row') return
-      if (item.is_active === "boolean") {
+      if (item.is_active === 'boolean') {
         if (!item.is_active) {
           // this.$refs.tooltip.$emit('enable')
           return 'disabledTableRow'
         }
       }
-      if (item.bill && typeof item.bill === "object") {
+      if (item.bill && typeof item.bill === 'object') {
         if (item.bill.cleared_status !== 'CLEARED') {
           // this.$refs.tooltip.$emit('enable')
           return 'disabledTableRow'
@@ -731,7 +751,7 @@ export default {
     },
 
     checkForBillStatusOnRowClick(item) {
-      if (item.bill && typeof item.bill === "object") {
+      if (item.bill && typeof item.bill === 'object') {
         if (item.bill.cleared_status !== 'CLEARED') {
           this.$toast({
             type: 'info',
@@ -754,5 +774,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

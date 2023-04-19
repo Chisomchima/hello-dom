@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <b-modal size="lg" id="Add-laborder" title="Add Lab Order" centered hide-footer ref="orderModal"
+      <b-modal id="Add-laborder" ref="orderModal" size="lg" title="Add Lab Order" centered hide-footer
         :no-close-on-backdrop="true" @hide="closeModal()">
         <ValidationObserver v-slot="{ validate }">
           <form class="mx-3">
@@ -10,13 +10,13 @@
                 <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6 w-100">
                   <small class="text-grey text-12">UHID</small>
                   <div class="d-flex align-items-center">
-                    <input type="text" placeholder="UHID" class="
+                    <input v-model="patientData.uhid" type="text" placeholder="UHID" class="
                           form-control
                           control
                           ng-untouched ng-pristine ng-valid
-                        " v-model="patientData.uhid" />
+                        " />
 
-                    <div class="mx-2" v-if="searchingPatient">
+                    <div v-if="searchingPatient" class="mx-2">
                       <b-spinner label="loading" variant="primary" type="grow" style="width: 1.5rem; height: 1.5rem"
                         class="text-center">
                       </b-spinner>
@@ -25,42 +25,42 @@
                 </div>
                 <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
                   <small class="text-grey text-12">Patient Details</small>
-                  <input type="text" disabled placeholder="Patient Details" v-model="patientFullName"
+                  <input v-model="patientFullName" type="text" disabled placeholder="Patient Details"
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div class="mb-2 col-lg-6 pl-0 pr-2 col-md-6 col-sm-6">
                   <small class="text-grey text-12">D.o.B</small>
 
-                  <input type="text" v-model="patientData.date_of_birth" disabled placeholder="D.O.B"
+                  <input v-model="patientData.date_of_birth" type="text" disabled placeholder="D.O.B"
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div class="mb-2 col-lg-6 col-md-6 col-sm-6">
                   <small class="text-grey text-12">Age (Y-M-D)</small>
                   <div class="d-flex">
                     <div v-if="fill" class="px-1">
-                      <input type="text" disabled placeholder="Year" v-model="age.year"
+                      <input v-model="age.year" type="text" disabled placeholder="Year"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                     </div>
                     <div v-if="!fill" class="px-1">
                       <ValidationProviderWrapper name="" :rules="['required']">
-                        <input type="number" placeholder="Year" v-model="formDate.year"
+                        <input v-model="formDate.year" type="number" placeholder="Year"
                           class="form-control ng-untouched ng-pristine ng-valid" />
                       </ValidationProviderWrapper>
                     </div>
                     <div v-if="fill" class="px-1">
-                      <input type="text" disabled placeholder="Month" v-model="age.month"
+                      <input v-model="age.month" type="text" disabled placeholder="Month"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                     </div>
                     <div v-if="!fill" class="px-1">
-                      <input type="number" placeholder="Month" v-model="formDate.month"
+                      <input v-model="formDate.month" type="number" placeholder="Month"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                     </div>
                     <div v-if="fill" class="px-1">
-                      <input type="text" disabled placeholder="Day" v-model="age.day"
+                      <input v-model="age.day" type="text" disabled placeholder="Day"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                     </div>
                     <div v-if="!fill" class="px-1">
-                      <input type="number" placeholder="Day" v-model="formDate.day"
+                      <input v-model="formDate.day" type="number" placeholder="Day"
                         class="form-control ng-untouched ng-pristine ng-valid" />
                     </div>
                   </div>
@@ -68,8 +68,8 @@
 
                 <div class="mb-2 col-lg-6 pr-2 pl-0 col-md-6 col-sm-6">
                   <small class="text-grey text-12">Email</small>
-                  <validation-provider :rules="'email'" v-slot="{ errors }">
-                    <input type="text" placeholder="Recipient Email" v-model="provisionalEmail"
+                  <validation-provider v-slot="{ errors }" :rules="'email'">
+                    <input v-model="provisionalEmail" type="text" placeholder="Recipient Email"
                       class="form-control ng-untouched ng-pristine ng-valid" />
                     <span class="text-12" style="color: red">{{
                       errors[0]
@@ -79,15 +79,15 @@
 
                 <div class="mb-2 col-lg-6 px-0 col-md-6 col-sm-6">
                   <small class="text-grey text-12">Gender</small>
-                  <input type="text" disabled placeholder="Phone No." v-model="patientData.gender"
+                  <input v-model="patientData.gender" type="text" disabled placeholder="Phone No."
                     class="form-control ng-untouched ng-pristine ng-valid" />
                 </div>
 
                 <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
                   <small class="text-grey text-12">Sevice Center</small>
-                  <validation-provider rules="required" v-slot="{ errors }">
-                    <v-select class="style-chooser text-grey text-14" placeholder="Service centers"
-                      :options="serviceCenters" v-model="labOrderData.service_center" label="name"></v-select>
+                  <validation-provider v-slot="{ errors }" rules="required">
+                    <v-select v-model="labOrderData.service_center" class="style-chooser text-grey text-14"
+                      placeholder="Service centers" :options="serviceCenters" label="name"></v-select>
                     <span class="text-12" style="color: red">{{
                       errors[0]
                     }}</span>
@@ -96,9 +96,9 @@
 
                 <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
                   <small class="text-grey text-12">Lab Panels</small>
-                  <validation-provider rules="required" v-slot="{ errors }">
-                    <v-select class="style-chooser text-grey text-14" placeholder="Lab Panels" :options="labPanels"
-                      v-model="labOrderData.lab_panels" :reduce="(name) => name.id" taggable multiple label="name">
+                  <validation-provider v-slot="{ errors }" rules="required">
+                    <v-select v-model="labOrderData.lab_panels" class="style-chooser text-grey text-14" placeholder="Lab Panels"
+                      :options="labPanels" :reduce="(name) => name.id" taggable multiple label="name">
                     </v-select>
                     <span class="text-12" style="color: red">{{
                       errors[0]
@@ -108,7 +108,7 @@
 
                 <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12 text-14">
                   <span class="text-grey"> stat</span>
-                  <input type="checkbox" v-model="labOrderData.stat" placeholder="Phone No."
+                  <input v-model="labOrderData.stat" type="checkbox" placeholder="Phone No."
                     class="ng-untouched ng-pristine ng-valid" />
                 </div>
                 <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
@@ -124,20 +124,20 @@
             </div>
 
             <div class="my-3 d-flex justify-content-center">
-              <button @click.prevent="closeModal" class="btn btn-light text-grey mr-5 text-14"
-                style="height: 38px; width: 5rem; text-align: center">
+              <button class="btn btn-light text-grey mr-5 text-14" style="height: 38px; width: 5rem; text-align: center"
+                @click.prevent="closeModal">
                 Cancel
               </button>
 
-              <BaseButton @click.prevent="createLabOrder" class="btn-primary">Order
+              <BaseButton class="btn-primary" @click.prevent="createLabOrder">Order
               </BaseButton>
             </div>
-            <div type="button" ref="runValidation" id="runValidation" @click="validate"></div>
+            <div id="runValidation" ref="runValidation" type="button" @click="validate"></div>
           </form>
         </ValidationObserver>
       </b-modal>
     </div>
-    <UtilsFilterComponent disable-pagination :disableSearch="true" :disable-visualization="true"
+    <UtilsFilterComponent disable-pagination :disable-search="true" :disable-visualization="true"
       search-placeholder="Search">
       <template #besideFilterButton>
         <BaseButton class="btn-outline-primary" @click="newLabOrders">New Lab Order</BaseButton>
@@ -160,31 +160,31 @@
                 <!-- <p class="mb-0 text-20">Date range</p> -->
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Search</span>
-                  <input type="text" class="form-control" placeholder="Search by name" v-model="filter.name" />
+                  <input v-model="filter.name" type="text" class="form-control" placeholder="Search by name" />
                 </div>
               </div>
               <div class="">
                 <!-- <p class="mb-0 text-20">Date range</p> -->
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date from:</span>
-                  <input type="date" class="form-control" :max="maxDate" v-model="filter.dateFrom" />
+                  <input v-model="filter.dateFrom" type="date" class="form-control" :max="maxDate" />
                 </div>
                 <div class="col-md-12">
                   <span class="text-12 text-grey">Date to:</span>
-                  <input type="date" class="form-control" :min="minDate" v-model="filter.dateTo" />
+                  <input v-model="filter.dateTo" type="date" class="form-control" :min="minDate" />
                 </div>
               </div>
 
               <div class="col-md-12">
                 <span class="text-12 text-grey">Service centers</span>
-                <VSelect style="font-size: 13px" label="name" class="width" v-model="filter.service_center"
+                <VSelect v-model="filter.service_center" style="font-size: 13px" label="name" class="width"
                   :placeholder="'Service centers'" :reduce="(option) => option.id" multiple taggable
                   :options="filterSerice">
                 </VSelect>
               </div>
               <div class="col-md-12">
                 <span class="text-12 text-grey">Lab unit</span>
-                <VSelect style="font-size: 13px" label="name" class="width" v-model="filter.lab_unit"
+                <VSelect v-model="filter.lab_unit" style="font-size: 13px" label="name" class="width"
                   :placeholder="'Lab unit'" :reduce="(option) => option.id" multiple taggable :options="filterLabUnit">
                 </VSelect>
               </div>
@@ -194,7 +194,7 @@
       </template>
       <b-overlay variant="light" spinner-variant="primary" spinner-type="grow" :show="downloading" rounded="sm">
         <table-component :paginate="true" :busy="busy" :pages="pages" :items="itemsToShow" :current-page="currentPage"
-          @page-changed="getLabOrders($event)" :fields="fields">
+          :fields="fields" @page-changed="getLabOrders($event)">
           <!-- <template #actions="{ data }">
                 <pre>{{ data }}</pre>
                 <button
@@ -241,14 +241,14 @@
 
             <div class="d-flex">
               <span style="width: 1rem" class="text-center text-12 text-info pointer mx-3">
-                <svg @click="save_file(data.item)" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
-                  width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20"
+                  height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20" @click="save_file(data.item)">
                   <path fill="currentColor"
                     d="M5 4.5A1.5 1.5 0 0 1 6.5 3h7A1.5 1.5 0 0 1 15 4.5V5h.5A2.5 2.5 0 0 1 18 7.5v5a1.5 1.5 0 0 1-1.5 1.5H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 15.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-5A2.5 2.5 0 0 1 4.5 5H5v-.5Zm9 0a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V5h8v-.5Zm-8 7v4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5Z" />
                 </svg>
               </span>
 
-              <span @click="mailReport(data.item)" style="width: 1rem" class="text-success text-center mx-3">
+              <span style="width: 1rem" class="text-success text-center mx-3" @click="mailReport(data.item)">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="20" height="20"
                   preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
                   <path fill="currentColor"
@@ -374,6 +374,18 @@ import { DateTime } from 'luxon'
 import { debounce } from 'lodash'
 export default {
   components: { Accordion, AccordionTab },
+  props: {
+    patientData: {
+      type: String,
+      default: {},
+    },
+  },
+  props: {
+    patientData: {
+      type: Object,
+      default: {},
+    },
+  },
   data() {
     return {
       text: '',
@@ -483,10 +495,26 @@ export default {
       test: '',
     }
   },
-  props: {
-    patientData: {
-      type: String,
-      default: {},
+  computed: {
+    rows() {
+      return this.itemsToShow.length
+    },
+    fill() {
+      return !!this.age.year
+    },
+    maxDate() {
+      let today = new Date()
+      today = today.toISOString()
+      const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
+    },
+    minDate() {
+      let today = new Date()
+      today = today.toISOString()
+      const x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
+      console.log(x)
+      return x
     },
   },
   mounted() {
@@ -494,34 +522,6 @@ export default {
     this.serviceCenterOptions()
     this.labUnitOptions()
     // this.getPatientRecord();
-  },
-  computed: {
-    rows() {
-      return this.itemsToShow.length
-    },
-    fill() {
-      return this.age.year ? true : false
-    },
-    maxDate() {
-      let today = new Date()
-      today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-      console.log(x)
-      return x
-    },
-    minDate() {
-      let today = new Date()
-      today = today.toISOString()
-      let x = DateTime.fromISO(today).toFormat('yyyy-LL-dd')
-      console.log(x)
-      return x
-    },
-  },
-  props: {
-    patientData: {
-      type: Object,
-      default: {},
-    },
   },
   watch: {
     'filter.lab_unit'() {
@@ -549,7 +549,7 @@ export default {
       deep: true,
     },
     test() {
-      let conv = 'hdjj'
+      const conv = 'hdjj'
       conv.toUpperCase()
     },
     'labOrderData.lab_panels': {
@@ -711,7 +711,7 @@ export default {
       if (this.$refs.runValidation) {
         this.$refs.runValidation.click()
       }
-      let obj = this.patientData
+      const obj = this.patientData
       if (!this.age.year) {
         obj.age = this.formDate
       }
@@ -725,7 +725,7 @@ export default {
       if (this.labOrderData.lab_panels && this.labOrderData.service_center) {
         try {
           this.isbusy = true
-          let response = await this.$axios.$post(
+          const response = await this.$axios.$post(
             'laboratory/lab_order/',
             this.labOrderData
           )
@@ -760,7 +760,7 @@ export default {
     ) {
       const newFilterObject = {
         ...e,
-        page: page,
+        page,
         patient_uhid: this.patientData.uhid,
       }
       try {
@@ -769,7 +769,7 @@ export default {
         }
         this.busy = true
 
-        let response = await this.$api.laboratory.getLabOrder({
+        const response = await this.$api.laboratory.getLabOrder({
           ...newFilterObject,
         })
 
@@ -779,21 +779,21 @@ export default {
         this.itemsToShow = []
 
         for (const iterator of response.results) {
-          let name =
+          const name =
             iterator.patient.firstname + ' ' + iterator.patient.lastname
-          let no_ = iterator.patient.phone_number
-          let uhid = iterator.patient.uhid
-          let time = iterator.ordered_datetime
-          let y = new Date(time).toLocaleDateString()
-          let z = new Date(time).toTimeString().substring(0, 5)
-          let b = y + ', ' + z
+          const no_ = iterator.patient.phone_number
+          const uhid = iterator.patient.uhid
+          const time = iterator.ordered_datetime
+          const y = new Date(time).toLocaleDateString()
+          const z = new Date(time).toTimeString().substring(0, 5)
+          const b = y + ', ' + z
 
           let labunit
 
           this.itemsToShow.push({
             patient_name: name,
             phone_number: no_,
-            uhid: uhid,
+            uhid,
             asn: iterator.asn,
             stat: iterator.stat,
             lab_panel_orders: iterator.lab_panel_orders,
@@ -819,7 +819,7 @@ export default {
       if (this.serviceCenters.length < 1) {
         try {
           this.clue = true
-          let uri = `laboratory/service_center/?size=100`
+          const uri = `laboratory/service_center/?size=100`
 
           const response = await this.$axios.$get(uri)
           this.serviceCenters = response.results
@@ -835,7 +835,7 @@ export default {
         try {
           this.clue2 = true
 
-          let uri = `laboratory/lab_unit/?size=100`
+          const uri = `laboratory/lab_unit/?size=100`
 
           const response = await this.$axios.$get(uri)
 
@@ -851,17 +851,17 @@ export default {
 
     async getLabPanels() {
       try {
-        let uri = `/laboratory/lab_panel/?size=2000`
+        const uri = `/laboratory/lab_panel/?size=2000`
 
         const response = await this.$axios.$get(uri)
 
         this.labPanels = []
-        let temp = []
+        const temp = []
         for (const iterator of response.results) {
-          let time = iterator.created_at
-          let y = new Date(time).toLocaleDateString()
-          let z = new Date(time).toTimeString().substring(0, 5)
-          let b = y + ', ' + z
+          const time = iterator.created_at
+          const y = new Date(time).toLocaleDateString()
+          const z = new Date(time).toTimeString().substring(0, 5)
+          const b = y + ', ' + z
           this.labPanels.push({
             name: iterator.name,
             // obv: iterator.obv,
@@ -883,13 +883,13 @@ export default {
     calcAge(e) {
       // **********calc year***********
       if (e.date_of_birth !== null || e.date_of_birth !== '') {
-        let presentDate = new Date().getFullYear()
-        let yearOfBirth = e.substring(0, 4)
-        let month = new Date().getMonth()
-        let monthOfBirth = parseInt(e.substring(5, 7))
+        const presentDate = new Date().getFullYear()
+        const yearOfBirth = e.substring(0, 4)
+        const month = new Date().getMonth()
+        const monthOfBirth = parseInt(e.substring(5, 7))
 
-        let diff = presentDate - yearOfBirth
-        let x = parseInt(diff)
+        const diff = presentDate - yearOfBirth
+        const x = parseInt(diff)
         if (x === 0) {
           this.age.year = 0
           this.age.month = 0
@@ -899,13 +899,11 @@ export default {
 
         if (monthOfBirth < month) {
           this.age.year
-        } else {
-          if (this.age.year === 0) {
+        } else if (this.age.year === 0) {
             this.age.year
           } else {
             this.age.year--
           }
-        }
 
         // **************calc month***********
         let tempMonth
@@ -928,8 +926,8 @@ export default {
         }
 
         // **************calc day**************
-        let day = new Date().getDate()
-        let dayOfBirth = e.substring(8, 10)
+        const day = new Date().getDate()
+        const dayOfBirth = e.substring(8, 10)
         // this.patient.age.day = new Date().getDate();
 
         if (day > dayOfBirth) {
