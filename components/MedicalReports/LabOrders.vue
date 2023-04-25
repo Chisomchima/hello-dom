@@ -1,41 +1,42 @@
+F
 <template>
-  <div class="p-3">
-    <div v-for="(panel, index) in itemsToShow" :key="index">
-      <!-- <pre>{{panel.panel}}</pre> -->
-      <Accordion class="m-2">
-        <AccordionTab>
-          <template #header>
-            <div class="w-100 d-flex justify-content-between">
-              <div class="col-md-4">
-                {{ panel.panel.name }}
+  <div>
+    <div class="p-3" v-if="itemsToShow.length > 0">
+      <div v-for="(panel, index) in itemsToShow" :key="index">
+        <Accordion class="m-2">
+          <AccordionTab>
+            <template #header>
+              <div class="w-100 d-flex justify-content-between">
+                <div class="col-md-4">
+                  {{ panel.panel.name }}
+                </div>
+                <div class="d-flex align-items-center col-md-4">
+                  <div
+                    style="
+                      width: 1rem;
+                      height: 1rem;
+                      border-radius: 50%;
+                      background: green;
+                      border: 1px solid #727d71;
+                    "
+                    :style="`background: ${panel.panel.specimen_type.color}`"
+                    class="first pointer mr-2"
+                  ></div>
+                  {{ panel.panel.specimen_type.name }}
+                </div>
+                <div class="col-md-4 text-capitalize">
+                  status:
+                  {{
+                    panel.status === 'NEW'
+                      ? 'Open'
+                      : panel.status === 'fill result'
+                      ? 'Reported'
+                      : panel.status
+                  }}
+                </div>
               </div>
-              <div class="d-flex align-items-center col-md-4">
-                <div
-                  style="
-                    width: 1rem;
-                    height: 1rem;
-                    border-radius: 50%;
-                    background: green;
-                    border: 1px solid #727d71;
-                  "
-                  :style="`background: ${panel.panel.specimen_type.color}`"
-                  class="first pointer mr-2"
-                ></div>
-                {{ panel.panel.specimen_type.name }}
-              </div>
-              <div class="col-md-4 text-capitalize">
-                status:
-                {{
-                  panel.status === 'NEW'
-                    ? 'Open'
-                    : panel.status === 'fill result'
-                    ? 'Reported'
-                    : panel.status
-                }}
-              </div>
-            </div>
-          </template>
-          <!-- <p class="my-2 text-capitalize text-14 text-info">
+            </template>
+            <!-- <p class="my-2 text-capitalize text-14 text-info">
                         Status:
                         {{
                           panel.status === 'NEW'
@@ -46,8 +47,8 @@
                         }}
                       </p> -->
 
-          <div class="mb-0 text-capitalize d-flex align-items-center text-14">
-            <!-- <div class="text-14 text-info">
+            <div class="mb-0 text-capitalize d-flex align-items-center text-14">
+              <!-- <div class="text-14 text-info">
                           Specimen-type: {{ panel.panel.specimen_type.name }}
                         </div>
 
@@ -62,33 +63,43 @@
                           :style="`background: ${panel.panel.specimen_type.color}`"
                           class="first pointer ml-2"
                         ></div> -->
-          </div>
+            </div>
 
-          <div class="table_container table-responsive mt-2 pt-2">
-            <TableComponent
-              :paginate="false"
-              :fields="nestedFields"
-              :items="panel.panel.obv"
-            >
-              <template #reference_range="{ data: { item } }">
-                <div v-for="(seen, index) in item.reference_range" :key="index">
-                  <span>
-                    {{ seen.name }}
-                  </span>
-                </div>
-              </template>
-              <template #value="{ data: { item } }">
-                <div>
-                  {{ item.value ? item.value : 'No Value recorded' }}
-                </div>
-              </template>
-            </TableComponent>
-          </div>
-          <p class="my-2 text-capitalize text-14 text-info">
-            Comments: {{ panel.panel.comments }}
-          </p>
-        </AccordionTab>
-      </Accordion>
+            <div class="table_container table-responsive mt-2 pt-2">
+              <TableComponent
+                :paginate="false"
+                :fields="nestedFields"
+                :items="panel.panel.obv"
+              >
+                <template #reference_range="{ data: { item } }">
+                  <div
+                    v-for="(seen, index) in item.reference_range"
+                    :key="index"
+                  >
+                    <span>
+                      {{ seen.name }}
+                    </span>
+                  </div>
+                </template>
+                <template #value="{ data: { item } }">
+                  <div>
+                    {{ item.value ? item.value : 'No Value recorded' }}
+                  </div>
+                </template>
+              </TableComponent>
+            </div>
+            <p class="my-2 text-capitalize text-14 text-info">
+              Comments: {{ panel.panel.comments }}
+            </p>
+          </AccordionTab>
+        </Accordion>
+      </div>
+    </div>
+    <div class="p-4" v-else>
+      <div class="d-flex justify-content-center">
+        <img src="~assets/img/empty-list.svg" alt="" />
+      </div>
+      <p class="text-14 text-center text-primary">No records to show</p>
     </div>
   </div>
 </template>
@@ -244,8 +255,8 @@ export default {
   },
   mounted() {
     this.getLabOrders()
-    this.serviceCenterOptions()
-    this.labUnitOptions()
+    // this.serviceCenterOptions()
+    // this.labUnitOptions()
     // this.getPatientRecord();
   },
   watch: {
@@ -308,172 +319,172 @@ export default {
       }
     },
 
-    async serviceCenterOptions() {
-      try {
-        const { results } = await this.$api.core.serviceCenter({
-          size: 1000,
-        })
-        this.filterSerice = results
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async labUnitOptions() {
-      try {
-        const { results } = await this.$api.core.labUnits({
-          size: 1000,
-        })
-        this.filterLabUnit = results
-      } catch (error) {
-        console.log(error)
-      }
-    },
+    // async serviceCenterOptions() {
+    //   try {
+    //     const { results } = await this.$api.core.serviceCenter({
+    //       size: 1000,
+    //     })
+    //     this.filterSerice = results
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
+    // async labUnitOptions() {
+    //   try {
+    //     const { results } = await this.$api.core.labUnits({
+    //       size: 1000,
+    //     })
+    //     this.filterLabUnit = results
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
 
-    async mailReport(e) {
-      try {
-        this.downloading = true
-        const response = await this.$axios.$get(
-          `laboratory/lab_order/${e.id}/reports/mail/`
-        )
-        console.log(response)
+    // async mailReport(e) {
+    //   try {
+    //     this.downloading = true
+    //     const response = await this.$axios.$get(
+    //       `laboratory/lab_order/${e.id}/reports/mail/`
+    //     )
+    //     console.log(response)
 
-        this.$toast({
-          type: 'success',
-          text: 'Mail sent',
-        })
-        this.downloading = false
-      } catch {
-        //   this.$toast({
-        //     type: 'error',
-        //     text: 'Mail not sent, please ensure that a mail address was provided',
-        //   })
-      } finally {
-        this.downloading = false
-      }
-    },
-    async save_file(e) {
-      this.downloading = true
-      const response = await fetch(
-        `${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download/`,
-        {
-          headers: {
-            Authorization: `Token ${this.$store.state.auth.token}`,
-          },
-        }
-      )
-      console.log(response)
-      if (response.status === 200) {
-        const data = await response.blob()
+    //     this.$toast({
+    //       type: 'success',
+    //       text: 'Mail sent',
+    //     })
+    //     this.downloading = false
+    //   } catch {
+    //     //   this.$toast({
+    //     //     type: 'error',
+    //     //     text: 'Mail not sent, please ensure that a mail address was provided',
+    //     //   })
+    //   } finally {
+    //     this.downloading = false
+    //   }
+    // },
+    // async save_file(e) {
+    //   this.downloading = true
+    //   const response = await fetch(
+    //     `${process.env.BASE_URL}laboratory/lab_order/${e.id}/reports/download/`,
+    //     {
+    //       headers: {
+    //         Authorization: `Token ${this.$store.state.auth.token}`,
+    //       },
+    //     }
+    //   )
+    //   console.log(response)
+    //   if (response.status === 200) {
+    //     const data = await response.blob()
 
-        const objectURL = URL.createObjectURL(data)
-        const link = document.createElement('a')
-        link.download = `Lab Report_${e.asn})`
-        link.href = objectURL
-        this.downloading = false
-        link.click()
-      } else if (response.status === 403) {
-        this.downloading = false
-        this.$toast({
-          type: 'info',
-          text: `You don't have the permission to perform this action`,
-        })
-      } else {
-        this.downloading = false
-        this.$toast({
-          type: 'error',
-          text: `An error occured`,
-        })
-      }
-    },
+    //     const objectURL = URL.createObjectURL(data)
+    //     const link = document.createElement('a')
+    //     link.download = `Lab Report_${e.asn})`
+    //     link.href = objectURL
+    //     this.downloading = false
+    //     link.click()
+    //   } else if (response.status === 403) {
+    //     this.downloading = false
+    //     this.$toast({
+    //       type: 'info',
+    //       text: `You don't have the permission to perform this action`,
+    //     })
+    //   } else {
+    //     this.downloading = false
+    //     this.$toast({
+    //       type: 'error',
+    //       text: `An error occured`,
+    //     })
+    //   }
+    // },
 
-    resetModal() {
-      this.test = ''
-      this.patientDetails = ''
-      this.age.year = ''
-      this.age.month = ''
-      this.age.day = ''
-      this.labOrderData = {
-        patient: {},
-        stat: false,
-        service_center: null,
-        lab_panels: [],
-        comments: '',
-      }
-    },
+    // resetModal() {
+    //   this.test = ''
+    //   this.patientDetails = ''
+    //   this.age.year = ''
+    //   this.age.month = ''
+    //   this.age.day = ''
+    //   this.labOrderData = {
+    //     patient: {},
+    //     stat: false,
+    //     service_center: null,
+    //     lab_panels: [],
+    //     comments: '',
+    //   }
+    // },
 
-    newLabOrders() {
-      this.$bvModal.show('Add-laborder')
-      this.getServiceCenter()
-      this.getLabPanels()
-      this.patientFullName =
-        this.patientData.firstname + ' ' + this.patientData.lastname
-      if (
-        this.patientData.date_of_birth !== null &&
-        this.patientData.date_of_birth !== ''
-      ) {
-        this.calcAge(this.patientData.date_of_birth)
-      }
-      if (this.patientData.email) {
-        this.provisionalEmail = this.patientData.email
-      }
-    },
+    // newLabOrders() {
+    //   this.$bvModal.show('Add-laborder')
+    //   this.getServiceCenter()
+    //   this.getLabPanels()
+    //   this.patientFullName =
+    //     this.patientData.firstname + ' ' + this.patientData.lastname
+    //   if (
+    //     this.patientData.date_of_birth !== null &&
+    //     this.patientData.date_of_birth !== ''
+    //   ) {
+    //     this.calcAge(this.patientData.date_of_birth)
+    //   }
+    //   if (this.patientData.email) {
+    //     this.provisionalEmail = this.patientData.email
+    //   }
+    // },
 
-    closeModal() {
-      this.$bvModal.hide('Add-laborder')
+    // closeModal() {
+    //   this.$bvModal.hide('Add-laborder')
 
-      this.patientDetails = ''
-      this.test = ''
-      ;(this.labOrderData = {
-        patient: {},
-        stat: true,
-        service_center: null,
-        lab_panels: [],
-        comments: '',
-      }),
-        (this.age.year = ''),
-        (this.age.month = ''),
-        (this.age.day = '')
-    },
+    //   this.patientDetails = ''
+    //   this.test = ''
+    //   ;(this.labOrderData = {
+    //     patient: {},
+    //     stat: true,
+    //     service_center: null,
+    //     lab_panels: [],
+    //     comments: '',
+    //   }),
+    //     (this.age.year = ''),
+    //     (this.age.month = ''),
+    //     (this.age.day = '')
+    // },
 
-    async createLabOrder() {
-      if (this.$refs.runValidation) {
-        this.$refs.runValidation.click()
-      }
-      const obj = this.patientData
-      if (!this.age.year) {
-        obj.age = this.formDate
-      } else {
-        obj.age = this.age
-      }
-      this.patientData.email = this.provisionalEmail
-      this.patientData = obj
-      this.labOrderData.patient = this.patientData
+    // async createLabOrder() {
+    //   if (this.$refs.runValidation) {
+    //     this.$refs.runValidation.click()
+    //   }
+    //   const obj = this.patientData
+    //   if (!this.age.year) {
+    //     obj.age = this.formDate
+    //   } else {
+    //     obj.age = this.age
+    //   }
+    //   this.patientData.email = this.provisionalEmail
+    //   this.patientData = obj
+    //   this.labOrderData.patient = this.patientData
 
-      if (this.labOrderData.lab_panels && this.labOrderData.service_center) {
-        try {
-          this.isbusy = true
-          const response = await this.$axios.$post(
-            'laboratory/lab_order/',
-            this.labOrderData
-          )
-          this.$toast({
-            type: 'success',
-            text: 'Lab order created',
-          })
-          this.getLabOrders()
-          this.$nuxt.refresh()
-          this.closeModal()
-        } catch {
-          this.$toast({
-            type: 'error',
-            text: 'Unable to create lab order',
-          })
-        } finally {
-          // this.getEncounters();
-          this.isbusy = false
-        }
-      }
-    },
+    //   if (this.labOrderData.lab_panels && this.labOrderData.service_center) {
+    //     try {
+    //       this.isbusy = true
+    //       const response = await this.$axios.$post(
+    //         'laboratory/lab_order/',
+    //         this.labOrderData
+    //       )
+    //       this.$toast({
+    //         type: 'success',
+    //         text: 'Lab order created',
+    //       })
+    //       this.getLabOrders()
+    //       this.$nuxt.refresh()
+    //       this.closeModal()
+    //     } catch {
+    //       this.$toast({
+    //         type: 'error',
+    //         text: 'Unable to create lab order',
+    //       })
+    //     } finally {
+    //       // this.getEncounters();
+    //       this.isbusy = false
+    //     }
+    //   }
+    // },
 
     async getLabOrders(
       page = 1,
@@ -499,16 +510,18 @@ export default {
         // const response = await this.$api.laboratory.getLabOrder({
         //   ...newFilterObject,
         // })
-        const response = await this.$api.medicalReport.getLabOrder(
-          this.data.lab_order,
-          {
-            ...newFilterObject,
-          }
-        )
-        this.pages = response.total_pages
-        this.totalPages = response.total_pages
-        this.currentPage = response.current_page
-        this.itemsToShow = response.results
+        if (this.data.lab_order) {
+          const response = await this.$api.medicalReport.getLabOrder(
+            this.data.lab_order,
+            {
+              ...newFilterObject,
+            }
+          )
+          this.pages = response.total_pages
+          this.totalPages = response.total_pages
+          this.currentPage = response.current_page
+          this.itemsToShow = response.results
+        }
 
         // for (const iterator of response.results) {
         //   const name =

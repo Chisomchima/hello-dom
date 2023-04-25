@@ -26,6 +26,21 @@
                 : 'nil'
             }}
           </div>
+          <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Acknowledge At:</b> {{ consultationData.acknowledged_at
+                ? dateAcknowledge
+                : 'nil'}}
+          </div>
+          <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Acknowledge By:</b> {{ consultationData.acknowledged_by
+                ? consultationData.acknowledged_by.email
+                : 'nil'}}
+          </div>
+          <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Status:</b> {{ consultationData.status
+                ? consultationData.status
+                : 'nil'}}
+          </div>
           <!-- <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Service Center:</b>
             {{
@@ -51,22 +66,27 @@
             <b>Updated By:</b> {{ consultationData.updated_by
                 ? consultationData.updated_by.email
                 : 'nil'}}
-          </div>
-          <div class="col-md-6 col-sm-6 col-lg-6">
-            <b>Reported By:</b> {{ consultationData.reported_by
-                ? consultationData.reported_by.email
+          </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Acknowledge At:</b> {{ consultationData.acknowledged_at
+                ? consultationData.acknowledged_at
                 : 'nil'}}
           </div>
           <div class="col-md-6 col-sm-6 col-lg-6">
+            <b>Acknowledge By:</b> {{ consultationData.acknowledged_by
+                ? consultationData.acknowledged_by.email
+                : 'nil'}}
+          </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Cancelled By:</b> {{ consultationData.cancelled_by
                 ? consultationData.cancelled_by.email
                 : 'nil'}}
           </div> -->
-          <div class="col-md-6 col-sm-6 col-lg-6">
+          <!-- <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Status:</b> {{ consultationData.status
                 ? consultationData.status
                 : 'nil'}}
-          </div>
+          </div> -->
         </div>
 
         <div v-if="consultationData.signed_date" class="col-md-12 col-sm-12">
@@ -242,6 +262,11 @@ export default {
     },
     dateUpdated() {
       return DateTime.fromISO(this.consultationData?.updated_at).toLocaleString(
+        DateTime.DATETIME_SHORT
+      )
+    },
+    dateAcknowledge() {
+      return DateTime.fromISO(this.consultationData?.acknowledged_at).toLocaleString(
         DateTime.DATETIME_SHORT
       )
     },
