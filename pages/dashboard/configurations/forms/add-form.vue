@@ -34,9 +34,14 @@
             <div
               v-for="(section, index) in dataObject.content"
               :key="index"
-              class="cards p-4 row"
+              class="cards p-4 my-3 row"
             >
-              <Accordion class="accordion-custom col-12 shadow-sm p-2" :active-index="index">
+              <Accordion
+                class="accordion-custom col-12 shadow-sm p-2"
+                :key="innerIndex"
+                :active-index="index"
+                v-for="(col, innerIndex) in section.cols"
+              >
                 <AccordionTab>
                   <template #header>
                     <div
@@ -60,7 +65,11 @@
                         "
                       >
                         <div class="w-100 hh d-flex align-items-end">
-                          <span class="point mr-1">
+                          <span
+                            v-if="section.show"
+                            class="point mr-1"
+                            @click="closeSection(index)"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="20"
@@ -74,7 +83,11 @@
                               />
                             </svg>
                           </span>
-                          <span class="point mr-1">
+                          <span
+                            v-else
+                            class="point mr-1"
+                            @click="openSection(index)"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="20"
@@ -88,7 +101,6 @@
                               />
                             </svg>
                           </span>
-
                           <div class="rounded w-100">
                             <input
                               ref="sectionheader"
@@ -150,6 +162,8 @@
                     </div>
                   </template>
                   <div
+                    v-for="(option, optionIndex) in col.form_field"
+                    :key="optionIndex"
                     class="
                       p-3
                       row
@@ -166,14 +180,14 @@
                     <div class="col-6 mb-2">
                       <ValidationProviderWrapper :rules="['']">
                         <input
-                          v-model="dataObject.title"
+                          v-model="option.context"
                           type="text"
                           class="form-control"
                           placeholder="Write a question"
                         />
                       </ValidationProviderWrapper>
                     </div>
-
+                    <!-- 
                     <div class="col-5 mb-2">
                       <v-select
                         class="text-grey text-14"
@@ -183,7 +197,23 @@
                         :reduce="(option) => option.label"
                       >
                       </v-select>
-                    </div>
+                    </div> -->
+                    <b-dropdown
+                      size="sm"
+                      text="Add form field"
+                      variant="outline-primary"
+                      class="col-5 mb-2"
+                    >
+                      <b-dropdown-item
+                        v-for="(form, formindex) in sectionType"
+                        :key="formindex"
+                        @click="
+                          setInputType(index, innerIndex, optionIndex, form)
+                        "
+                        >{{ form.label }}</b-dropdown-item
+                      >
+                    </b-dropdown>
+
                     <div
                       v-tooltip="'Remove Field'"
                       class="
@@ -211,6 +241,77 @@
                         />
                       </svg>
                     </div>
+                    <div v-if="option.type === 'text'" class="w-100 mb-2">
+                      <!-- Handle textfield -->
+                      <div class="w-100 d-flex mb-2">
+                        <input
+                          placeholder="Enter value"
+                          v-model="option.options"
+                          type="text"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div v-if="option.type === 'checkbox'" class="w-100 mb-2">
+                      <!-- Handle checkbox -->
+                      <div class="w-100 d-flex mb-2">
+                        <div class="ml-3">
+                          <input
+                            v-model="option.options"
+                            type="checkbox"
+                            class="checkbox"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="option.type === 'text-area'" class="w-100 mb-2">
+                      <!-- Handle text-area -->
+                      <div class="w-100 d-flex mb-2">
+                        <div class="w-100">
+                          <textarea
+                            id=""
+                            v-model="option.options"
+                            class="form-control"
+                            name=""
+                            cols="30"
+                            rows="1"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="option.type === 'date'" class="w-100 mb-2">
+                      <!-- Handle Date -->
+                      <div class="w-100 d-flex mb-2">
+                        <div class="w-100">
+                          <input
+                            v-model="option.options"
+                            type="date"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      v-if="
+                        option.type === 'diagnosis' ||
+                        option.type === 'lab_Order' ||
+                        option.type === 'imaging' ||
+                        option.type === 'prescription' ||
+                        option.type === 'nursing'
+                      "
+                      class="w-100 mb-2"
+                    >
+                      <!-- Handle Date -->
+                      <div class="w-100 d-flex align-items-center mb-2">
+                        <div class="mr-2">
+                          <button class="btn btn-success">
+                            <span class="text-capitalize">{{
+                              option.type.split('_').join(' ')
+                            }}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </AccordionTab>
               </Accordion>
@@ -222,7 +323,10 @@
                 <BaseButton class="mr-1 w-23" @click="addSection">
                   Add Section
                 </BaseButton>
-                <BaseButton class="ml-1 w-23 btn-danger">
+                <BaseButton
+                  class="ml-1 w-23 btn-danger"
+                  @click="deleteSection(index)"
+                >
                   Remove Section
                 </BaseButton>
               </div>
@@ -366,7 +470,7 @@ export default {
       this.dataObject.content[index].cols[innerIndex].show = true
     },
     printOption(index, innerIndex, optionIndex) {
-      let length =
+      const length =
         this.dataObject.content[index].cols[innerIndex].form_field[optionIndex]
           .options.length
       this.dataObject.content[index].cols[innerIndex].form_field[
@@ -424,7 +528,8 @@ export default {
         })
       }
     },
-    addSection() {
+    addSection(e) {
+      e.preventDefault()
       this.dataObject.content.push({
         section: 'Section title',
         show: false,
