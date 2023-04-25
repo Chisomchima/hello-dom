@@ -2,7 +2,7 @@
     <div>
         <UtilsFilterComponent disable-visualization disable-pagination @search-input="searchMe($event)">
             <template #besideFilterButton>
-                <BaseButton class="btn-outline-primary" @click="openModal">Add Template</BaseButton>
+                <BaseButton class="btn-outline-primary" @click="addForm">Add Form</BaseButton>
             </template>
             <template>
                 <TableComponent :fields="fields" :pages="pages" :items="items" :busy="busy" @delete="deleteItem"
@@ -15,7 +15,6 @@
                 </TableComponent>
             </template>
         </UtilsFilterComponent>
-        <SettingsTemplateModalNewTemplate :editObj="editObj" :modalTitle="modalTitle" @refresh="pageChange(1)" />
     </div>
 </template>
   
@@ -35,10 +34,10 @@ export default {
             },
             modalTitle: 'Add Template',
             fields: [
-                // {
-                //     key: 'created_at',
-                //     label: 'Date',
-                // },
+                {
+                    key: 'created_at',
+                    label: 'Date',
+                },
                 {
                     key: 'title',
                     label: 'Title',
@@ -47,10 +46,10 @@ export default {
                     key: 'description',
                     label: 'Description',
                 },
-                // {
-                //     key: 'source',
-                //     label: 'Source',
-                // },
+                {
+                    key: 'source',
+                    label: 'Source',
+                },
                 {
                     key: 'actions',
                     label: '',
@@ -81,9 +80,8 @@ export default {
                 this.busy = false
             }
         },
-        openModal() {
-            this.modalTitle = 'Create New Template'
-            this.$bvModal.show('newTemplate')
+        addForm() {
+            this.$router.push('/dashboard/configurations/forms/add-form')
         },
         edit(e) {
             console.log(e,'e')

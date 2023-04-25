@@ -17,8 +17,8 @@
         <div class="mb-2">
           <label class="form-control-label">Category</label>
           <VSelect
-            v-model="filters.category"
-            :multiple="false"
+            v-model="filters.package_category"
+            :multiple="true"
             :reduce="(opt) => opt.id"
             :options="categories"
             label="name"
@@ -57,7 +57,6 @@
             :reduce="(option) => option.value"
             :options="statuses"
           >
-
             <template #option="{ label }">
               <span
                 v-if="label === 'New'"
@@ -86,33 +85,6 @@
               <span
                 v-else-if="label === 'Reported'"
                 class="text-14 badge-warning rounded text-center p-1 text-white"
-              >
-                {{ label }}
-              </span>
-            </template>
-            <template #selected-option="{ label }">
-              <span
-                v-if="label === 'New'"
-                class="
-                  text-14
-                  badge-warning
-                  rounded
-                  text-center
-                  px-1
-                  text-white
-                "
-                style="margin: 0"
-                >{{ label }}</span
-              >
-              <span
-                v-else-if="label === 'Nurse Seen'"
-                class="text-14 badge-info rounded text-center px-1 text-white"
-              >
-                {{ label }}
-              </span>
-              <span
-                v-else-if="label === 'Doctor Seen'"
-                class="text-14 badge-danger rounded text-center px-1 text-white"
               >
                 {{ label }}
               </span>
@@ -180,14 +152,14 @@ export default {
       providers: [],
       newCount: 0,
       nurseSeen: 0,
-      categories:[],
+      categories: [],
       filters: {
         by: '',
         service_center: [],
         status: '',
         date_before: '',
         date_after: '',
-        category: '',
+        package_category: [],
       },
     }
   },
@@ -198,9 +170,15 @@ export default {
       }, 500),
       deep: true,
     },
-  
 
     'filters.status': {
+      handler: debounce(function () {
+        this.filterFunc(this.filters)
+      }, 500),
+      deep: true,
+    },
+
+    'filters.package_category': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
       }, 500),
@@ -213,6 +191,7 @@ export default {
       }, 500),
       deep: true,
     },
+
     'filters.date_after': {
       handler: debounce(function () {
         this.filterFunc(this.filters)
@@ -225,7 +204,7 @@ export default {
           const newFilterObject = {
             ...newVal,
             [newVal.by]: newVal.entry,
-            
+
           }
           this.$emit('filter', newFilterObject)
         } else {
@@ -241,41 +220,33 @@ export default {
     if (this.$route.query.filter) {
       this.filters = JSON.parse(this.$route.query.filter)
     }
+    this.$api.medicalReport.getParents().then((res) => {
+      this.categories = res.results
+    })
     // this.applyFilter(this.filters)
     try {
       const providers = await this.$api.core.providers({
         size: 1000,
       })
       this.providers = providers
-      const { results: serviceCenters } = await this.$api.medicalReport.getServiceCenters({ size: 1000 })
+      this.clear()
+      const { results: serviceCenters } =
+        await this.$api.medicalReport.getServiceCenters({ size: 1000 })
       this.serviceCenters = serviceCenters
-      
     } catch (error) {
       console.log(error)
     }
   },
-  mounted() {
-    this.$api.medicalReport.getParents().then((res) => {
-      this.categories = res.results
-    })
- 
-    let day = new Date().toISOString().split('T')[0]
-    this.filters.date_before = day
-    function getPreviousDay(date = new Date()) {
-      const previous = new Date(date.getTime())
-      previous.setDate(date.getDate() - 1)
-      return previous.toISOString().split('T')[0]
-    }
-    this.filters.date_after = getPreviousDay()
-  },
+
   methods: {
     clear() {
       this.filters = {
         by: '',
-        service_center: '',
+        service_center: [],
         status: '',
         date_before: '',
         date_after: '',
+        package_category: [],
       }
       this.applyFilter(this.filters)
     },
@@ -304,5 +275,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

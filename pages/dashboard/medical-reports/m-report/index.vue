@@ -71,7 +71,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'category.name',
+          key: 'package.category.name',
           label: 'Category',
           sortable: true,
         },
@@ -95,18 +95,21 @@ export default {
   },
   methods: {
     async filter(page, e) {
-      this.currentFilter = e
-      this.busy = true
-      try {
-        const data = await this.$api.medicalReport.getOrder({ ...e, page })
-        console.log(data, 'data')
-        this.items = data.results
-        this.pages = data.total_pages
-        this.busy = false
-      } catch (error) {
-        this.busy = false
-      } finally {
-        this.busy = false
+      console.log(e, 'evenett')
+      if (e) {
+        this.currentFilter = e
+        this.busy = true
+        try {
+          console.log(this.currentFilter, 'event')
+          const data = await this.$api.medicalReport.getOrder({ ...e, page })
+          this.items = data.results
+          this.pages = data.total_pages
+          this.busy = false
+        } catch (error) {
+          this.busy = false
+        } finally {
+          this.busy = false
+        }
       }
     },
     ViewData(e) {
@@ -118,7 +121,6 @@ export default {
           text: 'Bill not cleared',
         })
       }
-
       // if (e.status === 'NS') {
       //   this.$router.push(`/dashboard/opd/${e.id}`)
       // }
@@ -128,6 +130,14 @@ export default {
       //     text: 'Nurses are yet to take vitals'
       //   });
       // }
+    },
+    async cancel(e) {
+      try{
+        await this.$api.medicalReport.cancelOrder(e.id, { id: e.id })
+      } catch (err){
+        console.log(err)
+      }
+      
     },
     // addVitals(e) {
     //   this.tempEncounterData = e

@@ -209,7 +209,7 @@
             },
             sortable: true,
           },
-          // { key: 'info', label: 'Show Detail', sortable: true },
+          { key: 'info', label: 'Show Detail', sortable: true },
           // { key: 'dots', label: '', sortable: false },
         ],
       }

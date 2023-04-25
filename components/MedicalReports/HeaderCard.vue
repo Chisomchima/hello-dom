@@ -26,17 +26,17 @@
                 : 'nil'
             }}
           </div>
-          <div class="col-md-6 col-sm-6 col-lg-6">
+          <!-- <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Service Center:</b>
             {{
               consultationData.service_center.name
                 ? consultationData.service_center.name
                 : 'nil'
             }}
-          </div>
+          </div> -->
         </div>
         <div class="row px-0">
-          <div class="col-md-6 col-sm-6 col-lg-6">
+          <!-- <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Created At:</b> {{ dateCreated }}
           </div>
           <div class="col-md-6 col-sm-6 col-lg-6">
@@ -61,7 +61,7 @@
             <b>Cancelled By:</b> {{ consultationData.cancelled_by
                 ? consultationData.cancelled_by.email
                 : 'nil'}}
-          </div>
+          </div> -->
           <div class="col-md-6 col-sm-6 col-lg-6">
             <b>Status:</b> {{ consultationData.status
                 ? consultationData.status

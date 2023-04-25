@@ -18,7 +18,7 @@ export default axios => ({
         )
     },
     getImgingOrder(id, params){
-        return axios.$get(`/imaging/imaging_observation_order/?imaging_order=${id}`
+        return axios.$get(`/imaging/imaging_observation_order/?img_order=${id}`
         , {
             params
         }
@@ -69,4 +69,10 @@ export default axios => ({
     getOrder(params = {}){
         return axios.$get(`/medical-packages/orders/`, { params });
     },
+    acknowlegeOrder(id,body){
+        return axios.$post(`/medical-packages/orders/${id}/acknowledge/`, { body });
+    },
+    cancelOrder(id,body){
+        return axios.$post(`/medical-packages/orders/${id}/cancel/`, { body });
+    }
 })

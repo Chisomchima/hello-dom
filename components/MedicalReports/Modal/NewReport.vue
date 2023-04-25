@@ -137,6 +137,22 @@
               />
             </div>
 
+            <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
+              <small class="text-grey text-12">Scheme*</small>
+              <validation-provider v-slot="{ errors }" rules="required">
+                <VSelect
+                  v-model="encounterData.payment_scheme"
+                  class="text-14 bg-light"
+                  label="name"
+                  :options="payment_schemes"
+                  :reduce="(opt) => opt.payer_scheme.id"
+                  :get-option-label="(op) => op.payer_scheme.name"
+                >
+                </VSelect>
+                <span class="text-12" style="color: red">{{ errors[0] }}</span>
+              </validation-provider>
+            </div>
+
             <div class="mb-2 col-lg-12 pl-0 pr-2 col-md-12 col-sm-12">
               <label class="form-control-label">Service Center*</label>
               <validation-provider v-slot="{ errors }" rules="required">
@@ -152,7 +168,19 @@
             </div>
 
             <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
-              <small class="text-grey text-12">Package *</small>
+              <small class="text-grey text-12">Category*</small>
+                <VSelect
+                  v-model="package_category"
+                  class="text-14"
+                  label="name"
+                  :options="categories"
+                  :reduce="(opt) => opt.id"
+                >
+                </VSelect>
+            </div>
+
+            <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
+              <small class="text-grey text-12">Medical Report*</small>
               <validation-provider v-slot="{ errors }" rules="required">
                 <VSelect
                   v-model="encounterData.package"
@@ -160,22 +188,6 @@
                   label="name"
                   :options="packages"
                   :reduce="(opt) => opt.id"
-                >
-                </VSelect>
-                <span class="text-12" style="color: red">{{ errors[0] }}</span>
-              </validation-provider>
-            </div>
-
-            <div class="mb-2 col-lg-12 px-0 col-md-12 col-sm-12">
-              <small class="text-grey text-12">Payment Scheme*</small>
-              <validation-provider v-slot="{ errors }" rules="required">
-                <VSelect
-                  v-model="encounterData.payment_scheme"
-                  class="text-14"
-                  label="name"
-                  :options="payment_schemes"
-                  :reduce="(opt) => opt.payer_scheme.id"
-                  :get-option-label="(op) => op.payer_scheme.name"
                 >
                 </VSelect>
                 <span class="text-12" style="color: red">{{ errors[0] }}</span>
@@ -222,6 +234,8 @@ export default {
       payment_schemes: [],
       departments: [],
       genders: [],
+      package_category: '',
+      categories: [],
       busy: false,
       dropdownItem: ['Nurse Vitals'],
       clinics: [],
@@ -268,9 +282,14 @@ export default {
 
     const getPackages = await this.$api.medicalReport.getMedicalRecords({
       size: 1000,
+      package_category: this.package_category
     })
     this.packages = getPackages.results
     this.servicCenters = serviceCenter.results
+
+    this.$api.medicalReport.getParents().then((res) => {
+      this.categories = res.results
+    })
     // for (const iterator of await clinics.results) {
     //   this.departments.push(iterator.Department)
     // }

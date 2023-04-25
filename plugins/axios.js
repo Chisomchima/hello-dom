@@ -1,13 +1,13 @@
-
-import qs from 'qs';
+import qs from 'qs'
 
 export default function ({ $axios, $toast, store, redirect }) {
   // $axios.defaults.timeout = 1000 * 5 // t - 5s
 
-  $axios.onRequest(config => {
-    config.paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' });
-    return config;
-  });
+  $axios.onRequest((config) => {
+    config.paramsSerializer = (params) =>
+      qs.stringify(params, { arrayFormat: 'repeat' })
+    return config
+  })
 
   $axios.onRequest((config) => {
     store.commit('toggleRequestInProgress', true)
@@ -23,7 +23,7 @@ export default function ({ $axios, $toast, store, redirect }) {
 
     if (error.response && error.response.status === 401) {
       store.commit('toggleRequestInProgress', true)
-      redirect('/auth/login?redirect=true');
+      redirect('/auth/login?redirect=true')
       $toast({
         type: 'error',
         text: error.response.data.message,
@@ -45,6 +45,13 @@ export default function ({ $axios, $toast, store, redirect }) {
     }
 
     if (error.response && error.response.status === 400) {
+      if (error) {
+        $toast({
+          type: 'error',
+          text: error.message,
+        })
+        return
+      }
       $toast({
         type: 'error',
         text: error.response.data.message,
@@ -52,11 +59,22 @@ export default function ({ $axios, $toast, store, redirect }) {
       return Promise.reject(error)
     }
     if (error.response && error.response.status === 500) {
-      $toast({
-        type: 'error',
-        text: error.response.data.message,
-      })
-      return Promise.reject(error)
+     
+      if (error.response.data.message) {
+        $toast({
+          type: 'error',
+          text: error.message,
+        })
+        return
+      } else {
+        $toast({
+          type: 'error',
+          text: error.response.data.message,
+        })
+        return Promise.reject(error)
+      }
+     
+     
     }
 
     if (error.response && error.response.status === 404) {
@@ -76,14 +94,12 @@ export default function ({ $axios, $toast, store, redirect }) {
       return Promise.reject(error)
     }
 
-
     $toast({
       type: 'error',
       text: 'Error Occurred',
     })
 
     return Promise.reject(error)
-
   })
   $axios.onResponse((response) => {
     // NProgress.done();

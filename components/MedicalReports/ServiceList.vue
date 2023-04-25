@@ -22,9 +22,9 @@
           @row-clicked="onRowClicked($event)"
           @page-changed="pageChange($event, filter)"
         >
-          <!-- <template #bill_item_code="{ data }">
-            <div class="bill-cell">
-              <span>{{ data.item.bill_item_code}}</span>
+          <!-- <template #name="{ data }">
+            <div class="name-cell">
+              <span>{{ data.item.name}}</span>
             </div>
           </template> -->
         </TableComponent>
@@ -68,6 +68,7 @@ export default {
         {
           key: 'name',
           label: 'Name',
+          thStyle: { width: "20%" },
         },
         {
           key: 'cost_price',
@@ -180,7 +181,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.custom-table.table td, .custom-table.table th {
-  width: 114rem !important;
-}
 </style>

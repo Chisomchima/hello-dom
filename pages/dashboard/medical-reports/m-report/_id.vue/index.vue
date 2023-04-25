@@ -7,11 +7,15 @@
     <div v-else class="text-12 border-radius mb-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <BackwardNavigation />
-        <!-- <div>
-          <BaseButton
+        <BaseButton
+            @click="acknowledge"
+          >
+            Acknowledge
+          </BaseButton>
+        <!-- <div> -->
+          <!-- <BaseButton
             v-if="
-              consultationData.acknowledged_at != null &&
-              consultationData.status != 'DS'
+              consultationData.acknowledged_at != null
             "
             class="btn-success btn-sm"
             :disabled="
@@ -24,26 +28,13 @@
             @click="signAndCloseEnc"
           >
             Sign
-          </BaseButton>
-          <BaseButton
-            v-if="
-              (consultationData.status === 'NS' ||
-                consultationData.status === 'New') &&
-              consultationData.acknowledged_at === null
-            "
-            class="btn-success btn-sm"
-            :disabled="
-              consultationData
-                ? consultationData.bill.cleared_status === 'CLEARED'
-                  ? false
-                  : true
-                : ''
-            "
+          </BaseButton> -->
+          <!-- <BaseButton
             @click="acknowledgeEnc"
           >
             Acknowledge
-          </BaseButton>
-        </div> -->
+          </BaseButton> -->
+        <!-- </div> -->
       </div>
       <DashboardModalDoctorSign @refresh="showSignature" />
       <MedicalReportsHeaderCard :consultation-data="consultationData" />
@@ -279,14 +270,15 @@ export default {
       }
     },
 
-    async acknowledgeEnc() {
+    async acknowledge() {
       const result = await this.showConfirmMessageBox(
-        'Do you want to acknowledge this encounter ?'
+        'Do you want to acknowledge this Medical Report ?'
       )
       try {
         if (result) {
-          const response = await this.$api.encounter.acknowledgeEncounter(
-            this.consultationData.id
+          const response = await this.$api.medicalReport.acknowlegeOrder(
+            this.consultationData.id, {id: this.consultationData.id}
+
           )
           if (response) {
             this.getPatientRecord()
