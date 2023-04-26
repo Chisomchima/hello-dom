@@ -32,15 +32,15 @@
               </div>
             </div>
             <div
-              v-for="(section, index) in dataObject.content"
+              v-for="(section, index) in dataObject.form_fields"
               :key="index"
               class="cards p-4 my-3 row"
             >
               <Accordion
-                class="accordion-custom col-12 shadow-sm p-2"
-                :key="innerIndex"
-                :active-index="index"
                 v-for="(col, innerIndex) in section.cols"
+                :key="innerIndex"
+                class="accordion-custom col-12 shadow-sm p-2"
+                :active-index="index"
               >
                 <AccordionTab>
                   <template #header>
@@ -101,9 +101,15 @@
                               />
                             </svg>
                           </span>
-                          <div class="rounded w-100">
+                          <div class="text-16 px-1" v-show="!section.show">
+                            <p class="mb-0">{{ section.section }}</p>
+                          </div>
+                          <div class="rounded w-100" v-show="section.show">
                             <input
                               ref="sectionheader"
+                              @blur="closeSection(index)"
+                              @keyup.enter="closeSection(index)"
+                              v-model="section.section"
                               class="formhead2"
                               type="text"
                             />
@@ -245,8 +251,8 @@
                       <!-- Handle textfield -->
                       <div class="w-100 d-flex mb-2">
                         <input
-                          placeholder="Enter value"
                           v-model="option.options"
+                          placeholder="Enter value"
                           type="text"
                           class="form-control"
                         />
@@ -350,7 +356,8 @@ export default {
       dataObject: {
         title: '',
         description: '',
-        content: [
+        source:'',
+        form_fields: [
           {
             section: 'Section title',
             show: false,
@@ -439,15 +446,15 @@ export default {
       }
     },
     closeSection(index) {
-      this.dataObject.content[index].show = false
+      this.dataObject.form_fields[index].show = false
     },
     openSection(index) {
-      this.dataObject.content[index].show = true
+      this.dataObject.form_fields[index].show = true
       console.log(this.$refs.sectionheader[0])
       this.$refs.sectionheader[0].focus()
     },
     addField(index, innerIndex) {
-      this.dataObject.content[index].cols[innerIndex].form_field.push({
+      this.dataObject.form_fields[index].cols[innerIndex].form_field.push({
         context: '',
         type: null,
         options: [
@@ -458,22 +465,22 @@ export default {
       })
     },
     deleteField(index, innerIndex, optionIndex) {
-      this.dataObject.content[index].cols[innerIndex].form_field.splice(
+      this.dataObject.form_fields[index].cols[innerIndex].form_field.splice(
         optionIndex,
         1
       )
     },
     closeMode(index, innerIndex) {
-      this.dataObject.content[index].cols[innerIndex].show = false
+      this.dataObject.form_fields[index].cols[innerIndex].show = false
     },
     openMode(index, innerIndex) {
-      this.dataObject.content[index].cols[innerIndex].show = true
+      this.dataObject.form_fields[index].cols[innerIndex].show = true
     },
     printOption(index, innerIndex, optionIndex) {
       const length =
-        this.dataObject.content[index].cols[innerIndex].form_field[optionIndex]
+        this.dataObject.form_fields[index].cols[innerIndex].form_field[optionIndex]
           .options.length
-      this.dataObject.content[index].cols[innerIndex].form_field[
+      this.dataObject.form_fields[index].cols[innerIndex].form_field[
         optionIndex
       ].options.push({
         // label: `Option ${length + 1}`,
@@ -481,13 +488,13 @@ export default {
       })
     },
     deleteOption(index, innerIndex, optionIndex, itemindex) {
-      this.dataObject.content[index].cols[innerIndex].form_field[
+      this.dataObject.form_fields[index].cols[innerIndex].form_field[
         optionIndex
       ].options.splice(itemindex, 1)
     },
     setInputType(index, innerIndex, optionIndex, input) {
       if (input.val === 'dropdown') {
-        this.dataObject.content[index].cols[innerIndex].form_field[
+        this.dataObject.form_fields[index].cols[innerIndex].form_field[
           optionIndex
         ].options = [
           {
@@ -495,21 +502,21 @@ export default {
           },
         ]
       } else if (input.val === 'checkbox') {
-        this.dataObject.content[index].cols[innerIndex].form_field[
+        this.dataObject.form_fields[index].cols[innerIndex].form_field[
           optionIndex
         ].options = false
       } else {
-        this.dataObject.content[index].cols[innerIndex].form_field[
+        this.dataObject.form_fields[index].cols[innerIndex].form_field[
           optionIndex
         ].options = ''
       }
-      this.dataObject.content[index].cols[innerIndex].form_field[
+      this.dataObject.form_fields[index].cols[innerIndex].form_field[
         optionIndex
       ].type = input.val
     },
     addColumn(index) {
-      if (this.dataObject.content[index].cols.length < 4) {
-        this.dataObject.content[index].cols.push({
+      if (this.dataObject.form_fields[index].cols.length < 4) {
+        this.dataObject.form_fields[index].cols.push({
           header: 'Title',
           context: '',
           form_field: [
@@ -530,7 +537,7 @@ export default {
     },
     addSection(e) {
       e.preventDefault()
-      this.dataObject.content.push({
+      this.dataObject.form_fields.push({
         section: 'Section title',
         show: false,
         cols: [
@@ -555,12 +562,12 @@ export default {
       })
     },
     deleteSection(e) {
-      this.dataObject.content.length !== 0 &&
-        this.dataObject.content.splice(e, 1)
+      this.dataObject.form_fields.length !== 0 &&
+        this.dataObject.form_fields.splice(e, 1)
     },
     deleteColumn(index, innerIndex) {
-      this.dataObject.content[index].cols[innerIndex].length !== 1 &&
-        this.dataObject.content[index].cols.splice(innerIndex, 1)
+      this.dataObject.form_fields[index].cols[innerIndex].length !== 1 &&
+        this.dataObject.form_fields[index].cols.splice(innerIndex, 1)
     },
     async save() {
       try {
@@ -590,7 +597,7 @@ export default {
       this.dataObject = {
         title: '',
         description: '',
-        content: [
+        form_fields: [
           {
             section: 'Section title',
             show: false,
@@ -665,5 +672,13 @@ input[type='text'] {
 }
 .accordions {
   background-color: white !important;
+}
+.formhead2 {
+  outline: 0;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px dashed #000;
+  height: 35px;
+  background: #f8f9fa;
 }
 </style>
