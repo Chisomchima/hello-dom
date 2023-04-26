@@ -40,8 +40,8 @@
                 v-for="(col, innerIndex) in section.cols"
                 :key="innerIndex"
                 class="accordion-custom col-12 shadow-sm p-2"
-                :active-index="index"
               >
+                <!-- we can add this to the accordion :active-index="index" -->
                 <AccordionTab>
                   <template #header>
                     <div
@@ -66,9 +66,9 @@
                       >
                         <div class="w-100 hh d-flex align-items-end">
                           <span
-                            v-if="section.show"
-                            class="point mr-1"
-                            @click="closeSection(index)"
+                            v-if="col.show"
+                            class="point mr-2"
+                            @click="closeMode(index, innerIndex)"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -85,8 +85,8 @@
                           </span>
                           <span
                             v-else
-                            class="point mr-1"
-                            @click="openSection(index)"
+                            class="point mr-2"
+                            @click="openMode(index, innerIndex)"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -101,17 +101,21 @@
                               />
                             </svg>
                           </span>
-                          <div class="text-16 px-1" v-show="!section.show">
-                            <p class="mb-0">{{ section.section }}</p>
+                          <div v-show="!col.show" class="text-16 px-1">
+                            {{ col.header }}
                           </div>
-                          <div class="rounded w-100" v-show="section.show">
+                          <div v-show="col.show" class="rounded w-100">
                             <input
                               ref="sectionheader"
-                              @blur="closeSection(index)"
-                              @keyup.enter="closeSection(index)"
-                              v-model="section.section"
-                              class="formhead2"
+                              v-model="col.header"
+                              :class="
+                                section.cols.length > 1
+                                  ? 'formhead'
+                                  : 'formheadef w-25'
+                              "
                               type="text"
+                              @blur="closeMode(index, innerIndex)"
+                              @keyup.enter="closeMode(index, innerIndex)"
                             />
                           </div>
                         </div>
@@ -129,6 +133,7 @@
                             p-2
                             text-primary
                           "
+                          @click="addColumn(index)"
                         >
                           <span
                             ><svg
@@ -158,6 +163,7 @@
                             p-2
                             text-primary
                           "
+                          @click="deleteColumn(index, innerIndex)"
                         >
                           <i
                             class="pi pi-minus-circle"
@@ -356,7 +362,7 @@ export default {
       dataObject: {
         title: '',
         description: '',
-        source:'',
+        source: '',
         form_fields: [
           {
             section: 'Section title',
@@ -478,8 +484,9 @@ export default {
     },
     printOption(index, innerIndex, optionIndex) {
       const length =
-        this.dataObject.form_fields[index].cols[innerIndex].form_field[optionIndex]
-          .options.length
+        this.dataObject.form_fields[index].cols[innerIndex].form_field[
+          optionIndex
+        ].options.length
       this.dataObject.form_fields[index].cols[innerIndex].form_field[
         optionIndex
       ].options.push({
