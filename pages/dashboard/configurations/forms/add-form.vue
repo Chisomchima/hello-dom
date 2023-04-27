@@ -680,7 +680,7 @@ export default {
   border-radius: 10px;
   // border-left: 10px solid rgb(91, 91, 231);
 
-  border-left: 10px solid $COLOR_TWO;
+  border-right: 10px solid $COLOR_TWO;
 }
 .style-chooser .vs__search::placeholder,
 .style-chooser .vs__dropdown-toggle,
