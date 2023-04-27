@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <BackwardNavigation />
+  <div class="w-100">
+    <div class="w-100 d-flex align-items-center justify-content-between">
+      <BackwardNavigation />
+      <BaseButton class="ml-1 w-23 btn-primary" @click="ok()">
+        Save
+      </BaseButton>
+    </div>
     <div class="page-heading mb-4">Create Form</div>
     <div
       class="container d-flex wrap justify-content-center align-items-center"
@@ -12,7 +17,7 @@
               <div class="col-md-12 mb-2">
                 <ValidationProviderWrapper :rules="['required']">
                   <input
-                    v-model="dataObject.title"
+                    v-model="dataObject.name"
                     type="text"
                     class="form-control"
                     placeholder="Form Title"
@@ -30,6 +35,18 @@
                   />
                 </ValidationProviderWrapper>
               </div>
+
+              <div class="col-md-12 mb-2">
+              <ValidationProviderWrapper name="Source" :rules="['']">
+                <VSelect
+                  v-model="dataObject.source"
+                  :options="sources"
+                  :reduce="(opt) => opt.name"
+                  label="label"
+                >
+                </VSelect>
+              </ValidationProviderWrapper>
+            </div>
             </div>
             <div
               v-for="(section, index) in dataObject.form_fields"
@@ -357,12 +374,23 @@ export default {
   components: { Accordion, AccordionTab },
   data() {
     return {
+      sources: [
+        { name: 'Encounter', label: 'Encounter' },
+        { name: 'Finance', label: 'Finance' },
+        { name: 'Imaging', label: 'Imaging' },
+        { name: 'Inventory', label: 'Inventory' },
+        { name: 'Laboratory', label: 'Laboratory' },
+        { name: 'Messaging', label: 'Messaging' },
+        { name: 'Nursing', label: 'Nursing' },
+        { name: 'Pharmacy', label: 'Pharmacy' },
+        { name: 'Medical-Package', label: 'Medical Package' },
+      ],
       editMode: false,
       startCol: false,
       dataObject: {
-        title: '',
+        name: '',
         description: '',
-        source: '',
+        source: "",
         form_fields: [
           {
             section: 'Section title',
@@ -578,12 +606,12 @@ export default {
     },
     async save() {
       try {
-        const data = await this.$api.templates.createEncTemplate(
-          this.dataObject
-        )
+        const data = await this.$api.core.createForm(this.dataObject)
+        console.log(this.dataObject, 'dataobj')
         this.$emit('refresh')
         this.$bvModal.hide('addTemplate')
       } catch (error) {
+        console.log(this.dataObject, 'dataobj')
         console.log(error)
       }
     },
@@ -602,7 +630,7 @@ export default {
 
     clear() {
       this.dataObject = {
-        title: '',
+        name: '',
         description: '',
         form_fields: [
           {

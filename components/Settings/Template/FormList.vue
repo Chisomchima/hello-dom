@@ -39,8 +39,8 @@ export default {
                     label: 'Date',
                 },
                 {
-                    key: 'title',
-                    label: 'Title',
+                    key: 'name',
+                    label: 'Name',
                 },
                 {
                     key: 'description',
@@ -69,7 +69,7 @@ export default {
         async pageChange(page = 1, e = { title: '', size: 10 }) {
             try {
                 this.busy = true
-                const data = await this.$api.templates.getCoreTemplates({ page, ...e })
+                const data = await this.$api.core.getForm({ page, ...e })
                 console.log(data, 'dta')
                 this.items = data.results
                 this.pages = data.total_pages

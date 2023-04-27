@@ -88,5 +88,11 @@ export default axios => ({
         return axios.$get("/core/document_types/", {
             params
         })
-    }
+    },
+    createForm(body){
+        return axios.$post(`/core/forms/`, body)
+    },
+    getForm(params){
+        return axios.$get(`/core/forms`, params)
+    },
 });
