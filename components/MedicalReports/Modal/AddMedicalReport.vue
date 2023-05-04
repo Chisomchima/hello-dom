@@ -29,16 +29,17 @@
               ></VSelect>
             </ValidationProviderWrapper>
           </div>
-          
+
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper name="Lab Panels" :rules="['required']">
-              <VSelect
+              <v-select
                 v-model="dataObject.lab_panels"
                 :multiple="true"
                 :reduce="(opt) => opt.id"
                 :options="labPanels"
                 label="name"
-              ></VSelect>
+              >
+              </v-select>
             </ValidationProviderWrapper>
           </div>
 
@@ -135,9 +136,7 @@ export default {
     const { results } = await this.$api.medicalReport.getImaging({
       size: 1000,
     })
-    const labPanel = await this.$api.medicalReport.getLabPanel({
-      size: 1000,
-    })
+    const labPanel = await this.$api.medicalReport.getLabPanel()
     const categories = await this.$api.medicalReport.getParents({
       size: 1000,
     })
@@ -183,13 +182,15 @@ export default {
           //   category: categories,
           //   ...others,
           // }, 'chisom')
-          await this.$api.medicalReport.editMedicalRecord(this.dataObject.id, this.dataObject
-          // {
-          //   // imaging_obvs: imgObv,
-          //   // lab_panels: labpanels,
-          //   category: categories,
-          //   ...others,
-          // }
+          await this.$api.medicalReport.editMedicalRecord(
+            this.dataObject.id,
+            this.dataObject
+            // {
+            //   // imaging_obvs: imgObv,
+            //   // lab_panels: labpanels,
+            //   category: categories,
+            //   ...others,
+            // }
           )
         }
         this.$emit('refresh')

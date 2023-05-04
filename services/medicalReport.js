@@ -7,8 +7,8 @@ export default axios => ({
     getImaging(params) {
         return axios.$get('/imaging/imaging_observation/', params)
     },
-    getLabPanel(params) {
-        return axios.$get('/laboratory/lab_panel/', params)
+    getLabPanel() {
+        return axios.$get(`/laboratory/lab_panel/?size=1000`)
     },
     getLabOrder(id, params){
         return axios.$get(`/laboratory/lab_panel_order/?lab_order=${id}`

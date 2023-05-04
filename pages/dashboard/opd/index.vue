@@ -28,6 +28,7 @@
         </UtilsFilterComponent>
       </div>
     </div>
+    
     <DashboardModalNewEncounter @get-encounter="filter(1, {})" />
     <DashboardModalAddVitalOnOpd :encounterData="tempEncounterData" @refresh="filter(1, {})" />
   </div>
