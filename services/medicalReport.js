@@ -1,8 +1,6 @@
 export default axios => ({
-    getMedicalRecords(params) {
-        return axios.$get('/medical-packages/', {
-            params
-        })
+    getMedicalRecords() {
+        return axios.$get('/medical-packages/?size=1000')
     },
     getImaging(params) {
         return axios.$get('/imaging/imaging_observation/', params)
@@ -33,8 +31,8 @@ export default axios => ({
     deleteMedicalRecord(id) {
         return axios.$delete(`/medical-packages/${id}/`)
     },
-    getParents(params = {}){
-        return axios.$get(`/medical-packages/category/`, { params });
+    getParents(){
+        return axios.$get(`/medical-packages/category/?size=1000`);
     },
     deleteCategory(id){
         return axios.$delete(`/medical-packages/category/${id}/`)
