@@ -137,9 +137,7 @@ export default {
       size: 1000,
     })
     const labPanel = await this.$api.medicalReport.getLabPanel()
-    const categories = await this.$api.medicalReport.getParents({
-      size: 1000,
-    })
+    const categories = await this.$api.medicalReport.getParents()
     this.labPanels = labPanel.results
     this.categories = categories.results
     this.Observations = results
