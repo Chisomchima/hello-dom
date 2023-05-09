@@ -19,7 +19,7 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Category" :rules="['required']">
+            <ValidationProviderWrapper name="Category" :rules="['']">
               <VSelect
                 v-model="dataObject.category"
                 :multiple="false"
@@ -31,7 +31,7 @@
           </div>
 
           <div class="col-md-12 mb-2">
-            <ValidationProviderWrapper name="Lab Panels" :rules="['required']">
+            <ValidationProviderWrapper name="Lab Panels" :rules="['']">
               <v-select
                 v-model="dataObject.lab_panels"
                 :multiple="true"
@@ -46,7 +46,7 @@
           <div class="col-md-12 mb-2">
             <ValidationProviderWrapper
               name="Imaging Observation"
-              :rules="['required']"
+              :rules="['']"
             >
               <VSelect
                 v-model="dataObject.imaging_obvs"
