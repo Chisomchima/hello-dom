@@ -167,11 +167,12 @@ export default {
       }
     },
     async edit() {
-      console.log(this.dataObject, 'id')
-      // const imgObv = this.dataObject.imaging_obvs.map((el) => el.id)
-      // const labpanels = this.dataObject.lab_panels.map((el) => el.id)
-      // const categories = this.dataObject.category.id
+      
+      const imgObv = this.dataObject.imaging_obvs.map((el) => el.id)
+      const labpanels = this.dataObject.lab_panels.map((el) => el.id)
+      const categories = this.dataObject.category.id
       // const { category, ...others } = this.dataObject
+      console.log(labpanels, 'labid')
       try {
         if (this.dataObject.id) {
           // console.log({
@@ -180,9 +181,24 @@ export default {
           //   category: categories,
           //   ...others,
           // }, 'chisom')
+      //     dataObject: {
+      //   name: '',
+      //   lab_panels: [],
+      //   imaging_obvs: [],
+      //   bill_price: '',
+      //   cost_price: '',
+      //   category: '',
+      // },
           await this.$api.medicalReport.editMedicalRecord(
             this.dataObject.id,
-            this.dataObject
+            {
+              name: this.dataObject.name,
+              lab_panels: labpanels,
+              imaging_obvs: imgObv,
+              category: categories,
+              bill_price: this.dataObject.bill_price,
+              cost_price: this.dataObject.cost_price
+            }
             // {
             //   // imaging_obvs: imgObv,
             //   // lab_panels: labpanels,
