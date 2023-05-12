@@ -41,8 +41,6 @@ let inner = document.querySelector('#first-div')
 inner.innerHTML = "<ul><li>list 1</li> <li>list 2</li></ul>"
 console.log(inner)
 
-const name = 'chisom';
-const sentence = `${name} is a girl`
 
 /// rendering products on the page
 
@@ -80,3 +78,40 @@ const sentence = `${name} is a girl`
 //   }
 // }
 // fetchData();
+
+
+// event listeners click
+const button = document.getElementById('myButton');
+
+button.addEventListener('click', function(e) {
+  console.log('Button clicked!', e);
+  if(e.shiftKey === true){
+    alert('shift key was pressed')
+  }
+});
+
+// In this example, when the button is clicked, the function specified as the event handler is executed, and it logs the message "Button clicked!" to the console.
+
+// keydown
+const input = document.getElementById('myInput');
+input.addEventListener('keydown', function(event) {
+  console.log('Key pressed:', event);
+});
+
+//mouseOver
+const element = document.getElementById('myElement');
+
+function handleMouseOver(event) {
+  // Code to be executed when the mouseover event occurs
+  console.log('Mouse over event occurred!');
+  console.log('Target element:', event.target);
+}
+
+element.addEventListener('mouseover', handleMouseOver);
+
+
+// create new elements
+const newElement = document.createElement('div');
+
+//append child
+parentElement.appendChild(newElement);
